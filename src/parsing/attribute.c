@@ -82,9 +82,9 @@ void		ft_read_attr(void *dst, char *attr, int type)
 	data = ft_strtrim(data);
 	free(to_free);
 	if (type == KOEF)
-		*((double *)dst) = ft_limitf(0, 1, ft_atod(data));
-	else if (type == DBL)
-		*((double *)dst) = ft_atod(data);
+		*((float *)dst) = (float)ft_limitf(0, 1, ft_atod(data));
+	else if (type == FLT)
+		*((float *)dst) = (float)ft_atod(data);
 	else if (type == STR)
 		*((char **)dst) = ft_strdup(data);
 	else if (type == PNT)

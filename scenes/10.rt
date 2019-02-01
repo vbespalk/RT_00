@@ -1,0 +1,22 @@
+camera {
+	pos(0,0,0)
+	dir(0,0,-1)
+}
+light {
+	pos(0,0,0)
+	col(200,220,25)
+	rad(50)
+}
+
+light {
+	pos(0,-100,0)
+	col(20,220,250)
+	rad(30)
+}
+
+plane {
+	pos(-100,0,0)
+	rot(-1,0,0)
+	col(142,155,250)
+	reflect(0)	
+}

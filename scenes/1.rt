@@ -1,0 +1,50 @@
+camera {
+	pos(0,0,200)
+	dir(0,0,-1)
+}
+light {
+	pos(-50,0,50)
+	col(255,255,255)
+	rad(30)
+}
+light {
+	pos(0,0,50)
+	col(75,250,250)
+	rad(20)
+}
+light {
+	pos(50,0,50)
+	col(255,255,255)
+	rad(30)
+}
+plane {
+	pos(0,0,-100)
+	rot(0,0,-10)
+	col(160,160,160)
+	reflect(10)
+}
+plane {
+	pos(0,-50,0)
+	rot(0,-1,)
+	col(160,160,160)
+	reflect(10)
+}
+sphere {
+	pos(50,-10,0)
+	size(40)
+	col(20,180,160)
+	reflect(60)
+}
+sphere {
+	pos(-30,-30,80)
+	size(20)
+	col(180,180,160)
+	reflect(60)
+}
+cylinder {
+	pos(-100,0,70)
+	rot(5,20,-5)
+	size(20)
+	col(100,100,100)
+	reflect(10)
+}

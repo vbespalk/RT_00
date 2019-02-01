@@ -1,0 +1,16 @@
+camera {
+	pos(0,0,0)
+	dir(0,0,-1)
+}
+
+light {
+	pos(-50,0,0)
+	col(255,0,0)
+	rad(80)
+}
+sphere {
+	pos(-30,-30,80)
+	size(20)
+	col(0,255,0)
+	reflect(60)
+}

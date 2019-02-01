@@ -1,0 +1,126 @@
+camera {
+	pos(0,0,60)
+	dir(0,0,-1)
+}
+light {
+	pos(-50,0,50)
+	col(230,220,230)
+	rad(40)
+}
+light {
+	pos(50,0,50)
+	col(230,220,230)
+	rad(40)
+}
+plane {
+	pos(-100,0,0)
+	rot(-1,0,)
+	col(155,155,160)
+	reflect(0)	
+}
+plane {
+	pos(100,0,0)
+	rot(1,0,)
+	col(155,155,160)
+	reflect(0)	
+}
+plane {
+	pos(0,-50,0)
+	rot(,-1,)
+	col(155,155,160)
+	reflect(0)	
+}
+plane {
+	pos(0,50,0)
+	rot(,1,)
+	col(155,155,155)
+	reflect(0)	
+}
+plane {
+	pos(0,0,-100)
+	rot(,,-1)
+	col(155,155,160)
+	reflect(0)	
+}
+sphere {
+	pos(-10,-35,-30)
+	size(15)
+	col(100,100,100)
+	reflect(100)
+}
+cylinder {
+	pos(-50,40,-10)
+	rot(0,-1,0)
+	size(5)
+	col(250,250,250)
+	reflect(0)
+}
+sphere {
+	pos(-50,50,-10)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+sphere {
+	pos(-50,-50,-10)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+cylinder {
+	pos(50,40,-10)
+	rot(0,-1,0)
+	size(5)
+	col(250,250,250)
+	reflect(0)
+}
+sphere {
+	pos(50,50,-10)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+sphere {
+	pos(50,-50,-10)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+cylinder {
+	pos(-50,40,-60)
+	rot(0,-1,0)
+	size(5)
+	col(250,250,250)
+	reflect(0)
+}
+sphere {
+	pos(-50,50,-60)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+sphere {
+	pos(-50,-50,-60)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+cylinder {
+	pos(50,40,-60)
+	rot(0,-1,0)
+	size(5)
+	col(250,250,250)
+	reflect(0)
+}
+sphere {
+	pos(50,50,-60)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}
+sphere {
+	pos(50,-50,-60)
+	size(10)
+	col(250,250,250)
+	reflect(1)
+}

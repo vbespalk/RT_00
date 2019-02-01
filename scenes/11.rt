@@ -1,0 +1,23 @@
+camera {
+	pos(0,0,0)
+	dir(0,0,-1)
+}
+light {
+	pos(0,40,-30)
+	col(255,255,255)
+	rad(50)
+}
+
+cone {
+	pos(0,100,-100)
+	rot(1,1,1)
+	size(30)
+	col(128,250,200)
+	reflect(50)
+}
+sphere {
+	pos(40,0,-50)
+	size(10)
+	col(128,250,200)
+	reflect(50)
+}

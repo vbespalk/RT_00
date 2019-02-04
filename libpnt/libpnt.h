@@ -49,7 +49,7 @@ int						ft_3_pointcmp
 **	vector
 */
 
-t_vector				ft_3_vectornew(t_vector origin, t_vector direct);
+// t_vector				ft_3_vectornew(t_vector origin, t_vector direct);
 t_vector				ft_3_unitvectornew(t_vector origin, t_vector direct);
 t_vector				ft_3_tounitvector(t_vector vec);
 t_vector				ft_3_vector_scale(t_vector vec, float k);

@@ -23,7 +23,7 @@ t_vector	ft_3_line_line_inter
 	if ((len = ft_3_vector_len(den)) == 0.0)
 		return (ft_3_nullpointnew());
 	t = ft_3_vector_dot(
-		ft_3_vector_cross(ft_3_vectornew(o1, o2), d2), den) /
+		ft_3_vector_cross((o2 - o1), d2), den) /
 			(float)pow(len, 2);
 	return (o1 + ft_3_vector_scale(d1, t));
 }

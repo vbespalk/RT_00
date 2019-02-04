@@ -14,7 +14,5 @@
 
 t_vector		ft_3_vector_turn(t_vector proj, t_vector norm, float angle)
 {
-	return (ft_3_vector_add(
-		ft_3_vector_scale(proj, (float)sin(angle)),
-		ft_3_vector_scale(norm, (float)cos(angle))));
+	return (proj * (float)sin(angle) +	norm * (float)cos(angle));
 }

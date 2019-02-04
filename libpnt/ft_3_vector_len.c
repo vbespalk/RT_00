@@ -14,5 +14,5 @@
 
 float			ft_3_vector_len(t_vector vec)
 {
-	return ((float)sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
+	return ((float)sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]));
 }

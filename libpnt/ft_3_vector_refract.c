@@ -11,7 +11,7 @@ t_vector	ft_3_vector_refract
 	cos = ft_3_vector_cos(direct, norm);
 	if (cos < 0)
 	{
-		norm = ft_3_vector_scale(norm, -1.0);
+		norm =  -1.0 * norm;
 		cos *= -1.0f;
 	}
 	a1 = (float)acos(cos);

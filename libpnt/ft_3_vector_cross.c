@@ -14,7 +14,7 @@
 
 t_vector		ft_3_vector_cross(t_vector vec_1, t_vector vec_2)
 {
-	return (ft_3_pointnew(vec_1.y * vec_2.z - vec_1.z * vec_2.y,
-		vec_1.z * vec_2.x - vec_1.x * vec_2.z,
-		vec_1.x * vec_2.y - vec_1.y * vec_2.x));
+	return ((t_vector){vec_1[1] * vec_2[2] - vec_1[2] * vec_2[1],
+		vec_1[2] * vec_2[0] - vec_1[0] * vec_2[2],
+		vec_1[0] * vec_2[1] - vec_1[1] * vec_2[0]});
 }

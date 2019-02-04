@@ -17,8 +17,7 @@ t_vector		ft_3_vector_reflect
 {
 	t_vector		oc;
 
-	oc = ft_3_vectornew(origin, coll);
-	return (ft_3_unitvectornew(coll, ft_3_vector_add(origin, ft_3_vector_scale(
-		ft_3_vectornew(origin, ft_3_vector_add(coll, ft_3_vector_scale(norm,
-			(ft_3_vector_len(oc) * -ft_3_vector_cos(oc, norm))))), 2.0))));
+	oc = coll - origin;
+	return (ft_3_unitvectornew(coll, origin + 2.0f * 
+		(coll + norm * (ft_3_vector_len(oc) * -ft_3_vector_cos(oc, norm))) - origin));
 }

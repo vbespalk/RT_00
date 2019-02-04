@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-float			ft_3_vector_len(t_point3 vec)
+float			ft_3_vector_len(t_vector vec)
 {
 	return ((float)sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
 }

@@ -17,64 +17,59 @@
 # include <math.h>
 # include <float.h>
 
-typedef struct			s_point3
-{
-	float				x;
-	float				y;
-	float				z;
-}						t_point3;
+typedef float		t_vector __attribute__((vector_size(sizeof(float)*4)));
 
 /*
 **	point
 */
 
-t_point3				ft_3_pointnew(float x, float y, float z);
-t_point3				ft_3_nullpointnew(void);
-int						ft_3_isnullpoint(t_point3 point);
-float					ft_3_point_point_dist(t_point3 pnt_0, t_point3 pnt_1);
+t_vector				ft_3_pointnew(float x, float y, float z);
+t_vector				ft_3_nullpointnew(void);
+int						ft_3_isnullpoint(t_vector point);
+float					ft_3_point_point_dist(t_vector pnt_0, t_vector pnt_1);
 float					ft_3_line_point_dist
-							(t_point3 origin, t_point3 direct, t_point3 point);
+							(t_vector origin, t_vector direct, t_vector point);
 float					ft_3_plane_point_dist
-							(t_point3 origin, t_point3 norm, t_point3 point);
+							(t_vector origin, t_vector norm, t_vector point);
 float					ft_3_line_line_dist
-							(t_point3 o1, t_point3 d1,
-							t_point3 o2, t_point3 d2);
-t_point3				ft_3_line_line_inter
-							(t_point3 o1, t_point3 d1,
-							t_point3 o2, t_point3 d2);
-t_point3				ft_3_line_plane_inter
-							(t_point3 pln_o, t_point3 pln_norm,
-							t_point3 ln_o, t_point3 ln_d);
-t_point3				ft_3_line_point_proj
-							(t_point3 origin, t_point3 direct, t_point3 point);
+							(t_vector o1, t_vector d1,
+							t_vector o2, t_vector d2);
+t_vector				ft_3_line_line_inter
+							(t_vector o1, t_vector d1,
+							t_vector o2, t_vector d2);
+t_vector				ft_3_line_plane_inter
+							(t_vector pln_o, t_vector pln_norm,
+							t_vector ln_o, t_vector ln_d);
+t_vector				ft_3_line_point_proj
+							(t_vector origin, t_vector direct, t_vector point);
 int						ft_3_pointcmp
-							(t_point3 pnt_0, t_point3 pnt_1, float prec);
+							(t_vector pnt_0, t_vector pnt_1, float prec);
 
 /*
 **	vector
 */
 
-t_point3				ft_3_vectornew(t_point3 origin, t_point3 direct);
-t_point3				ft_3_unitvectornew(t_point3 origin, t_point3 direct);
-t_point3				ft_3_tounitvector(t_point3 vec);
-t_point3				ft_3_vector_add(t_point3 vec_1, t_point3 vec_2);
-t_point3				ft_3_vector_scale(t_point3 vec, float k);
-float					ft_3_vector_dot(t_point3 vec_1, t_point3 vec_2);
-t_point3				ft_3_vector_cross(t_point3 vec_1, t_point3 vec_2);
-float					ft_3_vector_len(t_point3 vec);
-float					ft_3_vector_cos(t_point3 vec_1, t_point3 vec_2);
-t_point3				ft_3_vector_reflect
-							(t_point3 origin, t_point3 coll, t_point3 norm);
-t_point3				ft_3_vector_refract
-							(t_point3 norm, t_point3 direct,
+t_vector				ft_3_vectornew(t_vector origin, t_vector direct);
+t_vector				ft_3_unitvectornew(t_vector origin, t_vector direct);
+t_vector				ft_3_tounitvector(t_vector vec);
+t_vector				ft_3_vector_add(t_vector vec_1, t_vector vec_2);
+t_vector				ft_3_vector_scale(t_vector vec, float k);
+float					ft_3_vector_dot(t_vector vec_1, t_vector vec_2);
+t_vector				ft_3_vector_cross(t_vector vec_1, t_vector vec_2);
+float					ft_3_vector_len(t_vector vec);
+float					ft_3_vector_cos(t_vector vec_1, t_vector vec_2);
+t_vector				ft_3_vector_reflect
+							(t_vector origin, t_vector coll, t_vector norm);
+t_vector				ft_3_vector_refract
+							(t_vector norm, t_vector direct,
 							float refr1, float refr2);
-t_point3				ft_3_vector_turn
-							(t_point3 proj, t_point3 norm, float angle);
-t_point3				ft_3_vector_project(t_point3 norm, t_point3 vec);
-t_point3				ft_3_vector_rotate
-							(t_point3 vec, float alpha,
+t_vector				ft_3_vector_turn
+							(t_vector proj, t_vector norm, float angle);
+t_vector				ft_3_vector_project(t_vector norm, t_vector vec);
+t_vector				ft_3_vector_rotate
+							(t_vector vec, float alpha,
 							float beta, float gamma);
-t_point3				ft_3_vector_turn_near
-							(t_point3 vec, t_point3 axis, float angle);
+t_vector				ft_3_vector_turn_near
+							(t_vector vec, t_vector axis, float angle);
 
 #endif

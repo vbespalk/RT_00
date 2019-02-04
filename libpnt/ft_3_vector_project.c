@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_vector_project(t_point3 norm, t_point3 vec)
+t_vector		ft_3_vector_project(t_vector norm, t_vector vec)
 {
 	return (ft_3_vector_add(
 			vec, ft_3_vector_scale(

@@ -12,10 +12,10 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_vector_rotate
-					(t_point3 vec, float alpha, float beta, float gamma)
+t_vector		ft_3_vector_rotate
+					(t_vector vec, float alpha, float beta, float gamma)
 {
-	t_point3	rotated;
+	t_vector	rotated;
 	float		sin_[3];
 	float		cos_[3];
 

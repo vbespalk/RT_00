@@ -12,10 +12,10 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_vector_reflect
-					(t_point3 origin, t_point3 coll, t_point3 norm)
+t_vector		ft_3_vector_reflect
+					(t_vector origin, t_vector coll, t_vector norm)
 {
-	t_point3		oc;
+	t_vector		oc;
 
 	oc = ft_3_vectornew(origin, coll);
 	return (ft_3_unitvectornew(coll, ft_3_vector_add(origin, ft_3_vector_scale(

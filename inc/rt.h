@@ -75,10 +75,10 @@
 
 # include <stdint.h>
 # include <time.h>
-// # include "libpnt.h"
+# include "libpnt.h"
 
 typedef	float		t_matrix[4][4];
-typedef float		t_vector __attribute__((vector_size(sizeof(float)*4)));
+
 
 typedef union		u_color
 {
@@ -117,14 +117,14 @@ typedef struct		s_object
 /*
 ** object propetries
 */
-	double			ambnt;
-	double			diff;
-	double			spclr;
-	double			s_blur;
-	double			refr;
-	double			trans;
-	double			t_blur;
-	double			phong;
+	float			ambnt;
+	float			diff;
+	float			spclr;
+	float			s_blur;
+	float			refr;
+	float			trans;
+	float			t_blur;
+	float			phong;
 
 	unsigned int	reflect; // my shiny val
 
@@ -155,15 +155,15 @@ typedef struct		s_plane
 typedef struct		s_sphere
 {
 	t_vector		origin;
-	double			radius;
+	float			radius;
 }					t_sphere;
 
 typedef struct		s_cone
 {
-	double			base_rad;
-	double			vert_rad;
-	double			bv_dist;
-	double			side_norm_angle;
+	float			base_rad;
+	float			vert_rad;
+	float			bv_dist;
+	float			side_norm_angle;
 	t_vector		base;
 	t_vector		vert;
 	t_vector		bv;
@@ -172,7 +172,7 @@ typedef struct		s_cone
 	t_vector		direction;
 	t_vector		origin;
 	t_vector		norm;
-	double			radius;
+	float			radius;
 	float			tg2;
 }					t_cone;
 
@@ -195,7 +195,7 @@ typedef struct		s_camera
 	t_vector		cam_angles;
 	t_vector		cam_transl;
 	float			fov;
-	double			start_refr;
+	float			start_refr;
 	t_vector		origin;
 	t_vector		direct;
 	t_matrix		wto_cam;
@@ -205,6 +205,14 @@ typedef struct		s_camera
 	t_vector		vs_x_step_vec;
 	t_vector		vs_y_step_vec;
 }					t_camera;
+
+typedef struct			s_rhhn
+{
+	struct s_object		*o;
+	struct s_rhhn		*prev;
+	struct s_rhhn		*next;
+}						t_rhhn;
+
 typedef struct		s_scene
 {
 	unsigned int	nb_obj;
@@ -216,6 +224,7 @@ typedef struct		s_scene
 	// t_vector		cam_transl; //
 	// t_vector		cam_angles; //
 	// t_matrix		wto_cam; //
+	t_rhhn			*(rhhns[THREADS]);
 	t_light			*light;
 	t_object		*obj;
 	t_camera		*cam;
@@ -235,7 +244,7 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	// SDL_Event 		event;
 }					t_sdl;
 
-typedef struct 		s_environmetn
+typedef struct 		s_environment
 {
 	t_scene			*scene;
 	t_light			*light;
@@ -251,6 +260,12 @@ typedef struct 		s_environmetn
 /*
 ** -----------------------------------------DIFFERENT-----------------------------------------------------
 */
+
+typedef struct			s_parg
+{
+	int					section;
+	t_env				*e;
+}						t_parg;
 
 typedef	struct		s_thread
 {
@@ -268,20 +283,6 @@ typedef	struct		s_ray
 	t_vector		hit_n;
 	t_vector		hit_c;
 }					t_ray;
-
-/*
-typedef struct			s_collision
-{
-	t_color				illum_color;
-	t_color				phong_color;
-	double				phong;
-	t_object			*o;
-	t_vector			coll_pnt;
-	t_vector			norm;
-	t_vector			spclr_vec;
-	t_vector			trans_vec;
-}						t_coll;
-*/
 
 /*
 ** -------------------------------------FUNCTIONS---------------------------------------------------------------
@@ -385,4 +386,216 @@ void				sdl_close(t_sdl *sdl);
 int					event_handler(t_env *env);
 int 				sdl_error(char *message);
 int					get_format_data(t_sdl *sdl);
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+typedef struct			s_collision
+{
+	t_color				illum_color;
+	t_color				phong_color;
+	float				phong;
+	t_object			*o;
+	t_vector			coll_pnt;
+	t_vector			norm;
+	t_vector			spclr_vec;
+	t_vector			trans_vec;
+}						t_coll;
+
+/*
+**	rhhn.c
+*/
+
+t_rhhn					*ft_rhhn_list_new(int length);
+void					ft_rhhn_hit
+	(t_rhhn *head, t_object *o, float (*refr)[2]);
+
+/*
+**	scene.c
+*/
+
+t_scene					*ft_scenenew(void);
+t_scene					*ft_get_scene(char *file_name);
+void					ft_parse_scene(char *attr, t_scene *scn);
+
+/*
+**	camera.c
+*/
+
+t_camera				*ft_cameranew(void);
+char					*ft_parse_camera(char *attr, t_scene *scn);
+void					ft_get_start_refr(t_scene *scn);
+
+/*
+**	image.c
+
+
+t_img					*ft_imgnew(t_env *e);
+void					ft_pixel_put_image(t_env *e, int x, int y, int colour);
+
+*/
+
+/*
+**	environment.c
+*/
+
+t_env					*ft_envnew(char *file_name);
+
+/*
+**	parse.c
+*/
+
+void					ft_parse(char *content, t_scene *scn);
+char					*ft_get_curve(char *attr, char curve);
+
+/*
+**	render.c
+*/
+
+void					ft_render(t_env *e);
+
+/*
+**	attribute.c
+*/
+
+char					*ft_search_attr
+	(char *content, char *attr, int ftsa_mode);
+void					ft_read_attr(void *dst, char *attr, int type);
+void					ft_get_attr_in_scope
+	(char *start, char *name, void *dst, int type);
+
+/*
+**	light.c
+*/
+
+t_light					*ft_lightnew();
+char					*ft_parse_light(char *attr, t_scene *scn);
+
+/*
+**	object.c
+*/
+
+t_object				*ft_objectnew();
+t_object				*ft_parse_object(char *attr);
+
+/*
+**	plane.c
+*/
+
+char					*ft_parse_plane(char *attr, t_scene *scn);
+
+/*
+**	plane_utils.c
+*/
+
+int						ft_is_reachable_plane
+	(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_plane
+	(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_plane(void *fig, t_vector point);
+t_vector				ft_get_norm_plane(void *fig, t_vector coll);
+
+/*
+**	sphere.c
+*/
+
+char					*ft_parse_sphere(char *attr, t_scene *scn);
+
+/*
+**	sphere_utils.c
+*/
+
+int						ft_is_reachable_sphere
+	(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_sphere
+	(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_sphere(void *fig, t_vector point);
+t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
+
+/*
+**	cone.c
+*/
+
+char					*ft_parse_cone(char *attr, t_scene *scn);
+
+/*
+**	cone_utils.c
+*/
+
+t_vector				ft_collide_cone
+	(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_cone(void *fig, t_vector point);
+t_vector				ft_get_norm_cone(void *fig, t_vector coll);
+void					ft_get_coll_pnts
+	(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
+
+/*
+**	cone_utils_2.c
+*/
+
+void					ft_set_coll_pnts_null(t_vector *pnt1, t_vector *pnt2);
+void					ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4]);
+void					ft_is_between_planes
+	(t_vector (*pnt)[4], t_vector base, t_vector vert);
+void					ft_collide_cone_planes
+	(t_cone *cone, t_vector origin,
+	 t_vector direct, t_vector (*pnt)[4]);
+t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
+
+/*
+**	ray.c
+*/
+
+t_color					ft_throw_rays
+							(t_parg *parg, t_coll coll, t_vector *vec,
+							 float num[2]);
+t_color					ft_trace_ray(t_parg *parg, int x, int y);
+
+/*
+**	ray_utils.c
+*/
+
+t_vector				ft_change_blur_vec
+							(t_vector norm, t_vector vec, float angle);
+t_vector				ft_get_blur_proj(t_vector origin, t_vector norm);
+t_color					ft_sum_colors
+							(t_coll coll, t_color color_s, t_color color_t);
+
+/*
+**	illumination.c
+*/
+
+void					ft_illuminate(t_parg *parg, t_coll *coll);
+
+/*
+**	collision.c
+*/
+
+t_coll					ft_get_collision
+							(t_parg *parg, t_vector origin, t_vector direct);
+
+/*
+**	utils.c
+*/
+
+t_color					ft_apply_phong
+	(t_color color, float bright, t_color light_color);
+t_color					ft_scale_color(t_color color, float k);
+t_color					ft_add_colors(t_color c1, t_color c2);
+
+/*
+**	key_hooks.c
+*/
+
+int						ft_key_hook(int key, void *p);
+
+/*
+**	hook.c
+*/
+
+int						ft_close_hook(int x, int y, void *a);
+
 #endif

@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_vector_cross(t_point3 vec_1, t_point3 vec_2)
+t_vector		ft_3_vector_cross(t_vector vec_1, t_vector vec_2)
 {
 	return (ft_3_pointnew(vec_1.y * vec_2.z - vec_1.z * vec_2.y,
 		vec_1.z * vec_2.x - vec_1.x * vec_2.z,

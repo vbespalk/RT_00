@@ -12,11 +12,11 @@
 
 #include "rt.h"
 
-static t_point3		ft_get_collision_point
-						(t_list *objs, t_object **obj, t_point3 od[2])
+static t_vector		ft_get_collision_point
+						(t_list *objs, t_object **obj, t_vector od[2])
 {
 	t_list		*node;
-	t_point3	pnt[2];
+	t_vector	pnt[2];
 	float		dist[2];
 	t_object	*o;
 
@@ -40,14 +40,14 @@ static t_point3		ft_get_collision_point
 }
 
 t_coll				ft_get_collision
-						(t_parg *parg, t_point3 origin, t_point3 direct)
+						(t_parg *parg, t_vector origin, t_vector direct)
 {
 	t_coll		coll;
-	t_point3	od[2];
+	t_vector	od[2];
 	float		refr[2];
 
 	coll.o = NULL;
-	od[0] = ft_3_vector_add(origin, direct);
+	od[0] = ft_3_vector_add(origin, ft_3_vector_scale(direct, 0.1f));
 	od[1] = direct;
 	if (ft_3_isnullpoint(coll.coll_pnt =
 		ft_get_collision_point(parg->e->scn->objs, &(coll.o), od)))
@@ -57,10 +57,12 @@ t_coll				ft_get_collision
 		coll.norm = ft_3_vector_scale(coll.norm, -1);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(origin, coll.coll_pnt, coll.norm);
-	ft_rhhn_hit(parg->e->scn->rhhns[parg->section], coll.o, &refr);
 	if (coll.o->trans)
+	{
+		ft_rhhn_hit(parg->e->scn->rhhns[parg->section], coll.o, &refr);
 		coll.trans_vec =
 			ft_3_vector_refract(coll.norm, direct, refr[0], refr[1]);
+	}
 	ft_illuminate(parg, &coll);
 	return (coll);
 }

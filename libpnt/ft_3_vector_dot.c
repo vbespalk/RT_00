@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-float			ft_3_vector_dot(t_point3 vec_1, t_point3 vec_2)
+float			ft_3_vector_dot(t_vector vec_1, t_vector vec_2)
 {
 	return (vec_1.x * vec_2.x + vec_1.y * vec_2.y + vec_1.z * vec_2.z);
 }

@@ -12,10 +12,10 @@
 
 #include "libpnt.h"
 
-float		ft_3_point_point_dist(t_point3 pnt_0, t_point3 pnt_1)
+float		ft_3_point_point_dist(t_vector pnt_0, t_vector pnt_1)
 {
 	return ((float)sqrt(
-		pow(pnt_1.x - pnt_0.x, 2) +
-		pow(pnt_1.y - pnt_0.y, 2) +
-		pow(pnt_1.z - pnt_0.z, 2)));
+		pow(pnt_1[0] - pnt_0[0], 2) +
+		pow(pnt_1[1] - pnt_0[1], 2) +
+		pow(pnt_1[2] - pnt_0[2], 2)));
 }

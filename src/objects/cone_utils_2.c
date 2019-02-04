@@ -12,15 +12,15 @@
 
 #include "rt.h"
 
-void		ft_set_coll_pnts_null(t_point3 *pnt1, t_point3 *pnt2)
+void		ft_set_coll_pnts_null(t_vector *pnt1, t_vector *pnt2)
 {
 	*pnt1 = ft_3_nullpointnew();
 	*pnt2 = *pnt1;
 }
 
-void		ft_get_coll_pnts_cyl(t_cone *cone, t_point3 (*pnt)[4])
+void		ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4])
 {
-	t_point3	a;
+	t_vector	a;
 	float		s;
 	float		dist;
 
@@ -36,10 +36,10 @@ void		ft_get_coll_pnts_cyl(t_cone *cone, t_point3 (*pnt)[4])
 }
 
 void		ft_is_between_planes
-				(t_point3 (*pnt)[4], t_point3 base, t_point3 vert)
+				(t_vector (*pnt)[4], t_vector base, t_vector vert)
 {
-	t_point3	bv;
-	t_point3	vb;
+	t_vector	bv;
+	t_vector	vb;
 
 	bv = ft_3_vectornew(base, vert);
 	vb = ft_3_vector_scale(bv, -1);
@@ -54,8 +54,8 @@ void		ft_is_between_planes
 }
 
 void		ft_collide_cone_planes
-				(t_cone *cone, t_point3 origin,
-				t_point3 direct, t_point3 (*pnt)[4])
+				(t_cone *cone, t_vector origin,
+				t_vector direct, t_vector (*pnt)[4])
 {
 	(*pnt)[2] = ft_3_line_plane_inter(cone->base, cone->bv, origin, direct);
 	if (ft_3_vector_cos(direct, ft_3_vectornew(origin, (*pnt)[2])) < 0 ||
@@ -67,11 +67,11 @@ void		ft_collide_cone_planes
 		(*pnt)[3] = ft_3_nullpointnew();
 }
 
-t_point3	ft_get_closest(t_point3 cam, t_point3 pnt[4])
+t_vector	ft_get_closest(t_vector cam, t_vector pnt[4])
 {
 	float		dist;
 	float		tmp;
-	t_point3	res;
+	t_vector	res;
 	int			i;
 
 	dist = -1;

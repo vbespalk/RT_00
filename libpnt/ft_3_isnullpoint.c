@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-int			ft_3_isnullpoint(t_point3 point)
+int			ft_3_isnullpoint(t_vector point)
 {
-	return (point.x == FLT_MIN && point.y == FLT_MIN && point.z == FLT_MIN);
+	return (point[0] == FLT_MIN && point[1] == FLT_MIN && point[2] == FLT_MIN);
 }

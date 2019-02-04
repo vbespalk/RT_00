@@ -3,6 +3,8 @@
 
 t_rhhn			*ft_rhhn_list_new(int length)
 {
+	write(1, "in ft_rhhn_list_new\n", 21);
+
 	t_rhhn	*head;
 	t_rhhn	*prev;
 	t_rhhn	*node;
@@ -39,21 +41,24 @@ static void		ft_rhhn_remove(t_rhhn *node, t_object *o, float (*refr)[2])
 
 	tmp = node;
 	(*refr)[0] = o->refr;
-	node->o = NULL;
 	if (node->prev)
 		node->prev->next = node->next;
 	if (node->next)
 		node->next->prev = node->prev;
-	if (!(node->next->o))
+	if (!(node->next) || !(node->next->o))
 		(*refr)[1] = (node->prev) ? node->prev->o->refr : DEFAULT_REFR;
 	else
+	{
 		while (node->next && node->next->o)
-			(*refr)[1] = node->o->refr;
-	while (node->next)
-		node = node->next;
-	node->next = tmp;
-	tmp->prev = node;
-	tmp->next = NULL;
+			node = node->next;
+		(*refr)[1] = node->o->refr;
+		while (node->next)
+			node = node->next;
+		node->next = tmp;
+		tmp->prev = node;
+		tmp->next = NULL;
+	}
+	tmp->o = NULL;
 }
 
 void			ft_rhhn_hit(t_rhhn *head, t_object *o, float (*refr)[2])

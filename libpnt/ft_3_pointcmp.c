@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-int			ft_3_pointcmp(t_point3 pnt_0, t_point3 pnt_1, float prec)
+int			ft_3_pointcmp(t_vector pnt_0, t_vector pnt_1, float prec)
 {
 	return (ft_3_point_point_dist(pnt_0, pnt_1) < prec);
 }

@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_vector_turn(t_point3 proj, t_point3 norm, float angle)
+t_vector		ft_3_vector_turn(t_vector proj, t_vector norm, float angle)
 {
 	return (ft_3_vector_add(
 		ft_3_vector_scale(proj, (float)sin(angle)),

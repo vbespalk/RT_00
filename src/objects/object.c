@@ -49,15 +49,15 @@ t_object	*ft_parse_object(char *attr)
 	ft_get_attr_in_scope(attr, "diff:", (void *)(&(o->diff)), KOEF);
 	ft_get_attr_in_scope(attr, "spclr:", (void *)(&(o->spclr)), KOEF);
 	ft_get_attr_in_scope(attr, "s_blur:", (void *)(&(o->s_blur)), KOEF);
-	ft_get_attr_in_scope(attr, "refr:", (void *)(&(o->refr)), KOEF);
+	ft_get_attr_in_scope(attr, "refr:", (void *)(&(o->refr)), FLT);
 	ft_get_attr_in_scope(attr, "trans:", (void *)(&(o->trans)), KOEF);
 	ft_get_attr_in_scope(attr, "t_blur:", (void *)(&(o->t_blur)), KOEF);
 	ft_get_attr_in_scope(attr, "phong:", (void *)(&(o->phong)), KOEF);
 	ft_get_attr_in_scope(attr, "translate:", (void *)(&(o->translate)), PNT);
 	ft_get_attr_in_scope(attr, "rotate:", (void *)(&(o->rotate)), PNT);
 	ft_balance_koefs(o);
-	o->rotate.x = ft_torad(o->rotate.x);
-	o->rotate.y = ft_torad(o->rotate.y);
-	o->rotate.z = ft_torad(o->rotate.z);
+	o->rotate.x = (float)ft_torad(o->rotate.x);
+	o->rotate.y = (float)ft_torad(o->rotate.y);
+	o->rotate.z = (float)ft_torad(o->rotate.z);
 	return (o);
 }

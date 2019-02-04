@@ -12,19 +12,19 @@
 
 #include "rt.h"
 
-t_point3		ft_change_blur_vec(t_point3 norm, t_point3 vec, float angle)
+t_vector		ft_change_blur_vec(t_vector norm, t_vector vec, float angle)
 {
-	t_point3	proj;
+	t_vector	proj;
 
-	proj = ft_3_vector_project(norm, vec);
 	if (acos(ft_3_vector_cos(norm, vec)) + angle <= M_PI_2)
 		return (vec);
+	proj = ft_3_tounitvector(ft_3_vector_project(norm, vec));
 	return (ft_3_vector_turn(proj, norm, M_PI_2 - angle));
 }
 
-t_point3		ft_get_blur_proj(t_point3 origin, t_point3 norm)
+t_vector		ft_get_blur_proj(t_vector origin, t_vector norm)
 {
-	t_point3	zero_proj;
+	t_vector	zero_proj;
 	float		angle;
 
 	zero_proj = ft_3_vector_project(
@@ -36,7 +36,7 @@ t_point3		ft_get_blur_proj(t_point3 origin, t_point3 norm)
 		zero_proj = ft_3_vector_project(
 			norm, ft_3_vectornew(origin, ft_3_pointnew(0.0, 42.0, 0.0)));
 	zero_proj = ft_3_tounitvector(zero_proj);
-	angle = (float)rand() / (float)RAND_MAX * M_2_PI;
+	angle = (float)rand() / (float)RAND_MAX * (float)M_2_PI;
 	return (ft_3_vector_turn_near(zero_proj, norm, angle));
 }
 

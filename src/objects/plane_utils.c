@@ -1,7 +1,7 @@
 
 #include "rt.h"
 
-int			ft_is_reachable_plane(void *fig, t_point3 origin, t_point3 direct)
+int			ft_is_reachable_plane(void *fig, t_vector origin, t_vector direct)
 {
 	(void)fig;
 	(void)origin;
@@ -9,10 +9,10 @@ int			ft_is_reachable_plane(void *fig, t_point3 origin, t_point3 direct)
 	return (1);
 }
 
-t_point3	ft_collide_plane(void *fig, t_point3 origin, t_point3 direct)
+t_vector	ft_collide_plane(void *fig, t_vector origin, t_vector direct)
 {
 	t_plane		*pln;
-	t_point3	coll;
+	t_vector	coll;
 
 	pln = (t_plane *)fig;
 	coll = ft_3_line_plane_inter(pln->origin, pln->norm, origin, direct);
@@ -20,14 +20,14 @@ t_point3	ft_collide_plane(void *fig, t_point3 origin, t_point3 direct)
 			ft_3_nullpointnew() : coll);
 }
 
-int			ft_is_inside_plane(void *fig, t_point3 point)
+int			ft_is_inside_plane(void *fig, t_vector point)
 {
 	(void)fig;
 	(void)point;
 	return (0);
 }
 
-t_point3	ft_get_norm_plane(void *fig, t_point3 coll)
+t_vector	ft_get_norm_plane(void *fig, t_vector coll)
 {
 	(void)coll;
 	return (((t_plane *)fig)->norm);

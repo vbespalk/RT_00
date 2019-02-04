@@ -12,10 +12,10 @@
 
 #include "rt.h"
 
-t_point3	ft_collide_cone(void *fig, t_point3 origin, t_point3 direct)
+t_vector	ft_collide_cone(void *fig, t_vector origin, t_vector direct)
 {
 	t_cone		*cone;
-	t_point3	pnt[4];
+	t_vector	pnt[4];
 
 	cone = (t_cone *)fig;
 	pnt[0] = origin;
@@ -26,10 +26,10 @@ t_point3	ft_collide_cone(void *fig, t_point3 origin, t_point3 direct)
 	return (ft_get_closest(origin, pnt));
 }
 
-void		ft_get_coll_pnts(t_cone *cone, t_point3 (*pnt)[4], int is_cyl)
+void		ft_get_coll_pnts(t_cone *cone, t_vector (*pnt)[4], int is_cyl)
 {
 	float		cos_t_2;
-	t_point3	v_co[2];
+	t_vector	v_co[2];
 	float		dv_dot;
 	float		cov_dot;
 	float		res[3];
@@ -54,12 +54,12 @@ void		ft_get_coll_pnts(t_cone *cone, t_point3 (*pnt)[4], int is_cyl)
 				ft_3_vector_add(v_co[0], ft_3_vector_scale((*pnt)[1], res[2]));
 }
 
-int			ft_is_inside_cone(void *fig, t_point3 point)
+int			ft_is_inside_cone(void *fig, t_vector point)
 {
 	t_cone		*cone;
-	t_point3	bv;
-	t_point3	vb;
-	t_point3	proj;
+	t_vector	bv;
+	t_vector	vb;
+	t_vector	proj;
 	float		rad;
 
 	cone = (t_cone *)fig;
@@ -75,10 +75,10 @@ int			ft_is_inside_cone(void *fig, t_point3 point)
 	return ((ft_3_point_point_dist(proj, point) < rad) ? 1 : 0);
 }
 
-t_point3	ft_get_norm_cone(void *fig, t_point3 coll)
+t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 {
 	t_cone		*cone;
-	t_point3	proj;
+	t_vector	proj;
 	float		sign;
 
 	cone = (t_cone *)fig;

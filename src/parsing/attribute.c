@@ -12,25 +12,25 @@
 
 #include "rt.h"
 
-t_point3	ft_atopoint3(char *str)
+t_vector	ft_atopoint3(char *str)
 {
-	t_point3		point;
+	t_vector		point;
 
 	while (*str && *str != '(')
 		++str;
 	if (!*str)
 		ft_error("invalid scene file");
-	point.x = ft_atod(++str);
+	point.x = (float)ft_atod(++str);
 	while (*str && *str != ',')
 		++str;
 	if (!*str)
 		ft_error("invalid scene file");
-	point.y = ft_atod(++str);
+	point.y = (float)ft_atod(++str);
 	while (*str && *str != ',')
 		++str;
 	if (!*str)
 		ft_error("invalid scene file");
-	point.z = ft_atod(++str);
+	point.z = (float)ft_atod(++str);
 	while (*str && *str != ')')
 		++str;
 	if (!*str)
@@ -88,7 +88,7 @@ void		ft_read_attr(void *dst, char *attr, int type)
 	else if (type == STR)
 		*((char **)dst) = ft_strdup(data);
 	else if (type == PNT)
-		*((t_point3 *)dst) = ft_atopoint3(data);
+		*((t_vector *)dst) = ft_atopoint3(data);
 	else
 		(*((t_color *)dst)).val = ft_limit(0, 0xffffff, ft_atoi_base(data, 16));
 	free(data);

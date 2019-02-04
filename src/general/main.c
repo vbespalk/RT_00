@@ -1,19 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_3_line_point_proj.c                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/09/19 11:35:13 by domelche          #+#    #+#             */
-/*   Updated: 2018/09/19 11:35:39 by domelche         ###   ########.fr       */
+/*   Created: 2018/08/23 13:20:12 by domelche          #+#    #+#             */
+/*   Updated: 2018/08/23 13:27:00 by domelche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libpnt.h"
+#include "rt.h"
 
-t_vector	ft_3_line_point_proj
-				(t_vector origin, t_vector direct, t_vector point)
+int			ft_usage(void)
 {
-	return (ft_3_line_plane_inter(point, direct, origin, direct));
+	ft_putendl("Usage: ./RTv1 scene_file");
+	return (1);
+}
+
+int			main(int ac, char **av)
+{
+	t_env		*e;
+
+	if (ac != 2)
+		return (ft_usage());
+	srand((unsigned int)time(NULL));
+	e = ft_envnew(av[1]);
+	ft_render(e);
+	mlx_key_hook(e->win, ft_key_hook, (void *)e);
+	mlx_hook(e->win, CLOSE_NOTIFY, CLOSE_MASK,
+			 ft_close_hook, (void *)e);
+	mlx_loop(e->mlx);
+	return (0);
 }

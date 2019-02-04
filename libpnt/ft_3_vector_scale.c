@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_vector_scale(t_point3 vec, float k)
+t_vector		ft_3_vector_scale(t_vector vec, float k)
 {
 	vec.x *= k;
 	vec.y *= k;

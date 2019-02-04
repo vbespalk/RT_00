@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_point3	ft_3_nullpointnew(void)
+t_vector	ft_3_nullpointnew(void)
 {
 	return (ft_3_pointnew(FLT_MIN, FLT_MIN, FLT_MIN));
 }

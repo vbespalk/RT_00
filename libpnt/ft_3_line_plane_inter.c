@@ -12,9 +12,9 @@
 
 #include "libpnt.h"
 
-t_point3	ft_3_line_plane_inter
-				(t_point3 pln_o, t_point3 pln_norm,
-				t_point3 ln_o, t_point3 ln_d)
+t_vector	ft_3_line_plane_inter
+				(t_vector pln_o, t_vector pln_norm,
+				t_vector ln_o, t_vector ln_d)
 {
 	float		t;
 	float		dev;
@@ -24,5 +24,5 @@ t_point3	ft_3_line_plane_inter
 		return (ft_3_nullpointnew());
 	t = (ft_3_vector_dot(pln_norm, pln_o) -
 		ft_3_vector_dot(pln_norm, ln_o)) / dev;
-	return (ft_3_vector_add(ln_o, ft_3_vector_scale(ln_d, t)));
+	return (ft_3_vector_add(ln_o, ln_d * t));
 }

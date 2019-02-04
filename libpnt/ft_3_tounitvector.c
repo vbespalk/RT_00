@@ -12,10 +12,10 @@
 
 #include "libpnt.h"
 
-t_point3		ft_3_tounitvector(t_point3 vec)
+t_vector		ft_3_tounitvector(t_vector vec)
 {
 	float	len;
 
 	len = ft_3_vector_len(vec);
-	return (ft_3_pointnew(vec.x / len, vec.y / len, vec.z / len));
+	return (ft_3_pointnew(vec[0] / len, vec[1] / len, vec[2] / len));
 }

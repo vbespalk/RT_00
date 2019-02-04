@@ -12,12 +12,12 @@
 
 #include "libpnt.h"
 
-t_point3	ft_3_pointnew(float x, float y, float z)
+t_vector	ft_3_pointnew(float x, float y, float z)
 {
-	t_point3	point;
+	t_vector	point;
 
-	point.x = x;
-	point.y = y;
-	point.z = z;
+	point[0] = x;
+	point[1] = y;
+	point[2] = z;
 	return (point);
 }

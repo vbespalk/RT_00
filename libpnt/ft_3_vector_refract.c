@@ -1,8 +1,8 @@
 
 #include "libpnt.h"
 
-t_point3	ft_3_vector_refract
-				(t_point3 norm, t_point3 direct, float refr1, float refr2)
+t_vector	ft_3_vector_refract
+				(t_vector norm, t_vector direct, float refr1, float refr2)
 {
 	float	cos;
 	float	a1;

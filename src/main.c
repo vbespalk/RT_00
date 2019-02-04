@@ -37,7 +37,7 @@ int		init_env(t_env *env, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 void	rt_loop(t_env *env, t_sdl *sdl)
 {
 	sdl->event_loop = 1;
-	render(env, env->scene);
+	ft_render(env);
 	SDL_UpdateTexture(sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
@@ -60,32 +60,26 @@ void	rt_loop(t_env *env, t_sdl *sdl)
 
 int		main(int argc, char **argv)
 {
-	int		fd;
-	t_scene	scene;
-	t_env	env;
-	t_sdl	sdl;
+	t_scene		*scene;
+	t_env		env;
+	t_sdl		sdl;
+	t_object	**obj_pix;
 
 	if (argc != 2)
 		ft_usage("RT scene\n");
-	if ((fd = open(argv[1], O_RDONLY)) == -1)
-		ft_error(NULL);
-	if (!ft_strequ(ft_strchr(argv[1], '.'), ".rt"))
-		ft_error("Invalid file\n");
-	if (!(parser(fd, &scene)))
+	if (!(scene = ft_get_scene(argv[1])))
 		ft_error("Scene is incomplete or incorrect\n");
-	close(fd);
 	sdl.scr_wid = SCR_WID;
 	sdl.scr_hei = SCR_HEI;
 	if (sdl_init(&sdl) < 0)
 	{
-		struct_del(&scene);
+		struct_del(scene);
 		exit(-1);
 	}
-	t_object	**obj_pix;
 	obj_pix = (t_object **)malloc(sizeof(t_object) * sdl.scr_wid * sdl.scr_hei);
-	if (init_env(&env, &scene, &obj_pix[0], &sdl))
+	if (init_env(&env, scene, &obj_pix[0], &sdl))
 	{
-		struct_del(&scene);
+		struct_del(scene);
 		exit(-1);
 	}
 	rt_loop(&env, &sdl);

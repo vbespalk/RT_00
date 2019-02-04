@@ -13,13 +13,11 @@
 #include "libpnt.h"
 
 float		ft_3_line_line_dist
-	(t_point3 o1, t_point3 d1, t_point3 o2, t_point3 d2)
+				(t_vector o1, t_vector d1, t_vector o2, t_vector d2)
 {
-	t_point3	axb;
+	t_vector	axb;
 
 	axb = ft_3_vector_cross(d1, d2);
-	return ((float)fabs(
-		ft_3_vector_dot(
-			ft_3_vector_add(o2, ft_3_vector_scale(o1, -1)), axb)) /
+	return ((float)fabs(ft_3_vector_dot(o2 + o1 * -1.0f, axb)) /
 		ft_3_vector_len(axb));
 }

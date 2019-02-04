@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-static t_color	ft_throw_ray(t_parg *parg, t_point3 od[2], int depth)
+static t_color	ft_throw_ray(t_parg *parg, t_vector od[2], int depth)
 {
 	t_coll		coll;
 	t_color		spclr_col;
@@ -62,15 +62,15 @@ t_color			ft_add_blur_colors(t_color sum, int num, t_color new)
 }
 
 t_color			ft_throw_rays
-					(t_parg *parg, t_coll coll, t_point3 *vec, float num[2])
+					(t_parg *parg, t_coll coll, t_vector *vec, float num[2])
 {
 	float		max_angle;
 	int			rays;
 	int			i;
 	t_color		color[2];
-	t_point3	od[2];
+	t_vector	od[2];
 
-	max_angle = ft_torad(num[0] * 10.0f);
+	max_angle = (float)ft_torad(num[0] * 10.0f);
 	rays = ft_limit(1, 10, (int)(sin(max_angle) * 10.0));
 	i = -1;
 	color[1].val = 0;
@@ -79,7 +79,7 @@ t_color			ft_throw_rays
 	{
 		od[0] = coll.coll_pnt;
 		od[1] = ft_3_vector_turn(ft_get_blur_proj(coll.coll_pnt, *vec),
-			*vec, (float) rand() / (float) RAND_MAX * max_angle);
+			*vec, (float)rand() / (float)RAND_MAX * max_angle);
 		color[0] = ft_throw_ray(parg, od, (int)(num[1] + 1));
 		color[1] = ft_add_blur_colors(color[1], i, color[0]);
 	}
@@ -89,7 +89,7 @@ t_color			ft_throw_rays
 t_color			ft_trace_ray(t_parg *parg, int x, int y)
 {
 	t_color		res;
-	t_point3	od[2];
+	t_vector	od[2];
 
 	od[0] = parg->e->scn->cam->origin;
 	od[1] = parg->e->scn->cam->vs_start_point;

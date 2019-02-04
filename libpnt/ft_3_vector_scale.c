@@ -14,8 +14,8 @@
 
 t_vector		ft_3_vector_scale(t_vector vec, float k)
 {
-	vec.x *= k;
-	vec.y *= k;
-	vec.z *= k;
+	vec[0] *= k;
+	vec[1] *= k;
+	vec[2] *= k;
 	return (vec);
 }

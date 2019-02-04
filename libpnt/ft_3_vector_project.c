@@ -14,6 +14,7 @@
 
 t_vector		ft_3_vector_project(t_vector norm, t_vector vec)
 {
-	return (vec + norm * (ft_3_vector_len(vec) * \
-		-ft_3_vector_cos(norm, vec)) / ft_3_vector_len(norm));
+	return (vec + ft_3_vector_scale(
+		norm, (ft_3_vector_len(vec) * -ft_3_vector_cos(norm, vec)) /
+			ft_3_vector_len(norm)));
 }

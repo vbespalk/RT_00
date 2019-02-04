@@ -18,6 +18,7 @@ float		ft_3_line_line_dist
 	t_vector	axb;
 
 	axb = ft_3_vector_cross(d1, d2);
-	return ((float)fabs(ft_3_vector_dot(o2 + o1 * -1.0f, axb)) /
-		ft_3_vector_len(axb));
+	return ((float)fabs(ft_3_vector_dot(
+		o2 + ft_3_vector_scale(o1, -1.0f), axb)) /
+			ft_3_vector_len(axb));
 }

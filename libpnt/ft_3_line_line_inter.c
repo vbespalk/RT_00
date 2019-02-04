@@ -25,5 +25,5 @@ t_vector	ft_3_line_line_inter
 	t = ft_3_vector_dot(
 		ft_3_vector_cross(ft_3_vectornew(o1, o2), d2), den) /
 			(float)pow(len, 2);
-	return (ft_3_vector_add(o1, ft_3_vector_scale(d1, t)));
+	return (o1 + ft_3_vector_scale(d1, t));
 }

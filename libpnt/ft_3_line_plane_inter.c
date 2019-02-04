@@ -24,5 +24,5 @@ t_vector	ft_3_line_plane_inter
 		return (ft_3_nullpointnew());
 	t = (ft_3_vector_dot(pln_norm, pln_o) -
 		ft_3_vector_dot(pln_norm, ln_o)) / dev;
-	return (ft_3_vector_add(ln_o, ln_d * t));
+	return (ln_o + ft_3_vector_scale(ln_d, t));
 }

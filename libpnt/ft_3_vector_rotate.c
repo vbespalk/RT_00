@@ -25,13 +25,13 @@ t_vector		ft_3_vector_rotate
 	cos_[0] = (float)cos(alpha);
 	cos_[1] = (float)cos(beta);
 	cos_[2] = (float)cos(gamma);
-	rotated.x = vec[0] * cos_[2] * cos_[1] +
+	rotated[0] = vec[0] * cos_[2] * cos_[1] +
 				vec[1] * (cos_[2] * sin_[1] * sin_[0] - sin_[2] * cos_[0]) +
 				vec[2] * (sin_[2] * sin_[0] + cos_[0] * cos_[2] * sin_[1]);
-	rotated.y = vec[0] * cos_[1] * sin_[2] +
+	rotated[1] = vec[0] * cos_[1] * sin_[2] +
 				vec[1] * (cos_[0] * cos_[2] + sin_[0] * sin_[1] * sin_[2]) +
 				vec[2] * (cos_[0] * sin_[1] * sin_[2] - sin_[0] * cos_[2]);
-	rotated.z = vec[0] * -(sin_[1]) +
+	rotated[2] = vec[0] * -(sin_[1]) +
 				vec[1] * sin_[0] * cos_[1] +
 				vec[2] * cos_[0] * cos_[1];
 	return (rotated);

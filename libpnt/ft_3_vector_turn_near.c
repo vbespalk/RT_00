@@ -26,14 +26,14 @@ t_vector		ft_3_vector_turn_near(t_vector vec, t_vector axis, float angle)
 	sin_a = (float)sin(angle);
 	cos_a = (float)cos(angle);
 	va = 1 - cos_a;
-	rotated.x = vec[0] * (axis.x * axis.x * va + cos_a) +
-				vec[1] * (axis.x * axis.y * va - axis.z * sin_a) +
-				vec[2] * (axis.x * axis.z * va + axis.y * sin_a);
-	rotated.y = vec[0] * (axis.x * axis.y * va + axis.z * sin_a) +
-				vec[1] * (axis.y * axis.y * va + cos_a) +
-				vec[2] * (axis.y * axis.z * va - axis.x * sin_a);
-	rotated.z = vec[0] * (axis.x * axis.z * va - axis.y * sin_a) +
-				vec[1] * (axis.y * axis.z * va + axis.x * sin_a) +
-				vec[2] * (axis.z * axis.z * va + cos_a);
+	rotated[0] = vec[0] * (axis[0] * axis[0] * va + cos_a) +
+				vec[1] * (axis[0] * axis[1] * va - axis[2] * sin_a) +
+				vec[2] * (axis[0] * axis[2] * va + axis[1] * sin_a);
+	rotated[1] = vec[0] * (axis[0] * axis[1] * va + axis[2] * sin_a) +
+				vec[1] * (axis[1] * axis[1] * va + cos_a) +
+				vec[2] * (axis[1] * axis[2] * va - axis[0] * sin_a);
+	rotated[2] = vec[0] * (axis[0] * axis[2] * va - axis[1] * sin_a) +
+				vec[1] * (axis[1] * axis[2] * va + axis[0] * sin_a) +
+				vec[2] * (axis[2] * axis[2] * va + cos_a);
 	return (rotated);
 }

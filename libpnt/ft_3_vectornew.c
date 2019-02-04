@@ -15,5 +15,5 @@
 t_vector		ft_3_vectornew(t_vector origin, t_vector direct)
 {
 	return (ft_3_pointnew(
-		direct.x - origin.x, direct.y - origin.y, direct.z - origin.z));
+		direct[0] - origin[0], direct[1] - origin[1], direct[2] - origin[2]));
 }

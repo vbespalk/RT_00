@@ -52,7 +52,6 @@ int						ft_3_pointcmp
 t_vector				ft_3_vectornew(t_vector origin, t_vector direct);
 t_vector				ft_3_unitvectornew(t_vector origin, t_vector direct);
 t_vector				ft_3_tounitvector(t_vector vec);
-t_vector				ft_3_vector_add(t_vector vec_1, t_vector vec_2);
 t_vector				ft_3_vector_scale(t_vector vec, float k);
 float					ft_3_vector_dot(t_vector vec_1, t_vector vec_2);
 t_vector				ft_3_vector_cross(t_vector vec_1, t_vector vec_2);

@@ -17,6 +17,5 @@ float		ft_3_plane_point_dist
 {
 	return (norm[0] * (point[0] - origin[0]) +
 			norm[1] * (point[1] - origin[1]) +
-			norm[2] * (point[2] - origin[2])) /
-			ft_3_vector_len(norm);
+			norm[2] * (point[2] - origin[2])) / ft_3_vector_len(norm);
 }

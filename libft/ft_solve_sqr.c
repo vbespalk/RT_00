@@ -12,18 +12,18 @@
 
 #include "libft.h"
 
-void		ft_solve_sqr(double a, double b, double c, double (*res)[3])
+void		ft_solve_sqr(float a, float b, float c, float (*res)[3])
 {
-	double	d;
+	float	d;
 
-	d = pow(b, 2) - 4.0 * a * c;
+	d = (float)pow(b, 2) - 4.0f * a * c;
 	if (d < 0)
 	{
 		*res[0] = 0;
 		return ;
 	}
-	d = sqrt(d);
+	d = (float)sqrt(d);
 	(*res)[0] = 1;
-	(*res)[1] = (-b + d) / (2.0 * a);
-	(*res)[2] = (-b - d) / (2.0 * a);
+	(*res)[1] = (-b + d) / (2.0f * a);
+	(*res)[2] = (-b - d) / (2.0f * a);
 }

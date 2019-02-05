@@ -99,9 +99,9 @@ void	reset(t_env *e)
 	t_object	*objs;
 	t_scene	*scene;
 
-	scene = e->scene;
+	scene = e->scn;
 	scene->cam->cam_transl = scene->cam->origin;
-	scene->cam->cam_angles = (t_vector){0.0f, 0.0f, 0.0f};
+	scene->cam->angles = (t_vector){0.0f, 0.0f, 0.0f};
 	scene->cam->fov = FOV;
 	e->selected = NULL;
 	objs = e->obj;

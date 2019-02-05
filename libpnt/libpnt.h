@@ -17,13 +17,12 @@
 # include <math.h>
 # include <float.h>
 
-typedef float		t_vector __attribute__((vector_size(sizeof(float)*4)));
+typedef float			t_vector __attribute__((vector_size(sizeof(float)*4)));
 
 /*
 **	point
 */
 
-t_vector				ft_3_pointnew(float x, float y, float z);
 t_vector				ft_3_nullpointnew(void);
 int						ft_3_isnullpoint(t_vector point);
 float					ft_3_point_point_dist(t_vector pnt_0, t_vector pnt_1);

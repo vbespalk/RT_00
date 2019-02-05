@@ -17,8 +17,8 @@ t_sphere	*ft_spherenew(void)
 	t_sphere	*sph;
 
 	sph = ft_smemalloc(sizeof(t_sphere), "ft_spherenew");
-	sph->origin = ft_3_pointnew(0.0, 0.0, 0.0);
-	sph->radius = 100.0;
+	sph->origin = (t_vector){ 0.0f, 0.0f, 0.0f };
+	sph->radius = 100.0f;
 	return (sph);
 }
 
@@ -37,7 +37,7 @@ char		*ft_parse_sphere(char *attr, t_scene *scn)
 	ft_get_attr_in_scope(attr, "origin:", (void *)(&(sph->origin)), PNT);
 	ft_get_attr_in_scope(attr, "radius:", (void *)(&(sph->radius)), FLT);
 	sph->radius = (float)ft_limitf(0.0f, FLT_MAX, sph->radius);
-	sph->origin = ft_3_vector_add(sph->origin, obj->translate);
+	sph->origin += obj->translate;
 	obj->fig = sph;
 	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
 	return (ft_get_curve(attr, '}'));

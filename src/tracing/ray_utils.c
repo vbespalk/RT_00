@@ -19,7 +19,7 @@ t_vector		ft_change_blur_vec(t_vector norm, t_vector vec, float angle)
 	if (acos(ft_3_vector_cos(norm, vec)) + angle <= M_PI_2)
 		return (vec);
 	proj = ft_3_tounitvector(ft_3_vector_project(norm, vec));
-	return (ft_3_vector_turn(proj, norm, M_PI_2 - angle));
+	return (ft_3_vector_turn(proj, norm, (float)M_PI_2 - angle));
 }
 
 t_vector		ft_get_blur_proj(t_vector origin, t_vector norm)
@@ -28,13 +28,13 @@ t_vector		ft_get_blur_proj(t_vector origin, t_vector norm)
 	float		angle;
 
 	zero_proj = ft_3_vector_project(
-		norm, ft_3_vectornew(origin, ft_3_pointnew(0.0, 0.0, 0.0)));
+		norm, ft_3_vectornew(origin, (t_vector){ 0.0f, 0.0f, 0.0f }));
 	if (ft_3_vector_len(zero_proj) == 0.0)
 		zero_proj = ft_3_vector_project(
-			norm, ft_3_vectornew(origin, ft_3_pointnew(42.0, 0.0, 0.0)));
+			norm, ft_3_vectornew(origin, (t_vector){ 42.0f, 0.0f, 0.0f }));
 	if (ft_3_vector_len(zero_proj) == 0.0)
 		zero_proj = ft_3_vector_project(
-			norm, ft_3_vectornew(origin, ft_3_pointnew(0.0, 42.0, 0.0)));
+			norm, ft_3_vectornew(origin, (t_vector){ 0.0, 42.0, 0.0 }));
 	zero_proj = ft_3_tounitvector(zero_proj);
 	angle = (float)rand() / (float)RAND_MAX * (float)M_2_PI;
 	return (ft_3_vector_turn_near(zero_proj, norm, angle));

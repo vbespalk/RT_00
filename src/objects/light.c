@@ -18,9 +18,9 @@ t_light		*ft_lightnew(void)
 
 	light = ft_smemalloc(sizeof(t_light), "ft_lightnew");
 	light->bright = 0.15;
-	light->origin = ft_3_pointnew(0.0, 10000.0, 0.0);
+	light->origin = (t_vector){ 0.0f, 10000.0f, 0.0f };
 	light->type = POINT;
-	light->color.val = 0XFFFFFF;
+	light->color.val = 0xffffff;
 	return (light);
 }
 
@@ -45,7 +45,7 @@ char		*ft_parse_light(char *attr, t_scene *scn)
 	ltype_str = NULL;
 	attr = ft_get_curve(attr, '{');
 	if (!*attr)
-		ft_error("invalid scene file");
+		ft_error("invalid scn file");
 	light = ft_lightnew();
 	ft_lstpush(&(scn->lights), ft_nodenew((void *)light, sizeof(t_light)));
 	ft_get_attr_in_scope(attr, "origin:", (void *)&(light->origin), PNT);

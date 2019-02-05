@@ -24,8 +24,8 @@ void	struct_del(t_scene *scene)
 {
 	if (scene->light)
 		slight_del(&(scene->light));
-	if (scene->obj)
-		sobj_del((&scene->obj));
+	if (scene->objs)
+		sobj_del((&scene->objs));
 }
 
 void	slight_del(t_light **lst)

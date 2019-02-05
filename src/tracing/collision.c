@@ -40,14 +40,14 @@ static t_vector		ft_get_collision_point
 }
 
 t_coll				ft_get_collision
-						(t_parg *parg, t_vector origin, t_vector direct)
+						(t_thrarg *parg, t_vector origin, t_vector direct)
 {
 	t_coll		coll;
 	t_vector	od[2];
 	float		refr[2];
 
 	coll.o = NULL;
-	od[0] = ft_3_vector_add(origin, ft_3_vector_scale(direct, 0.1f));
+	od[0] = origin + ft_3_vector_scale(direct, 0.1f);
 	od[1] = direct;
 	if (ft_3_isnullpoint(coll.coll_pnt =
 		ft_get_collision_point(parg->e->scn->objs, &(coll.o), od)))
@@ -59,7 +59,7 @@ t_coll				ft_get_collision
 		coll.spclr_vec = ft_3_vector_reflect(origin, coll.coll_pnt, coll.norm);
 	if (coll.o->trans)
 	{
-		ft_rhhn_hit(parg->e->scn->rhhns[parg->section], coll.o, &refr);
+		ft_handle_hit(parg->e->scn->hits[parg->i], coll.o, &refr);
 		coll.trans_vec =
 			ft_3_vector_refract(coll.norm, direct, refr[0], refr[1]);
 	}

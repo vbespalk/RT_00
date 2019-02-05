@@ -67,7 +67,7 @@ int		set_object1(t_scene *scene, char **prop, int type)
 
 	intersect[0] = p_intersect;
 	intersect[1] = s_intersect;
-	if (!(obj = init_sobj(&(scene->obj), &(scene->nb_obj))))
+	if (!(obj = init_sobj(&(scene->objs), &(scene->nb_obj))))
 		return (0);
 	obj->type = type;
 	if (!type && !((get_vec(ft_ptrtostr(prop[0], POSI), &(obj->pos))) \
@@ -94,7 +94,7 @@ int		set_object2(t_scene *scene, char **prop, int type)
 
 	intersect[2] = cy_intersect;
 	intersect[3] = co_intersect;
-	if (!(obj = init_sobj(&(scene->obj), &(scene->nb_obj))))
+	if (!(obj = init_sobj(&(scene->objs), &(scene->nb_obj))))
 		return (0);
 	obj->type = type;
 	if (!((get_vec(ft_ptrtostr(prop[0], POSI), &(obj->pos))) \

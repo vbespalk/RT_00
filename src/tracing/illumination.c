@@ -24,7 +24,7 @@ int		ft_iscollide
 	t_object	*o;
 	t_vector	coll;
 
-	origin = ft_3_vector_add(origin, direct);
+	origin = origin + ft_3_vector_scale(direct, 0.1f);
 	o_node = scn->objs;
 	while (o_node)
 	{
@@ -80,20 +80,20 @@ void	ft_affect_illumination
 	ft_affect_phong(coll, l, phong_cos);
 }
 
-void	ft_illuminate_with(t_parg *parg, t_coll *coll, t_light *l)
+void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 {
 	float		norm_light_cos;
 	t_vector	ldir;
 
 	ldir = (l->type == POINT) ? ft_3_vectornew(coll->coll_pnt, l->origin) :
-		ft_3_vector_scale(l->direct, -1.0);
+		ft_3_vector_scale(l->direct, -1.0f);
 	norm_light_cos = ft_3_vector_cos(coll->norm, ldir);
 	if (norm_light_cos >= 0 &&
 		!ft_iscollide(parg->e->scn, coll->coll_pnt, ldir, l))
 		ft_affect_illumination(coll, l, ldir, norm_light_cos);
 }
 
-void	ft_illuminate(t_parg *parg, t_coll *coll)
+void	ft_illuminate(t_thrarg *parg, t_coll *coll)
 {
 	t_list		*node;
 	t_light		*l;

@@ -42,12 +42,14 @@
 
 # define BRIGHT_UNIT	20000.0
 
+# define DEFAULT_REFR	1.0f
+
 # define DEPTH			10
 
 # define THREADS		8
 
 # define KOEF			0
-# define DBL			1
+# define FLT			1
 # define STR			2
 # define PNT			3
 # define COLOR			4
@@ -78,12 +80,12 @@
 # include "libpnt.h"
 
 typedef	float		t_matrix[4][4];
-
+typedef uint8_t		t_byte;
 
 typedef union		u_color
 {
 	int				val;
-	t_vector		argb;
+	t_byte			argb[4];
 }					t_color;
 
 typedef enum		e_ltype
@@ -133,15 +135,13 @@ typedef struct		s_object
 /*
 ** functions for intersection / search etc.
 */
-	int				(*intersect)();
-	// int				(*ft_is_reachable)
-	// 					(void *fig, t_vector origin, t_vector direct);
-	// t_vector		(*ft_collide)
-	// 					(void *fig, t_vector origin, t_vector direct);
-	// int				(*ft_is_inside)(void *fig, t_vector point);
-	// t_vector		(*ft_get_norm)(void *fig, t_vector coll);
-
-	struct s_object	*next;
+//	int				(*intersect)();
+	int				(*ft_is_reachable)
+	 					(void *fig, t_vector origin, t_vector direct);
+	t_vector		(*ft_collide)
+	 					(void *fig, t_vector origin, t_vector direct);
+	int				(*ft_is_inside)(void *fig, t_vector point);
+	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
 }					t_object;
 
 typedef struct		s_plane
@@ -182,22 +182,20 @@ typedef struct		s_cone
 
 typedef struct		s_light
 {
-	t_vector		pos;
-	unsigned int	rad;
-	t_vector		col;
-	t_vector		dir;
-	float			r2;
-	struct s_light	*next;
+	t_ltype			type;
+	t_color			color;
+	float			bright;
+	t_vector		origin;
+	t_vector		direct;
 }					t_light;
 
 typedef struct		s_camera
 {
-	t_vector		cam_angles;
-	t_vector		cam_transl;
-	float			fov;
-	float			start_refr;
 	t_vector		origin;
 	t_vector		direct;
+	float			angles[3];
+	t_vector		cam_transl;
+	float			fov;
 	t_matrix		wto_cam;
 
 	t_vector		vs_start_point;
@@ -206,27 +204,32 @@ typedef struct		s_camera
 	t_vector		vs_y_step_vec;
 }					t_camera;
 
-typedef struct			s_rhhn
+/*
+**	Hit Transparent Objects List
+*/
+
+typedef struct		s_hit
 {
-	struct s_object		*o;
-	struct s_rhhn		*prev;
-	struct s_rhhn		*next;
-}						t_rhhn;
+	struct s_object	*o;
+	struct s_hit	*prev;
+	struct s_hit	*next;
+}					t_hit;
 
 typedef struct		s_scene
 {
 	unsigned int	nb_obj;
 	unsigned int	nb_light;
 	t_color			bg_color;
+	char			*name;
 	t_vector		r_ori; //
 	// t_vector		cam_pos; //
 	// t_vector		cam_dir; //
 	// t_vector		cam_transl; //
 	// t_vector		cam_angles; //
 	// t_matrix		wto_cam; //
-	t_rhhn			*(rhhns[THREADS]);
-	t_light			*light;
-	t_object		*obj;
+	t_hit			*(hits[THREADS]);
+	t_list			*lights;
+	t_list			*objs;
 	t_camera		*cam;
 }					t_scene;
 
@@ -246,9 +249,9 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 
 typedef struct 		s_environment
 {
-	t_scene			*scene;
-	t_light			*light;
-	t_object		*obj;
+	t_scene			*scn;
+//	t_light			*light;//
+//	t_object		*obj;//
 	float			asp_rat;
 	t_object		**pix_obj;
 	t_object		*selected;
@@ -261,11 +264,13 @@ typedef struct 		s_environment
 ** -----------------------------------------DIFFERENT-----------------------------------------------------
 */
 
-typedef struct			s_parg
+typedef struct		s_thrarg
 {
-	int					section;
-	t_env				*e;
-}						t_parg;
+	int				i;
+//	int				pix_x;
+//	int				pix_y;
+	t_env			*e;
+}					t_thrarg;
 
 typedef	struct		s_thread
 {
@@ -406,15 +411,15 @@ typedef struct			s_collision
 }						t_coll;
 
 /*
-**	rhhn.c
+**	hit.c
 */
 
-t_rhhn					*ft_rhhn_list_new(int length);
-void					ft_rhhn_hit
-	(t_rhhn *head, t_object *o, float (*refr)[2]);
+t_hit					*ft_hit_list_new(int length);
+void					ft_handle_hit
+							(t_hit *head, t_object *o, float (*refr)[2]);
 
 /*
-**	scene.c
+**	scn.c
 */
 
 t_scene					*ft_scenenew(void);
@@ -550,9 +555,9 @@ t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
 */
 
 t_color					ft_throw_rays
-							(t_parg *parg, t_coll coll, t_vector *vec,
+							(t_thrarg *parg, t_coll coll, t_vector *vec,
 							 float num[2]);
-t_color					ft_trace_ray(t_parg *parg, int x, int y);
+t_color					ft_trace_ray(t_thrarg *parg, int x, int y);
 
 /*
 **	ray_utils.c
@@ -568,14 +573,14 @@ t_color					ft_sum_colors
 **	illumination.c
 */
 
-void					ft_illuminate(t_parg *parg, t_coll *coll);
+void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 
 /*
 **	collision.c
 */
 
 t_coll					ft_get_collision
-							(t_parg *parg, t_vector origin, t_vector direct);
+							(t_thrarg *parg, t_vector origin, t_vector direct);
 
 /*
 **	utils.c

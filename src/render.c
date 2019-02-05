@@ -58,7 +58,7 @@ t_vector	ray_generate(const t_env *e, int i, int j)
 	t_scene		*scene;
 	t_vector	dir;
 
-	scene = e->scene;
+	scene = e->scn;
 	dir[0] = ((2.0f * (i + 0.5f) / e->sdl->scr_wid - 1.0f) * e->asp_rat * \
 		tan(scene->cam->fov / 2.0f));
 	dir[1] = ((1.0f - (2 * (j + 0.5f) / e->sdl->scr_hei)) * tan(scene->cam->fov / 2.0f));
@@ -89,7 +89,7 @@ void		render(t_env *e, t_scene *sc)
 		ob = ob->next;
 	}
 	ft_bzero(e->pix_obj, sizeof(t_object *) * e->sdl->scr_hei * e->sdl->scr_wid);
-	transform_mat(&(sc->cam->wto_cam), sc->cam->cam_transl, sc->cam->cam_angles, 1.0f);
+	transform_mat(&(sc->cam->wto_cam), sc->cam->cam_transl, sc->cam->angles, 1.0f);
 	ft_bzero(&(sc->r_ori), sizeof(t_vector));
 	vec_multipl(&(sc->cam->wto_cam), &(sc->r_ori));
 	// printf("%f,%f,%f\n%f,%f,%f\n%f,%f,%f\n", );

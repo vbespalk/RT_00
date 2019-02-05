@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scene.c                                            :+:      :+:    :+:   */
+/*   scn.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -39,7 +39,7 @@ t_scene		*ft_get_scene(char *file_name)
 	i = -1;
 	length = ft_lstlen(&(scn->objs));
 	while (++i < THREADS)
-		scn->rhhns[i] = ft_rhhn_list_new(length);
+		scn->hits[i] = ft_hit_list_new(length);
 	return (scn);
 }
 
@@ -55,6 +55,5 @@ void		ft_parse_scene(char *attr, t_scene *scn)
 		ft_read_attr((void *)&(scn->name), ptr, STR);
 		free(to_free);
 	}
-	if ((ptr = ft_search_attr(attr, "world_color:", FTSA_IN_SCOPE)))
-		ft_read_attr((void *)&(scn->bg_color), ptr, COLOR);
+	ft_get_attr_in_scope(attr, "bg_color:", (void *)&(scn->bg_color), COLOR);
 }

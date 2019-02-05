@@ -17,7 +17,7 @@ t_camera			*ft_cameranew(void)
 	t_camera	*cam;
 
 	cam = ft_smemalloc(sizeof(t_camera), "ft_cameranew");
-	cam->origin = ft_3_pointnew(-500.0f, 0.0f, 0.0f);
+	cam->origin = (t_vector){ -500.0f, 0.0f, 0.0f };
 	cam->fov = (float)ft_torad(100.0f);
 	return (cam);
 }
@@ -26,15 +26,15 @@ char				*ft_parse_camera(char *attr, t_scene *scn)
 {
 	attr = ft_get_curve(attr, '{');
 	ft_get_attr_in_scope(attr, "origin:", (void *)&(scn->cam->origin), PNT);
-	ft_get_attr_in_scope(attr, "alpha:", (void *)&(scn->cam->alpha), FLT);
-	ft_get_attr_in_scope(attr, "beta:", (void *)&(scn->cam->beta), FLT);
-	ft_get_attr_in_scope(attr, "gamma:", (void *)&(scn->cam->gamma), FLT);
+	ft_get_attr_in_scope(attr, "alpha:", (void *)&(scn->cam->angles[0]), FLT);
+	ft_get_attr_in_scope(attr, "beta:", (void *)&(scn->cam->angles[1]), FLT);
+	ft_get_attr_in_scope(attr, "gamma:", (void *)&(scn->cam->angles[2]), FLT);
 	ft_get_attr_in_scope(attr, "fov:", (void *)&(scn->cam->fov), FLT);
 	scn->cam->fov = (float)ft_limitf(FOV_MIN, FOV_MAX, scn->cam->fov);
 	scn->cam->fov = (float)ft_torad(scn->cam->fov);
-	scn->cam->alpha = (float)ft_torad(scn->cam->alpha);
-	scn->cam->beta = (float)ft_torad(scn->cam->beta);
-	scn->cam->gamma = (float)ft_torad(scn->cam->gamma);
+	scn->cam->angles[0] = (float)ft_torad(scn->cam->angles[0]);
+	scn->cam->angles[1] = (float)ft_torad(scn->cam->angles[1]);
+	scn->cam->angles[2] = (float)ft_torad(scn->cam->angles[2]);
 	return (ft_get_curve(attr, '}'));
 }
 
@@ -44,7 +44,7 @@ static void			ft_add_start_object(t_scene *scn, t_object *o)
 
 	i = -1;
 	while (++i < THREADS)
-		scn->rhhns[i]->o = o;
+		scn->hits[i]->o = o;
 }
 
 static t_object		*ft_get_inner_object(t_list *objs, t_vector point)
@@ -55,7 +55,7 @@ static t_object		*ft_get_inner_object(t_list *objs, t_vector point)
 	t_object	*o;
 	t_object	*res;
 
-	direct = ft_3_pointnew(1.0f, 0.0f, 0.0f);
+	direct = (t_vector){ 1.0f, 0.0f, 0.0f };
 	min_dist = FLT_MAX;
 	res = NULL;
 	while (objs)

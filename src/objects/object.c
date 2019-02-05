@@ -18,10 +18,10 @@ t_object	*ft_objectnew(void)
 
 	obj = ft_smemalloc(sizeof(t_object), "ft_objectnew");
 	obj->color.val = 0xffff00;
-	obj->ambnt = 0.1;
-	obj->diff = 1.0;
+	obj->ambnt = 0.1f;
+	obj->diff = 1.0f;
 	obj->phong = 0;
-	obj->refr = 1.0;
+	obj->refr = 1.0f;
 	return (obj);
 }
 
@@ -30,7 +30,7 @@ static void	ft_balance_koefs(t_object *o)
 	float	sum;
 
 	sum = o->diff + o->trans + o->spclr;
-	if (sum > 1.0)
+	if (sum > 1.0f)
 	{
 		o->diff /= sum;
 		o->trans /= sum;
@@ -56,8 +56,8 @@ t_object	*ft_parse_object(char *attr)
 	ft_get_attr_in_scope(attr, "translate:", (void *)(&(o->translate)), PNT);
 	ft_get_attr_in_scope(attr, "rotate:", (void *)(&(o->rotate)), PNT);
 	ft_balance_koefs(o);
-	o->rotate.x = (float)ft_torad(o->rotate.x);
-	o->rotate.y = (float)ft_torad(o->rotate.y);
-	o->rotate.z = (float)ft_torad(o->rotate.z);
+	o->rotate[0] = (float)ft_torad(o->rotate[0]);
+	o->rotate[1] = (float)ft_torad(o->rotate[1]);
+	o->rotate[2] = (float)ft_torad(o->rotate[2]);
 	return (o);
 }

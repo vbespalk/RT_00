@@ -25,14 +25,14 @@ void		ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4])
 	float		dist;
 
 	a = ft_3_line_line_inter((*pnt)[0], (*pnt)[1], cone->base, cone->bv);
-	if ((dist = ft_3_line_point_dist(cone->base, cone->bv, a)) >
-		cone->base_rad ||
+	dist = ft_3_line_point_dist(cone->base, cone->bv, a);
+	if (dist > cone->base_rad ||
 		ft_3_vector_cos((*pnt)[1], ft_3_vectornew((*pnt)[0], a)) < 0)
 		return (ft_set_coll_pnts_null(&((*pnt)[0]), &((*pnt)[1])));
-	s = (float)(cone->base_rad * sqrt(1 - pow(dist / cone->base_rad, 2)) /
-		sqrt(1 - pow(ft_3_vector_cos(cone->bv, (*pnt)[1]), 2)));
-	(*pnt)[0] = ft_3_vector_add(a, ft_3_vector_scale((*pnt)[1], -s));
-	(*pnt)[1] = ft_3_vector_add(a, ft_3_vector_scale((*pnt)[1], s));
+	s = cone->base_rad * (float)sqrt(1 - pow(dist / cone->base_rad, 2)) /
+		(float)sqrt(1 - pow(ft_3_vector_cos(cone->bv, (*pnt)[1]), 2));
+	(*pnt)[0] = a + ft_3_vector_scale((*pnt)[1], -s);
+	(*pnt)[1] = a + ft_3_vector_scale((*pnt)[1], s);
 }
 
 void		ft_is_between_planes

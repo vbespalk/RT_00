@@ -19,22 +19,22 @@ t_vector	ft_atopoint3(char *str)
 	while (*str && *str != '(')
 		++str;
 	if (!*str)
-		ft_error("invalid scene file");
-	point.x = (float)ft_atod(++str);
+		ft_error("invalid scn file");
+	point[0] = (float)ft_atod(++str);
 	while (*str && *str != ',')
 		++str;
 	if (!*str)
-		ft_error("invalid scene file");
-	point.y = (float)ft_atod(++str);
+		ft_error("invalid scn file");
+	point[1] = (float)ft_atod(++str);
 	while (*str && *str != ',')
 		++str;
 	if (!*str)
-		ft_error("invalid scene file");
-	point.z = (float)ft_atod(++str);
+		ft_error("invalid scn file");
+	point[2] = (float)ft_atod(++str);
 	while (*str && *str != ')')
 		++str;
 	if (!*str)
-		ft_error("invalid scene file");
+		ft_error("invalid scn file");
 	return (point);
 }
 
@@ -76,13 +76,13 @@ void		ft_read_attr(void *dst, char *attr, int type)
 		++attr;
 	++attr;
 	if ((i = (long long)ft_strchr(attr, ';') - (long long)attr) < 0)
-		ft_error("invalid scene file");
+		ft_error("invalid scn file");
 	data = ft_strsub(attr, 0, i);
 	to_free = data;
 	data = ft_strtrim(data);
 	free(to_free);
 	if (type == KOEF)
-		*((float *)dst) = (float)ft_limitf(0, 1, ft_atod(data));
+		*((float *)dst) = (float)ft_limitf(0, 1, (float)ft_atod(data));
 	else if (type == FLT)
 		*((float *)dst) = (float)ft_atod(data);
 	else if (type == STR)
@@ -90,7 +90,8 @@ void		ft_read_attr(void *dst, char *attr, int type)
 	else if (type == PNT)
 		*((t_vector *)dst) = ft_atopoint3(data);
 	else
-		(*((t_color *)dst)).val = ft_limit(0, 0xffffff, ft_atoi_base(data, 16));
+		(*((t_color *)dst)).val = ft_limit(
+			0, 0xffffff, (int)ft_atoi_base(data, 16));
 	free(data);
 }
 

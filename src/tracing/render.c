@@ -19,22 +19,22 @@
 
 void	*ft_section_handle(void *arg)
 {
-	t_parg		*parg;
+	t_thrarg	*thrarg;
 	int			x[2];
 	int			y[2];
 	int			y_iter;
 
-	parg = (t_parg *)arg;
-	x[0] = (parg->section % 4) * (WIN_WIDTH / (THREADS / 2)) - 1;
-	y[0] = (parg->section / 4) * (WIN_HEIGHT / 2) - 1;
-	x[1] = x[0] + WIN_WIDTH / (THREADS / 2) + 1;
-	y[1] = y[0] + WIN_HEIGHT / 2 + 1;
+	thrarg = (t_thrarg *)arg;
+	x[0] = (thrarg->i % 4) * (SCR_WID / (THREADS / 2)) - 1;
+	y[0] = (thrarg->i / 4) * (SCR_WID / 2) - 1;
+	x[1] = x[0] + SCR_WID / (THREADS / 2) + 1;
+	y[1] = y[0] + SCR_HEI / 2 + 1;
 	while (++x[0] < x[1])
 	{
 		y_iter = y[0];
 		while (++y_iter < y[1])
-			ft_pixel_put_image(parg->e, x[0], y_iter,
-				ft_trace_ray(parg, x[0], y_iter).val);
+//			ft_pixel_put_image(parg->e, x[0], y_iter,
+//				ft_trace_ray(parg, x[0], y_iter).val);
 	}
 	return (NULL);
 }
@@ -42,20 +42,20 @@ void	*ft_section_handle(void *arg)
 void	ft_render(t_env *e)
 {
 	pthread_t	threads[THREADS];
-	t_parg		pargs[THREADS];
+	t_thrarg	thrargs[THREADS];
 	int			i;
 
-	ft_get_start_refr(e->scene);
+	ft_get_start_refr(e->scn);
 	i = -1;
 	while (++i < THREADS)
 	{
-		pargs[i].section = i;
-		pargs[i].e = e;
+		thrargs[i].i = i;
+		thrargs[i].e = e;
 	}
 	i = -1;
 	while (++i < THREADS)
 		pthread_create(&threads[i], NULL,
-			ft_section_handle, (void *)&pargs[i]);
+			ft_section_handle, (void *)&thrargs[i]);
 	i = -1;
 	while (++i < THREADS)
 		pthread_join(threads[i], NULL);

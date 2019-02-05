@@ -28,7 +28,7 @@ void	*thread_funct(void *ptr)
 		while (++i < th->env->sdl->scr_wid)
 		{
 			ray.dir = ray_generate(th->env, i, j);
-			ray.ori = th->env->scene->r_ori;
+			ray.ori = th->env->scn->r_ori;
 			if (cast_ray(&ray, th->env, j * th->env->sdl->scr_wid + i))
 			{
 				color = get_rgb(th->env->sdl, ray.hit_c[0], ray.hit_c[1], ray.hit_c[2]);

@@ -15,21 +15,25 @@
 static void	ft_get_vs_params(t_camera *cam)
 {
 	cam->direct = ft_3_vector_rotate(
-		ft_3_pointnew(1.0f, 0.0f, 0.0f), cam->alpha, cam->beta, cam->gamma);
+		(t_vector){ 1.0f, 0.0f, 0.0f },
+		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_vec = ft_3_vector_rotate(
-		ft_3_vectornew(ft_3_pointnew(0.0f, 0.0f, 0.0f),
-			ft_3_pointnew(0.0f, WIN_HEIGHT / 2.0f, -WIN_WIDTH / 2.0f)),
-			cam->alpha, cam->beta, cam->gamma);
+		(t_vector){ 0.0f, SCR_HEI / 2.0f, -SCR_WID / 2.0f },
+		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_x_step_vec = ft_3_vector_rotate(
-		ft_3_pointnew(0.0f, 0.0f, 1.0f), cam->alpha, cam->beta, cam->gamma);
+		(t_vector){ 0.0f, 0.0f, 1.0f },
+		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_y_step_vec = ft_3_vector_rotate(
-		ft_3_pointnew(0.0f, -1.0f, 0.0f), cam->alpha, cam->beta, cam->gamma);
-	cam->vs_start_point = ft_3_vector_add(
-		cam->vs_start_vec, ft_3_vector_add(
-			cam->origin, ft_3_vector_rotate(
-				ft_3_pointnew(
-				(WIN_WIDTH / 2.0f) / (float)tan(cam->fov / 2.0f), 0.0f, 0.0f),
-				cam->alpha, cam->beta, cam->gamma)));
+		(t_vector){ 0.0f, -1.0f, 0.0f },
+		cam->angles[0], cam->angles[1], cam->angles[2]);
+	cam->vs_start_point = cam->vs_start_vec + cam->origin +
+		ft_3_vector_rotate(
+			(t_vector){
+				(SCR_WID / 2.0f) / (float)tan(cam->fov / 2.0f),
+				0.0f,
+				0.0f
+			},
+			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
 void		ft_parse(char *content, t_scene *scn)
@@ -39,9 +43,9 @@ void		ft_parse(char *content, t_scene *scn)
 	char	*to_free;
 
 	if (!content)
-		ft_error("scene file is empty");
+		ft_error("scn file is empty");
 	to_free = content;
-	if ((attr = ft_search_attr(content, "scene", FTSA_GLOBALLY)))
+	if ((attr = ft_search_attr(content, "scn", FTSA_GLOBALLY)))
 		ft_parse_scene(attr, scn);
 	if ((attr = ft_search_attr(content, "camera", FTSA_GLOBALLY)))
 		ft_parse_camera(attr, scn);
@@ -66,6 +70,6 @@ char		*ft_get_curve(char *attr, char curve)
 	while (*attr && *attr != curve)
 		++attr;
 	if (!*attr)
-		ft_error("invalid scene file");
+		ft_error("invalid scn file");
 	return (attr + 1);
 }

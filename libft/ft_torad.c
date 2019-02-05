@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-double		ft_torad(double degrees)
+float		ft_torad(float degrees)
 {
-	return (degrees * M_PI / 180.0);
+	return (degrees * (float)M_PI / 180.0f);
 }

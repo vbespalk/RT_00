@@ -17,8 +17,8 @@ t_plane		*ft_planenew(void)
 	t_plane	*pln;
 
 	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
-	pln->origin = ft_3_pointnew(0.0, -1000.0, 0.0);
-	pln->norm = ft_3_pointnew(0.0, 1.0, 0.0);
+	pln->origin = (t_vector){ 0.0, -1000.0, 0.0 };
+	pln->norm = (t_vector){ 0.0, 1.0, 0.0 };
 	return (pln);
 }
 
@@ -39,13 +39,12 @@ char		*ft_parse_plane(char *attr, t_scene *scn)
 	ft_get_attr_in_scope(attr, "origin:", (void *)(&(pln->origin)), PNT);
 	ft_get_attr_in_scope(attr, "norm:", (void *)(&(pln->norm)), PNT);
 	if (ft_3_vector_len(pln->norm) == 0.0)
-		pln->norm = ft_3_pointnew(0.0, 1.0, 0.0);
+		pln->norm = (t_vector){ 0.0, 1.0, 0.0 };
 	pln->norm = ft_3_tounitvector(pln->norm);
-	pln->norm = ft_3_tounitvector(ft_3_vector_rotate(pln->norm,
-													 obj->rotate.x,
-													 obj->rotate.y,
-													 obj->rotate.z));
-	pln->origin = ft_3_vector_add(pln->origin, obj->translate);
+	pln->norm = ft_3_tounitvector(
+		ft_3_vector_rotate(
+			pln->norm, obj->rotate[0], obj->rotate[1], obj->rotate[2]));
+	pln->origin += obj->translate;
 	obj->fig = pln;
 	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
 	return (ft_get_curve(attr, '}'));

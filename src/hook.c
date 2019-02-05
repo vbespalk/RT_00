@@ -19,19 +19,19 @@ void	on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		|| sum == SDLK_LSHIFT || sum == SDLK_LCTRL)
 	{
 		e->selected ? translate(sum, &(e->selected->translate), 0) : \
-	translate(sum, &(e->scene->cam->cam_transl), 1);
+	translate(sum, &(e->scn->cam->cam_transl), 1);
 	}
 	if (sum == SDLK_UP || sum == SDLK_DOWN || \
 		sum == SDLK_LEFT || sum == SDLK_RIGHT || \
 		sum == SDLK_PAGEDOWN|| sum == SDLK_PAGEUP)
 	{
 		e->selected ? rotate(sum, &(e->selected->rotate)) : \
-	cam_rotate(sum, &(e->scene->cam->cam_angles));
+	cam_rotate(sum, &(e->scn->cam->angles));
 	}
 	if (sum == SDLK_z || sum == SDLK_x)
 	{
 		e->selected ? scale(sum, &(e->selected->scale), 0) : \
-	scale(sum, &(e->scene->cam->fov), 1);
+	scale(sum, &(e->scn->cam->fov), 1);
 	}
 	if (sum == SDLK_DELETE && e->selected)
 		delete_obj(&(e->obj), e->selected->id);
@@ -51,7 +51,7 @@ void	on_mouse_wheel(Sint32 y, Uint32 dir, t_env *e)
 	else
 		sum = (y < 0) ? SDLK_z : SDLK_x;
 	e->selected ? scale(sum, &(e->selected->scale), 0) : \
-	scale(sum, &(e->scene->cam->fov), 1);
+	scale(sum, &(e->scn->cam->fov), 1);
 	
 }
 

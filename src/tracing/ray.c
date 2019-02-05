@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-static t_color	ft_throw_ray(t_parg *parg, t_vector od[2], int depth)
+static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], int depth)
 {
 	t_coll		coll;
 	t_color		spclr_col;
@@ -62,7 +62,7 @@ t_color			ft_add_blur_colors(t_color sum, int num, t_color new)
 }
 
 t_color			ft_throw_rays
-					(t_parg *parg, t_coll coll, t_vector *vec, float num[2])
+					(t_thrarg *parg, t_coll coll, t_vector *vec, float num[2])
 {
 	float		max_angle;
 	int			rays;
@@ -70,7 +70,7 @@ t_color			ft_throw_rays
 	t_color		color[2];
 	t_vector	od[2];
 
-	max_angle = (float)ft_torad(num[0] * 10.0f);
+	max_angle = ft_torad(num[0] * 10.0f);
 	rays = ft_limit(1, 10, (int)(sin(max_angle) * 10.0));
 	i = -1;
 	color[1].val = 0;
@@ -86,17 +86,15 @@ t_color			ft_throw_rays
 	return (color[1]);
 }
 
-t_color			ft_trace_ray(t_parg *parg, int x, int y)
+t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 {
 	t_color		res;
 	t_vector	od[2];
 
 	od[0] = parg->e->scn->cam->origin;
 	od[1] = parg->e->scn->cam->vs_start_point;
-	od[1] = ft_3_vector_add(od[1],
-		ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x));
-	od[1] = ft_3_vector_add(od[1],
-		ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y));
+	od[1] = od[1] + ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x);
+	od[1] = od[1] + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	od[1] = ft_3_unitvectornew(parg->e->scn->cam->origin, od[1]);
 	res = ft_throw_ray(parg, od, 0);
 	return (res);

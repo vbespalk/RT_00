@@ -1,13 +1,11 @@
 
 #include "rt.h"
 
-t_rhhn			*ft_rhhn_list_new(int length)
+t_hit			*ft_hit_list_new(int length)
 {
-	write(1, "in ft_rhhn_list_new\n", 21);
-
-	t_rhhn	*head;
-	t_rhhn	*prev;
-	t_rhhn	*node;
+	t_hit	*head;
+	t_hit	*prev;
+	t_hit	*node;
 	int		i;
 
 	head = NULL;
@@ -15,7 +13,7 @@ t_rhhn			*ft_rhhn_list_new(int length)
 	i = 0;
 	while (i < length)
 	{
-		node = (t_rhhn *)ft_smemalloc(sizeof(t_rhhn), "ft_rhhnnew");
+		node = (t_hit *)ft_smemalloc(sizeof(t_hit), "ft_hit_list_new");
 		node->prev = prev;
 		if (!i)
 			head = node;
@@ -28,16 +26,16 @@ t_rhhn			*ft_rhhn_list_new(int length)
 	return (head);
 }
 
-static void		ft_rhhn_push(t_rhhn *node, t_object *o, float (*refr)[2])
+static void		ft_hit_push(t_hit *node, t_object *o, float (*refr)[2])
 {
 	node->o = o;
 	(*refr)[0] = (node->prev) ? node->prev->o->refr : DEFAULT_REFR;
 	(*refr)[1] = o->refr;
 }
 
-static void		ft_rhhn_remove(t_rhhn *node, t_object *o, float (*refr)[2])
+static void		ft_hit_remove(t_hit *node, t_object *o, float (*refr)[2])
 {
-	t_rhhn	*tmp;
+	t_hit	*tmp;
 
 	tmp = node;
 	(*refr)[0] = o->refr;
@@ -61,12 +59,12 @@ static void		ft_rhhn_remove(t_rhhn *node, t_object *o, float (*refr)[2])
 	tmp->o = NULL;
 }
 
-void			ft_rhhn_hit(t_rhhn *head, t_object *o, float (*refr)[2])
+void			ft_handle_hit(t_hit *head, t_object *o, float (*refr)[2])
 {
 	while (head->o && head->o != o)
 		head = head->next;
 	if (!(head->o))
-		ft_rhhn_push(head, o, refr);
+		ft_hit_push(head, o, refr);
 	else
-		ft_rhhn_remove(head, o, refr);
+		ft_hit_remove(head, o, refr);
 }

@@ -14,5 +14,5 @@
 
 t_vector		ft_3_unitvectornew(t_vector origin, t_vector direct)
 {
-	return (ft_3_tounitvector(ft_3_vectornew(origin, direct)));
+	return (ft_3_tounitvector(direct - origin));
 }

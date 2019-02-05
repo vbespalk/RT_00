@@ -27,7 +27,7 @@ void		ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4])
 	a = ft_3_line_line_inter((*pnt)[0], (*pnt)[1], cone->base, cone->bv);
 	dist = ft_3_line_point_dist(cone->base, cone->bv, a);
 	if (dist > cone->base_rad ||
-		ft_3_vector_cos((*pnt)[1], ft_3_vectornew((*pnt)[0], a)) < 0)
+		ft_3_vector_cos((*pnt)[1], a - (*pnt)[0]) < 0)
 		return (ft_set_coll_pnts_null(&((*pnt)[0]), &((*pnt)[1])));
 	s = cone->base_rad * (float)sqrt(1 - pow(dist / cone->base_rad, 2)) /
 		(float)sqrt(1 - pow(ft_3_vector_cos(cone->bv, (*pnt)[1]), 2));
@@ -41,15 +41,15 @@ void		ft_is_between_planes
 	t_vector	bv;
 	t_vector	vb;
 
-	bv = ft_3_vectornew(base, vert);
+	bv = vert - base;
 	vb = ft_3_vector_scale(bv, -1);
 	if (ft_3_isnullpoint((*pnt)[0]) ||
-		ft_3_vector_cos(bv, ft_3_vectornew(base, (*pnt)[0])) < 0 ||
-		ft_3_vector_cos(vb, ft_3_vectornew(vert, (*pnt)[0])) < 0)
+		ft_3_vector_cos(bv, (*pnt)[0] - base) < 0 ||
+		ft_3_vector_cos(vb, (*pnt)[0] - vert) < 0)
 		(*pnt)[0] = ft_3_nullpointnew();
 	if (ft_3_isnullpoint((*pnt)[1]) ||
-		ft_3_vector_cos(bv, ft_3_vectornew(base, (*pnt)[1])) < 0 ||
-		ft_3_vector_cos(vb, ft_3_vectornew(vert, (*pnt)[1])) < 0)
+		ft_3_vector_cos(bv, (*pnt)[1] - base) < 0 ||
+		ft_3_vector_cos(vb, (*pnt)[1] - vert) < 0)
 		(*pnt)[1] = ft_3_nullpointnew();
 }
 
@@ -58,11 +58,11 @@ void		ft_collide_cone_planes
 				t_vector direct, t_vector (*pnt)[4])
 {
 	(*pnt)[2] = ft_3_line_plane_inter(cone->base, cone->bv, origin, direct);
-	if (ft_3_vector_cos(direct, ft_3_vectornew(origin, (*pnt)[2])) < 0 ||
+	if (ft_3_vector_cos(direct, (*pnt)[2] - origin) < 0 ||
 		ft_3_point_point_dist(cone->base, (*pnt)[2]) > fabs(cone->base_rad))
 		(*pnt)[2] = ft_3_nullpointnew();
 	(*pnt)[3] = ft_3_line_plane_inter(cone->vert, cone->bv, origin, direct);
-	if (ft_3_vector_cos(direct, ft_3_vectornew(origin, (*pnt)[3])) < 0 ||
+	if (ft_3_vector_cos(direct, (*pnt)[3] - origin) < 0 ||
 		ft_3_point_point_dist(cone->vert, (*pnt)[3]) > fabs(cone->vert_rad))
 		(*pnt)[3] = ft_3_nullpointnew();
 }

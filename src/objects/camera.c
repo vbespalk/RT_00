@@ -31,10 +31,10 @@ char				*ft_parse_camera(char *attr, t_scene *scn)
 	ft_get_attr_in_scope(attr, "gamma:", (void *)&(scn->cam->angles[2]), FLT);
 	ft_get_attr_in_scope(attr, "fov:", (void *)&(scn->cam->fov), FLT);
 	scn->cam->fov = (float)ft_limitf(FOV_MIN, FOV_MAX, scn->cam->fov);
-	scn->cam->fov = (float)ft_torad(scn->cam->fov);
-	scn->cam->angles[0] = (float)ft_torad(scn->cam->angles[0]);
-	scn->cam->angles[1] = (float)ft_torad(scn->cam->angles[1]);
-	scn->cam->angles[2] = (float)ft_torad(scn->cam->angles[2]);
+	scn->cam->fov = ft_torad(scn->cam->fov);
+	scn->cam->angles[0] = ft_torad(scn->cam->angles[0]);
+	scn->cam->angles[1] = ft_torad(scn->cam->angles[1]);
+	scn->cam->angles[2] = ft_torad(scn->cam->angles[2]);
 	return (ft_get_curve(attr, '}'));
 }
 

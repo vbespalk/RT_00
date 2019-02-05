@@ -39,7 +39,7 @@ void		ft_get_coll_pnts(t_cone *cone, t_vector (*pnt)[4], int is_cyl)
 	v_co[0] = ft_3_vector_scale(cone->bv, -1.0f);
 	cos_t_2 = (float)pow(cone->bv_dist / sqrt(
 		pow(cone->base_rad - cone->vert_rad, 2) + pow(cone->bv_dist, 2)), 2);
-	v_co[1] = ft_3_vectornew(cone->main_vert, (*pnt)[0]);
+	v_co[1] = (*pnt)[0] - cone->main_vert;
 	dv_dot = ft_3_vector_dot((*pnt)[1], v_co[0]);
 	cov_dot = ft_3_vector_dot(v_co[1], v_co[0]);
 	ft_solve_sqr((float)pow(dv_dot, 2) - cos_t_2, 2.0f *
@@ -64,10 +64,10 @@ int			ft_is_inside_cone(void *fig, t_vector point)
 	float		rad;
 
 	cone = (t_cone *)fig;
-	bv = ft_3_vectornew(cone->base, cone->vert);
+	bv = cone->vert - cone->base;
 	vb = ft_3_vector_scale(bv, -1);
-	if (ft_3_vector_cos(bv, ft_3_vectornew(cone->base, point)) < 0 ||
-		ft_3_vector_cos(vb, ft_3_vectornew(cone->vert, point)) < 0)
+	if (ft_3_vector_cos(bv, point - cone->base) < 0 ||
+		ft_3_vector_cos(vb, point - cone->vert) < 0)
 		return (0);
 	proj = ft_3_line_point_proj(cone->base, ft_3_tounitvector(bv), point);
 	rad = cone->base_rad + (cone->vert_rad - cone->base_rad) *
@@ -91,8 +91,8 @@ t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 	if (cone->base_rad == cone->vert_rad)
 		return (ft_3_unitvectornew(proj, coll));
 	sign = (cone->base_rad > cone->vert_rad) ? 1.0f : -1.0f;
-	sign *= (ft_3_vector_cos(ft_3_vectornew(cone->main_vert, cone->base),
-		ft_3_vectornew(cone->main_vert, proj)) < 0) ? -1.0f : 1.0f;
+	sign *= (ft_3_vector_cos(cone->base - cone->main_vert,
+		proj - cone->main_vert) < 0) ? -1.0f : 1.0f;
 	return (ft_3_tounitvector(ft_3_vector_turn(cone->bv,
 		ft_3_unitvectornew(proj, coll), sign * cone->side_norm_angle)));
 }

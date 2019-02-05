@@ -11,7 +11,7 @@ int			ft_is_reachable_sphere(void *fig, t_vector origin, t_vector direct)
 		return (1);
 	if (ft_3_line_point_dist(origin, direct, sph->origin) > sph->radius)
 		return (0);
-	cos = ft_3_vector_cos(direct, ft_3_vectornew(origin, sph->origin));
+	cos = ft_3_vector_cos(direct, sph->origin - origin);
 	return ((cos > 0) ? 1 : 0);
 }
 

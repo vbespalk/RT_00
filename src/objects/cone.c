@@ -42,12 +42,13 @@ void		ft_cone_init(t_object *obj, t_cone *cone)
 		cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
 }
 
-char		*ft_parse_cone(char *attr, t_scene *scn)
+char		*ft_parse_cone(char *attr, t_scene *scn, Uint32 id)
 {
 	t_object	*obj;
 	t_cone		*cone;
 
 	obj = ft_parse_object(attr);
+	obj->id = id; 
 	obj->ft_collide = ft_collide_cone;
 	obj->ft_is_reachable = ft_is_reachable_plane;
 	obj->ft_is_inside = ft_is_inside_cone;

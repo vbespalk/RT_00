@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], int depth)
+static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], Uint32 pix, int depth)
 {
 	t_coll		coll;
 	t_color		spclr_col;
@@ -22,6 +22,11 @@ static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], int depth)
 	spclr_col.val = 0;
 	trans_col.val = 0;
 	coll = ft_get_collision(parg, od[0], od[1]);
+	if (!depth)
+	{
+		// printf("pix %u\n", pix);
+		parg->e->pix_obj[pix] = coll.o;
+	}
 	if (!coll.o)
 		return (parg->e->scn->bg_color);
 	od[0] = coll.coll_pnt;
@@ -32,7 +37,7 @@ static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], int depth)
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
 			ft_throw_rays(parg, coll, &(coll.spclr_vec), num) :
-			ft_throw_ray(parg, od, depth + 1);
+			ft_throw_ray(parg, od, 0, depth + 1);
 	}
 	if (coll.o->trans && depth < DEPTH)
 	{
@@ -40,7 +45,7 @@ static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], int depth)
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
 			ft_throw_rays(parg, coll, &(coll.trans_vec), num) :
-			ft_throw_ray(parg, od, depth + 1);
+			ft_throw_ray(parg, od, 0, depth + 1);
 	}
 	return ((coll.o->phong != 0.0) ?
 		ft_apply_phong(ft_sum_colors(coll, spclr_col, trans_col),
@@ -80,7 +85,7 @@ t_color			ft_throw_rays
 		od[0] = coll.coll_pnt;
 		od[1] = ft_3_vector_turn(ft_get_blur_proj(coll.coll_pnt, *vec),
 			*vec, (float)rand() / (float)RAND_MAX * max_angle);
-		color[0] = ft_throw_ray(parg, od, (int)(num[1] + 1));
+		color[0] = ft_throw_ray(parg, od, 0, (int)(num[1] + 1));
 		color[1] = ft_add_blur_colors(color[1], i, color[0]);
 	}
 	return (color[1]);
@@ -96,6 +101,6 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	od[1] = od[1] + ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x);
 	od[1] = od[1] + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	od[1] = ft_3_unitvectornew(parg->e->scn->cam->origin, od[1]);
-	res = ft_throw_ray(parg, od, 0);
+	res = ft_throw_ray(parg, od, y * parg->e->sdl->scr_wid + x, 0);
 	return (res);
 }

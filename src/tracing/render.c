@@ -49,8 +49,8 @@ void	*ft_section_handle(void *arg)
 	int			y_iter;
 
 	thrarg = (t_thrarg *)arg;
-	x[0] = (thrarg->i % 4) * (thrarg->e->sdl->scr_wid / (THREADS / 2)) - 1;
-	y[0] = (thrarg->i / 4) * (thrarg->e->sdl->scr_hei / 2) - 1;
+	x[0] = (thrarg->i % 4) * (thrarg->e->sdl->scr_wid / (THREADS / 2) - 1);
+	y[0] = (thrarg->i / 4) * (thrarg->e->sdl->scr_hei / 2 - 1);
 	x[1] = x[0] + thrarg->e->sdl->scr_wid / (THREADS / 2) + 1;
 	y[1] = y[0] + thrarg->e->sdl->scr_hei / 2 + 1;
 

@@ -34,7 +34,10 @@ void	on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 	scale(sum, &(e->scn->cam->fov), 1);
 	}
 	if (sum == SDLK_DELETE && e->selected)
+	{
+		printf("delete? id %u\n", e->selected->id);
 		delete_obj(&(e->scn->objs), e->selected->id);
+	}
 	if (sum == SDLK_r)
 		reset(e);
 	if (sum == SDLK_c)
@@ -70,9 +73,16 @@ void	on_mouse_move(int x, int y, int rel_x, int rel_y, t_env *e, int left, int r
 void	on_lbutton_down(int x, int y, t_env *e)
 {
 	if (e->pix_obj[y * e->sdl->scr_wid + x])
+	{
+		printf("selected pix %d\n", x * y);
 		e->selected = (e->pix_obj)[y * e->sdl->scr_wid + x];
+		printf("selected obj, id %d\n", e->selected->id);
+	}
 	else
+	{
+		printf("unselected, cum\n");
 		e->selected = NULL;
+	}
 	// printf("left but_down %d,%d\n", x, y);
 }
 

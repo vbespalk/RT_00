@@ -22,12 +22,13 @@ t_sphere	*ft_spherenew(void)
 	return (sph);
 }
 
-char		*ft_parse_sphere(char *attr, t_scene *scn)
+char		*ft_parse_sphere(char *attr, t_scene *scn, Uint32 id)
 {
 	t_object	*obj;
 	t_sphere	*sph;
 
 	obj = ft_parse_object(attr);
+	obj->id = id;
 	obj->ft_collide = ft_collide_sphere;
 	obj->ft_is_reachable = ft_is_reachable_sphere;
 	obj->ft_is_inside = ft_is_inside_sphere;

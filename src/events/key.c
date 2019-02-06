@@ -41,7 +41,7 @@ void	rotate(Uint32 key, t_vector *dir)
 	// if (key == SDLK_UP)
 	// 	x_rotate(&m, k);
 	// if (key == SDLK_DOWN)
-	// 	x_rotate(&m, -k);
+		// x_rotate(&m, -k);
 	// if (key == SDLK_LEFT)
 	// 	y_rotate(&m, k);
 	// if (key == SDLK_RIGHT)
@@ -108,7 +108,7 @@ void	reset(t_env *e)
 	obj_lst = e->scn->objs;
 	while (obj_lst)
 	{
-		obj = (t_object *)obj_lst;
+		obj = (t_object *)(obj_lst->content);
 		obj->translate = obj->pos;
 		obj->rotate = obj->rot;
 		obj->scale = obj->size;
@@ -125,31 +125,29 @@ static void	delnod_obj(void	*nod, size_t size)
 	ft_memdel(&nod);
 }
 
-void	delete_obj(t_list **obj_lst, int id)
+void	delete_obj(t_list **obj_lst, Uint32 id)
 {
-	t_list *temp;
-	t_list *prev;
+	t_list 		*temp;
+	t_list 		*prev;
 
 	if (!obj_lst || !(*obj_lst))
 		return ;
-	if ((temp = *obj_lst) && ((t_object *)temp)->id == id)
+	temp = *obj_lst;
+	if (temp && ((t_object *)(temp->content))->id == id)
 	{
 		*obj_lst = temp->next;
 		ft_lstdelone(&temp, delnod_obj);
-// 		ft_memdel((void **)&temp);
 		return ;
 	}
 	while (temp)
 	{
 		prev = temp;
 		temp = temp->next;
-		if (((t_object *)temp)->id == id)
+		if (((t_object *)(temp->content))->id == id)
 		{
 			prev->next = temp->next;
 			ft_lstdelone(&temp, delnod_obj);
-// 			ft_memdel((void **)&temp);
 			return ;
 		}
 	}
-
 }

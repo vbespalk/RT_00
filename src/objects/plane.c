@@ -23,12 +23,13 @@ t_plane		*ft_planenew(void)
 }
 
 
-char		*ft_parse_plane(char *attr, t_scene *scn)
+char		*ft_parse_plane(char *attr, t_scene *scn, Uint32 id)
 {
 	t_object	*obj;
 	t_plane		*pln;
 
 	obj = ft_parse_object(attr);
+	obj->id = id;
 	obj->refr = 1.0;
 	obj->ft_collide = ft_collide_plane;
 	obj->ft_is_reachable = ft_is_reachable_plane;

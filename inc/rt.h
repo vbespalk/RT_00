@@ -102,7 +102,7 @@ typedef enum		e_ltype
 typedef struct		s_object
 {
 	int				type;
-	int				id;
+	Uint32			id;
 	t_vector		pos; //
 	t_vector		rot; //
 	unsigned int	size; //
@@ -147,15 +147,20 @@ typedef struct		s_object
 typedef struct		s_plane
 {
 	t_vector		origin;
+	// t_vector		origin_ini;
 	t_vector		norm;
+	// t_vector		norm_ini;
 
 	t_vector		direction;
+	// t_vector		direction_ini;
 }					t_plane;
 
 typedef struct		s_sphere
 {
 	t_vector		origin;
+	// t_vector		origin_ini;
 	float			radius;
+	// float			radius_ini;
 }					t_sphere;
 
 typedef struct		s_cone
@@ -260,6 +265,18 @@ typedef struct 		s_environment
 	unsigned int	nb_obj;
 	unsigned int	nb_light;
 }					t_env;
+
+typedef struct			s_collision
+{
+	t_color				illum_color;
+	t_color				phong_color;
+	float				phong;
+	t_object			*o;
+	t_vector			coll_pnt;
+	t_vector			norm;
+	t_vector			spclr_vec;
+	t_vector			trans_vec;
+}						t_coll;
 /*
 ** -----------------------------------------DIFFERENT-----------------------------------------------------
 */
@@ -382,7 +399,7 @@ t_matrix			*z_rotate(t_matrix *m_zrot, float angle);
 t_vector			cross_prod(t_vector u, t_vector v);
 void				translate(Uint32 key, t_vector *pos, int cam);
 void				reset(t_env *e);
-void				delete_obj(t_list **obj_lst, int id);
+void				delete_obj(t_list **obj_lst, Uint32 id);
 /*
 ** SDL
 */
@@ -395,20 +412,6 @@ int					get_format_data(t_sdl *sdl);
 
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
-
-typedef struct			s_collision
-{
-	t_color				illum_color;
-	t_color				phong_color;
-	float				phong;
-	t_object			*o;
-	t_vector			coll_pnt;
-	t_vector			norm;
-	t_vector			spclr_vec;
-	t_vector			trans_vec;
-}						t_coll;
 
 /*
 **	hit.c
@@ -490,7 +493,7 @@ t_object				*ft_parse_object(char *attr);
 **	plane.c
 */
 
-char					*ft_parse_plane(char *attr, t_scene *scn);
+char					*ft_parse_plane(char *attr, t_scene *scn, Uint32 id);
 
 /*
 **	plane_utils.c
@@ -507,7 +510,7 @@ t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 **	sphere.c
 */
 
-char					*ft_parse_sphere(char *attr, t_scene *scn);
+char					*ft_parse_sphere(char *attr, t_scene *scn, Uint32 id);
 
 /*
 **	sphere_utils.c
@@ -524,7 +527,7 @@ t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 **	cone.c
 */
 
-char					*ft_parse_cone(char *attr, t_scene *scn);
+char					*ft_parse_cone(char *attr, t_scene *scn, Uint32 id);
 
 /*
 **	cone_utils.c

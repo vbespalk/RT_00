@@ -17,7 +17,9 @@ void		ft_parse(char *content, t_scene *scn)
 	char	*attr;
 	char	*tmp;
 	char	*to_free;
+	Uint32	id;
 
+	id = 0;
 	if (!content)
 		ft_error("scn file is empty");
 	to_free = content;
@@ -30,13 +32,13 @@ void		ft_parse(char *content, t_scene *scn)
 		tmp = ft_parse_light(attr, scn);
 	tmp = content;
 	while ((attr = ft_search_attr(tmp, "plane", FTSA_GLOBALLY)))
-		tmp = ft_parse_plane(attr, scn);
+		tmp = ft_parse_plane(attr, scn, id++);
 	tmp = content;
 	while ((attr = ft_search_attr(tmp, "sphere", FTSA_GLOBALLY)))
-		tmp = ft_parse_sphere(attr, scn);
+		tmp = ft_parse_sphere(attr, scn, id++);
 	tmp = content;
 	while ((attr = ft_search_attr(tmp, "cone", FTSA_GLOBALLY)))
-		tmp = ft_parse_cone(attr, scn);
+		tmp = ft_parse_cone(attr, scn, id++);
 	free(to_free);
 }
 

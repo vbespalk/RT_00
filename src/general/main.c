@@ -22,6 +22,7 @@ int		init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	e->sdl = sdl;
 	sdl->scr_wid = SCR_WID;
 	sdl->scr_hei = SCR_HEI;
+	e->selected = NULL;
 	return (0);
 }
 

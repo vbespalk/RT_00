@@ -14,5 +14,5 @@
 
 t_vector	ft_3_nullpointnew(void)
 {
-	return (ft_3_pointnew(FLT_MIN, FLT_MIN, FLT_MIN));
+	return ((t_vector){FLT_MIN, FLT_MIN, FLT_MIN});
 }

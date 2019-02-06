@@ -59,6 +59,7 @@ void	*ft_section_handle(void *arg)
 		while (++y_iter < y[1])
 //			ft_pixel_put_image(parg->e, x[0], y_iter,
 //				ft_trace_ray(parg, x[0], y_iter).val);
+			;
 	}
 	return (NULL);
 }

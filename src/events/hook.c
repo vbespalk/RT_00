@@ -34,7 +34,7 @@ void	on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 	scale(sum, &(e->scn->cam->fov), 1);
 	}
 	if (sum == SDLK_DELETE && e->selected)
-		delete_obj(&(e->obj), e->selected->id);
+		delete_obj(&(e->scn->objs), e->selected->id);
 	if (sum == SDLK_r)
 		reset(e);
 	if (sum == SDLK_c)

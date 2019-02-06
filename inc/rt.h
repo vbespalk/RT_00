@@ -193,7 +193,7 @@ typedef struct		s_camera
 {
 	t_vector		origin;
 	t_vector		direct;
-	float			angles[3];
+	t_vector		angles;
 	t_vector		cam_transl;
 	float			fov;
 	t_matrix		wto_cam;
@@ -382,7 +382,7 @@ t_matrix			*z_rotate(t_matrix *m_zrot, float angle);
 t_vector			cross_prod(t_vector u, t_vector v);
 void				translate(Uint32 key, t_vector *pos, int cam);
 void				reset(t_env *e);
-void				delete_obj(t_object **obj_lst, int id);
+void				delete_obj(t_list **obj_lst, int id);
 /*
 ** SDL
 */
@@ -602,5 +602,12 @@ int						ft_key_hook(int key, void *p);
 */
 
 int						ft_close_hook(int x, int y, void *a);
+
+/*
+** FROM MY LIBFT
+*/
+void	ft_perr_exit(char *message);
+int		ft_perr_retu(char *message);
+void	ft_usage(char *message);
 
 #endif

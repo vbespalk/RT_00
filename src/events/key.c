@@ -96,45 +96,58 @@ void	scale(Uint32 key, float *siz, int cam)
 
 void	reset(t_env *e)
 {
-	t_object	*objs;
-	t_scene	*scene;
+	t_list		*obj_lst;
+	t_scene		*scene;
+	t_object	*obj;
 
 	scene = e->scn;
 	scene->cam->cam_transl = scene->cam->origin;
 	scene->cam->angles = (t_vector){0.0f, 0.0f, 0.0f};
 	scene->cam->fov = FOV;
 	e->selected = NULL;
-	objs = e->obj;
-	while (objs)
+	obj_lst = e->scn->objs;
+	while (obj_lst)
 	{
-		objs->translate = objs->pos;
-		objs->rotate = objs->rot;
-		objs->scale = objs->size;
-		objs = objs->next;
+		obj = (t_object *)obj_lst;
+		obj->translate = obj->pos;
+		obj->rotate = obj->rot;
+		obj->scale = obj->size;
+		obj_lst = obj_lst->next;
 	}
 }
 
-void	delete_obj(t_object **obj_lst, int id)
+static void	delnod_obj(void	*nod, size_t size)
 {
-	t_object *temp;
-	t_object *prev;
+	t_object *obj;
+
+	obj = (t_object *)nod;
+	ft_memdel((void **)&obj->fig);
+	ft_memdel(&nod);
+}
+
+void	delete_obj(t_list **obj_lst, int id)
+{
+	t_list *temp;
+	t_list *prev;
 
 	if (!obj_lst || !(*obj_lst))
 		return ;
-	if ((temp = *obj_lst) && temp->id == id)
+	if ((temp = *obj_lst) && ((t_object *)temp)->id == id)
 	{
 		*obj_lst = temp->next;
-		ft_memdel((void **)&temp);
+		ft_lstdelone(&temp, delnod_obj);
+// 		ft_memdel((void **)&temp);
 		return ;
 	}
 	while (temp)
 	{
 		prev = temp;
 		temp = temp->next;
-		if (temp->id == id)
+		if (((t_object *)temp)->id == id)
 		{
 			prev->next = temp->next;
-			ft_memdel((void **)&temp);
+			ft_lstdelone(&temp, delnod_obj);
+// 			ft_memdel((void **)&temp);
 			return ;
 		}
 	}

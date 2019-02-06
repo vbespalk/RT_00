@@ -85,7 +85,7 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 	float		norm_light_cos;
 	t_vector	ldir;
 
-	ldir = (l->type == POINT) ? ft_3_vectornew(coll->coll_pnt, l->origin) :
+	ldir = (l->type == POINT) ? (l->origin - coll->coll_pnt) :
 		ft_3_vector_scale(l->direct, -1.0f);
 	norm_light_cos = ft_3_vector_cos(coll->norm, ldir);
 	if (norm_light_cos >= 0 &&

@@ -49,17 +49,20 @@ void	*ft_section_handle(void *arg)
 	int			y_iter;
 
 	thrarg = (t_thrarg *)arg;
-	x[0] = (thrarg->i % 4) * (SCR_WID / (THREADS / 2)) - 1;
-	y[0] = (thrarg->i / 4) * (SCR_WID / 2) - 1;
-	x[1] = x[0] + SCR_WID / (THREADS / 2) + 1;
-	y[1] = y[0] + SCR_HEI / 2 + 1;
+	x[0] = (thrarg->i % 4) * (thrarg->e->sdl->scr_wid / (THREADS / 2)) - 1;
+	y[0] = (thrarg->i / 4) * (thrarg->e->sdl->scr_hei / 2) - 1;
+	x[1] = x[0] + thrarg->e->sdl->scr_wid / (THREADS / 2) + 1;
+	y[1] = y[0] + thrarg->e->sdl->scr_hei / 2 + 1;
+
 	while (++x[0] < x[1])
 	{
 		y_iter = y[0];
 		while (++y_iter < y[1])
-//			ft_pixel_put_image(parg->e, x[0], y_iter,
-//				ft_trace_ray(parg, x[0], y_iter).val);
-			;
+			img_pixel_put(thrarg->e, x[0], y_iter,
+				ft_trace_ray(thrarg, x[0], y_iter).val);
+		// while (++y_iter < y[1])
+		// 	img_pixel_put(thrarg->e, x[0], y_iter,
+		// 		0xFFFF);
 	}
 	return (NULL);
 }
@@ -85,5 +88,4 @@ void	ft_render(t_env *e)
 	i = -1;
 	while (++i < THREADS)
 		pthread_join(threads[i], NULL);
-//	mlx_put_image_to_window(e->mlx, e->win, e->img->ptr, 0, 0);
 }

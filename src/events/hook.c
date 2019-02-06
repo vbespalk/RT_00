@@ -115,5 +115,5 @@ void	on_exit(t_env *e)
 {
 	e->sdl->event_loop = 0; //on_quit(): destroy_all_data, exit;
 	sdl_close(e->sdl);
-	system("leaks RTv1");
+	system("leaks RT");
 }

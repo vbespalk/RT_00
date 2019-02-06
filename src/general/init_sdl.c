@@ -49,10 +49,9 @@ int		sdl_init(t_sdl *sdl)
 	SDL_RendererInfo	info;
 	Uint32				flags;
 
-	printf("sdl %p\n", sdl);
 	//The window we'll be rendering to
 	flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
-	sdl->window = NULL;   
+	sdl->window = NULL;
 	//The surface contained by the window
 	get_format_data(sdl);
 	//Initialize SDL
@@ -87,7 +86,7 @@ int		sdl_init(t_sdl *sdl)
 	if (!(sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * sdl->scr_hei * sdl->scr_wid)))
 	{
 		sdl_close(sdl);
-		return (ft_perror(NULL));
+		return (ft_perr_retu(NULL));
 	}
 	ft_memset(sdl->pixels, 100, sdl->scr_hei * sdl->scr_wid * sizeof(Uint32));
 	printf("win_init: OK\n");

@@ -38,20 +38,20 @@ void	rotate(Uint32 key, t_vector *dir)
 	t_matrix	m;
 
 	k = DEG_TO_RAD(1);
-	if (key == SDLK_UP)
-		x_rotate(&m, k);
-	if (key == SDLK_DOWN)
-		x_rotate(&m, -k);
-	if (key == SDLK_LEFT)
-		y_rotate(&m, k);
-	if (key == SDLK_RIGHT)
-		y_rotate(&m, -k);
-	if (key == SDLK_PAGEUP)
-		z_rotate(&m, k);
-	if (key == SDLK_PAGEDOWN)
-		z_rotate(&m, -k);
-	dir_multipl(&m, dir);
-	normilize_vec(dir);
+	// if (key == SDLK_UP)
+	// 	x_rotate(&m, k);
+	// if (key == SDLK_DOWN)
+	// 	x_rotate(&m, -k);
+	// if (key == SDLK_LEFT)
+	// 	y_rotate(&m, k);
+	// if (key == SDLK_RIGHT)
+	// 	y_rotate(&m, -k);
+	// if (key == SDLK_PAGEUP)
+	// 	z_rotate(&m, k);
+	// if (key == SDLK_PAGEDOWN)
+	// 	z_rotate(&m, -k);
+	// dir_multipl(&m, dir);
+	*dir = ft_3_tounitvector(*dir);
 }
 
 void	cam_rotate(Uint32 key, t_vector *angles)

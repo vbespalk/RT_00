@@ -12,16 +12,6 @@
 
 #include "rt.h"
 
-static void	configuration(void)
-{
-	write(1, "-------------------------------------\n", 38);
-	write(1, "MOVE XYZ   : 8 2 4 6 + - (numeric)   \n", 38);
-	write(1, "FOV/ZOOM   : * / (numeric)           \n", 38);
-	write(1, "ROTATE     : (Arrows, PgUp, PgDn)    \n", 38);
-	write(1, "RESET      : 0 (numeric)             \n", 38);
-	write(1, "-------------------------------------\n", 38);
-}
-
 int		init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
 	e->scn = scene;
@@ -41,19 +31,16 @@ void	rt_loop(t_env *e)
 
 	sdl = e->sdl;
 	sdl->event_loop = 1;
-//	ft_render(e);
-//	SDL_UpdateTexture(
-//		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
-//	SDL_RenderClear(sdl->renderer);
-//	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
-//	SDL_RenderPresent(sdl->renderer);
+	ft_render(e);
+	SDL_UpdateTexture(
+		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
+	SDL_RenderClear(sdl->renderer);
+	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+	SDL_RenderPresent(sdl->renderer);
 	while (sdl->event_loop)
 	{
 		if (event_handler(e))
 		{
-			//Update the surface
-			// if (SDL_UpdateWindowSurface(sdl->window))
-			// 	sdl_error("Window could not be updated! ");
 			ft_render(e);
 			SDL_UpdateTexture(
 				sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
@@ -75,17 +62,18 @@ int		main(int argc, char **argv)
 		ft_usage("RT scn\n");
 	if (!(scene = ft_get_scene(argv[1])))
 		ft_error("Scene is incomplete or incorrect\n");
-	configuration();
+	sdl.scr_wid = SCR_WID;
+	sdl.scr_hei = SCR_HEI;
 	if (sdl_init(&sdl) < 0)
 	{
-		struct_del(scene);
+		// struct_del(scene);
 		exit(-1);
 	}
 	obj_pix = (t_object **)ft_smemalloc(
 		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main: for 'obj_pix'");
 	if (init_env(&e, scene, &obj_pix[0], &sdl))
 	{
-		struct_del(scene);
+		// struct_del(scene);
 		exit(-1);
 	}
 	rt_loop(&e);

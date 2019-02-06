@@ -24,11 +24,15 @@ t_camera			*ft_cameranew(void)
 
 char				*ft_parse_camera(char *attr, t_scene *scn)
 {
+	float angles[3];
+
+	ft_bzero(&angles[0], sizeof(angles));
 	attr = ft_get_curve(attr, '{');
 	ft_get_attr_in_scope(attr, "origin:", (void *)&(scn->cam->origin), PNT);
-	ft_get_attr_in_scope(attr, "alpha:", (void *)&(scn->cam->angles[0]), FLT);
-	ft_get_attr_in_scope(attr, "beta:", (void *)&(scn->cam->angles[1]), FLT);
-	ft_get_attr_in_scope(attr, "gamma:", (void *)&(scn->cam->angles[2]), FLT);
+	ft_get_attr_in_scope(attr, "alpha:", (void *)&(angles[0]), FLT);
+	ft_get_attr_in_scope(attr, "beta:", (void *)&(angles[1]), FLT);
+	ft_get_attr_in_scope(attr, "gamma:", (void *)&(angles[2]), FLT);
+	scn->cam->angles = (t_vector){angles[0], angles[1], angles[2]};
 	ft_get_attr_in_scope(attr, "fov:", (void *)&(scn->cam->fov), FLT);
 	scn->cam->fov = (float)ft_limitf(FOV_MIN, FOV_MAX, scn->cam->fov);
 	scn->cam->fov = ft_torad(scn->cam->fov);

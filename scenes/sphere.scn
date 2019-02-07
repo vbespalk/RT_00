@@ -1,0 +1,43 @@
+
+scene {
+    world_color: 0xffffff;
+}
+
+light {
+    type: direct;
+    direct: (1, -1, 0);
+}
+
+sphere {
+    origin: (0, 0, 0);
+    color: 0x00ffff;
+    diff: 0;
+    spclr: 1;
+    trans: 1;
+    refr: 1.3;
+}
+
+
+sphere {
+    origin: (1000, 0, 0);
+    radius: 100;
+    color: 0xffffff;
+}
+
+sphere {
+    origin: (1000, 0, -300);
+    radius: 100;
+    color: 0xff0000;
+}
+
+sphere {
+    origin: (1000, 300, 0);
+    radius: 100;
+    color: 0x00ff00;
+}
+
+sphere {
+    origin: (1000, 0, 300);
+    radius: 100;
+    color: 0x0000ff;
+}

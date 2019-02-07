@@ -44,22 +44,18 @@ static void	ft_get_vs_params(t_camera *cam)
 void	*ft_section_handle(void *arg)
 {
 	t_thrarg	*thrarg;
-	int			x[2];
-	int			y[2];
-	int			y_iter;
+	int			x;
+	int			y;
 
 	thrarg = (t_thrarg *)arg;
-	x[0] = (thrarg->i % 4) * (thrarg->e->sdl->scr_wid / (THREADS / 2) - 1);
-	y[0] = (thrarg->i / 4) * (thrarg->e->sdl->scr_hei / 2 - 1);
-	x[1] = x[0] + thrarg->e->sdl->scr_wid / (THREADS / 2) + 1;
-	y[1] = y[0] + thrarg->e->sdl->scr_hei / 2 + 1;
-
-	while (++x[0] < x[1])
+	x = thrarg->i;
+	while (x < thrarg->e->sdl->scr_wid)
 	{
-		y_iter = y[0];
-		while (++y_iter < y[1])
-			img_pixel_put(thrarg->e, x[0], y_iter,
-				ft_trace_ray(thrarg, x[0], y_iter).val);
+		y = -1;
+		while (++y < thrarg->e->sdl->scr_hei)
+			img_pixel_put(
+				thrarg->e, x, y, (unsigned int)ft_trace_ray(thrarg, x, y).val);
+		x += THREADS;
 		// while (++y_iter < y[1])
 		// 	img_pixel_put(thrarg->e, x[0], y_iter,
 		// 		0xFFFF);

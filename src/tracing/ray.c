@@ -36,21 +36,21 @@ static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], Uint32 pix, int dept
 		od[1] = coll.spclr_vec;
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
-			ft_throw_rays(parg, coll, &(coll.spclr_vec), num) :
-			ft_throw_ray(parg, od, 0, depth + 1);
+			ft_throw_rays(parg, &coll, &(coll.spclr_vec), num) :
+			ft_throw_ray(parg, od, pix, depth + 1);
 	}
-	if (coll.o->trans && depth < DEPTH)
+	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
 		od[1] = coll.trans_vec;
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
-			ft_throw_rays(parg, coll, &(coll.trans_vec), num) :
-			ft_throw_ray(parg, od, 0, depth + 1);
+			ft_throw_rays(parg, &coll, &(coll.trans_vec), num) :
+			ft_throw_ray(parg, od, pix, depth + 1);
 	}
 	return ((coll.o->phong != 0.0) ?
-		ft_apply_phong(ft_sum_colors(coll, spclr_col, trans_col),
+		ft_apply_phong(ft_sum_colors(&coll, spclr_col, trans_col, depth),
 			coll.phong, coll.phong_color) :
-		ft_sum_colors(coll, spclr_col, trans_col));
+		ft_sum_colors(&coll, spclr_col, trans_col, depth));
 }
 
 t_color			ft_add_blur_colors(t_color sum, int num, t_color new)
@@ -67,7 +67,7 @@ t_color			ft_add_blur_colors(t_color sum, int num, t_color new)
 }
 
 t_color			ft_throw_rays
-					(t_thrarg *parg, t_coll coll, t_vector *vec, float num[2])
+					(t_thrarg *parg, t_coll *coll, t_vector *vec, float num[2])
 {
 	float		max_angle;
 	int			rays;
@@ -79,11 +79,11 @@ t_color			ft_throw_rays
 	rays = ft_limit(1, 10, (int)(sin(max_angle) * 10.0));
 	i = -1;
 	color[1].val = 0;
-	*vec = ft_change_blur_vec(coll.norm, *vec, max_angle);
+	*vec = ft_change_blur_vec(coll->norm, *vec, max_angle);
 	while (++i < rays)
 	{
-		od[0] = coll.coll_pnt;
-		od[1] = ft_3_vector_turn(ft_get_blur_proj(coll.coll_pnt, *vec),
+		od[0] = coll->coll_pnt;
+		od[1] = ft_3_vector_turn(ft_get_blur_proj(coll->coll_pnt, *vec),
 			*vec, (float)rand() / (float)RAND_MAX * max_angle);
 		color[0] = ft_throw_ray(parg, od, 0, (int)(num[1] + 1));
 		color[1] = ft_add_blur_colors(color[1], i, color[0]);

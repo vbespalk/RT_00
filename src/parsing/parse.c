@@ -23,7 +23,7 @@ void		ft_parse(char *content, t_scene *scn)
 	if (!content)
 		ft_error("scn file is empty");
 	to_free = content;
-	if ((attr = ft_search_attr(content, "scn", FTSA_GLOBALLY)))
+	if ((attr = ft_search_attr(content, "scene", FTSA_GLOBALLY)))
 		ft_parse_scene(attr, scn);
 	if ((attr = ft_search_attr(content, "camera", FTSA_GLOBALLY)))
 		ft_parse_camera(attr, scn);

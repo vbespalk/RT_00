@@ -14,10 +14,10 @@
 
 void		ft_parse(char *content, t_scene *scn)
 {
-	char	*attr;
-	char	*tmp;
-	char	*to_free;
-	Uint32	id;
+	char			*attr;
+	char			*tmp;
+	char			*to_free;
+	unsigned int	id;
 
 	id = 0;
 	if (!content)

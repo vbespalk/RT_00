@@ -28,7 +28,7 @@
 # define ALBEDO 0.18
 # define T_COEF 0.0f
 # define AMBILI 0.1f
-# define NB_THREADS 8
+# define NB_THREADS 1
 # define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a >= _b ? _b : _a;})
 # define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a <= _b ? _b : _a;})
 # define DEG_TO_RAD(x) ((x) * M_PI / 180.0f)
@@ -67,6 +67,11 @@
 # define MINUS          0X4E
 # define C              0X08
 
+# define ROTAT_F		DEG_TO_RAD(1)
+# define TRANS_F		15
+# define SCALE_F		0.1
+// # define SCALE_F_CAM	0.1
+
 # include <stdio.h>
 # include <pthread.h>
 # include <math.h>
@@ -102,7 +107,7 @@ typedef enum		e_ltype
 typedef struct		s_object
 {
 	int				type;
-	Uint32			id;
+	unsigned int	id;
 	t_vector		pos; //
 	t_vector		rot; //
 	unsigned int	size; //
@@ -142,35 +147,47 @@ typedef struct		s_object
 	 					(void *fig, t_vector origin, t_vector direct);
 	int				(*ft_is_inside)(void *fig, t_vector point);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
+/*
+** functions for transform obj.
+*/
+	void			(*ft_translate)
+						(Uint32 key, void *fig, t_vector *translate);
+	void			(*ft_rotate)
+						(Uint32 key, void *fig, t_vector *rotate);
+	void			(*ft_scale)
+						(Uint32 key, void *fig, float *scale);
+
 }					t_object;
 
 typedef struct		s_plane
 {
+	t_vector		origin_ini;
+	t_vector		norm_ini;
 	t_vector		origin;
-	// t_vector		origin_ini;
 	t_vector		norm;
-	// t_vector		norm_ini;
-
-	t_vector		direction;
-	// t_vector		direction_ini;
 }					t_plane;
 
 typedef struct		s_sphere
 {
+	t_vector		origin_ini;
+	float			radius_ini;
 	t_vector		origin;
-	// t_vector		origin_ini;
 	float			radius;
-	// float			radius_ini;
 }					t_sphere;
 
 typedef struct		s_cone
 {
+	float			base_rad_ini;
+	float			vert_rad_ini;
 	float			base_rad;
 	float			vert_rad;
+	float			bv_dist_ini;
 	float			bv_dist;
 	float			side_norm_angle;
+	t_vector		base_ini;
 	t_vector		base;
 	t_vector		vert;
+	t_vector		bv_ini;
 	t_vector		bv;
 	t_vector		main_vert;
 
@@ -389,17 +406,21 @@ t_matrix			*transform_mat(t_matrix *lm, t_vector translation, \
 	t_vector rot, float scale);
 t_matrix			*transform_mat_inv(t_matrix *lm, t_vector translation, \
 	t_vector rot, float scale);
-// void				reset(t_env *env);
-void				rotate(Uint32 key, t_vector *angles);
-void				scale(Uint32 key, float *siz, int cam);
+
 void				cam_rotate(Uint32 key, t_vector *angles);
 t_matrix			*x_rotate(t_matrix *m_xrot, float angle);
 t_matrix			*y_rotate(t_matrix *m_yrot, float angle);
 t_matrix			*z_rotate(t_matrix *m_zrot, float angle);
 t_vector			cross_prod(t_vector u, t_vector v);
-void				translate(Uint32 key, t_vector *pos, int cam);
 void				reset(t_env *e);
 void				delete_obj(t_list **obj_lst, Uint32 id);
+
+// void				rotate(Uint32 key, t_vector *angles);
+// void				scale(Uint32 key, float *siz, int cam);
+// void				translate(Uint32 key, t_vector *pos, int cam);
+
+void				scale_cam(Uint32 key, t_object *obj, float *sc_factor, int cam);
+
 /*
 ** SDL
 */
@@ -436,6 +457,14 @@ void					ft_parse_scene(char *attr, t_scene *scn);
 t_camera				*ft_cameranew(void);
 char					*ft_parse_camera(char *attr, t_scene *scn);
 void					ft_get_start_refr(t_scene *scn);
+
+/*
+** cam_transform
+*/
+
+void					ft_translate_cam(Uint32 key, t_vector *rot);
+void					ft_rotate_cam(Uint32 key, t_vector *angles);
+void					ft_scale_cam(Uint32 key, float *sc_factor);
 
 /*
 **	image.c
@@ -488,12 +517,17 @@ char					*ft_parse_light(char *attr, t_scene *scn);
 
 t_object				*ft_objectnew();
 t_object				*ft_parse_object(char *attr);
-
+/*
+**--------------------------------------------------PLANE------------------------------------------------------------------
+*/
 /*
 **	plane.c
 */
 
-char					*ft_parse_plane(char *attr, t_scene *scn, Uint32 id);
+char					*ft_parse_plane(char *attr, t_scene *scn, unsigned int id);
+void					ft_translate_plane(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_plane(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_plane(Uint32 key, void *fig, float *scale);
 
 /*
 **	plane_utils.c
@@ -507,10 +541,16 @@ int						ft_is_inside_plane(void *fig, t_vector point);
 t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 
 /*
+**--------------------------------------------------SPHERE------------------------------------------------------------------
+*/
+/*
 **	sphere.c
 */
 
-char					*ft_parse_sphere(char *attr, t_scene *scn, Uint32 id);
+char					*ft_parse_sphere(char *attr, t_scene *scn, unsigned int id);
+void					ft_translate_sphere(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_sphere(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
 
 /*
 **	sphere_utils.c
@@ -524,10 +564,16 @@ int						ft_is_inside_sphere(void *fig, t_vector point);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
 /*
+**--------------------------------------------------CONE------------------------------------------------------------------
+*/
+/*
 **	cone.c
 */
 
-char					*ft_parse_cone(char *attr, t_scene *scn, Uint32 id);
+char					*ft_parse_cone(char *attr, t_scene *scn, unsigned int id);
+void					ft_translate_cone(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_cone(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_cone(Uint32 key, void *fig, float *scale);
 
 /*
 **	cone_utils.c

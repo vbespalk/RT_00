@@ -1,0 +1,105 @@
+
+scene {
+	name:;
+	world_color: 0x0;
+}
+
+camera {
+	origin: (-2000, 0, 0);
+	alpha: 0;
+	beta: 0;
+	gamma: 0;
+	fov: 100;
+}
+
+
+
+light {
+	bright: 0.15;
+	origin: (-10000, 500, 2000);
+}
+
+light {
+	bright: 0.15;
+	origin: (-10000, 500, -2000);
+}
+
+
+
+plane {
+    origin: (500, 0, 0);
+    norm: (-1, 0, 0);
+    color: 0x808080;
+}
+
+plane {
+    origin: (0, -500, 0);
+    norm: (0, 1, 0);
+    color: 0x808080;
+    spclr: 1;
+	s_blur: 0.3;
+}
+
+cone {
+    base: (0, -500, -700);
+    base_rad: 300;
+    vert: (0, 500, -700);
+    vert_rad: 0;
+    color: 0x00ffff;
+    spclr: 1;
+    phong: 1;
+}
+
+cone {
+    base: (-500, -500, -1200);
+    base_rad: 300;
+    vert: (-500, 700, -1200);
+    vert_rad: 100;
+    color: 0xff00ff;
+    spclr: 0.3;
+    phong: 0.5;
+}
+
+cone {
+    base: (-600, -500, -600);
+    base_rad: 300;
+    vert: (-600, 0, -600);
+    vert_rad: -100;
+    color: 0xff8080;
+}
+
+cone {
+    base: (-500, -400, 1500);
+    base_rad: 100;
+    vert: (-1300, -400, 1500);
+    vert_rad: 100;
+    color: 0xffff00;
+
+    rotate: (0, -60, 0);
+    translate: (-200, 0, -300);
+}
+
+sphere {
+    origin: (0, -300, 0);
+    radius: 200;
+    color: 0xff0000;
+    spclr: 1;
+    phong: 1;
+}
+
+sphere {
+    origin: (-200, -200, 500);
+    radius: 300;
+    color: 0x8080ff;
+    diff: 0;
+    spclr: 1;
+    phong: 1;
+}
+
+sphere {
+    origin: (-400, -400, 200);
+    radius: 100;
+    color: 0xff80ff;
+    spclr: 1;
+    phong: 1;
+}

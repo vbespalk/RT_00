@@ -1,0 +1,107 @@
+
+scene {
+	name: Test Scene;
+	world_color: 0x0;
+}
+
+camera {
+	origin: (-2000, 0, 0);
+	alpha: 0;
+	beta: 0;
+	gamma: 0;
+	fov: 100;
+}
+
+#light {
+#	bright: 0.001;
+#	origin: (-1000, 1000, 1000);
+#}
+
+#light {
+#	bright: 0.001;
+#	origin: (-1000, 1000, -1000);
+#}
+
+light {
+	bright: 0.15;
+	origin: (0, 10000, 0);
+}
+
+#light {
+#	bright: 0.03;
+#	origin: (-2000, 2000, -3000);
+#}
+
+plane {
+	origin: (0, -500, 0)
+	norm: (0, 1, 0)
+	color: 0x0000ff;
+	ambnt: 0.2;
+	diff: 1;
+	spclr: 0;
+	s_blur: 0;
+	trans: 0;
+	t_blur: 0;
+	phong: 0;
+}
+
+#plane {
+#	origin: (0, 500, 0)
+#	norm: (0, -1, 0)
+#	color: 0x0000ff;
+#	ambnt: 0.2;
+#	diff: 1;
+#	spclr: 1;
+#	s_blur: 0.3;
+#	trans: 0;
+#	t_blur: 0;
+#	phong: 0;
+#}
+#
+#plane {
+#	origin: (0, 0, -500)
+#	norm: (0, 0, 1)
+#	color: 0x0000ff;
+#	ambnt: 0.2;
+#	diff: 1;
+#	spclr: 1;
+#	s_blur: 0.3;
+#	trans: 0;
+#	t_blur: 0;
+#	phong: 0;
+#}
+#
+#plane {
+#	origin: (0, 0, 500)
+#	norm: (0, 0, -1)
+#	color: 0x0000ff;
+#	ambnt: 0.2;
+#	diff: 1;
+#	spclr: 1;
+#	s_blur: 0.3;
+#	trans: 0;
+#	t_blur: 0;
+#	phong: 0;
+#}
+
+sphere {
+	origin: (-2000, 0, 0);
+	radius: 300;
+	color: 0xff0000;
+	ambnt: 0.1;
+	diff: 1;
+	spclr: 1;
+	s_blur: 0;
+	phong: 1;
+}
+
+#sphere {
+#	origin: (-500, 0, 500);
+#	radius: 200;
+#	color: 0x00ff00;
+#	ambnt: 0.1;
+#	diff: 1;
+#	spclr: 1;
+#	s_blur: 1;
+#	phong: 1;
+#}

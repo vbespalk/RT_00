@@ -10,8 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef rt_h
-# define rt_h
+#ifndef RT_H
+
+# define RT_H
+
 # define INFINITY 18446744073709551615
 # define SCR_WID 1000
 # define SCR_HEI 800
@@ -34,19 +36,30 @@
 # define DEG_TO_RAD(x) ((x) * M_PI / 180.0f)
 # define RAD_TO_DEG(x) ((x) * 180.0f / M_PI)
 
-# define CLOSE_MASK		0L
-# define CLOSE_NOTIFY	17
+/*
+**	camera
+*/
 
 # define FOV_MIN		60.0
 # define FOV_MAX		120.0
 
-# define BRIGHT_UNIT	20000.0
+/*
+**	tracing
+*/
 
+# define BRIGHT_UNIT	20000.0
 # define DEFAULT_REFR	1.0f
 
-# define DEPTH			10
+/*
+**	system
+*/
 
+# define DEPTH			10
 # define THREADS		8
+
+/*
+**	parsing
+*/
 
 # define KOEF			0
 # define FLT			1
@@ -57,6 +70,19 @@
 # define FTSA_GLOBALLY	0
 # define FTSA_IN_SCOPE	1
 
+# define RND_BR			1
+# define SQR_BR			2
+# define CRL_BR			3
+
+# define ESCAPE			"\"\\\/bfnrtu"
+
+/*
+**	key hooks
+*/
+
+# define CLOSE_MASK		0L
+# define CLOSE_NOTIFY	17
+
 # define ESC            0X35
 # define ARR_UP         0X7E
 # define ARR_DOWN       0X7D
@@ -66,6 +92,10 @@
 # define PLUS           0X45
 # define MINUS          0X4E
 # define C              0X08
+
+/*
+**	includes
+*/
 
 # include <stdio.h>
 # include <pthread.h>

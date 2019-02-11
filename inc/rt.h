@@ -70,12 +70,6 @@
 # define FTSA_GLOBALLY	0
 # define FTSA_IN_SCOPE	1
 
-# define RND_BR			1
-# define SQR_BR			2
-# define CRL_BR			3
-
-# define ESCAPE			"\"\\\/bfnrtu"
-
 /*
 **	key hooks
 */
@@ -83,15 +77,15 @@
 # define CLOSE_MASK		0L
 # define CLOSE_NOTIFY	17
 
-# define ESC            0X35
-# define ARR_UP         0X7E
-# define ARR_DOWN       0X7D
-# define ARR_RIGHT      0X7C
-# define ARR_LEFT       0X7B
-# define R              0X0F
-# define PLUS           0X45
-# define MINUS          0X4E
-# define C              0X08
+# define KEY_ESC		0X35
+# define KEY_ARR_UP		0X7E
+# define KEY_ARR_DOWN	0X7D
+# define KEY_ARR_RIGHT	0X7C
+# define KEY_ARR_LEFT	0X7B
+# define KEY_R			0X0F
+# define KEY_PLUS		0X45
+# define KEY_MINUS		0X4E
+# define KEY_C			0X08
 
 /*
 **	includes
@@ -100,14 +94,14 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <math.h>
-# include "libft.h"
+# include <stdint.h>
+# include <time.h>
 # include "SDL.h"
 # include "SDL_image.h"
 # include "SDL_syswm.h"
 
-# include <stdint.h>
-# include <time.h>
 # include "libpnt.h"
+# include "json.h"
 
 typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
@@ -120,9 +114,9 @@ typedef union		u_color
 
 typedef enum		e_ltype
 {
-	POINT,
-	DIRECT,
-	PARALLEL
+	L_POINT,
+	L_DIRECT,
+	L_PARALLEL
 }					t_ltype;
 
 /*

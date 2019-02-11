@@ -7,23 +7,25 @@
 
 # define JSON_H
 
-# define TRUE	1
-# define FALSE	0
-# define GOOD	0xBABAB00E
-# define _		-1
+# include "libftprintf.h"
 
-# include <stdlib.h>
+# define TRUE		1
+# define FALSE		0
+# define GOOD		0xBABAB00E
+# define _			-1
 
-typedef struct	s_checker
+# define OBJ_DEPTH	4
+
+typedef struct		s_checker
 {
-    int			valid;
-    int			state;
-    int			depth;
-    int			top;
-    int			*stack;
-}				*t_checker;
+    int				valid;
+    int				state;
+    int				depth;
+    int				top;
+    int				*stack;
+}					*t_checker;
 
-typedef enum	e_classes
+typedef enum		e_classes
 {
     SPACE,
     WHITE,
@@ -57,9 +59,10 @@ typedef enum	e_classes
     E,
     ETC,
     NR_CLASSES
-}				t_classes;
+}					t_classes;
 
-typedef enum	e_states {
+typedef enum		e_states
+{
     GO,
     OK,
     OB,
@@ -92,17 +95,40 @@ typedef enum	e_states {
     N2,
     N3,
     NR_STATES
-}				t_states;
+}					t_states;
 
-typedef enum	e_modes {
+typedef enum		e_modes
+{
     MODE_ARRAY,
     MODE_DONE,
     MODE_KEY,
     MODE_OBJECT
-}				t_modes;
+}					t_modes;
 
-t_checker		ft_checkernew(int depth);
-int				ft_check_char(t_checker checker, int c);
-int				ft_check_done(t_checker parser);
+/*
+**	checker_utils.c
+*/
+
+void				ft_destroy(t_checker checker);
+int					ft_reject(t_checker checker);
+int					ft_push(t_checker checker, int mode);
+int					ft_pop(t_checker jc, int mode);
+int					ft_handle_next_state
+						(t_checker checker, int is_push,
+						t_modes mode, t_states state);
+
+/*
+**	checker.c
+*/
+
+t_checker			ft_checkernew(int depth);
+int					ft_check_char(t_checker checker, int c);
+int					ft_check_done(t_checker parser);
+
+/*
+**	syntax.c
+*/
+
+void				ft_check_syntax(char *content);
 
 #endif

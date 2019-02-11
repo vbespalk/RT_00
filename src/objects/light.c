@@ -19,7 +19,7 @@ t_light		*ft_lightnew(void)
 	light = ft_smemalloc(sizeof(t_light), "ft_lightnew");
 	light->bright = 0.15;
 	light->origin = (t_vector){ 0.0f, 10000.0f, 0.0f };
-	light->type = POINT;
+	light->type = L_POINT;
 	light->color.val = 0xffffff;
 	return (light);
 }
@@ -28,11 +28,11 @@ t_ltype		ft_get_light_type(char *type)
 {
 	t_ltype		res;
 
-	res = POINT;
+	res = L_POINT;
 	if (!ft_strcmp(type, "direct"))
-		res = DIRECT;
+		res = L_DIRECT;
 	if (!ft_strcmp(type, "parallel"))
-		res = PARALLEL;
+		res = L_PARALLEL;
 	return (res);
 }
 

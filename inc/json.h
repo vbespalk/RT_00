@@ -102,7 +102,7 @@ typedef enum	e_modes {
 }				t_modes;
 
 t_checker		ft_checkernew(int depth);
-int				ft_check_char(t_checker parser, int c);
+int				ft_check_char(t_checker checker, int c);
 int				ft_check_done(t_checker parser);
 
 #endif

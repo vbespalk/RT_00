@@ -52,33 +52,33 @@ void	rt_loop(t_env *e)
 	}
 }
 
-int		main(int argc, char **argv)
-{
-	t_scene		*scene;
-	t_env		e;
-	t_sdl		sdl;
-	t_object	**obj_pix;
-
-	if (argc != 2)
-		ft_usage("RT scn\n");
-	if (!(scene = ft_get_scene(argv[1])))
-		ft_error("Scene is incomplete or incorrect\n");
-	sdl.scr_wid = SCR_WID;
-	sdl.scr_hei = SCR_HEI;
-	if (sdl_init(&sdl) < 0)
-	{
-		// struct_del(scene);
-		exit(-1);
-	}
-	obj_pix = (t_object **)ft_smemalloc(
-		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main: for 'obj_pix'");
-	if (init_env(&e, scene, &obj_pix[0], &sdl))
-	{
-		// struct_del(scene);
-		exit(-1);
-	}
-	rt_loop(&e);
-//	printf("Works\n");
-	sdl_close(&sdl);
-	return (0);
-}
+//int		main(int argc, char **argv)
+//{
+//	t_scene		*scene;
+//	t_env		e;
+//	t_sdl		sdl;
+//	t_object	**obj_pix;
+//
+//	if (argc != 2)
+//		ft_usage("RT scn\n");
+//	if (!(scene = ft_get_scene(argv[1])))
+//		ft_error("Scene is incomplete or incorrect\n");
+//	sdl.scr_wid = SCR_WID;
+//	sdl.scr_hei = SCR_HEI;
+//	if (sdl_init(&sdl) < 0)
+//	{
+//		// struct_del(scene);
+//		exit(-1);
+//	}
+//	obj_pix = (t_object **)ft_smemalloc(
+//		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main: for 'obj_pix'");
+//	if (init_env(&e, scene, &obj_pix[0], &sdl))
+//	{
+//		// struct_del(scene);
+//		exit(-1);
+//	}
+//	rt_loop(&e);
+////	printf("Works\n");
+//	sdl_close(&sdl);
+//	return (0);
+//}

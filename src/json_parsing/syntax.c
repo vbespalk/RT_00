@@ -4,34 +4,45 @@
 */
 
 #include "json.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 
+static char		*test_content = "\{\n\
+		\"name\": \"New Scene\",\n\
+		\"camera\": {\n\
+			\"origin\": { \"x\": -500, \"y\": 0, \"z\": 0 }\n\
+		},\n\
+		\"lights\": [\n\
+			{\n\
+				\"type\": \"direct\"\n\
+			},\n\
+			{ }\n\
+		]\n\
+	}";
+
+static int		is_inited;
 static int		ascii_class[128] = {
-/*
-**	This array maps the 128 ASCII characters into character classes.
-**	The remaining Unicode characters should be mapped to ETC.
-**	Non-whitespace control characters are errors.
-*/
-    _,     _,     _,     _,     _,     _,     _,     _,
-    _,     WHITE, WHITE, _,     _,     WHITE, _,     _,
-    _,     _,     _,     _,     _,     _,     _,     _,
-    _,     _,     _,     _,     _,     _,     _,     _,
+	_,     _,     _,     _,     _,     _,     _,     _,
+	_,     WHITE, WHITE, _,     _,     WHITE, _,     _,
+	_,     _,     _,     _,     _,     _,     _,     _,
+	_,     _,     _,     _,     _,     _,     _,     _,
 
-    SPACE, ETC,   QUOTE, ETC,   ETC,   ETC,   ETC,   ETC,
-    ETC,   ETC,   ETC,   PLUS,  COMMA, MINUS, POINT, SLASH,
-    ZERO,  DIGIT, DIGIT, DIGIT, DIGIT, DIGIT, DIGIT, DIGIT,
-    DIGIT, DIGIT, COLON, ETC,   ETC,   ETC,   ETC,   ETC,
+	SPACE, ETC,   QUOTE, ETC,   ETC,   ETC,   ETC,   ETC,
+	ETC,   ETC,   ETC,   PLUS,  COMMA, MINUS, POINT, SLASH,
+	ZERO,  DIGIT, DIGIT, DIGIT, DIGIT, DIGIT, DIGIT, DIGIT,
+	DIGIT, DIGIT, COLON, ETC,   ETC,   ETC,   ETC,   ETC,
 
-    ETC,   ABCDF, ABCDF, ABCDF, ABCDF, E,     ABCDF, ETC,
-    ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,
-    ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,
-    ETC,   ETC,   ETC,   LSQRB, BACKS, RSQRB, ETC,   ETC,
+	ETC,   ABCDF, ABCDF, ABCDF, ABCDF, E,     ABCDF, ETC,
+	ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,
+	ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,
+	ETC,   ETC,   ETC,   LSQRB, BACKS, RSQRB, ETC,   ETC,
 
-    ETC,   LOW_A, LOW_B, LOW_C, LOW_D, LOW_E, LOW_F, ETC,
-    ETC,   ETC,   ETC,   ETC,   LOW_L, ETC,   LOW_N, ETC,
-    ETC,   ETC,   LOW_R, LOW_S, LOW_T, LOW_U, ETC,   ETC,
-    ETC,   ETC,   ETC,   LCURB, ETC,   RCURB, ETC,   ETC
+	ETC,   LOW_A, LOW_B, LOW_C, LOW_D, LOW_E, LOW_F, ETC,
+	ETC,   ETC,   ETC,   ETC,   LOW_L, ETC,   LOW_N, ETC,
+	ETC,   ETC,   LOW_R, LOW_S, LOW_T, LOW_U, ETC,   ETC,
+	ETC,   ETC,   ETC,   LCURB, ETC,   RCURB, ETC,   ETC
 };
-
 
 static int		state_transition_table[NR_STATES][NR_CLASSES] = {
 	{GO,GO,-6,_,-5,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_},
@@ -67,213 +78,233 @@ static int		state_transition_table[NR_STATES][NR_CLASSES] = {
 	{_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,OK,_,_,_,_,_,_,_,_}
 };
 
-static void		destroy(t_checker jc)
+//static void		ft_init_ascii_class(void)
+//{
+//	ascii_class = (int[128]) {
+//		_,     _,     _,     _,     _,     _,     _,     _,
+//		_,     WHITE, WHITE, _,     _,     WHITE, _,     _,
+//		_,     _,     _,     _,     _,     _,     _,     _,
+//		_,     _,     _,     _,     _,     _,     _,     _,
+//
+//		SPACE, ETC,   QUOTE, ETC,   ETC,   ETC,   ETC,   ETC,
+//		ETC,   ETC,   ETC,   PLUS,  COMMA, MINUS, POINT, SLASH,
+//		ZERO,  DIGIT, DIGIT, DIGIT, DIGIT, DIGIT, DIGIT, DIGIT,
+//		DIGIT, DIGIT, COLON, ETC,   ETC,   ETC,   ETC,   ETC,
+//
+//		ETC,   ABCDF, ABCDF, ABCDF, ABCDF, E,     ABCDF, ETC,
+//		ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,
+//		ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,   ETC,
+//		ETC,   ETC,   ETC,   LSQRB, BACKS, RSQRB, ETC,   ETC,
+//
+//		ETC,   LOW_A, LOW_B, LOW_C, LOW_D, LOW_E, LOW_F, ETC,
+//		ETC,   ETC,   ETC,   ETC,   LOW_L, ETC,   LOW_N, ETC,
+//		ETC,   ETC,   LOW_R, LOW_S, LOW_T, LOW_U, ETC,   ETC,
+//		ETC,   ETC,   ETC,   LCURB, ETC,   RCURB, ETC,   ETC
+//	};
+//}
+
+static void		ft_destroy(t_checker checker)
 {
-    jc->valid = 0;
-    free((void*)jc->stack);
-    free((void*)jc);
+    checker->valid = 0;
+    free((void*)checker->stack);
+    free((void*)checker);
 }
 
-static int		reject(t_checker jc)
+static int		ft_reject(t_checker checker)
 {
-    destroy(jc);
-    return FALSE;
+	ft_destroy(checker);
+    return (FALSE);
 }
 
-static int		push(t_checker jc, int mode)
+static int		ft_push(t_checker checker, int mode)
 {
-    jc->top += 1;
-    if (jc->top >= jc->depth)
-        return FALSE;
-    jc->stack[jc->top] = mode;
-    return TRUE;
+    checker->top += 1;
+    if (checker->top >= checker->depth)
+        return (FALSE);
+    checker->stack[checker->top] = mode;
+    return (TRUE);
 }
 
-static int		pop(t_checker jc, int mode)
+static int		ft_pop(t_checker jc, int mode)
 {
     if (jc->top < 0 || jc->stack[jc->top] != mode)
-        return FALSE;
+        return (FALSE);
     jc->top -= 1;
-    return TRUE;
+    return (TRUE);
 }
 
 t_checker		ft_checkernew(int depth)
 {
-    t_checker jc = (t_checker)malloc(sizeof(struct s_checker));
-    jc->valid = GOOD;
-    jc->state = GO;
-    jc->depth = depth;
-    jc->top = -1;
-    jc->stack = (int *)calloc(depth, sizeof(int));
-    push(jc, MODE_DONE);
-    return jc;
+    t_checker checker;
+
+    //ft_init_ascii_class();
+    checker = (t_checker)malloc(sizeof(struct s_checker));
+    checker->valid = GOOD;
+    checker->state = GO;
+    checker->depth = depth;
+    checker->top = -1;
+    checker->stack = (int *)calloc(depth, sizeof(int));
+	ft_push(checker, MODE_DONE);
+    return (checker);
 }
 
-int				ft_check_char(t_checker parser, int c)
+static int		ft_handle_next_state
+					(t_checker checker, int is_push,
+					t_modes mode, t_states state)
+{
+	if (is_push)
+	{
+		if (!ft_push(checker, mode))
+        	return (FALSE);
+	}
+	else
+	{
+		if (!ft_pop(checker, mode))
+        	return (FALSE);
+	}
+    checker->state = state;
+	return (TRUE);
+}
+
+static int		ft_handle_coma_and_quotation(t_checker ch, t_states next_state)
+{
+	if (next_state == -4)
+	{
+		if (ch->stack[ch->top] == MODE_KEY)
+			ch->state = CO;
+		else if (ch->stack[ch->top] == MODE_ARRAY ||
+				ch->stack[ch->top] == MODE_OBJECT)
+			ch->state = OK;
+		else
+			return (FALSE);
+	}
+	else if (next_state == -3)
+	{
+		if (ch->stack[ch->top] == MODE_OBJECT)
+		{
+			if (!ft_pop(ch, MODE_OBJECT) || !ft_push(ch, MODE_KEY))
+            	return (FALSE);
+			ch->state = KE;
+		}
+		else if (ch->stack[ch->top] == MODE_ARRAY)
+			ch->state = VA;
+		else
+			return (FALSE);
+	}
+	return (TRUE);
+}
+
+static int		ft_handle_neg_states(t_checker ch, t_states next_state)
+{
+	if (next_state == -9)
+    	return (ft_handle_next_state(ch, 0, MODE_KEY, OK));
+	else if (next_state == -8)
+    	return (ft_handle_next_state(ch, 0, MODE_OBJECT, OK));
+	else if (next_state == -7)
+    	return (ft_handle_next_state(ch, 0, MODE_ARRAY, OK));
+	else if (next_state == -6)
+    	return (ft_handle_next_state(ch, 1, MODE_KEY, OB));
+	else if (next_state == -5)
+    	return (ft_handle_next_state(ch, 1, MODE_ARRAY, AR));
+	else if (next_state == -4 || next_state == -3)
+		return (ft_handle_coma_and_quotation(ch, next_state));
+	else if (next_state == -2)
+		return (ft_handle_next_state(ch, 0, MODE_KEY, VA) &&
+				ft_handle_next_state(ch, 1, MODE_OBJECT, VA));
+	else
+		return (FALSE);
+}
+
+int				ft_check_char(t_checker checker, int c)
 {
     int		next_class;
     int		next_state;
 
-    if (parser->valid != GOOD) {
-        return FALSE;
-    }
-    if (c < 0) {
-        return reject(parser);
-    }
-    if (c >= 128) {
+    if (checker->valid != GOOD)
+        return (FALSE);
+    if (c < 0)
+        return (ft_reject(checker));
+    if (c >= 128)
         next_class = ETC;
-    } else {
+    else
+	{
         next_class = ascii_class[c];
-        if (next_class <= _) {
-            return reject(parser);
-        }
-    }
-    next_state = state_transition_table[parser->state][next_class];
-    if (next_state >= 0) {
-        parser->state = next_state;
-    } else {
-        switch (next_state) {
-        case -9:
-            if (!pop(parser, MODE_KEY)) {
-                return reject(parser);
-            }
-            parser->state = OK;
-            break;
-
-/* } */ case -8:
-            if (!pop(parser, MODE_OBJECT)) {
-                return reject(parser);
-            }
-            parser->state = OK;
-            break;
-
-/* ] */ case -7:
-            if (!pop(parser, MODE_ARRAY)) {
-                return reject(parser);
-            }
-            parser->state = OK;
-            break;
-
-/* { */ case -6:
-            if (!push(parser, MODE_KEY)) {
-                return reject(parser);
-            }
-            parser->state = OB;
-            break;
-
-/* [ */ case -5:
-            if (!push(parser, MODE_ARRAY)) {
-                return reject(parser);
-            }
-            parser->state = AR;
-            break;
-
-/* " */ case -4:
-            switch (parser->stack[parser->top]) {
-            case MODE_KEY:
-                parser->state = CO;
-                break;
-            case MODE_ARRAY:
-            case MODE_OBJECT:
-                parser->state = OK;
-                break;
-            default:
-                return reject(parser);
-            }
-            break;
-
-/* , */ case -3:
-            switch (parser->stack[parser->top]) {
-            case MODE_OBJECT:
-                if (!pop(parser, MODE_OBJECT) || !push(parser, MODE_KEY)) {
-                    return reject(parser);
-                }
-                parser->state = KE;
-                break;
-            case MODE_ARRAY:
-                parser->state = VA;
-                break;
-            default:
-                return reject(parser);
-            }
-            break;
-
-/* : */ case -2:
-            if (!pop(parser, MODE_KEY) || !push(parser, MODE_OBJECT)) {
-                return reject(parser);
-            }
-            parser->state = VA;
-            break;
-        default:
-            return reject(parser);
-        }
-    }
-    return TRUE;
+        if (next_class <= _)
+            return (ft_reject(checker));
+	}
+    next_state = state_transition_table[checker->state][next_class];
+    if (next_state >= 0)
+	{
+        checker->state = next_state;
+        return (TRUE);
+	}
+    else
+    	return ((ft_handle_neg_states(checker, next_state)) ?
+    		TRUE : ft_reject(checker));
 }
 
 
 int				ft_check_done(t_checker parser)
 {
-    if (parser->valid != GOOD) {
+	int		res;
+
+    if (parser->valid != GOOD)
         return FALSE;
-    }
-    int result = parser->state == OK && pop(parser, MODE_DONE);
-    destroy(parser);
-    return result;
+    res = parser->state == OK && ft_pop(parser, MODE_DONE);
+	ft_destroy(parser);
+    return (res);
 }
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
-static int	ft_check_bracket(char c, int *counters[3], int last_bracket)
+int	main(void)
 {
-	if (c == '(')
-	{
-		++(*counters[0]);
-		return ('(');
-	}
-	else if (c == '[')
-	{
-		++(*counters[1]);
-		return ('[');
-	}
-	else if (c == '{')
-	{
-		++(*counters[2]);
-		return ('{');
-	}
-	else if (c == ')')
-}
+	t_checker	checker;
+	char		*ptr;
+	size_t		len;
 
-void		ft_validate(char *content)
-{
-	char	*c;
+	char 		*line_ptr;
+	char		*to_free;
+	int			line;
+	int			symbol;
 
-	int		line;
-	int		symbol;
+	checker = ft_checkernew(10);
+	len = strlen(test_content);
+	ptr = (char *)malloc(len + 1);
+	ptr[len] = 0;
+	memmove(ptr, test_content, len);
 
-	int		brackets[3];
-	char	last_bracket;
-
-
-
-	c = content;
-
-	line = 0;
+	line = 1;
 	symbol = 0;
 
-	last_bracket = 0;
-
-	while (c)
+	while (*ptr && ft_check_char(checker, *ptr))
 	{
-		while (c && ft_isspace(*c))
-			++c;
-		if (!c)
-			return ;
-
-		++c;
+		if (*ptr == '\n')
+		{
+			++line;
+			symbol = 0;
+		}
+		++symbol;
+		++ptr;
 	}
+	line_ptr = ptr - symbol + 1;
+	if (!ft_check_done(checker))
+	{
+		len = 0;
+
+		while (line_ptr[len] && line_ptr[len] != '\n')
+			++len;
+		to_free = (char *)malloc(len + 1);
+		to_free[len] = 0;
+		memmove(to_free, line_ptr, len);
+		printf("SYNTAX ERROR at line %4d : <<%s>>\n", line, to_free);
+		printf("                              ");
+		for (int i = 0; i < symbol - 1; ++i)
+			printf("%c", to_free[i] == '\t' ? '\t' : ' ');
+		printf("^");
+		free(to_free);
+	}
+	return (0);
 }

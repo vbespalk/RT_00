@@ -16,7 +16,7 @@ t_vector		ft_change_blur_vec(t_vector norm, t_vector vec, float angle)
 {
 	t_vector	proj;
 
-	if (acos(ft_3_vector_cos(norm, vec)) + angle <= M_PI_2)
+	if (acosf(ft_3_vector_cos(norm, vec)) + angle <= M_PI_2)
 		return (vec);
 	proj = ft_3_tounitvector(ft_3_vector_project(norm, vec));
 	return (ft_3_vector_turn(proj, norm, (float)M_PI_2 - angle));
@@ -56,12 +56,14 @@ t_color			ft_sum_colors
 		illum = (float)ft_limitf(
 			0.0, 1.0, o->ambnt + (float)(coll->illum_color.argb[i]) / 255.0);
 		res.argb[i] = (t_byte)(
-			(depth == DEPTH)
-			? (float)(o->color.argb[i]) * illum
+			(!coll->o->spclr || !coll->o->trans)
+			? ((float)(o->color.argb[i]) * illum * o->diff +
+				(float)(color_s.argb[i]) * coll->o->spclr +
+				(float)(color_t.argb[i]) * coll->o->trans)
 			: ((float)(o->color.argb[i]) * illum * o->diff +
 				(1.0f - o->diff) *
 					((float)(color_s.argb[i]) * coll->fresnel +
-						(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));
+				(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));
 	}
 	return (res);
 }

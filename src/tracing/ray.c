@@ -29,10 +29,10 @@ static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], Uint32 pix, int dept
 	}
 	if (!coll.o)
 		return (parg->e->scn->bg_color);
-	od[0] = coll.coll_pnt;
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)
 	{
+		od[0] = coll.coll_pnt;
 		od[1] = coll.spclr_vec;
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
@@ -41,6 +41,7 @@ static t_color	ft_throw_ray(t_thrarg *parg, t_vector od[2], Uint32 pix, int dept
 	}
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
+		od[0] = coll.coll_pnt;
 		od[1] = coll.trans_vec;
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
@@ -102,5 +103,9 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	od[1] = od[1] + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	od[1] = ft_3_unitvectornew(parg->e->scn->cam->origin, od[1]);
 	res = ft_throw_ray(parg, od, y * parg->e->sdl->scr_wid + x, 0);
+
+	if (x == 0 && y < 10)
+		printf("%#0.6x\n", res.val);
+
 	return (res);
 }

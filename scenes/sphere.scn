@@ -8,8 +8,19 @@ light {
     direct: (1, -1, 0);
 }
 
+#sphere {
+#    origin: (0, 0, 0);
+#    radius: 10;
+#    color: 0x0000ff;
+#    diff: 1;
+#    spclr: 0;
+#    phong: 0;
+#    trans: 0;
+#}
+
 sphere {
-    origin: (0, 0, 0);
+    origin: (600, 600, -1200);
+    radius: 500;
     color: 0x0000ff;
     diff: 1;
     spclr: 1;

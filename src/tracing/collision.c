@@ -48,6 +48,7 @@ static void			ft_refract(t_thrarg *arg, t_coll *coll, t_vector direct)
 	coll->trans_vec = ft_3_vector_refract(coll->norm, direct, refr[0], refr[1]);
 	if (ft_3_isnullpoint(coll->trans_vec))
 	{
+//		printf("full reflection\n");
 		coll->fresnel = 1.0f;
 		return ;
 	}
@@ -85,9 +86,8 @@ t_coll				ft_get_collision
 		ft_get_collision_point(arg->e->scn->objs, &(coll.o), od)))
 		return (coll);
 	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
-	coll.fresnel = coll.o->spclr;
 	if (ft_3_vector_cos(coll.norm, direct) > 0)
-		coll.norm = ft_3_vector_scale(coll.norm, -1);
+		coll.norm = ft_3_vector_scale(coll.norm, -1.0f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(origin, coll.coll_pnt, coll.norm);
 	if (coll.o->trans)

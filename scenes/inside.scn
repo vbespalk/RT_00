@@ -1,0 +1,13 @@
+
+camera {
+    origin: (0, 0, 0);
+}
+
+light {
+    origin: (-5, 0, 0);
+    bright: 0.001;
+}
+
+sphere {
+
+}

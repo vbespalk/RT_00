@@ -22,16 +22,16 @@ int	get_format_data(t_sdl *sdl)
 
 	if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
 	{
-		rmask = 0xff000000;
-		gmask = 0x00ff0000;
-		bmask = 0x0000ff00;
-		amask = 0x000000ff;
+		rmask = 0x00ff0000;
+		gmask = 0x0000ff00;
+		bmask = 0x000000ff;
+		amask = 0xff000000;
 	}
 	else
 	{
-		rmask = 0x000000ff;
+		rmask = 0x00ff0000;
 		gmask = 0x0000ff00;
-		bmask = 0x00ff0000;
+		bmask = 0x000000ff;
 		amask = 0xff000000;
 	}
 	surface = SDL_CreateRGBSurface(0, sdl->scr_wid, sdl->scr_hei, 32, rmask, gmask, bmask, amask);

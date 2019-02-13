@@ -6,7 +6,7 @@
 #    By: domelche <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/19 11:58:45 by domelche          #+#    #+#              #
-#    Updated: 2019/01/22 15:39:23 by domelche         ###   ########.fr        #
+#    Updated: 2019/02/07 14:41:52 by domelche         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,13 +63,11 @@ $(NAME): $(OBJ)
 clean:
 	@/bin/rm -f src/*/*.o
 	@$(MAKE) clean -C libft
-	@$(MAKE) clean -C minilibx
 	@$(MAKE) clean -C libpnt
 
 fclean: clean
 	@/bin/rm -f $(NAME)
 	@/bin/rm -f $(LIBFT_PATH)
-	@/bin/rm -f $(LIBMLX_PATH)
 	@/bin/rm -f $(LIBPNT_PATH)
 
 re: fclean all

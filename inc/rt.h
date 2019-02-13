@@ -295,6 +295,7 @@ typedef struct			s_collision
 	t_color				illum_color;
 	t_color				phong_color;
 	float				phong;
+	float				fresnel;
 	t_object			*o;
 	t_vector			coll_pnt;
 	t_vector			norm;
@@ -582,8 +583,8 @@ t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
 */
 
 t_color					ft_throw_rays
-							(t_thrarg *parg, t_coll coll, t_vector *vec,
-							 float num[2]);
+							(t_thrarg *parg, t_coll *coll,
+							t_vector *vec, float num[2]);
 t_color					ft_trace_ray(t_thrarg *parg, int x, int y);
 
 /*
@@ -594,7 +595,8 @@ t_vector				ft_change_blur_vec
 							(t_vector norm, t_vector vec, float angle);
 t_vector				ft_get_blur_proj(t_vector origin, t_vector norm);
 t_color					ft_sum_colors
-							(t_coll coll, t_color color_s, t_color color_t);
+							(t_coll *coll, t_color color_s,
+							t_color color_t, int depth);
 
 /*
 **	illumination.c
@@ -607,14 +609,14 @@ void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 */
 
 t_coll					ft_get_collision
-							(t_thrarg *parg, t_vector origin, t_vector direct);
+							(t_thrarg *arg, t_vector origin, t_vector direct);
 
 /*
 **	utils.c
 */
 
 t_color					ft_apply_phong
-	(t_color color, float bright, t_color light_color);
+							(t_color color, float bright, t_color light_color);
 t_color					ft_scale_color(t_color color, float k);
 t_color					ft_add_colors(t_color c1, t_color c2);
 

@@ -88,7 +88,7 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 	ldir = (l->type == POINT) ? (l->origin - coll->coll_pnt) :
 		ft_3_vector_scale(l->direct, -1.0f);
 	norm_light_cos = ft_3_vector_cos(coll->norm, ldir);
-	if (norm_light_cos >= 0 &&
+	if (norm_light_cos >= 0 && 
 		!ft_iscollide(parg->e->scn, coll->coll_pnt, ldir, l))
 		ft_affect_illumination(coll, l, ldir, norm_light_cos);
 }

@@ -117,9 +117,9 @@ void		ft_rotate_cone(Uint32 key, void *fig, t_vector *rot)
 	else if (key == SDLK_UP)
 		(*rot)[2] -= ROTAT_F;
 	else if (key == SDLK_LEFT)
-		(*rot)[1] += ROTAT_F;
+		(*rot)[1] -= ROTAT_F;
 	else if (key == SDLK_RIGHT)
-		(*rot)[1] -= -ROTAT_F;
+		(*rot)[1] += ROTAT_F;
 	else if (key == SDLK_PAGEDOWN)
 		(*rot)[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)

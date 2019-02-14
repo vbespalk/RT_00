@@ -29,7 +29,7 @@ light {
 plane {
     origin: (500, 0, 0);
     norm: (-1, 0, 0);
-    color: 0x808080;
+    color: 0xff8080;
 }
 
 plane {

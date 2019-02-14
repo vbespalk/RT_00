@@ -17,8 +17,10 @@ t_plane		*ft_planenew(void)
 	t_plane	*pln;
 
 	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
-	pln->origin_ini = (t_vector){ 0.0, -1000.0, 0.0 };
-	pln->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
+	// pln->origin_ini = (t_vector){ 0.0, -1000.0, 0.0 };
+	// pln->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
+	pln->origin_ini = (t_vector){ 500.0, 0.0, 0.0 };
+	pln->norm_ini = (t_vector){ 1.0, 0.0, 0.0 };
 	return (pln);
 }
 
@@ -88,9 +90,9 @@ void		ft_rotate_plane(Uint32 key, void *fig, t_vector *rot)
 	else if (key == SDLK_UP)
 		(*rot)[2] -= ROTAT_F;
 	else if (key == SDLK_LEFT)
-		(*rot)[1] += ROTAT_F;
+		(*rot)[1] -= ROTAT_F;
 	else if (key == SDLK_RIGHT)
-		(*rot)[1] -= -ROTAT_F;
+		(*rot)[1] += ROTAT_F;
 	else if (key == SDLK_PAGEDOWN)
 		(*rot)[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)

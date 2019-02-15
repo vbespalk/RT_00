@@ -55,6 +55,7 @@
 */
 
 # define DEPTH			10
+# define STACK_SIZE		128
 # define THREADS		8
 
 /*
@@ -302,6 +303,23 @@ typedef struct			s_collision
 	t_vector			spclr_vec;
 	t_vector			trans_vec;
 }						t_coll;
+
+typedef struct			s_ray
+{
+	int					stack_i;
+	Uint32				pix;
+	t_coll				*coll;
+	/*
+	**	origin
+	*/
+	t_vector			o;
+	/*
+	**	direct
+	*/
+	t_vector			d;
+	t_object			*(stack[STACK_SIZE]);
+}						t_ray;
+
 /*
 ** -----------------------------------------DIFFERENT-----------------------------------------------------
 */
@@ -582,10 +600,11 @@ t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
 **	ray.c
 */
 
-t_color					ft_throw_rays
-							(t_thrarg *parg, t_coll *coll,
-							t_vector *vec, float num[2]);
 t_color					ft_trace_ray(t_thrarg *parg, int x, int y);
+t_color					ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth);
+t_color					ft_throw_rays
+							(t_thrarg *parg, t_ray *ray,
+							t_vector *vec, float num[2]);
 
 /*
 **	ray_utils.c

@@ -1,30 +1,6 @@
 
+#include <zconf.h>
 #include "rt.h"
-
-t_hit			*ft_hit_list_new(int length)
-{
-	t_hit	*head;
-	t_hit	*prev;
-	t_hit	*node;
-	int		i;
-
-	head = NULL;
-	prev = NULL;
-	i = 0;
-	while (i < length)
-	{
-		node = (t_hit *)ft_smemalloc(sizeof(t_hit), "ft_hit_list_new");
-		node->prev = prev;
-		if (!i)
-			head = node;
-		if (prev)
-			prev->next = node;
-		prev = node;
-		node = node->next;
-		++i;
-	}
-	return (head);
-}
 
 static void		ft_hit_push(t_hit *node, t_object *o, float (*refr)[2])
 {
@@ -59,12 +35,25 @@ static void		ft_hit_remove(t_hit *node, t_object *o, float (*refr)[2])
 	tmp->o = NULL;
 }
 
-void			ft_handle_hit(t_hit *head, t_object *o, float (*refr)[2])
+void			ft_get_refrs(t_ray *ray, float (*refr)[2])
 {
-	while (head->o && head->o != o)
-		head = head->next;
-	if (!(head->o))
-		ft_hit_push(head, o, refr);
+	int		i;
+
+	i = -1;
+	while (++i <= ray->stack_i && ray->stack[i] != ray->coll->o)
+		;
+	refr[0](--i < 0) ? DEFAULT_REFR : ray->stack[i]->refr;
+}
+
+void			ft_handle_hit(t_ray *ray)
+{
+	int		i;
+
+	i = -1;
+	while (++i <= ray->stack_i && ray->stack[i] != ray->coll->o)
+		;
+	if (i > ray->stack_i)
+		ft_hit_push();
 	else
-		ft_hit_remove(head, o, refr);
+		ft_hit_remove();
 }

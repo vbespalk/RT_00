@@ -74,8 +74,7 @@ static void			ft_refract(t_thrarg *arg, t_ray *ray)
 	}
 }
 
-t_coll				ft_get_collision
-						(t_thrarg *arg, t_ray *ray)
+t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 {
 	t_coll		coll;
 	t_vector	od[2];
@@ -92,7 +91,7 @@ t_coll				ft_get_collision
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
 	if (coll.o->trans)
-		ft_refract(arg, &coll, ray->d);
+		ft_refract(arg, ray);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

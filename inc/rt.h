@@ -55,7 +55,7 @@
 */
 
 # define DEPTH			10
-# define STACK_SIZE		128
+# define STACK_SIZE		DEPTH
 # define THREADS		8
 
 /*
@@ -461,8 +461,7 @@ int					get_format_data(t_sdl *sdl);
 */
 
 void					ft_get_refrs(t_ray *ray, float (*refr)[2]);
-void					ft_handle_hit
-							(t_hit *head, t_object *o, float (*refr)[2]);
+void					ft_handle_hit(t_ray *ray);
 
 /*
 **	scn.c
@@ -627,8 +626,7 @@ void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 **	collision.c
 */
 
-t_coll					ft_get_collision
-							(t_thrarg *arg, t_vector origin, t_vector direct);
+t_coll					ft_get_collision(t_thrarg *arg, t_ray *ray);
 
 /*
 **	utils.c

@@ -50,9 +50,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
 		ft_init_ray(ray, &next_ray, &(coll.coll_pnt), &(coll.trans_vec));
-
-		// ft_handle_hit();
-
+		ft_handle_hit(&next_ray);
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
 			ft_throw_rays(parg, &next_ray, &(coll.trans_vec), num) :

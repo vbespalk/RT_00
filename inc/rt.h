@@ -460,7 +460,7 @@ int					get_format_data(t_sdl *sdl);
 **	hit.c
 */
 
-t_hit					*ft_hit_list_new(int length);
+void					ft_get_refrs(t_ray *ray, float (*refr)[2]);
 void					ft_handle_hit
 							(t_hit *head, t_object *o, float (*refr)[2]);
 

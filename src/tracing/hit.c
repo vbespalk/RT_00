@@ -39,10 +39,25 @@ void			ft_get_refrs(t_ray *ray, float (*refr)[2])
 {
 	int		i;
 
-	i = -1;
-	while (++i <= ray->stack_i && ray->stack[i] != ray->coll->o)
-		;
-	refr[0](--i < 0) ? DEFAULT_REFR : ray->stack[i]->refr;
+	i = ray->stack_i;
+	while (i >= 0 && ray->stack[i] != ray->coll->o)
+		--i;
+	if (i < 0)
+	{
+		(*refr)[0] = (ray->stack_i < 0) ?
+			DEFAULT_REFR : (ray->stack[ray->stack_i])->refr;
+		(*refr)[1] = ray->coll->o->refr;
+	}
+	else
+	{
+		(*refr)[0] = ray->coll->o->refr;
+		if (i < ray->stack_i)
+			(*refr)[1] = (ray->stack[i + 1])->refr;
+		else if (i == 0)
+			(*refr)[1] = DEFAULT_REFR;
+		else
+			(*refr)[1] = (ray->stack[i - 1])->refr;
+	}
 }
 
 void			ft_handle_hit(t_ray *ray)

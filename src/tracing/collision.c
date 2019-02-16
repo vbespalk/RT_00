@@ -44,7 +44,7 @@ static void			ft_refract(t_thrarg *arg, t_ray *ray)
 	float		refr[2];
 	float		cos[2];
 
-	ft_handle_hit(ray, &refr);
+	ft_get_refrs(ray, &refr);
 	ray->coll->trans_vec =
 		ft_3_vector_refract(ray->coll->norm, ray->d, refr[0], refr[1]);
 	if (ft_3_isnullpoint(ray->coll->trans_vec))

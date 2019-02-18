@@ -8,6 +8,7 @@
 # define JSON_H
 
 # include "libftprintf.h"
+# include "libpnt.h"
 
 # define TRUE		1
 # define FALSE		0
@@ -24,6 +25,37 @@ typedef struct		s_checker
     int				top;
     int				*stack;
 }					*t_checker;
+
+typedef enum		e_datatype
+{
+	DT_POINT,
+	DT_COLOR,
+	DT_STRING,
+	DT_FLOAT,
+	DT_KOEF
+}					t_datatype;
+
+typedef enum		e_object_type
+{
+	O_SCENE,
+	O_SPHERE,
+	O_PLANE,
+	O_CONE,
+	O_POINT,
+	O_COUNT
+}					t_object_type;
+
+typedef struct		s_attribute
+{
+	char			*name;
+	t_datatype		datatype;
+	void			*dst;
+}					t_attr;
+
+typedef struct		s_parser
+{
+	t_attr			**attrs;
+}					t_parser;
 
 typedef enum		e_classes
 {
@@ -130,5 +162,19 @@ int					ft_check_done(t_checker parser);
 */
 
 void				ft_check_syntax(char *content);
+
+/*
+**	attribute.c
+*/
+
+void				ft_get_attr
+						(char *content, void *dst, char *attr, t_datatype datatype);
+
+/*
+**	warning.c
+*/
+
+void				ft_parse_warning
+						(char *content, char *attr, t_datatype datatype);
 
 #endif

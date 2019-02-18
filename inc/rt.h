@@ -101,7 +101,6 @@
 # include "SDL_image.h"
 # include "SDL_syswm.h"
 
-# include "libpnt.h"
 # include "json.h"
 
 typedef	float		t_matrix[4][4];

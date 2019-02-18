@@ -20,4 +20,6 @@ t_scene		*ft_parse_json(char *filename)
 	content = ft_read(filename);
 	scn = ft_scenenew();
 	ft_check_syntax(content);
+	ft_parse_content(scn, content);
+	return (scn);
 }

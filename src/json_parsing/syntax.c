@@ -5,18 +5,20 @@ static void		ft_syntax_error(char *content, int line, int symbol)
 {
 	char 		*line_ptr;
 	size_t		len;
+	int			i;
 
 	len = 0;
 	while (content[len] && content[len] != '\n')
 		++len;
 	line_ptr = (char *)ft_smemalloc(len + 1, "ft_check_syntax");
 	line_ptr[len] = 0;
-	memmove(line_ptr, content - len, len);
-	ft_printf("SYNTAX ERROR at line %4d : <<%s>>\n", line, line_ptr);
-	ft_printf("                              ");
-	for (int i = 0; i < symbol - 1; ++i)
-		ft_printf("%c", line_ptr[i] == '\t' ? '\t' : ' ');
-	ft_printf("^");
+	ft_memmove(line_ptr, content - len, len);
+	ft_printf("SYNTAX ERROR  at line %4d : <<%s>>\n", line, line_ptr);
+	write(1, "                               ", 31);
+	i = -1;
+	while (++i < symbol - 1)
+		write(1, (line_ptr[i] == '\t') ? "\t" : " ", 1);
+	write(1, "^", 1);
 	free(line_ptr);
 	ft_error("scene file is invalid");
 }

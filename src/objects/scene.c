@@ -27,8 +27,6 @@ t_scene		*ft_get_scene(char *file_name)
 {
 	t_scene		*scn;
 	int			fd;
-	int			i;
-	int			length;
 
 	scn = ft_scenenew();
 	if ((fd = open(file_name, O_RDONLY)) < 0)
@@ -36,10 +34,6 @@ t_scene		*ft_get_scene(char *file_name)
 	if ((read(fd, NULL, 0)) < 0)
 		ft_error("cannot read file");
 	ft_parse(ft_readfile(file_name), scn);
-	i = -1;
-	length = ft_lstlen(&(scn->objs));
-	while (++i < THREADS)
-		scn->hits[i] = ft_hit_list_new(length);
 	return (scn);
 }
 

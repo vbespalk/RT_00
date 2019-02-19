@@ -61,7 +61,7 @@ static int		state_transition_table[NR_STATES][NR_CLASSES] = {
 	{_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,OK,_,_,_,_,_,_,_,_}
 };
 
-static int		ft_handle_coma_and_quotation(t_checker ch, t_states next_state)
+static int		ft_handle_coma_and_quotation(t_checker ch, int next_state)
 {
 	if (next_state == -4)
 	{
@@ -89,7 +89,7 @@ static int		ft_handle_coma_and_quotation(t_checker ch, t_states next_state)
 	return (TRUE);
 }
 
-static int		ft_handle_neg_states(t_checker ch, t_states next_state)
+static int		ft_handle_neg_states(t_checker ch, int next_state)
 {
 	if (next_state == -9)
     	return (ft_handle_next_state(ch, 0, MODE_KEY, OK));

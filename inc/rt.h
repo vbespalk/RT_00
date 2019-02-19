@@ -98,8 +98,8 @@
 # include <stdint.h>
 # include <time.h>
 # include "SDL.h"
-# include "SDL_image.h"
-# include "SDL_syswm.h"
+//# include "SDL_image.h"
+//# include "SDL_syswm.h"
 
 # include "json.h"
 
@@ -331,22 +331,22 @@ typedef struct		s_thrarg
 	t_env			*e;
 }					t_thrarg;
 
-typedef	struct		s_thread
-{
-	int				s_pix;
-	int				e_pix;
-	t_env			*env;
-}					t_thread;
-
-typedef	struct		s_ray
-{
-	t_vector		ori;
-	t_vector		dir;
-	float			t;
-	t_vector		hit_p;
-	t_vector		hit_n;
-	t_vector		hit_c;
-}					t_ray;
+//typedef	struct		s_thread
+//{
+//	int				s_pix;
+//	int				e_pix;
+//	t_env			*env;
+//}					t_thread;
+//
+//typedef	struct		s_ray
+//{
+//	t_vector		ori;
+//	t_vector		dir;
+//	float			t;
+//	t_vector		hit_p;
+//	t_vector		hit_n;
+//	t_vector		hit_c;
+//}					t_ray;
 
 /*
 ** -------------------------------------FUNCTIONS---------------------------------------------------------------
@@ -460,7 +460,7 @@ int					get_format_data(t_sdl *sdl);
 */
 
 void					ft_get_refrs(t_ray *ray, float (*refr)[2]);
-void					ft_handle_hit(t_ray *ray);
+void					ft_handle_hit(t_ray *ray, t_object *o);
 
 /*
 **	scn.c

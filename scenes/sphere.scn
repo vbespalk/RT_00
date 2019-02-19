@@ -3,6 +3,10 @@ scene {
     bg_color: 0xffffff;
 }
 
+camera {
+    origin: (-500, 0, 0);
+}
+
 light {
     type: direct;
     direct: (1, -1, 0);
@@ -19,43 +23,48 @@ light {
 #}
 
 sphere {
-    origin: (600, 600, -1200);
+    origin: (2000, 0, 0);
     radius: 500;
     color: 0x0000ff;
     diff: 1;
     spclr: 1;
     phong: 1;
     trans: 1;
-    refr: 2;
+    refr: 1.5;
 }
 
-plane {
-    origin: (1000, 0, 0);
-    norm: (1, 0, 0);
+#plane {
+#    origin: (3000, 0, 0);
+#    norm: (1, 0, 0);
+#    color: 0x00ff00;
+#}
+
+sphere {
+    origin: (2000, 0, 0);
+    radius: 100;
     color: 0x00ff00;
 }
 
+sphere {
+    origin: (2000, 0, 500);
+    radius: 100;
+    color: 0x0000ff;
+}
 
-#sphere {
-#    origin: (1000, 0, -300);
-#    radius: 100;
-#    color: 0x00ff00;
-#}
-#
-#sphere {
-#    origin: (1000, 0, -300);
-#    radius: 100;
-#    color: 0xff0000;
-#}
-#
-#sphere {
-#    origin: (1000, 300, 0);
-#    radius: 100;
-#    color: 0x00ff00;
-#}
-#
-#sphere {
-#    origin: (1000, 0, 300);
-#    radius: 100;
-#    color: 0x0000ff;
-#}
+sphere {
+    origin: (2000, -500, 0);
+    radius: 100;
+    color: 0xff0000;
+}
+
+sphere {
+    origin: (2000, 500, 0);
+    radius: 100;
+    color: 0x880000;
+}
+
+sphere {
+    origin: (2000, 0, -500);
+    radius: 100;
+    color: 0x000088;
+}

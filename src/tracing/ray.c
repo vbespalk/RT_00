@@ -15,11 +15,14 @@
 static void		ft_init_ray
 					(t_ray *ray_prev, t_ray *ray, t_vector *o, t_vector *d)
 {
+	int		i;
+
 	ray->o = *o;
 	ray->d = *d;
-	ray->stack_i = -1;
-	while (++(ray->stack_i) <= ray_prev->stack_i)
-		ray->stack[ray->stack_i] = ray_prev->stack[ray->stack_i];
+	ray->stack_i = ray_prev->stack_i;
+	i = -1;
+	while (++i < STACK_SIZE)
+		ray->stack[i] = ray_prev->stack[i];
 }
 
 t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
@@ -50,7 +53,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
 		ft_init_ray(ray, &next_ray, &(coll.coll_pnt), &(coll.trans_vec));
-		ft_handle_hit(&next_ray);
+		ft_handle_hit(&next_ray, coll.o);
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
 			ft_throw_rays(parg, &next_ray, &(coll.trans_vec), num) :
@@ -105,7 +108,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	t_ray		ray;
 	t_color		res;
 
-	ray.stack_i = 0;
+	ray.stack_i = -1;
 	ray.pix = (Uint32)(y * parg->e->sdl->scr_wid + x);
 	ray.o = parg->e->scn->cam->origin;
 	ray.d = parg->e->scn->cam->vs_start_point;

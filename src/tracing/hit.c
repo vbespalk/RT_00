@@ -26,15 +26,15 @@ void			ft_get_refrs(t_ray *ray, float (*refr)[2])
 	}
 }
 
-void			ft_handle_hit(t_ray *ray)
+void			ft_handle_hit(t_ray *ray, t_object *o)
 {
 	int		i;
 
 	i = ray->stack_i;
-	while (i >= 0 && ray->stack[i] != ray->coll->o)
+	while (i >= 0 && ray->stack[i] != o)
 		--i;
 	if (i < 0)
-		ray->stack[++(ray->stack_i)] = ray->coll->o;
+		ray->stack[++(ray->stack_i)] = o;
 	else
 	{
 		ray->stack[i] = NULL;

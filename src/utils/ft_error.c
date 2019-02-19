@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libftprintf.h"
 #include <stdio.h>
 
 void	ft_perr_exit(char *message)

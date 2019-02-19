@@ -22,24 +22,22 @@ t_camera			*ft_cameranew(void)
 	return (cam);
 }
 
-char				*ft_parse_camera(char *attr, t_scene *scn)
+void				ft_parse_camera(char *content, t_camera *cam)
 {
-	float angles[3];
+	float	angles[3];
 
 	ft_bzero(&angles[0], sizeof(angles));
-	attr = ft_get_curve(attr, '{');
-	ft_get_attr_in_scope(attr, "origin:", (void *)&(scn->cam->origin), PNT);
-	ft_get_attr_in_scope(attr, "alpha:", (void *)&(angles[0]), FLT);
-	ft_get_attr_in_scope(attr, "beta:", (void *)&(angles[1]), FLT);
-	ft_get_attr_in_scope(attr, "gamma:", (void *)&(angles[2]), FLT);
-	scn->cam->angles = (t_vector){angles[0], angles[1], angles[2]};
-	ft_get_attr_in_scope(attr, "fov:", (void *)&(scn->cam->fov), FLT);
-	scn->cam->fov = (float)ft_limitf(FOV_MIN, FOV_MAX, scn->cam->fov);
-	scn->cam->fov = ft_torad(scn->cam->fov);
-	scn->cam->angles[0] = ft_torad(scn->cam->angles[0]);
-	scn->cam->angles[1] = ft_torad(scn->cam->angles[1]);
-	scn->cam->angles[2] = ft_torad(scn->cam->angles[2]);
-	return (ft_get_curve(attr, '}'));
+	ft_get_attr(content, "origin", (void *)&(cam->origin), DT_POINT);
+	ft_get_attr(content, "alpha", (void *)&(angles[0]), DT_FLOAT);
+	ft_get_attr(content, "beta", (void *)&(angles[1]), DT_FLOAT);
+	ft_get_attr(content, "gamma", (void *)&(angles[2]), DT_FLOAT);
+	cam->angles = (t_vector){ angles[0], angles[1], angles[2] };
+	ft_get_attr(content, "fov", (void *)&(cam->fov), DT_FLOAT);
+	cam->fov = (float)ft_limitf(FOV_MIN, FOV_MAX, cam->fov);
+	cam->fov = ft_torad(cam->fov);
+	cam->angles[0] = ft_torad(cam->angles[0]);
+	cam->angles[1] = ft_torad(cam->angles[1]);
+	cam->angles[2] = ft_torad(cam->angles[2]);
 }
 
 static void			ft_add_start_object(t_scene *scn, t_object *o)

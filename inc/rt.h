@@ -59,19 +59,6 @@
 # define THREADS		8
 
 /*
-**	parsing
-*/
-
-# define KOEF			0
-# define FLT			1
-# define STR			2
-# define PNT			3
-# define COLOR			4
-
-# define FTSA_GLOBALLY	0
-# define FTSA_IN_SCOPE	1
-
-/*
 **	key hooks
 */
 
@@ -475,7 +462,7 @@ void					ft_parse_scene(char *attr, t_scene *scn);
 */
 
 t_camera				*ft_cameranew(void);
-char					*ft_parse_camera(char *attr, t_scene *scn);
+void					ft_parse_camera(char *content, t_camera *cam);
 void					ft_get_start_refr(t_scene *scn);
 
 /*
@@ -510,11 +497,11 @@ void					ft_render(t_env *e);
 **	attribute.c
 */
 
-char					*ft_search_attr
-	(char *content, char *attr, int ftsa_mode);
-void					ft_read_attr(void *dst, char *attr, int type);
-void					ft_get_attr_in_scope
-	(char *start, char *name, void *dst, int type);
+//char					*ft_search_attr
+//	(char *content, char *attr, int ftsa_mode);
+//void					ft_read_attr(void *dst, char *attr, int type);
+//void					ft_get_attr_in_scope
+//	(char *start, char *name, void *dst, int type);
 
 /*
 **	light.c
@@ -528,7 +515,7 @@ char					*ft_parse_light(char *attr, t_scene *scn);
 */
 
 t_object				*ft_objectnew();
-t_object				*ft_parse_object(char *attr);
+t_object				*ft_parse_object(char *content);
 
 /*
 **	plane.c

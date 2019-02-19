@@ -38,26 +38,28 @@ static void	ft_balance_koefs(t_object *o)
 	}
 }
 
-t_object	*ft_parse_object(char *attr)
+void		ft_parse_object(char *content, t_list *list)
 {
 	t_object	*o;
+	char		*name;
 
+	ft_get_attr(content, "name", (void *)(&(name)), DT_STRING);
 	o = ft_objectnew();
-	attr = ft_get_curve(attr, '{');
-	ft_get_attr_in_scope(attr, "color:", (void *)(&(o->color)), COLOR);
-	ft_get_attr_in_scope(attr, "ambnt:", (void *)(&(o->ambnt)), KOEF);
-	ft_get_attr_in_scope(attr, "diff:", (void *)(&(o->diff)), KOEF);
-	ft_get_attr_in_scope(attr, "spclr:", (void *)(&(o->spclr)), KOEF);
-	ft_get_attr_in_scope(attr, "s_blur:", (void *)(&(o->s_blur)), KOEF);
-	ft_get_attr_in_scope(attr, "refr:", (void *)(&(o->refr)), FLT);
-	ft_get_attr_in_scope(attr, "trans:", (void *)(&(o->trans)), KOEF);
-	ft_get_attr_in_scope(attr, "t_blur:", (void *)(&(o->t_blur)), KOEF);
-	ft_get_attr_in_scope(attr, "phong:", (void *)(&(o->phong)), KOEF);
-	ft_get_attr_in_scope(attr, "translate:", (void *)(&(o->translate)), PNT);
-	ft_get_attr_in_scope(attr, "rotate:", (void *)(&(o->rotate)), PNT);
+
+	ft_get_attr(content, "color", (void *)(&(o->color)), DT_COLOR);
+	ft_get_attr(content, "ambnt", (void *)(&(o->ambnt)), DT_KOEF);
+	ft_get_attr(content, "diff", (void *)(&(o->diff)), DT_KOEF);
+	ft_get_attr(content, "spclr", (void *)(&(o->spclr)), DT_KOEF);
+	ft_get_attr(content, "s_blur", (void *)(&(o->s_blur)), DT_KOEF);
+	ft_get_attr(content, "refr", (void *)(&(o->refr)), DT_FLOAT);
+	ft_get_attr(content, "trans", (void *)(&(o->trans)), DT_KOEF);
+	ft_get_attr(content, "t_blur", (void *)(&(o->t_blur)), DT_KOEF);
+	ft_get_attr(content, "phong", (void *)(&(o->phong)), DT_KOEF);
+	ft_get_attr(content, "translate", (void *)(&(o->translate)), DT_POINT);
+	ft_get_attr(content, "rotate", (void *)(&(o->rotate)), DT_POINT);
 	ft_balance_koefs(o);
 	o->rotate[0] = (float)ft_torad(o->rotate[0]);
 	o->rotate[1] = (float)ft_torad(o->rotate[1]);
 	o->rotate[2] = (float)ft_torad(o->rotate[2]);
-	return (o);
+
 }

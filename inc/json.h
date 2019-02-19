@@ -29,33 +29,21 @@ typedef struct		s_checker
 typedef enum		e_datatype
 {
 	DT_POINT,
-	DT_COLOR,
+	DT_CAMERA,
+	DT_OBJECT_ARR,
+	DT_LIGHT_ARR,
 	DT_STRING,
+	DT_COLOR,
 	DT_FLOAT,
 	DT_KOEF
 }					t_datatype;
 
-typedef enum		e_object_type
+typedef enum 		e_otype
 {
-	O_SCENE,
-	O_SPHERE,
 	O_PLANE,
-	O_CONE,
-	O_POINT,
-	O_COUNT
-}					t_object_type;
-
-typedef struct		s_attribute
-{
-	char			*name;
-	t_datatype		datatype;
-	void			*dst;
-}					t_attr;
-
-typedef struct		s_parser
-{
-	t_attr			**attrs;
-}					t_parser;
+	O_SPHERE,
+	O_CONE
+}					t_otype;
 
 typedef enum		e_classes
 {
@@ -168,7 +156,26 @@ void				ft_check_syntax(char *content);
 */
 
 void				ft_get_attr
-						(char *content, void *dst, char *attr, t_datatype datatype);
+						(char *content, void *dst,
+						char *attr, t_datatype datatype);
+
+/*
+**	attribute_utils.c
+*/
+
+t_vector			ft_parse_point(char *content);
+void				ft_parse_str
+						(char *content, char **data,
+						void *dst, t_datatype datatype);
+void				ft_parse_json_object
+						(char *content, char **data,
+						void *dst, t_datatype datatype);
+void				ft_parse_json_array
+						(char *content, char **data,
+						void *dst, t_datatype datatype);
+void				ft_parse_num
+						(char *content, char **data,
+						void *dst, t_datatype datatype);
 
 /*
 **	warning.c

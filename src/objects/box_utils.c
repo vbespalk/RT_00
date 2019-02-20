@@ -20,8 +20,8 @@ t_vector	ft_collide_box(void *fig, t_vector origin, t_vector direct)
 	bx = (t_box *)fig;
 	t_min[0] = (bx->bounds[0][0] - origin[0]) / direct[0];
 	t_max[0] = (bx->bounds[1][0] - origin[0]) / direct[0];
-	t_min[1] = (bx->bounds[0][1] - origin[0]) / direct[0];
-	t_max[1] = (bx->bounds[1][1] - origin[0]) / direct[0];
+	t_min[1] = (bx->bounds[0][1] - origin[1]) / direct[1];
+	t_max[1] = (bx->bounds[1][1] - origin[1]) / direct[1];
 
 	if (t_min[0] > t_max[0])
 		ft_swap_float(&t_min[0], &t_max[0]);
@@ -30,18 +30,18 @@ t_vector	ft_collide_box(void *fig, t_vector origin, t_vector direct)
 	if (t_min[0] > t_max[1] || t_max[0] < t_min[1])
 		return (ft_3_nullpointnew());
 	t[0] = t_min[0] > t_min[1] ? t_min[0] : t_min[1];
-	t[1] = t_max[0] < t_max[1] ? t_min[0] : t_min[1];
-	t_min[2] = (bx->bounds[0][2] - origin[0]) / direct[2];
-	t_max[2] = (bx->bounds[1][2] - origin[0]) / direct[2];
+	t[1] = t_max[0] < t_max[1] ? t_max[0] : t_max[1];
+	t_min[2] = (bx->bounds[0][2] - origin[2]) / direct[2];
+	t_max[2] = (bx->bounds[1][2] - origin[2]) / direct[2];
 	if (t_min[2] > t_max[2])
 		ft_swap_float(&t_min[2], &t_max[2]);
 	if (t_min[2] > t[1] || t_max[2] < t[0])
 		return (ft_3_nullpointnew());
 	t[0] = t[0] > t_min[2] ? t[0] : t_min[2];
 	t[1] = t[1] < t_max[2] ? t[1] : t_max[2];
-	if (t[0] < 0 || t[0] > t[1])
+	if (t[0] < 0 || (t[0] > t[1] && t[1] > FLT_MIN))
 		ft_swap_float(&t[0], &t[1]);
-	return (t[0] > 0 ? origin + ft_3_vector_scale(direct, t[0]) : ft_3_nullpointnew());
+	return (t[0] > FLT_MIN ? origin + ft_3_vector_scale(direct, t[0]) : ft_3_nullpointnew());
 }
 
 int			ft_is_inside_box(void *fig, t_vector point)

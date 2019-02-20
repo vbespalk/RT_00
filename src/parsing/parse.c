@@ -41,7 +41,8 @@ void		ft_parse(char *content, t_scene *scn)
 		tmp = ft_parse_cone(attr, scn, id++);
 	// ft_parse_triangle("triangle", scn, id++);
 	// ft_parse_quad("quad", scn, id++);
-	ft_parse_box("box", scn, id++);
+	// ft_parse_box("box", scn, id++);
+	ft_parse_prbld("paraboloid", scn, id++);
 	free(to_free);
 }
 

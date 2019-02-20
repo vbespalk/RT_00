@@ -5,8 +5,8 @@ t_box		*ft_boxnew(void)
 	t_box	*bx;
 
 	bx = ft_smemalloc(sizeof(t_box), "ft_boxnew");
-	bx->bounds_ini[0] = (t_vector){-10, -50, -50};
-	bx->bounds_ini[1] = (t_vector){ 10, 50, 50.0 };
+	bx->bounds_ini[0] = (t_vector){-50, -50, -50};
+	bx->bounds_ini[1] = (t_vector){ 50, 50, 50.0 };
 	return (bx);
 }
 
@@ -17,7 +17,8 @@ char		*ft_parse_box(char *attr, t_scene *scn, unsigned int  id)
 	t_box		*bx;
 
 	// printf("here\n");
-	obj = ft_parse_object(attr);
+	// obj = ft_parse_object(attr);
+	obj = ft_objectnew();
 	obj->id = id;
 	obj->refr = 1.0;
 	obj->ft_collide = ft_collide_box;
@@ -40,7 +41,7 @@ char		*ft_parse_box(char *attr, t_scene *scn, unsigned int  id)
 	bx->bounds[0] = bx->bounds_ini[0];
 	bx->bounds[1] = bx->bounds_ini[1];
 	obj->fig = bx;
-	printf("box normal %f,%f,%f\n", bx->norm[0], bx->norm[1], bx->norm[2]);
+	// printf("box normal %f,%f,%f\n", bx->norm[0], bx->norm[1], bx->norm[2]);
 	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
 	return (NULL);
 	// return (ft_get_curve(attr, '}'));
@@ -93,16 +94,9 @@ void		ft_rotate_box(Uint32 key, void *fig, t_vector *rot)
 
 void		ft_scale_box(Uint32 key, void *fig, float *scale)
 {
-	t_box *bx;
+	t_box		*bx;
 
 	if (!fig)
 		return ;
-	bx = (t_box *)fig;
-	if (key == SDLK_z)
-		*scale += SCALE_F;
-	else if (key == SDLK_x && *scale >= 0.0f)
-		*scale -= SCALE_F;
-	else
-		*scale = 0;
-	// bx->radius = bx->radius_ini * *scale;
+
 }

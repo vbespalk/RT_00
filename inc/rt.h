@@ -247,6 +247,17 @@ typedef struct		s_box
 
 }					t_box;
 
+typedef struct		s_paraboloid
+{
+	t_vector		o;
+	t_vector		d;
+	t_vector		n;
+	float			sk;
+	float			h; //height
+	float			maxh; //max height
+
+}					t_prbld;
+
 /*
 ** ------------------------------------------ENVIRONMENT-----------------------------------------------------------
 */
@@ -664,7 +675,7 @@ t_vector				ft_get_norm_quad(void *fig, t_vector coll);
 **	box.c
 */
 
- char					*ft_parse_box(char *attr, t_scene *scn, unsigned int id);
+char					*ft_parse_box(char *attr, t_scene *scn, unsigned int id);
 void					ft_translate_box(Uint32 key, void *fig, t_vector *transl);
 void					ft_rotate_box(Uint32 key, void *fig, t_vector *rot);
 void					ft_scale_box(Uint32 key, void *fig, float *scale);
@@ -679,6 +690,13 @@ t_vector				ft_collide_box
 	(void *fig, t_vector origin, t_vector direct);
 int						ft_is_inside_box(void *fig, t_vector point);
 t_vector				ft_get_norm_box(void *fig, t_vector coll);
+
+/*
+** abbx_utils.c
+*/
+
+float					bbx_area(t_vector d);
+float					bbx_volume(t_vector d);
 
 /*
 **--------------------------------------------------SPHERE------------------------------------------------------------------
@@ -738,6 +756,28 @@ void					ft_collide_cone_planes
 	(t_cone *cone, t_vector origin,
 	 t_vector direct, t_vector (*pnt)[4]);
 t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
+
+/*
+**------------------------------------------------PARABOLOID----------------------------------------------------------------
+*/
+/*
+**	paraboloid.c
+*/
+
+char					*ft_parse_prbld(char *attr, t_scene *scn, unsigned int id);
+void					ft_translate_prbld(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_prbld(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_prbld(Uint32 key, void *fig, float *scale);
+
+/*
+**	paraboloid_utils.c
+*/
+
+int						ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_prbld(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_prbld(void *fig, t_vector point);
+t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
+
 
 /*
 **	ray.c

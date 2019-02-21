@@ -22,25 +22,19 @@ t_sphere	*ft_spherenew(void)
 	return (sph);
 }
 
-char		*ft_parse_sphere(char *attr, t_scene *scn, Uint32 id)
+void		*ft_parse_sphere(char *content, t_object *o)
 {
-	t_object	*obj;
 	t_sphere	*sph;
 
-	obj = ft_parse_object(attr);
-	obj->id = id;
-	obj->ft_collide = ft_collide_sphere;
-	obj->ft_is_reachable = ft_is_reachable_sphere;
-	obj->ft_is_inside = ft_is_inside_sphere;
-	obj->ft_get_norm = ft_get_norm_sphere;
+	o->ft_collide = ft_collide_sphere;
+	o->ft_is_reachable = ft_is_reachable_sphere;
+	o->ft_is_inside = ft_is_inside_sphere;
+	o->ft_get_norm = ft_get_norm_sphere;
 	sph = ft_spherenew();
-	attr = ft_get_curve(attr, '{');
-	ft_get_attr_in_scope(attr, "origin:", (void *)(&(sph->origin)), PNT);
-	ft_get_attr_in_scope(attr, "radius:", (void *)(&(sph->radius)), FLT);
+	ft_get_attr(content, "origin:", (void *)(&(sph->origin)), DT_POINT);
+	ft_get_attr(content, "radius:", (void *)(&(sph->radius)), DT_FLOAT);
 	sph->radius = (float)ft_limitf(0.0f, FLT_MAX, sph->radius);
-	sph->origin += obj->translate;
-	obj->fig = sph;
-	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
-	return (ft_get_curve(attr, '}'));
+	sph->origin += o->translate;
+	return ((void *)sph);
 }
 

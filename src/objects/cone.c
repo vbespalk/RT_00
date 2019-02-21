@@ -24,48 +24,42 @@ t_cone		*ft_conenew(void)
 	return (cone);
 }
 
-void		ft_cone_init(t_object *obj, t_cone *cone)
+void		ft_cone_init(t_object *o, t_cone *cone)
 {
-	obj->fig = cone;
 	cone->bv_dist = ft_3_point_point_dist(cone->base, cone->vert);
-	cone->base += obj->translate;
-	cone->vert += obj->translate;
+	cone->base += o->translate;
+	cone->vert += o->translate;
 	cone->bv = ft_3_vector_rotate(
 		ft_3_unitvectornew(cone->base, cone->vert),
-		obj->rotate[0], obj->rotate[1], obj->rotate[2]);
+		o->rotate[0], o->rotate[1], o->rotate[2]);
 	cone->vert = cone->base + ft_3_vector_scale(cone->bv, cone->bv_dist);
-	cone->side_norm_angle = (float)acos(
-		(cone->bv_dist * sin(atan((cone->base_rad - cone->vert_rad) /
+	cone->side_norm_angle = acosf(
+		(cone->bv_dist * sinf(atanf((cone->base_rad - cone->vert_rad) /
 			cone->bv_dist))) / (cone->base_rad - cone->vert_rad));
 	cone->main_vert = cone->base + ft_3_vector_scale(
 		cone->bv,
 		cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
 }
 
-char		*ft_parse_cone(char *attr, t_scene *scn, Uint32 id)
+void		*ft_parse_cone(char *content, t_object *o)
 {
-	t_object	*obj;
 	t_cone		*cone;
 
-	obj = ft_parse_object(attr);
-	obj->id = id; 
-	obj->ft_collide = ft_collide_cone;
-	obj->ft_is_reachable = ft_is_reachable_plane;
-	obj->ft_is_inside = ft_is_inside_cone;
-	obj->ft_get_norm = ft_get_norm_cone;
+	o->ft_collide = ft_collide_cone;
+	o->ft_is_reachable = ft_is_reachable_plane;
+	o->ft_is_inside = ft_is_inside_cone;
+	o->ft_get_norm = ft_get_norm_cone;
 	cone = ft_conenew();
-	attr = ft_get_curve(attr, '{');
-	ft_get_attr_in_scope(attr, "base:", (void *)(&(cone->base)), PNT);
-	ft_get_attr_in_scope(attr, "base_rad:", (void *)(&(cone->base_rad)), FLT);
-	ft_get_attr_in_scope(attr, "vert:", (void *)(&(cone->vert)), PNT);
-	ft_get_attr_in_scope(attr, "vert_rad:", (void *)(&(cone->vert_rad)), FLT);
+	ft_get_attr(content, "base", (void *)(&(cone->base)), DT_POINT);
+	ft_get_attr(content, "base_rad", (void *)(&(cone->base_rad)), DT_FLOAT);
+	ft_get_attr(content, "vert", (void *)(&(cone->vert)), DT_POINT);
+	ft_get_attr(content, "vert_rad", (void *)(&(cone->vert_rad)), DT_FLOAT);
 	if (cone->base_rad < 0 && cone->vert_rad < 0)
 	{
 		cone->base_rad *= -1.0f;
 		cone->vert_rad *= -1.0f;
 	}
-	ft_cone_init(obj, cone);
-	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
-	return (ft_get_curve(attr, '}'));
+	ft_cone_init(o, cone);
+	return ((void *)cone);
 }
 

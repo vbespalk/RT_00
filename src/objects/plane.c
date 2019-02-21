@@ -23,30 +23,23 @@ t_plane		*ft_planenew(void)
 }
 
 
-char		*ft_parse_plane(char *attr, t_scene *scn, Uint32 id)
+void		*ft_parse_plane(char *content, t_object *o)
 {
-	t_object	*obj;
 	t_plane		*pln;
 
-	obj = ft_parse_object(attr);
-	obj->id = id;
-	obj->refr = 1.0;
-	obj->ft_collide = ft_collide_plane;
-	obj->ft_is_reachable = ft_is_reachable_plane;
-	obj->ft_is_inside = ft_is_inside_plane;
-	obj->ft_get_norm = ft_get_norm_plane;
+	o->ft_collide = ft_collide_plane;
+	o->ft_is_reachable = ft_is_reachable_plane;
+	o->ft_is_inside = ft_is_inside_plane;
+	o->ft_get_norm = ft_get_norm_plane;
 	pln = ft_planenew();
-	attr = ft_get_curve(attr, '{');
-	ft_get_attr_in_scope(attr, "origin:", (void *)(&(pln->origin)), PNT);
-	ft_get_attr_in_scope(attr, "norm:", (void *)(&(pln->norm)), PNT);
+	ft_get_attr(content, "origin", (void *)(&(pln->origin)), DT_POINT);
+	ft_get_attr(content, "norm", (void *)(&(pln->norm)), DT_POINT);
 	if (ft_3_vector_len(pln->norm) == 0.0)
 		pln->norm = (t_vector){ 0.0, 1.0, 0.0 };
 	pln->norm = ft_3_tounitvector(pln->norm);
 	pln->norm = ft_3_tounitvector(
 		ft_3_vector_rotate(
-			pln->norm, obj->rotate[0], obj->rotate[1], obj->rotate[2]));
-	pln->origin += obj->translate;
-	obj->fig = pln;
-	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
-	return (ft_get_curve(attr, '}'));
+			pln->norm, o->rotate[0], o->rotate[1], o->rotate[2]));
+	pln->origin += o->translate;
+	return ((void *)pln);
 }

@@ -25,16 +25,22 @@ static char *ft_get_dt_str(t_datatype datatype)
 {
 	char	*dt;
 
-	if (datatype == DT_COLOR)
-		dt = ft_strdup("     color");
+	if (datatype == DT_POINT)
+		dt = ft_strdup("       point");
+	else if (datatype == DT_CAMERA)
+		dt = ft_strdup("      camera");
+	else if (datatype == DT_OBJECT_ARR)
+		dt = ft_strdup("object array");
+	else if (datatype == DT_LIGHT_ARR)
+		dt = ft_strdup(" light array");
 	else if (datatype == DT_STRING)
-		dt = ft_strdup("    string");
-	else if (datatype == DT_POINT)
-		dt = ft_strdup("     point");
+		dt = ft_strdup("      string");
+	else if (datatype == DT_COLOR)
+		dt = ft_strdup("       color");
 	else if (datatype == DT_FLOAT)
-		dt = ft_strdup("     float");
+		dt = ft_strdup("       float");
 	else
-		dt = ft_strdup("0 - 1 coef");
+		dt = ft_strdup("  0 - 1 coef");
 	return (dt);
 }
 
@@ -52,7 +58,8 @@ static char	*ft_get_line_ptr(char *content)
 	return (line_ptr);
 }
 
-void		ft_parse_warning(char *content, char *attr, t_datatype datatype)
+void		ft_parse_warning_datatype
+				(char *content, char *attr, t_datatype datatype)
 {
 	int		line;
 	int		symbol;
@@ -68,9 +75,19 @@ void		ft_parse_warning(char *content, char *attr, t_datatype datatype)
 	write(1, "                                                  ", 50);
 	write(1, "                                            ", 44);
 	i = -1;
+	free(dt);
+	dt = (char *)ft_smemalloc(
+		sizeof(char) * (symbol + 1), "ft_parse_warning_datatype");
 	while (++i < symbol - 1)
-		write(1, (line_ptr[i] == '\t') ? "\t" : " ", 1);
-	write(1, "^", 1);
+		dt[i] = (char)((line_ptr[i] == '\t') ? '\t' : ' ');
+	dt[i] = '^';
+	dt[i + 1] = '\n';
+	write(1, dt, (size_t)symbol + 1);
 	free(line_ptr);
 	free(dt);
+}
+
+void		ft_parse_warning(char *msg)
+{
+	ft_printf("PARSE WARNING: %s\n", msg);
 }

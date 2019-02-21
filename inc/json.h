@@ -42,7 +42,8 @@ typedef enum 		e_otype
 {
 	O_PLANE,
 	O_SPHERE,
-	O_CONE
+	O_CONE,
+	O_COUNT
 }					t_otype;
 
 typedef enum		e_classes
@@ -126,6 +127,12 @@ typedef enum		e_modes
 }					t_modes;
 
 /*
+**	parse.c
+*/
+
+t_scene				*ft_parse_json(char *filename);
+
+/*
 **	checker_utils.c
 */
 
@@ -181,7 +188,8 @@ void				ft_parse_num
 **	warning.c
 */
 
-void				ft_parse_warning
+void				ft_parse_warning(char *msg);
+void				ft_parse_warning_datatype
 						(char *content, char *attr, t_datatype datatype);
 
 #endif

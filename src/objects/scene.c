@@ -18,7 +18,6 @@ t_scene		*ft_scenenew(void)
 
 	scn = ft_smemalloc(sizeof(t_scene), "ft_scenenew");
 	scn->bg_color.val = 0;
-	scn->name = ft_strdup("New Scene");
 	scn->cam = ft_cameranew();
 	return (scn);
 }
@@ -37,17 +36,13 @@ t_scene		*ft_get_scene(char *file_name)
 	return (scn);
 }
 
-void		ft_parse_scene(char *attr, t_scene *scn)
+void		ft_parse_scene(char *content, t_scene *scn)
 {
-	char	*ptr;
-	char	*to_free;
-
-	attr = ft_get_curve(attr, '{');
-	if ((ptr = ft_search_attr(attr, "name:", FTSA_IN_SCOPE)))
-	{
-		to_free = scn->name;
-		ft_read_attr((void *)&(scn->name), ptr, STR);
-		free(to_free);
-	}
-	ft_get_attr_in_scope(attr, "bg_color:", (void *)&(scn->bg_color), COLOR);
+	ft_get_attr(content, "name", (void *)&(scn->name), DT_STRING);
+	if (!scn->name)
+		scn->name = ft_strdup("New Scene");
+	ft_get_attr(content, "bg_color", (void *)&(scn->bg_color), DT_COLOR);
+	ft_get_attr(content, "camera", (void *)&(scn->cam), DT_CAMERA);
+	ft_get_attr(content, "objects", (void *)&(scn->objs), DT_OBJECT_ARR);
+	ft_get_attr(content, "lights", (void *)&(scn->objs), DT_LIGHT_ARR);
 }

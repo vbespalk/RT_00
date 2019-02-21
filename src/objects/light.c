@@ -29,33 +29,34 @@ t_ltype		ft_get_light_type(char *type)
 	t_ltype		res;
 
 	res = L_POINT;
-	if (!ft_strcmp(type, "direct"))
+	if (!type)
+		return (res);
+	else if (!ft_strcmp(type, "point"))
+		res = L_POINT;
+	else if (!ft_strcmp(type, "direct"))
 		res = L_DIRECT;
-	if (!ft_strcmp(type, "parallel"))
+	else if (!ft_strcmp(type, "parallel"))
 		res = L_PARALLEL;
+	else
+		ft_printf(
+			"PARSE WARNING: no such light type '%s'; value set to default\n",
+			type);
 	return (res);
 }
 
-char		*ft_parse_light(char *attr, t_scene *scn)
+void		ft_parse_light(char *content, t_list *list, Uint32 id)
 {
 	char			*ptr;
 	char 			*ltype_str;
 	t_light			*light;
 
 	ltype_str = NULL;
-	attr = ft_get_curve(attr, '{');
-	if (!*attr)
-		ft_error("invalid scn file");
 	light = ft_lightnew();
-	ft_lstpush(&(scn->lights), ft_nodenew((void *)light, sizeof(t_light)));
-	ft_get_attr_in_scope(attr, "origin:", (void *)&(light->origin), PNT);
-	ft_get_attr_in_scope(attr, "direct:", (void *)&(light->direct), PNT);
-	ft_get_attr_in_scope(attr, "bright:", (void *)&(light->bright), KOEF);
-	ft_get_attr_in_scope(attr, "color:", (void *)&(light->color), COLOR);
-	if ((ptr = ft_search_attr(attr, "type:", FTSA_IN_SCOPE)))
-	{
-		ft_read_attr((void *)&(ltype_str), ptr, STR);
-		light->type = ft_get_light_type(ltype_str);
-	}
-	return (ft_get_curve(attr, '}'));
+	ft_lstpush(&list, ft_nodenew((void *)light, sizeof(t_light)));
+	ft_get_attr(content, "type", (void *)&(ltype_str), DT_STRING);
+	light->type = ft_get_light_type(ltype_str);
+	ft_get_attr(content, "origin", (void *)&(light->origin), DT_POINT);
+	ft_get_attr(content, "direct", (void *)&(light->direct), DT_POINT);
+	ft_get_attr(content, "bright", (void *)&(light->bright), DT_KOEF);
+	ft_get_attr(content, "color", (void *)&(light->color), DT_COLOR);
 }

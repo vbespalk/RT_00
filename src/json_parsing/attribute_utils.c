@@ -26,7 +26,7 @@ void		ft_parse_str
 		(*((int *)dst)) = ft_limit(
 			0, 0xffffff, (int)ft_atoi_base(*data, 16));
 	else
-		ft_parse_warning(content, *data, datatype);
+		ft_parse_warning_datatype(content, *data, datatype);
 }
 
 void		ft_parse_json_object
@@ -35,21 +35,24 @@ void		ft_parse_json_object
 	if (datatype == DT_POINT)
 		*((t_vector *)dst) = ft_parse_point(*data);
 	if (datatype == DT_CAMERA)
-		ft_parse_camera(*data, (t_camera *)dst);
+		ft_parse_camera(*data, *((t_camera **)dst));
 	else
-		ft_parse_warning(content, *data, datatype);
+		ft_parse_warning_datatype(content, *data, datatype);
 }
 
 void		ft_parse_array
-				(char **data, t_list *list, void (*ft_parse)(char *, t_list *))
+				(char **data, t_list *list,
+				void (*ft_parse)(char *, t_list *, Uint32))
 {
 	int		scope;
 	int		i;
 	int		is_in_str;
+	Uint32	id;
 
 	scope = 0;
 	i = 0;
 	is_in_str = 0;
+	id = 0;
 	while (scope != 0 || *data[++i] != ']' || is_in_str)
 	{
 		if (*data[i] == '\"' && *data[i - 1] != '\\')
@@ -59,7 +62,7 @@ void		ft_parse_array
 		if (*data[i] == '{')
 		{
 			if (scope == 0)
-				ft_parse(&(*data[i]), list);
+				ft_parse(&(*data[i]), list, id++);
 			++scope;
 		}
 		else if (*data[i] == '}')
@@ -73,11 +76,11 @@ void		ft_parse_json_array
 	if (datatype == DT_LIGHT_ARR || datatype == DT_OBJECT_ARR)
 		ft_parse_array(
 			data,
-			(t_list *)dst,
+			*((t_list **)dst),
 			(datatype == DT_LIGHT_ARR) ? ft_parse_light : ft_parse_object
 		);
 	else
-		ft_parse_warning(content, *data, datatype);
+		ft_parse_warning_datatype(content, *data, datatype);
 }
 
 void		ft_parse_num
@@ -88,5 +91,5 @@ void		ft_parse_num
 	else if (datatype == DT_KOEF)
 		*((float *)dst) = (float)ft_limitf(0.0, 1.0, (float)ft_atod(*data));
 	else
-		ft_parse_warning(content, *data, datatype);
+		ft_parse_warning_datatype(content, *data, datatype);
 }

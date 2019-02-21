@@ -79,7 +79,7 @@
 **	includes
 */
 
-# include <stdio.h>
+//# include <stdio.h>
 # include <pthread.h>
 # include <math.h>
 # include <stdint.h>
@@ -455,7 +455,7 @@ void					ft_handle_hit(t_ray *ray, t_object *o);
 
 t_scene					*ft_scenenew(void);
 t_scene					*ft_get_scene(char *file_name);
-void					ft_parse_scene(char *attr, t_scene *scn);
+void					ft_parse_scene(char *content, t_scene *scn);
 
 /*
 **	camera.c
@@ -507,30 +507,28 @@ void					ft_render(t_env *e);
 **	light.c
 */
 
-t_light					*ft_lightnew();
-char					*ft_parse_light(char *attr, t_scene *scn);
+void					ft_parse_light(char *content, t_list *list, Uint32 id);
 
 /*
 **	object.c
 */
 
-t_object				*ft_objectnew();
-t_object				*ft_parse_object(char *content);
+void					ft_parse_object(char *content, t_list *list, Uint32 id);
 
 /*
 **	plane.c
 */
 
-char					*ft_parse_plane(char *attr, t_scene *scn, Uint32 id);
+void					*ft_parse_plane(char *content, t_object *o);
 
 /*
 **	plane_utils.c
 */
 
 int						ft_is_reachable_plane
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_plane
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 int						ft_is_inside_plane(void *fig, t_vector point);
 t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 
@@ -538,16 +536,16 @@ t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 **	sphere.c
 */
 
-char					*ft_parse_sphere(char *attr, t_scene *scn, Uint32 id);
+void					*ft_parse_sphere(char *content, t_object *o);
 
 /*
 **	sphere_utils.c
 */
 
 int						ft_is_reachable_sphere
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_sphere
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 int						ft_is_inside_sphere(void *fig, t_vector point);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -555,18 +553,18 @@ t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 **	cone.c
 */
 
-char					*ft_parse_cone(char *attr, t_scene *scn, Uint32 id);
+void					*ft_parse_cone(char *content, t_object *o);
 
 /*
 **	cone_utils.c
 */
 
 t_vector				ft_collide_cone
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 int						ft_is_inside_cone(void *fig, t_vector point);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
-	(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
+							(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
 
 /*
 **	cone_utils_2.c
@@ -575,10 +573,10 @@ void					ft_get_coll_pnts
 void					ft_set_coll_pnts_null(t_vector *pnt1, t_vector *pnt2);
 void					ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4]);
 void					ft_is_between_planes
-	(t_vector (*pnt)[4], t_vector base, t_vector vert);
+							(t_vector (*pnt)[4], t_vector base, t_vector vert);
 void					ft_collide_cone_planes
-	(t_cone *cone, t_vector origin,
-	 t_vector direct, t_vector (*pnt)[4]);
+							(t_cone *cone, t_vector origin,
+							t_vector direct, t_vector (*pnt)[4]);
 t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
 
 /*

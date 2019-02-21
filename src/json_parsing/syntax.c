@@ -4,6 +4,7 @@
 static void		ft_syntax_error(char *content, int line, int symbol)
 {
 	char 		*line_ptr;
+	char 		*ptr;
 	size_t		len;
 	int			i;
 
@@ -16,10 +17,15 @@ static void		ft_syntax_error(char *content, int line, int symbol)
 	ft_printf("SYNTAX ERROR  at line %4d : <<%s>>\n", line, line_ptr);
 	write(1, "                               ", 31);
 	i = -1;
+	ptr = (char *)ft_smemalloc(
+		sizeof(char) * (symbol + 1), "ft_parse_warning_datatype");
 	while (++i < symbol - 1)
-		write(1, (line_ptr[i] == '\t') ? "\t" : " ", 1);
-	write(1, "^", 1);
+		ptr[i] = (char)((line_ptr[i] == '\t') ? '\t' : ' ');
+	ptr[i] = '^';
+	ptr[i + 1] = '\n';
+	write(1, ptr, (size_t)symbol + 1);
 	free(line_ptr);
+	free(ptr);
 	ft_error("scene file is invalid");
 }
 

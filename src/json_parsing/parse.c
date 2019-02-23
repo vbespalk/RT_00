@@ -14,12 +14,14 @@ static char	*ft_read(char *filename)
 
 t_scene		*ft_parse_json(char *filename)
 {
-	char	*content;
+	char	*(content[2]);
 	t_scene	*scn;
 
-	content = ft_read(filename);
+	content[0] = ft_read(filename);
+	content[1] = content[0];
 	scn = ft_scenenew();
-	ft_check_syntax(content);
+	ft_check_syntax(content[0]);
 	ft_parse_scene(content, scn);
+	free(content[0]);
 	return (scn);
 }

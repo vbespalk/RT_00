@@ -41,7 +41,7 @@ void		ft_cone_init(t_object *o, t_cone *cone)
 		cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
 }
 
-void		*ft_parse_cone(char *content, t_object *o)
+void		*ft_parse_cone(char **content, t_object *o)
 {
 	t_cone		*cone;
 

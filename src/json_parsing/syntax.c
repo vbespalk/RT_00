@@ -11,14 +11,14 @@ static void		ft_syntax_error(char *content, int line, int symbol)
 	len = 0;
 	while (content[len] && content[len] != '\n')
 		++len;
-	line_ptr = (char *)ft_smemalloc(len + 1, "ft_check_syntax");
+	line_ptr = (char *)ft_smemalloc(len + 1, "ft_syntax_error for 'line_ptr'");
 	line_ptr[len] = 0;
-	ft_memmove(line_ptr, content - len, len);
-	ft_printf("SYNTAX ERROR  at line %4d : <<%s>>\n", line, line_ptr);
-	write(1, "                               ", 31);
+	ft_memmove(line_ptr, content, len);
+	ft_printf("SYNTAX ERROR  at line %4d: %s\n", line, line_ptr);
+	write(1, "                            ", 28);
 	i = -1;
 	ptr = (char *)ft_smemalloc(
-		sizeof(char) * (symbol + 1), "ft_parse_warning_datatype");
+		sizeof(char) * (symbol + 1), "ft_syntax_error for 'ptr'");
 	while (++i < symbol - 1)
 		ptr[i] = (char)((line_ptr[i] == '\t') ? '\t' : ' ');
 	ptr[i] = '^';

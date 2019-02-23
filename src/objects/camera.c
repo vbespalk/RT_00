@@ -22,7 +22,7 @@ t_camera			*ft_cameranew(void)
 	return (cam);
 }
 
-void				ft_parse_camera(char *content, t_camera *cam)
+void				ft_parse_camera(char **content, t_camera *cam)
 {
 	float	angles[3];
 
@@ -38,15 +38,6 @@ void				ft_parse_camera(char *content, t_camera *cam)
 	cam->angles[0] = ft_torad(cam->angles[0]);
 	cam->angles[1] = ft_torad(cam->angles[1]);
 	cam->angles[2] = ft_torad(cam->angles[2]);
-}
-
-static void			ft_add_start_object(t_scene *scn, t_object *o)
-{
-	int		i;
-
-	i = -1;
-	while (++i < THREADS)
-		scn->hits[i]->o = o;
 }
 
 static t_object		*ft_get_inner_object(t_list *objs, t_vector point)
@@ -98,7 +89,7 @@ void				ft_get_start_refr(t_scene *scn)
 	if (len == 0)
 		return ;
 	else if (len == 1)
-		ft_add_start_object(scn, (t_object *)(objs->content));
+		scn->cam->inner_o = (t_object *)(objs->content);
 	else
-		ft_add_start_object(scn, ft_get_inner_object(objs, scn->cam->origin));
+		scn->cam->inner_o = ft_get_inner_object(objs, scn->cam->origin);
 }

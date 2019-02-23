@@ -23,7 +23,7 @@ t_plane		*ft_planenew(void)
 }
 
 
-void		*ft_parse_plane(char *content, t_object *o)
+void		*ft_parse_plane(char **content, t_object *o)
 {
 	t_plane		*pln;
 

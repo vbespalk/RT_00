@@ -22,7 +22,7 @@ t_sphere	*ft_spherenew(void)
 	return (sph);
 }
 
-void		*ft_parse_sphere(char *content, t_object *o)
+void		*ft_parse_sphere(char **content, t_object *o)
 {
 	t_sphere	*sph;
 
@@ -31,8 +31,8 @@ void		*ft_parse_sphere(char *content, t_object *o)
 	o->ft_is_inside = ft_is_inside_sphere;
 	o->ft_get_norm = ft_get_norm_sphere;
 	sph = ft_spherenew();
-	ft_get_attr(content, "origin:", (void *)(&(sph->origin)), DT_POINT);
-	ft_get_attr(content, "radius:", (void *)(&(sph->radius)), DT_FLOAT);
+	ft_get_attr(content, "origin", (void *)(&(sph->origin)), DT_POINT);
+	ft_get_attr(content, "radius", (void *)(&(sph->radius)), DT_FLOAT);
 	sph->radius = (float)ft_limitf(0.0f, FLT_MAX, sph->radius);
 	sph->origin += o->translate;
 	return ((void *)sph);

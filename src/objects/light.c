@@ -44,19 +44,19 @@ t_ltype		ft_get_light_type(char *type)
 	return (res);
 }
 
-void		ft_parse_light(char *content, t_list *list, Uint32 id)
+void		ft_parse_light(char **content, t_list **lst, Uint32 id)
 {
-	char			*ptr;
 	char 			*ltype_str;
 	t_light			*light;
 
 	ltype_str = NULL;
 	light = ft_lightnew();
-	ft_lstpush(&list, ft_nodenew((void *)light, sizeof(t_light)));
+	ft_lstpush(lst, ft_nodenew((void *)light, sizeof(t_light)));
 	ft_get_attr(content, "type", (void *)&(ltype_str), DT_STRING);
 	light->type = ft_get_light_type(ltype_str);
+	free(ltype_str);
 	ft_get_attr(content, "origin", (void *)&(light->origin), DT_POINT);
 	ft_get_attr(content, "direct", (void *)&(light->direct), DT_POINT);
-	ft_get_attr(content, "bright", (void *)&(light->bright), DT_KOEF);
+	ft_get_attr(content, "bright", (void *)&(light->bright), DT_COEF);
 	ft_get_attr(content, "color", (void *)&(light->color), DT_COLOR);
 }

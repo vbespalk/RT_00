@@ -15,7 +15,7 @@
 # define GOOD		0xBABAB00E
 # define _			-1
 
-# define OBJ_DEPTH	4
+# define OBJ_DEPTH	5
 
 typedef struct		s_checker
 {
@@ -35,7 +35,7 @@ typedef enum		e_datatype
 	DT_STRING,
 	DT_COLOR,
 	DT_FLOAT,
-	DT_KOEF
+	DT_COEF
 }					t_datatype;
 
 typedef enum 		e_otype
@@ -126,6 +126,8 @@ typedef enum		e_modes
     MODE_OBJECT
 }					t_modes;
 
+typedef struct s_scene	t_scene;
+
 /*
 **	parse.c
 */
@@ -163,32 +165,30 @@ void				ft_check_syntax(char *content);
 */
 
 void				ft_get_attr
-						(char *content, void *dst,
-						char *attr, t_datatype datatype);
+						(char **content, char *attr,
+						void *dst, t_datatype datatype);
 
 /*
 **	attribute_utils.c
 */
 
-t_vector			ft_parse_point(char *content);
 void				ft_parse_str
-						(char *content, char **data,
+						(char **content, char **data,
 						void *dst, t_datatype datatype);
 void				ft_parse_json_object
-						(char *content, char **data,
+						(char **content, char **data,
 						void *dst, t_datatype datatype);
 void				ft_parse_json_array
-						(char *content, char **data,
+						(char **content, char **data,
 						void *dst, t_datatype datatype);
 void				ft_parse_num
-						(char *content, char **data,
+						(char **content, char **data,
 						void *dst, t_datatype datatype);
 
 /*
 **	warning.c
 */
 
-void				ft_parse_warning(char *msg);
 void				ft_parse_warning_datatype
 						(char *content, char *attr, t_datatype datatype);
 

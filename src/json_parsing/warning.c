@@ -26,21 +26,21 @@ static char *ft_get_dt_str(t_datatype datatype)
 	char	*dt;
 
 	if (datatype == DT_POINT)
-		dt = ft_strdup("       point");
+		dt = ft_strdup("POINT");
 	else if (datatype == DT_CAMERA)
-		dt = ft_strdup("      camera");
+		dt = ft_strdup("CAMERA");
 	else if (datatype == DT_OBJECT_ARR)
-		dt = ft_strdup("object array");
+		dt = ft_strdup("OBJECT ARRAY");
 	else if (datatype == DT_LIGHT_ARR)
-		dt = ft_strdup(" light array");
+		dt = ft_strdup("LIGHT ARRAY");
 	else if (datatype == DT_STRING)
-		dt = ft_strdup("      string");
+		dt = ft_strdup("STRING");
 	else if (datatype == DT_COLOR)
-		dt = ft_strdup("       color");
+		dt = ft_strdup("COLOR");
 	else if (datatype == DT_FLOAT)
-		dt = ft_strdup("       float");
+		dt = ft_strdup("FLOAT");
 	else
-		dt = ft_strdup("  0 - 1 coef");
+		dt = ft_strdup("0 - 1 COEF");
 	return (dt);
 }
 
@@ -54,8 +54,17 @@ static char	*ft_get_line_ptr(char *content)
 		++len;
 	line_ptr = (char *)ft_smemalloc(len + 1, "ft_check_syntax");
 	line_ptr[len] = 0;
-	ft_memmove(line_ptr, content - len, len);
+	ft_memmove(line_ptr, content, len);
 	return (line_ptr);
+}
+
+static void	ft_put_space(size_t	len)
+{
+	char	*space;
+
+	space = ft_strnew((size_t)len, ' ');
+	write(1, space, len);
+	free(space);
 }
 
 void		ft_parse_warning_datatype
@@ -71,13 +80,11 @@ void		ft_parse_warning_datatype
 	dt = ft_get_dt_str(datatype);
 	line_ptr = ft_get_line_ptr(attr - symbol + 1);
 	ft_printf("PARSE WARNING at line %4d: data type mismatch", line);
-	ft_printf(" - expected %s, value set to default: <<%s>>\n", dt, line_ptr);
-	write(1, "                                                  ", 50);
-	write(1, "                                            ", 44);
+	ft_printf(", expected %s, value set to default: %s\n", dt, line_ptr);
+	ft_put_space(81 + ft_strlen(dt));
 	i = -1;
 	free(dt);
-	dt = (char *)ft_smemalloc(
-		sizeof(char) * (symbol + 1), "ft_parse_warning_datatype");
+	dt = (char *)ft_smemalloc(sizeof(char) * (symbol + 1), "ft_parse_warning");
 	while (++i < symbol - 1)
 		dt[i] = (char)((line_ptr[i] == '\t') ? '\t' : ' ');
 	dt[i] = '^';
@@ -85,9 +92,4 @@ void		ft_parse_warning_datatype
 	write(1, dt, (size_t)symbol + 1);
 	free(line_ptr);
 	free(dt);
-}
-
-void		ft_parse_warning(char *msg)
-{
-	ft_printf("PARSE WARNING: %s\n", msg);
 }

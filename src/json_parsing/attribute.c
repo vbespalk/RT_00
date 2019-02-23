@@ -55,11 +55,11 @@ static char	*ft_search_attr(char *content, char *attr)
 }
 
 void		ft_get_attr
-				(char *content, void *dst, char *attr, t_datatype datatype)
+				(char **content, char *attr, void *dst, t_datatype datatype)
 {
 	char	*data;
 
-	data = ft_search_attr(content, attr);
+	data = ft_search_attr(content[1], attr);
 	if (!data)
 		return ;
 	while (ft_isspace(*data))

@@ -112,7 +112,7 @@ typedef enum		e_ltype
 
 typedef struct		s_object
 {
-	int				type;
+//	int				type;
 	Uint32			id;
 	t_vector		pos; //
 	t_vector		rot; //
@@ -139,9 +139,9 @@ typedef struct		s_object
 	float			t_blur;
 	float			phong;
 
-	unsigned int	reflect; // my shiny val
-
-	t_vector		col;
+//	unsigned int	reflect; // my shiny val
+//
+//	t_vector		col;
 	t_color			color;
 /*
 ** functions for intersection / search etc.
@@ -218,18 +218,19 @@ typedef struct		s_camera
 	t_vector		vs_start_vec;
 	t_vector		vs_x_step_vec;
 	t_vector		vs_y_step_vec;
+	t_object		*inner_o;
 }					t_camera;
 
 /*
 **	Hit Transparent Objects List
 */
 
-typedef struct		s_hit
-{
-	struct s_object	*o;
-	struct s_hit	*prev;
-	struct s_hit	*next;
-}					t_hit;
+//typedef struct		s_hit
+//{
+//	struct s_object	*o;
+//	struct s_hit	*prev;
+//	struct s_hit	*next;
+//}					t_hit;
 
 typedef struct		s_scene
 {
@@ -243,7 +244,7 @@ typedef struct		s_scene
 	// t_vector		cam_transl; //
 	// t_vector		cam_angles; //
 	// t_matrix		wto_cam; //
-	t_hit			*(hits[THREADS]);
+	//t_hit			*(hits[THREADS]);
 	t_list			*lights;
 	t_list			*objs;
 	t_camera		*cam;
@@ -450,19 +451,18 @@ void					ft_get_refrs(t_ray *ray, float (*refr)[2]);
 void					ft_handle_hit(t_ray *ray, t_object *o);
 
 /*
-**	scn.c
+**	scene.c
 */
 
 t_scene					*ft_scenenew(void);
-t_scene					*ft_get_scene(char *file_name);
-void					ft_parse_scene(char *content, t_scene *scn);
+void					ft_parse_scene(char **content, t_scene *scn);
 
 /*
 **	camera.c
 */
 
 t_camera				*ft_cameranew(void);
-void					ft_parse_camera(char *content, t_camera *cam);
+void					ft_parse_camera(char **content, t_camera *cam);
 void					ft_get_start_refr(t_scene *scn);
 
 /*
@@ -507,19 +507,20 @@ void					ft_render(t_env *e);
 **	light.c
 */
 
-void					ft_parse_light(char *content, t_list *list, Uint32 id);
+void					ft_parse_light(char **content, t_list **lst, Uint32 id);
 
 /*
 **	object.c
 */
 
-void					ft_parse_object(char *content, t_list *list, Uint32 id);
+void					ft_parse_object
+							(char **content, t_list **lst, Uint32 id);
 
 /*
 **	plane.c
 */
 
-void					*ft_parse_plane(char *content, t_object *o);
+void					*ft_parse_plane(char **content, t_object *o);
 
 /*
 **	plane_utils.c
@@ -536,7 +537,7 @@ t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 **	sphere.c
 */
 
-void					*ft_parse_sphere(char *content, t_object *o);
+void					*ft_parse_sphere(char **content, t_object *o);
 
 /*
 **	sphere_utils.c
@@ -553,7 +554,7 @@ t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 **	cone.c
 */
 
-void					*ft_parse_cone(char *content, t_object *o);
+void					*ft_parse_cone(char **content, t_object *o);
 
 /*
 **	cone_utils.c

@@ -102,5 +102,6 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	od[1] = od[1] + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	od[1] = ft_3_unitvectornew(parg->e->scn->cam->origin, od[1]);
 	res = ft_throw_ray(parg, od, y * parg->e->sdl->scr_wid + x, 0);
+	res.val = get_rgb(parg->e->sdl, res.argb[2], res.argb[1], res.argb[0]);
 	return (res);
 }

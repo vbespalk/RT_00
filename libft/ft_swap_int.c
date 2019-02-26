@@ -18,3 +18,12 @@ void	ft_swap_int(int *a, int *b)
 	*a = *b;
 	*b = tmp;
 }
+
+void	ft_swap_float(float *a, float *b)
+{
+	float		tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}

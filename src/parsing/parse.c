@@ -14,10 +14,10 @@
 
 void		ft_parse(char *content, t_scene *scn)
 {
-	char	*attr;
-	char	*tmp;
-	char	*to_free;
-	Uint32	id;
+	char			*attr;
+	char			*tmp;
+	char			*to_free;
+	unsigned int	id;
 
 	id = 0;
 	if (!content)
@@ -39,6 +39,10 @@ void		ft_parse(char *content, t_scene *scn)
 	tmp = content;
 	while ((attr = ft_search_attr(tmp, "cone", FTSA_GLOBALLY)))
 		tmp = ft_parse_cone(attr, scn, id++);
+	// ft_parse_triangle("triangle", scn, id++);
+	// ft_parse_quad("quad", scn, id++);
+	// ft_parse_box("box", scn, id++);
+	ft_parse_prbld("paraboloid", scn, id++);
 	free(to_free);
 }
 

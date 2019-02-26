@@ -18,7 +18,7 @@ t_light		*ft_lightnew(void)
 
 	light = ft_smemalloc(sizeof(t_light), "ft_lightnew");
 	light->bright = 0.15;
-	light->origin = (t_vector){ 0.0f, 10000.0f, 0.0f };
+	light->origin = (t_vector){ 0.0f, 1000.0f, 0.0f };
 	light->type = POINT;
 	light->color.val = 0xffffff;
 	return (light);

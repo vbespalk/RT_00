@@ -22,6 +22,9 @@ t_object	*ft_objectnew(void)
 	obj->diff = 1.0f;
 	obj->phong = 0;
 	obj->refr = 1.0f;
+	obj->scale = 1.0f;
+	obj->translate = (t_vector){0.0f, 0.0f, 0.0f};
+	obj->rotate = (t_vector){0.0f, 0.0f, 0.0f};
 	return (obj);
 }
 

@@ -51,9 +51,9 @@ CC = gcc
 
 .NOTPARALLEL: all clean fclean re
 
-all: $(NAME)
+all: $(NAME) 
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) ./inc/rt.h
 	@$(MAKE) -C libft
 	@$(MAKE) -C libpnt
 	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \
@@ -63,13 +63,11 @@ $(NAME): $(OBJ)
 clean:
 	@/bin/rm -f src/*/*.o
 	@$(MAKE) clean -C libft
-	@$(MAKE) clean -C minilibx
 	@$(MAKE) clean -C libpnt
 
 fclean: clean
 	@/bin/rm -f $(NAME)
 	@/bin/rm -f $(LIBFT_PATH)
-	@/bin/rm -f $(LIBMLX_PATH)
 	@/bin/rm -f $(LIBPNT_PATH)
 
 re: fclean all

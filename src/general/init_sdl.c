@@ -71,11 +71,9 @@ int		sdl_init(t_sdl *sdl)
 		return (sdl_error("Renderer could not be created! "));
 	}
 	//HOW IT WORKS??
-	if (!SDL_GetRendererInfo(sdl->renderer, &info))
-	{
-		printf("flaggs %u\n", info.flags);
-
-	}
+	SDL_GetRendererInfo(sdl->renderer, &info);
+	SDL_Log("RENDERER: %s", info.name);
+	printf("CURRENT VIDEO DRIVER %s\n", SDL_GetCurrentVideoDriver());
 	//Init texture
 	sdl->screen = SDL_CreateTexture(sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, sdl->scr_wid, sdl->scr_hei);
 	if(sdl->screen == NULL)

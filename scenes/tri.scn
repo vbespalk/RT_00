@@ -1,0 +1,43 @@
+scene {
+	name:;
+	world_color: 0x0;
+}
+
+camera {
+	origin: (-500, 0, 0);
+	alpha: 0;
+	beta: 0;
+	gamma: 0;
+	fov: 100;
+}
+
+
+
+light {
+	bright: 0.15;
+	origin: (-10000, 500, 2000);
+}
+
+sphere {
+    origin: (0, 0, 0);
+    radius: 10;
+    color: 0x8080ff;
+    diff: 1;
+
+}
+
+sphere {
+    origin: (0, 0, 100);
+    radius: 10;
+    color: 0xff080ff;
+    diff: 1;
+
+}
+
+sphere {
+    origin: (100, 130, 20);
+    radius: 10;
+    color: 0x80ffff;
+    diff: 1;
+
+}

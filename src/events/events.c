@@ -20,11 +20,11 @@ int		event_handler(t_env *e)
 	{
 		//User requests quit
 		if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
-			on_exit(e);
+			return (on_exit(e));
 		else if (event.type == SDL_KEYDOWN)
-			on_key_down(event.key.keysym.sym, event.key.keysym.mod, e);
+			return (on_key_down(event.key.keysym.sym, event.key.keysym.mod, e));
 		else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
-			on_resize(event.window.data1, event.window.data2, e);
+			return (on_resize(event.window.data1, event.window.data2, e));
 		// else if (event.type == SDL_KEYUP)
 		// 	on_key_up(event.key.keysym.sym, event.key.keysym.mod, e);
 		// else if (event.type == SDL_MOUSEMOTION)
@@ -34,12 +34,12 @@ int		event_handler(t_env *e)
 		else if (event.type == SDL_MOUSEBUTTONDOWN)
 		{
 			if (event.button.button == SDL_BUTTON_LEFT)
-				on_lbutton_down(event.button.x, event.button.y, e);
+				return (on_lbutton_down(event.button.x, event.button.y, e));
 			if (event.button.button == SDL_BUTTON_RIGHT)
-				on_rbutton_down(event.button.x, event.button.y, e);
+				return (on_rbutton_down(event.button.x, event.button.y, e));
 		}
 		else if (event.type == SDL_MOUSEWHEEL && event.wheel.y)
-			on_mouse_wheel(event.wheel.y, event.wheel.direction, e);
+			return (on_mouse_wheel(event.wheel.y, event.wheel.direction, e));
 		// else if (event.type == SDL_MOUSEBUTTONUP)
 		// {
 		// 	if (event.button.button == SDL_BUTTON_LEFT)
@@ -47,9 +47,8 @@ int		event_handler(t_env *e)
 		// }
 		else
 			return (0);
-
 	}
-	return (1);
+	return (0);
 }
 
 

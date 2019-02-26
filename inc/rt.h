@@ -602,6 +602,7 @@ void					ft_parse_light(char **content, t_list **lst, Uint32 id);
 **	object.c
 */
 
+t_object				*ft_objectnew(Uint32 id);
 void					ft_parse_object
 							(char **content, t_list **lst, Uint32 id);
 

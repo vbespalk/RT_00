@@ -39,10 +39,12 @@ EFLAGS =  -Wall -Wextra -Werror
 
 #FLAGS = -lmlx -framework OpenGL -framework AppKit
 
-# Linux flags
 
-# FLAGS = -lmlx -lXext -lX11
+# LINUX SDL
 
+# SDL_LNK		= -lSDL2
+# SDL_IMG_LNK 	= -lSDL2_image
+# flags 		= -pthread
 CC = gcc
 
 

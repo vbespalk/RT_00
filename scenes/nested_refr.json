@@ -1,0 +1,45 @@
+{
+    "name": "Nested Refraction",
+    "bg_color": "0x0",
+    "camera": {
+        "origin": { "x": -1000 }
+    },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": 1, "y": -1, "z": 0 }
+        }
+    ],
+    "objects": [
+        {
+            "name": "sphere",
+            "radius": 100,
+            "color": "0x00ffff",
+            "diff": 1,
+            "spclr": 0,
+            "trans": 1,
+            "phong": 0,
+            "refr": 1.5
+        },
+        {
+            "name": "sphere",
+            "radius": 200,
+            "color": "0x00ffff",
+            "diff": 1,
+            "spclr": 0,
+            "trans": 1,
+            "phong": 0,
+            "refr": 1.8
+        },
+        {
+            "name": "sphere",
+            "radius": 300,
+            "color": "0x00ffff",
+            "diff": 1,
+            "spclr": 0,
+            "trans": 1,
+            "phong": 0,
+            "refr": 1.3
+        }
+    ]
+}

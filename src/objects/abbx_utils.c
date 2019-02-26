@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_swap.c                                          :+:      :+:    :+:   */
+/*   abbx_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/20 12:53:41 by domelche          #+#    #+#             */
-/*   Updated: 2017/11/20 12:53:43 by domelche         ###   ########.fr       */
+/*   Created: 2019/02/19 15:46:28 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/02/19 15:46:31 by vbespalk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_swap_int(int *a, int *b)
-{
-	int		tmp;
+#include "rt.h"
 
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
+float	bbx_area(t_vector d)
+{
+	return (2.0f * (d[0] * d[1] + d[0] * d[2] + d[1] * d[2]));
 }
 
-void	ft_swap_float(float *a, float *b)
+float	bbx_volume(t_vector d)
 {
-	float		tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
+	return (d[0] * d[1] * d[2]);
 }

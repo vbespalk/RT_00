@@ -26,12 +26,6 @@ unsigned int	get_rgb(t_sdl *sdl, unsigned int red, unsigned int green, unsigned 
 	unsigned int color;
 	Uint32 col;
 
-	// color = red;
-	// color = (color << 8) + green;
-	// color = (color << 8) + blue;
-	// color = blue;
-	// color = (color << 8) + green;
-	// color = (color << 8) + red;
 	col = SDL_MapRGB(sdl->format, red, green, blue);
 	return ((unsigned int)col);
 }

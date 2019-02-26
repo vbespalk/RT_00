@@ -121,9 +121,5 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	ray.d = ft_3_unitvectornew(parg->e->scn->cam->origin, ray.d);
 	res = ft_throw_ray(parg, &ray,  0);
-
-//	if (x == 0 && y < 10)
-//		printf("%#0.6x\n", res.val);
-
 	return (res);
 }

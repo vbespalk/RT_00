@@ -51,9 +51,9 @@ CC = gcc
 
 .NOTPARALLEL: all clean fclean re
 
-all: $(NAME)
+all: $(NAME) 
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) ./inc/rt.h
 	@$(MAKE) -C libftprintf
 	@$(MAKE) -C libpnt
 	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \

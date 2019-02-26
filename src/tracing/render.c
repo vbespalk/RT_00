@@ -12,13 +12,13 @@
 
 #include "rt.h"
 
-static void	ft_get_vs_params(t_camera *cam)
+static void	ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 {
 	cam->direct = ft_3_vector_rotate(
 		(t_vector){ 1.0f, 0.0f, 0.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_vec = ft_3_vector_rotate(
-		(t_vector){ 0.0f, SCR_HEI / 2.0f, -SCR_WID / 2.0f },
+		(t_vector){ 0.0f, sdl->scr_hei / 2.0f, sdl->scr_wid / -2.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_x_step_vec = ft_3_vector_rotate(
 		(t_vector){ 0.0f, 0.0f, 1.0f },
@@ -28,7 +28,8 @@ static void	ft_get_vs_params(t_camera *cam)
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_point =
 		cam->vs_start_vec + cam->origin + ft_3_vector_rotate(
-			(t_vector){ (SCR_WID / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
+			(t_vector){
+				(sdl->scr_wid / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
 			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
@@ -63,7 +64,7 @@ void	ft_render(t_env *e)
 	t_thrarg	thrargs[THREADS];
 	int			i;
 
-	ft_get_vs_params(e->scn->cam);
+	ft_get_vs_params(e->sdl, e->scn->cam);
 	ft_get_start_refr(e->scn);
 	i = -1;
 	while (++i < THREADS)

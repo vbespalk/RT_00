@@ -80,7 +80,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	t_vector	od[2];
 
 	coll.o = NULL;
-	od[0] = ray->o + ft_3_vector_scale(ray->d, 0.5f);
+	od[0] = ray->o + ft_3_vector_scale(ray->d, 0.2f);
 	od[1] = ray->d;
 	ray->coll = &coll;
 	if (ft_3_isnullpoint(coll.coll_pnt =

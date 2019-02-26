@@ -20,8 +20,7 @@ char		*ft_parse_quad(char *attr, t_scene *scn, unsigned int  id)
 	t_quad	*qd;
 
 	// obj = ft_parse_object(attr);
-	obj = ft_objectnew();
-	obj->id = id;
+	obj = ft_objectnew(id);
 	obj->refr = 1.0;
 	obj->ft_collide = ft_collide_quad;
 	obj->ft_is_reachable = ft_is_reachable_quad;

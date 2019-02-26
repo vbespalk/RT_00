@@ -46,6 +46,7 @@ void		*ft_parse_plane(char **content, t_object *o)
 	pln->origin_ini += o->translate;
 	pln->norm = pln->norm_ini;
 	pln->origin = pln->origin_ini;
+	o->refr = DEFAULT_REFR;
 	return ((void *)pln);
 }
 

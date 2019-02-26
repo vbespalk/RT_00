@@ -30,8 +30,7 @@ char		*ft_parse_prbld(char *attr, t_scene *scn, unsigned int id)
 	t_prbld		*par;
 
 	// obj = ft_parse_object(attr);
-	obj = ft_objectnew();
-	obj->id = id;
+	obj = ft_objectnew(id);
 	obj->ft_collide = ft_collide_prbld;
 	obj->ft_is_reachable = ft_is_reachable_prbld;
 	obj->ft_is_inside = ft_is_inside_prbld;

@@ -18,8 +18,7 @@ char		*ft_parse_box(char *attr, t_scene *scn, unsigned int  id)
 
 	// printf("here\n");
 	// obj = ft_parse_object(attr);
-	obj = ft_objectnew();
-	obj->id = id;
+	obj = ft_objectnew(id);
 	obj->refr = 1.0;
 	obj->ft_collide = ft_collide_box;
 	obj->ft_is_reachable = ft_is_reachable_box;

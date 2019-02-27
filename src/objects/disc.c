@@ -19,43 +19,41 @@ t_disk		*ft_disknew(void)
 	dsk = ft_smemalloc(sizeof(t_disk), "ft_disknew");
 	dsk->origin_ini = (t_vector){ 100.0, 0.0, 0.0 };
 	dsk->norm_ini = (t_vector){ 1.0, 0.0, 0.0 };
-	dsk->radius_ini = 1500.0f;
+	dsk->out_r_ini = FLT_MAX;
+	dsk->in_r_ini = FLT_MIN;
 	return (dsk);
 }
 
 
-// char		*ft_parse_plane(char *attr, t_scene *scn, unsigned int  id)
-// {
-// 	t_object	*obj;
-// 	t_disk		*dsk;
+char		*ft_parse_disk(char **content, t_object *o)
+{
+	t_object	*obj;
+	t_disk		*dsk;
 
-// 	// printf("here\n");
-// 	obj = ft_parse_object(attr);
-// 	obj->id = id;
-// 	obj->refr = 1.0;
-// 	obj->ft_collide = ft_collide_disk;
-// 	obj->ft_is_reachable = ft_is_reachable_disk;
-// 	obj->ft_is_inside = ft_is_inside_disk;
-// 	obj->ft_get_norm = ft_get_norm_disk;
-// 	obj->ft_translate = ft_translate_disk;
-// 	obj->ft_rotate = ft_rotate_disk;
-// 	obj->ft_scale = ft_scale_disk;
-// 	dsk = ft_disknew();
-// 	attr = ft_get_curve(attr, '{');
-// 	ft_get_attr_in_scope(attr, "origin:", (void *)(&(dsk->origin_ini)), PNT);
-// 	ft_get_attr_in_scope(attr, "norm:", (void *)(&(dsk->norm_ini)), PNT);
-// 	if (ft_3_vector_len(dsk->norm_ini) == 0.0)
-// 		dsk->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
-// 	dsk->norm_ini = ft_3_tounitvector(ft_3_vector_rotate(
-// 			dsk->norm_ini, obj->rotate[0], obj->rotate[1], obj->rotate[2]));
-// 	dsk->origin_ini += obj->translate;
-// 	dsk->norm = dsk->norm_ini;
-// 	dsk->origin = dsk->origin_ini;
-// 	dsk->radius = dsk->radius_ini;
-// 	obj->fig = dsk;
-// 	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
-// 	return (ft_get_curve(attr, '}'));
-// }
+	o->ft_collide = ft_collide_disk;
+	o->ft_is_reachable = ft_is_reachable_disk;
+	o->ft_is_inside = ft_is_inside_disk;
+	o->ft_get_norm = ft_get_norm_disk;
+	o->ft_translate = ft_translate_disk;
+	o->ft_rotate = ft_rotate_disk;
+	o->ft_scale = ft_scale_disk;
+	dsk = ft_disknew();
+	ft_get_attr(content, "origin", (void *)(&(dsk->origin_ini)), DT_POINT);
+	ft_get_attr(content, "normal", (void *)(&(dsk->norm_ini)), DT_POINT);
+	ft_get_attr(content, "inner_radius", (void *)(&(dsk->in_r_ini)), DT_FLOAT);
+	ft_get_attr(content, "outer_radius", (void *)(&(dsk->out_r_ini)), DT_FLOAT);
+	if (ft_3_vector_len(dsk->norm_ini) == 0.0)
+		dsk->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
+	if (dsk->in_r_ini > dsk->out_r_ini)
+		ft_swap_float(&dsk->in_r_ini, &dsk->out_r_ini);
+	dsk->norm_ini = ft_3_tounitvector(dsk->norm_ini);
+	dsk->norm = dsk->norm_ini;
+	dsk->origin = dsk->origin_ini;
+	dsk->in_r = dsk->in_r_ini;
+	dsk->out_r = dsk->out_r_ini;
+	printf("rad in %f out %f\n", dsk->in_r, dsk->out_r);
+	return ((void *)dsk);
+}
 
 void		ft_translate_disk(Uint32 key, void *fig, t_vector *transl)
 {
@@ -114,5 +112,6 @@ void		ft_scale_disk(Uint32 key, void *fig, float *scale)
 		*scale -= SCALE_F;
 	else
 		*scale = 0;
-	dsk->radius = dsk->radius_ini * *scale;
+	dsk->in_r = dsk->in_r_ini * *scale;
+	dsk->out_r = dsk->out_r_ini * *scale;
 }

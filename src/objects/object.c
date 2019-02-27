@@ -52,6 +52,14 @@ void		*ft_get_figure_parser(char *name)
 		return (ft_parse_sphere);
 	else if (!ft_strcmp(name, "cone"))
 		return (ft_parse_cone);
+	else if (!ft_strcmp(name, "paraboloid"))
+		return (ft_parse_prbld);
+	else if (!ft_strcmp(name, "box"))
+		return (ft_parse_box);
+	else if (!ft_strcmp(name, "disk"))
+		return (ft_parse_disk);
+	// else if (!ft_strcmp(name, "triangle"))
+	// 	return (ft_parse_triangle);
 	ft_printf("PARSE WARNING: unknown object name '%s'\n", name);
 	return (NULL);
 }
@@ -91,6 +99,7 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->rotate[0] = (float)ft_torad(o->rotate[0]);
 	o->rotate[1] = (float)ft_torad(o->rotate[1]);
 	o->rotate[2] = (float)ft_torad(o->rotate[2]);
+	o->scale = 1.0f;
 	o->fig = ft_parse_figure(content, o);
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

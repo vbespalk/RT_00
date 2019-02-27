@@ -19,6 +19,8 @@ t_plane		*ft_planenew(void)
 	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
 	pln->origin_ini = (t_vector){ 0.0f, -500.0f, 0.0f };
 	pln->norm_ini = (t_vector){ 0.0f, 1.0f, 0.0f };
+	pln->w_ini = ft_3_nullpointnew();
+	pln->h_ini = ft_3_nullpointnew();
 	return (pln);
 }
 
@@ -36,16 +38,23 @@ void		*ft_parse_plane(char **content, t_object *o)
 	o->ft_scale = ft_scale_plane;
 	pln = ft_planenew();
 	ft_get_attr(content, "origin", (void *)(&(pln->origin_ini)), DT_POINT);
-	ft_get_attr(content, "norm", (void *)(&(pln->norm_ini)), DT_POINT);
+	ft_get_attr(content, "normal", (void *)(&(pln->norm_ini)), DT_POINT);
+	ft_get_attr(content, "width", (void *)(&(pln->w_ini)), DT_POINT);
+	ft_get_attr(content, "height", (void *)(&(pln->h_ini)), DT_POINT);
+	pln->origin = pln->origin_ini;
+	pln->w = pln->w_ini;
+	pln->h = pln->h_ini;
+	if (!ft_3_isnullpoint(pln->w) && !ft_3_isnullpoint(pln->h))
+		pln->norm_ini = ft_3_vector_cross(pln->w - pln->origin, pln->h - pln->origin);
 	if (ft_3_vector_len(pln->norm_ini) == 0.0)
 		pln->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
 	pln->norm_ini = ft_3_tounitvector(pln->norm_ini);
-	pln->norm_ini = ft_3_tounitvector(
-		ft_3_vector_rotate(
-			pln->norm_ini, o->rotate[0], o->rotate[1], o->rotate[2]));
-	pln->origin_ini += o->translate;
+	// pln->norm_ini = ft_3_tounitvector(
+	// 	ft_3_vector_rotate(
+	// 		pln->norm_ini, o->rotate[0], o->rotate[1], o->rotate[2]));
+	// pln->origin_ini += o->translate;
 	pln->norm = pln->norm_ini;
-	pln->origin = pln->origin_ini;
+	printf("NORM %f,%f,%f\n", pln->norm[0], pln->norm[1], pln->norm[2]);
 	return ((void *)pln);
 }
 
@@ -69,6 +78,11 @@ void		ft_translate_plane(Uint32 key, void *fig, t_vector *transl)
 	if (key == SDLK_q)
 		(*transl)[0] -= TRANS_F;
 	pln->origin = pln->origin_ini + *(transl);
+	if (!ft_3_isnullpoint(pln->w) && !ft_3_isnullpoint(pln->h))
+	{
+		pln->w = pln->w_ini + *(transl);
+		pln->h = pln->h_ini + *(transl);
+	}
 }
 
 void		ft_rotate_plane(Uint32 key, void *fig, t_vector *rot)

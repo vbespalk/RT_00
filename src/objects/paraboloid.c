@@ -19,39 +19,30 @@ t_prbld		*ft_prbldnew(void)
 	par = ft_smemalloc(sizeof(t_prbld), "ft_prbldnew");
 	par->o = (t_vector){0.0f, 0.0f, 0.0f};
 	par->d = (t_vector){0.0f, 1.0f, 0.0f};
-	par->sk = 10.f;
+	par->r = 1.f;
 	par->maxh = 200.0f;
 	return (par);
 }
 
-char		*ft_parse_prbld(char *attr, t_scene *scn, unsigned int id)
+char		*ft_parse_prbld(char **content, t_object *o)
 {
-	t_object	*obj;
 	t_prbld		*par;
 
-	// obj = ft_parse_object(attr);
-	obj = ft_objectnew(id);
-	obj->id = id;
-	obj->ft_collide = ft_collide_prbld;
-	obj->ft_is_reachable = ft_is_reachable_prbld;
-	obj->ft_is_inside = ft_is_inside_prbld;
-	obj->ft_get_norm = ft_get_norm_prbld;
-	obj->ft_translate = ft_translate_prbld;
-	obj->ft_rotate = ft_rotate_prbld;
-	obj->ft_scale = ft_scale_prbld;
-	obj->spclr = 0.8f;
-	obj->s_blur = 1.0f;
+	o->ft_collide = ft_collide_prbld;
+	o->ft_is_reachable = ft_is_reachable_prbld;
+	o->ft_is_inside = ft_is_inside_prbld;
+	o->ft_get_norm = ft_get_norm_prbld;
+	o->ft_translate = ft_translate_prbld;
+	o->ft_rotate = ft_rotate_prbld;
+	o->ft_scale = ft_scale_prbld;
 	par = ft_prbldnew();
+	ft_get_attr(content, "origin", (void *)(&(par->o)), DT_POINT);
+	ft_get_attr(content, "direction", (void *)(&(par->d)), DT_POINT);
+	ft_get_attr(content, "radius", (void *)(&(par->r)), DT_FLOAT);
+	ft_get_attr(content, "height", (void *)(&(par->maxh)), DT_FLOAT);
 	par->n = ft_3_nullpointnew();
 	par->d = ft_3_tounitvector(par->d);
-	// attr = ft_get_curve(attr, '{');
-	// ft_get_attr_in_scope(attr, "origin:", (void *)(&(par->origin_ini)), PNT);
-	// ft_get_attr_in_scope(attr, "radius:", (void *)(&(par->radius_ini)), FLT);
-	obj->fig = par;
-	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
-	// return (ft_get_curve(attr, '}'));
-	printf("INITIALISED PARABOLOID\n");
-	return (NULL);
+	return ((void *)par);
 }
 
 void		ft_translate_prbld(Uint32 key, void *fig, t_vector *transl)
@@ -115,6 +106,6 @@ void		ft_scale_prbld(Uint32 key, void *fig, float *scale)
 		*scale -= SCALE_F;
 	else
 		*scale = 0;
-	par->sk = par->sk * *scale;
+	par->r = par->r * *scale;
 	par->maxh = par->maxh * *scale;
 }

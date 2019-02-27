@@ -128,7 +128,7 @@ int		on_resize(Sint32 w, Sint32 h, t_env *e)
 	return (1);
 }
 
-int		on_exit(t_env *e)
+int		ft_on_exit(t_env *e)
 {
 	e->sdl->event_loop = 0; //on_quit(): destroy_all_data, exit;
 	sdl_close(e->sdl);

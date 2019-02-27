@@ -20,11 +20,11 @@ LIBPNT_NAME = libpnt.a
 LIBPNT_PATH = libpnt/$(LIBPNT_NAME)
 LIBPNT_INC  = -Ilibpnt
 
-SDL_INC =	-I frameworks/SDL2.framework/Headers/
-SDL_LNK	=	-F ./frameworks -rpath ./frameworks -framework SDL2 
+# SDL_INC =	-I frameworks/SDL2.framework/Headers/
+# SDL_LNK	=	-F ./frameworks -rpath ./frameworks -framework SDL2 
 
-SDL_IMG_INC =	-I frameworks/SDL2_image.framework/Headers/
-SDL_IMG_LNK =	-F ./frameworks -rpath ./frameworks -framework SDL2_image 
+# SDL_IMG_INC =	-I frameworks/SDL2_image.framework/Headers/
+# SDL_IMG_LNK =	-F ./frameworks -rpath ./frameworks -framework SDL2_image 
 
 INC	=	-I ./inc/
 SRCS = $(wildcard src/*/*.c)
@@ -42,9 +42,9 @@ EFLAGS =  -Wall -Wextra -Werror
 
 # LINUX SDL
 
-# SDL_LNK		= -lSDL2
-# SDL_IMG_LNK 	= -lSDL2_image
-# flags 		= -pthread
+SDL_LNK		= -lSDL2
+SDL_IMG_LNK = -lSDL2_image
+LFLAGS 		= -pthread -lm
 CC = gcc
 
 
@@ -60,7 +60,7 @@ $(NAME): $(OBJ) ./inc/rt.h
 	@$(MAKE) -C libpnt
 	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \
 		$(LIBFT_PATH) $(LIBMLX_PATH) $(LIBPNT_PATH) \
-		$(SDL_LNK) $(SDL_IMG_LNK)
+		$(SDL_LNK) $(SDL_IMG_LNK) $(LFLAGS)
 
 clean:
 	@/bin/rm -f src/*/*.o

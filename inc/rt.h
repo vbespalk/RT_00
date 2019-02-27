@@ -91,14 +91,14 @@
 # include <math.h>
 # include <stdint.h>
 # include <time.h>
-# include "SDL.h"
+// # include "SDL.h"
 // # include "SDL_image.h"
 //# include "SDL_syswm.h"
 /*
 ** LINUX
 */
-// # include <SDL2/SDL.h>
-// # include <SDL2/SDL_image.h>
+# include <SDL2/SDL.h>
+# include <SDL2/SDL_image.h>
 
 # include "json.h"
 
@@ -609,6 +609,7 @@ void					ft_parse_light(char **content, t_list **lst, Uint32 id);
 
 void					ft_parse_object
 							(char **content, t_list **lst, Uint32 id);
+t_object				*ft_objectnew(Uint32 id);
 
 /*
 **--------------------------------------------------PLANE------------------------------------------------------------------

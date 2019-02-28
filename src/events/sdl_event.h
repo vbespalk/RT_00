@@ -24,7 +24,7 @@ int		on_lbutton_down(int x, int y, t_env *e );
 int		on_rbutton_down(int x, int y, t_env *e );
 int		on_lbutton_up(int x, int y, t_env *e );
 int		on_resize(Sint32 w, Sint32 h, t_env *e);
-int		on_exit(t_env *e);
+int		ft_on_exit(t_env *e);
 int		on_mouse_wheel(Sint32 y, Uint32 dir, t_env *e);
 
 #endif

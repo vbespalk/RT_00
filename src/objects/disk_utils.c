@@ -19,7 +19,8 @@ t_vector	ft_collide_disk(void *fig, t_vector origin, t_vector direct)
 	coll = ft_3_line_plane_inter(dsk->origin, dsk->norm, origin, direct);
 	dis = ft_3_vector_dot(coll - dsk->origin, coll - dsk->origin);
 	return ((!ft_3_pointcmp(ft_3_tounitvector(coll - origin), direct, 1e-6)) 
-		|| (dis > dsk->radius * dsk->radius) ? ft_3_nullpointnew() : coll);
+		|| dis < dsk->in_r * dsk->in_r || dis > dsk->out_r * dsk->out_r ? \
+		ft_3_nullpointnew() : coll);
 }
 
 int			ft_is_inside_disk(void *fig, t_vector point)

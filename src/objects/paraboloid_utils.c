@@ -43,9 +43,9 @@ t_vector	ft_collide_prbld(void *fig, t_vector origin, t_vector direct)
 	a = ft_3_vector_dot(direct, direct) - \
 		ft_3_vector_dot(direct, par->d) * ft_3_vector_dot(direct, par->d);
 	b = 2.0f * (ft_3_vector_dot(direct, origin - par->o) - \
-		ft_3_vector_dot(direct, par->d) * (ft_3_vector_dot(origin - par->o, par->d) + 2.f * par->sk));
+		ft_3_vector_dot(direct, par->d) * (ft_3_vector_dot(origin - par->o, par->d) + 2.f * par->r));
 	c = ft_3_vector_dot(origin - par->o, origin - par->o) - \
-		ft_3_vector_dot(origin - par->o, par->d) * (ft_3_vector_dot(origin - par->o, par->d) + 4.f * par->sk); 
+		ft_3_vector_dot(origin - par->o, par->d) * (ft_3_vector_dot(origin - par->o, par->d) + 4.f * par->r); 
 	ft_solve_sqr(a, b, c, &res);
 	if (!res[0] || (res[1] < FLT_MIN && res[2] < FLT_MIN))
 		return (ft_3_nullpointnew());
@@ -82,6 +82,6 @@ t_vector	ft_get_norm_prbld(void *fig, t_vector coll)
 	if (fabs(ft_3_vector_dot(coll - (par->o + ft_3_vector_scale(par->d, par->maxh)), par->d)) <= 0.1)
 		par->n = ft_3_tounitvector(par->d);
 	else
-		par->n = ft_3_tounitvector(coll - par->o - ft_3_vector_scale(par->d, par->h + par->sk));
+		par->n = ft_3_tounitvector(coll - par->o - ft_3_vector_scale(par->d, par->h + par->r));
 	return (par->n);
 }

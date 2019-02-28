@@ -121,5 +121,6 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	ray.d = ft_3_unitvectornew(parg->e->scn->cam->origin, ray.d);
 	res = ft_throw_ray(parg, &ray,  0);
+	res.val = SDL_MapRGB(parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
 	return (res);
 }

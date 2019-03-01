@@ -87,7 +87,7 @@ void				ft_get_start_refr(t_scene *scn)
 		node = node->next;
 	}
 	if (len == 0)
-		return ;
+		scn->cam->inner_o = NULL;
 	else if (len == 1)
 		scn->cam->inner_o = (t_object *)(objs->content);
 	else

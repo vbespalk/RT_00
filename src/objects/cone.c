@@ -58,10 +58,10 @@ void		*ft_parse_cone(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_cone;
 	o->ft_scale = ft_scale_cone;
 	cone = ft_conenew();
-	ft_get_attr(content, "base", (void *)(&(cone->base)), DT_POINT);
-	ft_get_attr(content, "base_rad", (void *)(&(cone->base_rad)), DT_FLOAT);
+	ft_get_attr(content, "base", (void *)(&(cone->base_ini)), DT_POINT);
+	ft_get_attr(content, "base_rad", (void *)(&(cone->base_rad_ini)), DT_FLOAT);
 	ft_get_attr(content, "vert", (void *)(&(cone->vert)), DT_POINT);
-	ft_get_attr(content, "vert_rad", (void *)(&(cone->vert_rad)), DT_FLOAT);
+	ft_get_attr(content, "vert_rad", (void *)(&(cone->vert_rad_ini)), DT_FLOAT);
 	if (cone->base_rad < 0 && cone->vert_rad < 0)
 	{
 		cone->base_rad *= -1.0f;

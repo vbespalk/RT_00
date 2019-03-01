@@ -113,7 +113,10 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	{
 		ray.stack[0] = parg->e->scn->cam->inner_o;
 		ray.stack_i = 0;
+//		printf("start refraction: %f\n", parg->e->scn->cam->inner_o->refr);
 	}
+//	else
+//		printf(" --- no start object --- \n");
 	ray.pix = (Uint32)(y * parg->e->sdl->scr_wid + x);
 	ray.o = parg->e->scn->cam->origin;
 	ray.d = parg->e->scn->cam->vs_start_point;

@@ -42,9 +42,9 @@ FLAGS = -lmlx -framework OpenGL -framework AppKit
 
 # LINUX SDL
 
-# SDL_LNK		= -lSDL2
-# SDL_IMG_LNK 	= -lSDL2_image
-# flags 		= -pthread
+SDL_LNK		= -lSDL2
+SDL_IMG_LNK = -lSDL2_image
+LFLAGS 		= -pthread -lm
 CC = gcc
 
 
@@ -60,7 +60,7 @@ $(NAME): $(OBJ) ./inc/rt.h
 	@$(MAKE) -C libpnt
 	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \
 		$(LIBFT_PATH) $(LIBMLX_PATH) $(LIBPNT_PATH) \
-		$(SDL_LNK) $(SDL_IMG_LNK)
+		$(SDL_LNK) $(SDL_IMG_LNK) $(LFLAGS)
 
 clean:
 	@/bin/rm -f src/*/*.o

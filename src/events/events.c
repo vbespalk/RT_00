@@ -20,7 +20,7 @@ int		event_handler(t_env *e)
 	{
 		//User requests quit
 		if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
-			return (on_exit(e));
+			return (ft_on_exit(e));
 		else if (event.type == SDL_KEYDOWN)
 			return (on_key_down(event.key.keysym.sym, event.key.keysym.mod, e));
 		else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)

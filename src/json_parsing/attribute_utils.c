@@ -75,7 +75,9 @@ static void		ft_parse_array
 			new_content[0] = content[0];
 			new_content[1] = &((*data)[i]);
 			if (scope == 0)
+			{
 				ft_parse(new_content, list, id++);
+			}
 			++scope;
 		}
 		else if ((*data)[i] == '}')

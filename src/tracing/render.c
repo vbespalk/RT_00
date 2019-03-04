@@ -50,9 +50,9 @@ void	*ft_section_handle(void *arg)
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
-			img_pixel_put(
-				thrarg->e, x, y,
-					(unsigned int)ft_trace_ray(thrarg, x, y).val);
+//			img_pixel_put(
+//				thrarg->e, x, y,
+					(unsigned int)ft_trace_ray(thrarg, x, y).val;
 		x += THREADS;
 	}
 	return (NULL);
@@ -62,21 +62,21 @@ void	ft_render(t_env *e)
 {
 	pthread_t	threads[THREADS];
 	t_thrarg	thrargs[THREADS];
-	int			i;
+	int			i = 0;
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
-	ft_get_start_refr(e->scn);
-	i = -1;
-	while (++i < THREADS)
-	{
+	ft_get_start_stack(e->scn);
+//	i = -1;
+//	while (++i < THREADS)
+//	{
 		thrargs[i].i = i;
 		thrargs[i].e = e;
-	}
-	i = -1;
-	while (++i < THREADS)
+//	}
+//	i = -1;
+//	while (++i < THREADS)
 		pthread_create(&threads[i], NULL,
 			ft_section_handle, (void *)&thrargs[i]);
-	i = -1;
-	while (++i < THREADS)
+//	i = -1;
+//	while (++i < THREADS)
 		pthread_join(threads[i], NULL);
 }

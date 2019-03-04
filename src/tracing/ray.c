@@ -81,23 +81,26 @@ t_color			ft_add_blur_colors(t_color sum, int num, t_color new)
 t_color			ft_throw_rays
 					(t_thrarg *parg, t_ray *ray, t_vector *vec, float num[2])
 {
+//	printf("in rays\n");
+
 	float		max_angle;
 	int			rays;
 	int			i;
 	t_color		color[2];
-	t_vector	od[2];
+	t_ray		next_ray;
+	t_vector	rand;
 
-	max_angle = ft_torad(num[0] * 30.0f);
-	rays = ft_limit(1, 100, (int)(sinf(max_angle) * 200.0f));
+	max_angle = ft_torad(num[0] * 45.0f);
+	rays = ft_limit(1, (int)(100.0f * sinf(ft_torad(45.0f))),
+		(int)(sinf(max_angle) * 100.0f));
 	i = -1;
 	color[1].val = 0;
 	*vec = ft_change_blur_vec(ray->coll->norm, *vec, max_angle);
 	while (++i < rays)
 	{
-		od[0] = ray->coll->coll_pnt;
-		od[1] = ft_3_vector_turn(ft_get_blur_proj(ray->coll->coll_pnt, *vec),
-			*vec, (float)rand() / (float)RAND_MAX * max_angle);
-		color[0] = ft_throw_ray(parg, ray, (int)(num[1] + 1));
+		rand = ft_3_vector_random_cone(*vec, max_angle);
+		ft_init_ray(ray, &next_ray, &(ray->coll->coll_pnt), &rand);
+		color[0] = ft_throw_ray(parg, &next_ray, (int)(num[1] + 1));
 		color[1] = ft_add_blur_colors(color[1], i, color[0]);
 	}
 	return (color[1]);
@@ -124,6 +127,6 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	ray.d = ft_3_unitvectornew(parg->e->scn->cam->origin, ray.d);
 	res = ft_throw_ray(parg, &ray,  0);
-	res.val = SDL_MapRGB(parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
+	//res.val = SDL_MapRGB(parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
 	return (res);
 }

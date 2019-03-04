@@ -56,7 +56,7 @@
 **	system
 */
 
-# define DEPTH			10
+# define DEPTH			5
 # define STACK_SIZE		DEPTH
 # define THREADS		8
 

@@ -86,6 +86,11 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	if (ft_3_isnullpoint(coll.coll_pnt =
 		ft_get_collision_point(arg->e->scn->objs, &(coll.o), od)))
 		return (coll);
+
+//	if (coll.coll_pnt[0] >= 10000.0f)
+//		printf("collision - x: %.3f, y: %.3f, z: %.3f\n",
+//			coll.coll_pnt[0], coll.coll_pnt[1], coll.coll_pnt[2]);
+
 	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
 	if (ft_3_vector_cos(coll.norm, ray->d) > 0)
 		coll.norm = ft_3_vector_scale(coll.norm, -1.0f);

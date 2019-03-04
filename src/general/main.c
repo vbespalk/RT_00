@@ -71,7 +71,7 @@ int			main(int argc, char **argv)
 		exit(-1);
 	}
 	obj_pix = (t_object **)ft_smemalloc(
-		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main: for 'obj_pix'");
+		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main");
 	if (init_env(&e, scene, &obj_pix[0], &sdl))
 	{
 		// struct_del(scene);

@@ -52,12 +52,12 @@ void		*ft_get_figure_parser(char *name)
 		return (ft_parse_sphere);
 	else if (!ft_strcmp(name, "cone"))
 		return (ft_parse_cone);
-	else if (!ft_strcmp(name, "paraboloid"))
-		return (ft_parse_prbld);
-	else if (!ft_strcmp(name, "box"))
-		return (ft_parse_box);
-	else if (!ft_strcmp(name, "disk"))
-		return (ft_parse_disk);
+//	else if (!ft_strcmp(name, "paraboloid"))
+//		return (ft_parse_prbld);
+//	else if (!ft_strcmp(name, "box"))
+//		return (ft_parse_box);
+//	else if (!ft_strcmp(name, "disk"))
+//		return (ft_parse_disk);
 	// else if (!ft_strcmp(name, "triangle"))
 	// 	return (ft_parse_triangle);
 	ft_printf("PARSE WARNING: unknown object name '%s'\n", name);

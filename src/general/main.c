@@ -33,23 +33,23 @@ static void	ft_rt_loop(t_env *e)
 	sdl = e->sdl;
 	sdl->event_loop = 1;
 	ft_render(e);
-//	SDL_UpdateTexture(
-//		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
-//	SDL_RenderClear(sdl->renderer);
-//	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
-//	SDL_RenderPresent(sdl->renderer);
-//	while (sdl->event_loop)
-//	{
-//		if (event_handler(e))
-//		{
-//			ft_render(e);
-//			SDL_UpdateTexture(
-//				sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
-//			SDL_RenderClear(sdl->renderer);
-//			SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
-//			SDL_RenderPresent(sdl->renderer);
-//		}
-//	}
+	SDL_UpdateTexture(
+		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
+	SDL_RenderClear(sdl->renderer);
+	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+	SDL_RenderPresent(sdl->renderer);
+	while (sdl->event_loop)
+	{
+		if (event_handler(e))
+		{
+			ft_render(e);
+			SDL_UpdateTexture(
+				sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
+			SDL_RenderClear(sdl->renderer);
+			SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+			SDL_RenderPresent(sdl->renderer);
+		}
+	}
 }
 
 int			main(int argc, char **argv)
@@ -65,11 +65,11 @@ int			main(int argc, char **argv)
 		ft_error("Scene is incomplete or incorrect\n");
 	sdl.scr_wid = SCR_WID;
 	sdl.scr_hei = SCR_HEI;
-//	if (sdl_init(&sdl) < 0)
-//	{
-//		// struct_del(scene);
-//		exit(-1);
-//	}
+	if (sdl_init(&sdl) < 0)
+	{
+		// struct_del(scene);
+		exit(-1);
+	}
 	obj_pix = (t_object **)ft_smemalloc(
 		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main");
 	if (init_env(&e, scene, &obj_pix[0], &sdl))
@@ -79,6 +79,6 @@ int			main(int argc, char **argv)
 	}
 	ft_rt_loop(&e);
 //	printf("Works\n");
-//	sdl_close(&sdl);
+	sdl_close(&sdl);
 	return (0);
 }

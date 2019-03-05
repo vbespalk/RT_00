@@ -38,7 +38,7 @@ void		*ft_parse_plane(char **content, t_object *o)
 	o->ft_scale = ft_scale_plane;
 	pln = ft_planenew();
 	ft_get_attr(content, "origin", (void *)(&(pln->origin_ini)), DT_POINT);
-	ft_get_attr(content, "normal", (void *)(&(pln->norm_ini)), DT_POINT);
+	ft_get_attr(content, "norm", (void *)(&(pln->norm_ini)), DT_POINT);
 	ft_get_attr(content, "width", (void *)(&(pln->w_ini)), DT_POINT);
 	ft_get_attr(content, "height", (void *)(&(pln->h_ini)), DT_POINT);
 	pln->origin = pln->origin_ini;

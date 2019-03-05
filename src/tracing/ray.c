@@ -19,6 +19,7 @@ static void		ft_init_ray
 
 	ray->o = *o;
 	ray->d = *d;
+	ray->coll = ray_prev->coll;
 	ray->stack_i = ray_prev->stack_i;
 	i = -1;
 	while (++i < STACK_SIZE)
@@ -65,45 +66,47 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 		ft_sum_colors(&coll, spclr_col, trans_col, depth));
 }
 
-t_color			ft_add_blur_colors(t_color sum, int num, t_color new)
-{
-	int		i;
-
-	if (!num)
-		return (new);
-	i = 4;
-	while (--i > 0)
-		sum.argb[i] = (t_byte)((float)(sum.argb[i] + new.argb[i]) /
-			(float)(num + 1));
-	return (sum);
-}
+//void			ft_add_blur_colors(float (*sum)[3], int num, t_color new)
+//{
+//
+//
+//}
 
 t_color			ft_throw_rays
 					(t_thrarg *parg, t_ray *ray, t_vector *vec, float num[2])
 {
-//	printf("in rays\n");
-
 	float		max_angle;
 	int			rays;
+	int			j;
 	int			i;
-	t_color		color[2];
 	t_ray		next_ray;
 	t_vector	rand;
+	t_color		color;
+	float		color_sum[3];
 
+	color_sum[0] = 0.0f;
+	color_sum[1] = 0.0f;
+	color_sum[2] = 0.0f;
 	max_angle = ft_torad(num[0] * 45.0f);
 	rays = ft_limit(1, (int)(100.0f * sinf(ft_torad(45.0f))),
 		(int)(sinf(max_angle) * 100.0f));
-	i = -1;
-	color[1].val = 0;
+	if (ft_3_vector_cos(*vec, ray->coll->norm) < 0)
+		ray->coll->norm = ft_3_vector_scale(ray->coll->norm, -1.0f);
 	*vec = ft_change_blur_vec(ray->coll->norm, *vec, max_angle);
+	i = -1;
 	while (++i < rays)
 	{
 		rand = ft_3_vector_random_cone(*vec, max_angle);
 		ft_init_ray(ray, &next_ray, &(ray->coll->coll_pnt), &rand);
-		color[0] = ft_throw_ray(parg, &next_ray, (int)(num[1] + 1));
-		color[1] = ft_add_blur_colors(color[1], i, color[0]);
+		color = ft_throw_ray(parg, &next_ray, (int)(num[1] + 1));
+		j = -1;
+		while (++j < 3)
+			color_sum[j] += (float)(color.argb[j]) / (float)(rays);
 	}
-	return (color[1]);
+	color.argb[0] = (t_byte)(color_sum[0]);
+	color.argb[1] = (t_byte)(color_sum[1]);
+	color.argb[2] = (t_byte)(color_sum[2]);
+	return (color);
 }
 
 t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
@@ -116,10 +119,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	{
 		ray.stack[0] = parg->e->scn->cam->inner_o;
 		ray.stack_i = 0;
-//		printf("start refraction: %f\n", parg->e->scn->cam->inner_o->refr);
 	}
-//	else
-//		printf(" --- no start object --- \n");
 	ray.pix = (Uint32)(y * parg->e->sdl->scr_wid + x);
 	ray.o = parg->e->scn->cam->origin;
 	ray.d = parg->e->scn->cam->vs_start_point;
@@ -127,6 +127,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	ray.d = ft_3_unitvectornew(parg->e->scn->cam->origin, ray.d);
 	res = ft_throw_ray(parg, &ray,  0);
-	//res.val = SDL_MapRGB(parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
+	res.val = SDL_MapRGB(
+		parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
 	return (res);
 }

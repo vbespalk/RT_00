@@ -3,97 +3,154 @@
 /*                                                        :::      ::::::::   */
 /*   cone_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/23 13:25:05 by domelche          #+#    #+#             */
-/*   Updated: 2018/08/23 13:26:14 by domelche         ###   ########.fr       */
+/*   Created: 2019/02/20 12:33:06 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/02/20 12:33:12 by vbespalk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_vector	ft_collide_cone(void *fig, t_vector origin, t_vector direct)
+static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
 {
-	t_cone		*cone;
-	t_vector	pnt[4];
+	float	d;
 
-	cone = (t_cone *)fig;
-	pnt[0] = origin;
-	pnt[1] = direct;
-	ft_get_coll_pnts(cone, &pnt, cone->base_rad == cone->vert_rad);
-	ft_is_between_planes(&pnt, cone->base, cone->vert);
-	ft_collide_cone_planes(cone, origin, direct, &pnt);
-	return (ft_get_closest(origin, pnt));
+	d = (float)pow(b, 2) - 4.0f * a * c;
+	if (d < 0)
+		return (0);
+	d = sqrtf(d);
+	(*res)[0] = (-b + d) / (2.0f * a);
+	(*res)[1] = (-b - d) / (2.0f * a);
+	if ((*res)[0] > (*res)[1] || (*res)[0] < FLT_MIN)
+		ft_swap_float(&(*res)[0], &(*res)[1]);
+	return (1);
 }
 
-void		ft_get_coll_pnts(t_cone *cone, t_vector (*pnt)[4], int is_cyl)
+static t_vector	get_closer_pnt(t_vector origin, t_vector *coll)
 {
-	float		cos_t_2;
-	t_vector	v_co[2];
-	float		dv_dot;
-	float		cov_dot;
-	float		res[3];
+	float t[2];
 
-	if (is_cyl)
-		return (ft_get_coll_pnts_cyl(cone, pnt));
-	v_co[0] = ft_3_vector_scale(cone->bv, -1.0f);
-	cos_t_2 = (float)pow(cone->bv_dist / sqrt(
-		pow(cone->base_rad - cone->vert_rad, 2) + pow(cone->bv_dist, 2)), 2);
-	v_co[1] = (*pnt)[0] - cone->main_vert;
-	dv_dot = ft_3_vector_dot((*pnt)[1], v_co[0]);
-	cov_dot = ft_3_vector_dot(v_co[1], v_co[0]);
-	ft_solve_sqr((float)pow(dv_dot, 2) - cos_t_2, 2.0f *
-		(dv_dot * cov_dot - ft_3_vector_dot((*pnt)[1], v_co[1]) * cos_t_2),
-		(float)pow(cov_dot, 2) - ft_3_vector_dot(v_co[1], v_co[1]) * cos_t_2,
-		&res);
-	if (res[0] == 0.0)
-		return (ft_set_coll_pnts_null(&((*pnt)[0]), &((*pnt)[1])));
-	v_co[0] = (*pnt)[0];
-	(*pnt)[0] = (res[1] < 0.0f) ?
-		ft_3_nullpointnew() : v_co[0] + ft_3_vector_scale((*pnt)[1], res[1]);
-	(*pnt)[1] = (res[2] < 0.0f) ?
-		ft_3_nullpointnew() : v_co[0] + ft_3_vector_scale((*pnt)[1], res[2]);
+	if (ft_3_isnullpoint(coll[0]))
+		return (coll[1]);
+	if (ft_3_isnullpoint(coll[1]))
+		return (coll[0]);
+	t[0] = ft_3_vector_len(coll[0] - origin);
+	t[1] = ft_3_vector_len(coll[1] - origin);
+	return (t[0] < t[1] ? coll[0] : coll[1]);
+}
+
+/*
+** ADD 1e-1 TO t TO AVOID MISSES BETW SIDES AND CAPS
+*/
+
+static t_vector	get_cides_coll(t_vector origin, t_vector direct, float *res, t_cone *con)
+{
+	t_vector	coll[2];
+	float 		m[2];
+
+	coll[0] = origin + ft_3_vector_scale(direct, res[0]);
+	m[0] = ft_3_vector_dot(con->v, coll[0] - con->o);
+	coll[1] = origin + ft_3_vector_scale(direct, res[1]);
+	m[1] = ft_3_vector_dot(con->v, coll[1] - con->o);
+	if (con->maxh == FLT_MAX && con->minh == FLT_MIN)
+	{
+		if (res[0] >= FLT_MIN)
+			return (coll[0]);
+		else if (res[1] >= FLT_MIN)
+			return (coll[1]);
+		return (ft_3_nullpointnew());
+	}
+	if (res[0] + 1e-1 >= FLT_MIN && IN_RANGE(m[0], con->minh, con->maxh))
+		return (coll[0]);
+	if (res[1] + 1e-1 >= FLT_MIN && IN_RANGE(m[1], con->minh, con->maxh))
+		return (coll[1]);
+	return (ft_3_nullpointnew());
+}
+
+static t_vector	get_caps_coll(t_vector origin, t_vector direct, t_cone *con, float dot)
+{
+	float		t[2];
+	t_vector	coll[2];
+	t_vector 	o[2];
+
+	o[0] = con->o + ft_3_vector_scale(con->v, con->minh);
+	o[1] = con->o + ft_3_vector_scale(con->v, con->maxh);
+	t[0] = (ft_3_vector_dot(o[0], con->v) - ft_3_vector_dot(origin, con->v)) * dot;
+	t[1] = (ft_3_vector_dot(o[1], con->v) - ft_3_vector_dot(origin, con->v)) * dot;
+	if (t[0] < 1e-6 && t[1] < 1e-6)
+		return (ft_3_nullpointnew());
+	coll[0] = ft_3_nullpointnew();
+	coll[1] = ft_3_nullpointnew();
+	if (t[0] >= FLT_MIN && (con->minh != FLT_MIN || con->minh != 0.0f))
+	{
+		coll[0] = origin + ft_3_vector_scale(direct, t[0]);
+		if (ft_3_vector_dot(coll[0] - o[0], coll[0] - o[0]) > (con->r[0]) * (con->r[0]))
+			coll[0] = ft_3_nullpointnew();
+	}
+	if (t[1] >= FLT_MIN  && con->maxh != FLT_MAX)
+	{
+		coll[1] = origin + ft_3_vector_scale(direct, t[1]);
+		if (ft_3_vector_dot(coll[1] - o[1], coll[1]	- o[1]) > (con->r[1]) * (con->r[1]))
+			coll[1] = ft_3_nullpointnew();
+	}
+	if (t[0] < FLT_MIN)
+		return (coll[1]);
+	else if (t[1] < FLT_MIN)
+		return (coll[0]);
+	return ((t[0] < t[1] && !ft_3_isnullpoint(coll[0])) ? coll[0] : coll[1]);
+}
+
+int					ft_is_reachable_cone(void *fig, t_vector origin, t_vector direct)
+{
+	return (1);
+}
+
+t_vector			ft_collide_cone(void *fig, t_vector origin, t_vector direct)
+{
+	t_cone	*con;
+	t_vector	coll[2];
+	float		res[2];
+	float 		dot_dv;
+	float 		dot_vx;
+
+	con = (t_cone *)fig;
+	dot_dv = ft_3_vector_dot(direct, con->v);
+	dot_vx = ft_3_vector_dot(origin - con->o, con->v);
+	if (!ft_solve_sqr_(ft_3_vector_dot(direct, direct) - (1 + con->tan * con->tan) * dot_dv * dot_dv,
+		2.0f * (ft_3_vector_dot(origin - con->o, direct) - (1 + con->tan * con->tan) * dot_dv * dot_vx),
+		ft_3_vector_dot(origin - con->o, origin - con->o) - (1 + con->tan * con->tan) * dot_vx * dot_vx,
+		&res))
+		return (fabsf(dot_dv) < 1e-6 ? ft_3_nullpointnew() :
+			get_caps_coll(origin, direct, con, 1.0f / dot_dv));
+	coll[0] = get_cides_coll(origin, direct, res, con);
+	if ((con->maxh == FLT_MAX && con->minh == FLT_MIN) || fabsf(dot_dv) < 1e-6)
+		return (coll[0]);
+	coll[1] = get_caps_coll(origin, direct, con, 1.0f / dot_dv);
+	return (get_closer_pnt(origin, coll));
 }
 
 int			ft_is_inside_cone(void *fig, t_vector point)
 {
-	t_cone		*cone;
-	t_vector	bv;
-	t_vector	vb;
-	t_vector	proj;
-	float		rad;
+	t_cone	*con;
 
-	cone = (t_cone *)fig;
-	bv = cone->vert - cone->base;
-	vb = ft_3_vector_scale(bv, -1);
-	if (ft_3_vector_cos(bv, point - cone->base) < 0 ||
-		ft_3_vector_cos(vb, point - cone->vert) < 0)
-		return (0);
-	proj = ft_3_line_point_proj(cone->base, ft_3_tounitvector(bv), point);
-	rad = cone->base_rad + (cone->vert_rad - cone->base_rad) *
-		(ft_3_point_point_dist(cone->base, proj) /
-		ft_3_point_point_dist(cone->vert, proj));
-	return ((ft_3_point_point_dist(proj, point) < rad) ? 1 : 0);
+	con = (t_cone *)fig;
+	return (1);
+
+//	return ((ft_3_point_point_dist(con->o, point) < con->r[0]) ? 1 : 0);
 }
 
 t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 {
-	t_cone		*cone;
-	t_vector	proj;
-	float		sign;
+	t_cone 		*con;
+	float 		h;
 
-	cone = (t_cone *)fig;
-	proj = ft_3_line_point_proj(cone->base, cone->bv, coll);
-	if (ft_3_pointcmp(proj, cone->base, 1e-3))
-		return (ft_3_vector_scale(cone->bv, -1));
-	if (ft_3_pointcmp(proj, cone->vert, 1e-3))
-		return (cone->bv);
-	if (cone->base_rad == cone->vert_rad)
-		return (ft_3_unitvectornew(proj, coll));
-	sign = (cone->base_rad > cone->vert_rad) ? 1.0f : -1.0f;
-	sign *= (ft_3_vector_cos(cone->base - cone->main_vert,
-		proj - cone->main_vert) < 0) ? -1.0f : 1.0f;
-	return (ft_3_tounitvector(ft_3_vector_turn(cone->bv,
-		ft_3_unitvectornew(proj, coll), sign * cone->side_norm_angle)));
+	con = (t_cone *)fig;
+	h = ft_3_vector_dot(con->v, coll - con->o);
+	if (con->maxh != FLT_MAX && h >= con->maxh - 1e-2)
+		return (con->v);
+	if (con->minh != FLT_MIN && h <= con->minh + 1e-2)
+		return (-con->v);
+	return (ft_3_tounitvector(coll - ((t_cone *)fig)->o - (1.0f + con->tan * con->tan)
+	* ft_3_vector_scale(con->v, h)));
 }
-

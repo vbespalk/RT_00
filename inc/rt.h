@@ -14,28 +14,14 @@
 
 # define RT_H
 
-# define INFINITY 18446744073709551615
 # define SCR_WID 640
 # define SCR_HEI 480
-# define SQ_MATR 4
-# define POSI "pos("
-# define COLO "col("
-# define RADI "rad("
-# define SIZE "size("
-# define DIFU "diffuse("
-# define REFL "reflect("
-# define DIRE "dir("
-# define ROTI "rot("
 # define FOV 1.570796
-# define ALBEDO 0.18
-# define T_COEF 0.0f
-# define AMBILI 0.1f
-# define NB_THREADS 1
 # define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a >= _b ? _b : _a;})
 # define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a <= _b ? _b : _a;})
-# define DEG_TO_RAD(x) ((x) * M_PI / 180.0f)
+# define DEG_TO_RAD(x) ((x) * (float)M_PI / 180.0f)
 # define RAD_TO_DEG(x) ((x) * 180.0f / M_PI)
-# define RANGE_STRICT(x, left, right) ((x >= left) && (x <= right))
+# define IN_RANGE(x, left, right) ((x >= left) && (x <= right))
 # define RANGE_RI_STR(x, left, right) ((x > left) && (x <= right))
 
 /*
@@ -58,30 +44,13 @@
 
 # define DEPTH			10
 # define STACK_SIZE		DEPTH
-# define THREADS		8
-
-/*
-**	key hooks
-*/
-
-# define CLOSE_MASK		0L
-# define CLOSE_NOTIFY	17
-
-# define KEY_ESC		0X35
-# define KEY_ARR_UP		0X7E
-# define KEY_ARR_DOWN	0X7D
-# define KEY_ARR_RIGHT	0X7C
-# define KEY_ARR_LEFT	0X7B
-# define KEY_R			0X0F
-# define KEY_PLUS		0X45
-# define KEY_MINUS		0X4E
-# define KEY_C			0X08
+# define THREADS		1
 
 /*
 **	includes
 */
 
-# define ROTAT_F		DEG_TO_RAD(1)
+# define ROTAT_F		DEG_TO_RAD(10)
 # define TRANS_F		15
 # define SCALE_F		0.1
 // # define SCALE_F_CAM	0.1
@@ -194,30 +163,31 @@ typedef struct		s_sphere
 	float			radius_ini;
 	t_vector		origin;
 	float			radius;
+	float			min_thcos;
+	float			max_thcos;
+	float			min_phi;
+	float			max_phi;
 }					t_sphere;
 
 typedef struct		s_cone
 {
-	float			base_rad_ini;
-	float			vert_rad_ini;
-	float			base_rad;
-	float			vert_rad;
-	float			bv_dist_ini;
-	float			bv_dist;
-	float			side_norm_angle;
-	t_vector		base_ini;
-	t_vector		base;
-	t_vector		vert;
-	t_vector		bv_ini;
-	t_vector		bv;
-	t_vector		main_vert;
-
-	t_vector		direction;
-	t_vector		origin;
+	t_vector		o; //vertex of the cone
+	t_vector		v;
+	float 			r[2]; //caps radius; from vertex to base
+	float			tan;
+	float			minh; //limits of height; from vertex
+	float			maxh; //limits of height; from vertex
 	t_vector		norm;
-	float			radius;
-	float			tg2;
 }					t_cone;
+
+typedef struct		s_cylinder
+{
+	t_vector		o;
+	t_vector		v;
+	float			r;
+	float			maxh;
+	float			phi;
+}					t_cylinder;
 
 typedef struct		s_disc
 {
@@ -449,7 +419,6 @@ void				sobj_del(t_object **lst);
 void				render(t_env *env, t_scene *scene);
 int					cast_ray(t_ray *ray, t_env *env, unsigned int pix);
 t_vector			ray_generate(const t_env *env, int i, int j);
-int					solve_qvadratic(float a, float b, float c, float *t);
 int					s_intersect(t_vector dir, t_vector	orig, \
 	t_object obj, float *t);
 int					p_intersect(t_vector dir, t_vector orig, \
@@ -763,6 +732,24 @@ void					ft_collide_cone_planes
 							(t_cone *cone, t_vector origin,
 							t_vector direct, t_vector (*pnt)[4]);
 t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
+
+/*
+**	cylinder_utils.c
+*/
+
+void					*ft_parse_cylinder(char **content, t_object *o);
+void					ft_translate_cylinder(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_cylinder(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_cylinder(Uint32 key, void *fig, float *scale);
+
+/*
+**	cone_utils.c
+*/
+
+int						ft_is_reachable_cylinder(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_cylinder(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_cylinder(void *fig, t_vector point);
+t_vector				ft_get_norm_cylinder(void *fig, t_vector coll);
 
 /*
 **------------------------------------------------PARABOLOID----------------------------------------------------------------

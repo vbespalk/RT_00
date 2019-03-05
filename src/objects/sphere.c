@@ -40,6 +40,10 @@ void		*ft_parse_sphere(char **content, t_object *o)
 	sph->origin_ini += o->translate;
 	sph->radius = sph->radius_ini;
 	sph->origin = sph->origin_ini;
+	sph->min_phi = 0.0f;
+	sph->max_phi = (float)M_PI * 2.0f;
+	sph->min_thcos = acosf(0);
+	sph->max_thcos = acosf((float)M_PI);
 	return ((void *)sph);
 }
 

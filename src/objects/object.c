@@ -52,6 +52,8 @@ void		*ft_get_figure_parser(char *name)
 		return (ft_parse_sphere);
 	else if (!ft_strcmp(name, "cone"))
 		return (ft_parse_cone);
+	else if (!ft_strcmp(name, "cylinder"))
+		return (ft_parse_cylinder);
 	else if (!ft_strcmp(name, "paraboloid"))
 		return (ft_parse_prbld);
 	else if (!ft_strcmp(name, "box"))

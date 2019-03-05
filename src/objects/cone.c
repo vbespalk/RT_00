@@ -17,38 +17,41 @@ t_cone		*ft_conenew(void)
 	t_cone	*cone;
 
 	cone = ft_smemalloc(sizeof(t_cone), "ft_conenew");
-	cone->base_ini = (t_vector){ 0.0f, 0.0f, -200.0f };
-	cone->base_rad_ini = 100;
-	cone->vert = (t_vector){ 0.0f, 0.0f, 200.0f };
-	cone->vert_rad_ini = 100;
+	cone->o = (t_vector){ 100.0f, 0.0f, 0.0f };
+	cone->v = (t_vector){0.0f, 1.0f, 0.0f};
+	cone->tan = 90;
+	cone->minh = FLT_MIN;
+	cone->maxh = FLT_MAX;
+	cone->r[0] = FLT_MIN;
+	cone->r[1] = FLT_MIN;
 	return (cone);
 }
 
-void		ft_cone_init(t_object *o, t_cone *cone)
+void		ft_cone_init(t_cone *cone, t_vector base)
 {
-	cone->bv_dist_ini = ft_3_point_point_dist(cone->base_ini, cone->vert);
-	cone->bv_dist = cone->bv_dist_ini;
-	cone->base_ini += o->translate;
-	cone->vert += o->translate;
-	cone->base = cone->base_ini;
-	cone->base_rad = cone->base_rad_ini;
-	cone->vert_rad = cone->vert_rad_ini;
-	cone->bv_ini = ft_3_vector_rotate(
-		ft_3_unitvectornew(cone->base, cone->vert),
-		o->rotate[0], o->rotate[1], o->rotate[2]);
-	cone->bv = cone->bv_ini;
-	cone->vert = cone->base + ft_3_vector_scale(cone->bv, cone->bv_dist);
-	cone->side_norm_angle = acosf(
-		(cone->bv_dist * sinf(atanf((cone->base_rad_ini - cone->vert_rad_ini) /
-			cone->bv_dist))) / (cone->base_rad - cone->vert_rad));
-	cone->main_vert = cone->base + ft_3_vector_scale(
-		cone->bv,
-		cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
+	cone->r[0] = fabsf(cone->r[0]);
+	cone->r[1] = fabsf(cone->r[1]);
+	if (cone->minh > cone->maxh)
+		ft_swap_float(&cone->minh, &cone->maxh);
+	if (cone->minh == cone->maxh)
+		ft_bzero(&cone->r, sizeof(float) * 2);
+	cone->tan = fabsf(cone->tan);
+	if (cone->tan >= 175)
+		cone->tan = (int)cone->tan % 175;
+	cone->tan = (int)cone->tan == 180 ? 0.0f : tanf(DEG_TO_RAD(cone->tan / 2.0f));
+	if (!ft_3_isnullpoint(base))
+		cone->v = ft_3_tounitvector(base - cone->o);
+	if (cone->r[1] == FLT_MIN)
+	{
+		cone->r[0] = fabsf(cone->minh * cone->tan);
+		cone->r[1] = fabsf(cone->maxh * cone->tan);
+	}
 }
 
 void		*ft_parse_cone(char **content, t_object *o)
 {
 	t_cone		*cone;
+	t_vector	base;
 
 	o->ft_collide = ft_collide_cone;
 	o->ft_is_reachable = ft_is_reachable_plane;
@@ -58,16 +61,20 @@ void		*ft_parse_cone(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_cone;
 	o->ft_scale = ft_scale_cone;
 	cone = ft_conenew();
-	ft_get_attr(content, "base", (void *)(&(cone->base)), DT_POINT);
-	ft_get_attr(content, "base_rad", (void *)(&(cone->base_rad)), DT_FLOAT);
-	ft_get_attr(content, "vert", (void *)(&(cone->vert)), DT_POINT);
-	ft_get_attr(content, "vert_rad", (void *)(&(cone->vert_rad)), DT_FLOAT);
-	if (cone->base_rad < 0 && cone->vert_rad < 0)
-	{
-		cone->base_rad *= -1.0f;
-		cone->vert_rad *= -1.0f;
-	}
-	ft_cone_init(o, cone);
+	base = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	ft_get_attr(content, "vert", (void *)(&(cone->o)), DT_POINT);
+	ft_get_attr(content, "base_rad", (void *)(&(cone->r[1])), DT_FLOAT);
+	ft_get_attr(content, "vert_rad", (void *)(&(cone->r[0])), DT_FLOAT);
+	ft_get_attr(content, "base", (void *)(&base), DT_POINT);
+
+	ft_get_attr(content, "direction", (void *)&(cone->v), DT_POINT);
+	ft_get_attr(content, "min_height", (void *)(&(cone->minh)), DT_FLOAT);
+	ft_get_attr(content, "max_height", (void *)(&(cone->maxh)), DT_FLOAT);
+	ft_get_attr(content, "angle", (void *)(&(cone->tan)), DT_FLOAT);
+	ft_cone_init(cone, base);
+	printf("CONE: v %f,%f,%f, tan %f, dir %f,%f,%f, maxh %f, minh %f rad0 %f, rad1 %f\n",
+			cone->o[0], cone->o[1], cone->o[2],
+		   cone->tan, cone->v[0], cone->v[1], cone->v[2], cone->maxh, cone->minh, cone->r[0], cone->r[1]);
 	return ((void *)cone);
 }
 
@@ -75,9 +82,10 @@ void		ft_translate_cone(Uint32 key, void *fig, t_vector *transl)
 {
 	t_cone *cone;
 
-	cone = (t_cone *)fig;
 	if (!fig)
 		return ;
+	cone = (t_cone *)fig;
+	*transl = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
 	if (key == SDLK_d)
 		(*transl)[2] += TRANS_F;
 	if (key == SDLK_a)
@@ -90,20 +98,17 @@ void		ft_translate_cone(Uint32 key, void *fig, t_vector *transl)
 		(*transl)[0] += TRANS_F;
 	if (key == SDLK_q)
 		(*transl)[0] -= TRANS_F;
-	cone->base = cone->base_ini + *(transl);
-	cone->vert = cone->base + ft_3_vector_scale(cone->bv, cone->bv_dist);
-	cone->main_vert = cone->base + ft_3_vector_scale(
-		cone->bv,
-		cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
+	cone->o = cone->o + *(transl);
 }
 
 void		ft_rotate_cone(Uint32 key, void *fig, t_vector *rot)
 {
 	t_cone *cone;
 
-	cone = (t_cone *)fig;
 	if (!fig)
 		return ;
+	cone = (t_cone *)fig;
+	*rot = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
 	if (key == SDLK_DOWN)
 		(*rot)[2] += ROTAT_F;
 	else if (key == SDLK_UP)
@@ -116,31 +121,24 @@ void		ft_rotate_cone(Uint32 key, void *fig, t_vector *rot)
 		(*rot)[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
 		(*rot)[0] -= ROTAT_F;
-	cone->bv = ft_3_vector_rotate(cone->bv_ini, (*rot)[0], (*rot)[1], (*rot)[2]);
-	cone->vert = cone->base + ft_3_vector_scale(cone->bv, cone->bv_dist);
-	cone->main_vert = cone->base + ft_3_vector_scale(
-		cone->bv,
-		cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
+	cone->v = ft_3_vector_rotate(cone->v, (*rot)[0], (*rot)[1], (*rot)[2]);
 }
 
 void		ft_scale_cone(Uint32 key, void *fig, float *scale)
 {
 	t_cone *cone;
 
-	cone = (t_cone *)fig;
 	if (!fig)
 		return ;
+	cone = (t_cone *)fig;
+	*scale = FLT_MIN;
 	if (key == SDLK_z)
 		*scale += SCALE_F;
 	else if (key == SDLK_x && *scale - SCALE_F >= 0.0f)
 		*scale -= SCALE_F;
 	else
 		*scale = 0;
-	cone->base_rad = cone->base_rad_ini * *scale;
-	cone->vert_rad = cone->vert_rad_ini * *scale;
-	cone->bv_dist = cone->bv_dist_ini * *scale;
-	cone->vert = cone->base + ft_3_vector_scale(cone->bv, cone->bv_dist);
-	cone->main_vert = cone->base + ft_3_vector_scale(
-	cone->bv,
-	cone->base_rad * cone->bv_dist / (cone->base_rad - cone->vert_rad));
+	cone->tan = cone->tan * *scale;
+	cone->maxh = cone->maxh * *scale * 0.5f;
+	cone->minh = cone->minh / *scale * 0.5f;
 }

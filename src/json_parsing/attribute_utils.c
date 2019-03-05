@@ -6,9 +6,9 @@ static t_vector	ft_parse_point(char **content)
 	float		coords[3];
 	t_vector	point;
 
-	coords[0] = 1;
-	coords[1] = 0;
-	coords[2] = 0;
+	coords[0] = 0.0f; //coords[0] = 1;
+	coords[1] = 0.0f;
+	coords[2] = 0.0f;
 	ft_get_attr(content, "x", &(coords[0]), DT_FLOAT);
 	ft_get_attr(content, "y", &(coords[1]), DT_FLOAT);
 	ft_get_attr(content, "z", &(coords[2]), DT_FLOAT);

@@ -89,8 +89,8 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 		ft_3_vector_scale(l->direct, -1.0f);
 	norm_light_cos = ft_3_vector_cos(coll->norm, ldir);
 	// printf("norm ldir cos %f norm %f,%f,%f\n", norm_light_cos, coll->norm[0], coll->norm[1], coll->norm[2]);
-	// if (norm_light_cos >= 0 && 
-	// 	!ft_iscollide(parg->e->scn, coll->coll_pnt, ldir, l))
+	 if (norm_light_cos >= 0 &&
+	 	!ft_iscollide(parg->e->scn, coll->coll_pnt + ft_3_vector_scale(coll->norm, 0.1), ldir, l))
 		ft_affect_illumination(coll, l, ldir, norm_light_cos);
 }
 

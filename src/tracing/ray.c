@@ -39,7 +39,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	ray->coll = &coll;
 	if (depth == 0)
 		parg->e->pix_obj[ray->pix] = coll.o;
-	if (!coll.o)
+	if (coll.o == NULL)
 		return (parg->e->scn->bg_color);
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)

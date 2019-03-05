@@ -78,21 +78,22 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 {
 	t_coll		coll;
 	t_vector	od[2];
+	t_vector	norm = {0,0,0};
 
 	coll.o = NULL;
-	od[0] = ray->o + ft_3_vector_scale(ray->d, 0.5f);
+	od[0] = ray->o; // + ft_3_vector_scale(ray->d, 0.5f);
 	od[1] = ray->d;
 	ray->coll = &coll;
 	if (ft_3_isnullpoint(coll.coll_pnt =
 		ft_get_collision_point(arg->e->scn->objs, &(coll.o), od)))
 		return (coll);
 	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
+	if (coll.o->trans)
+		ft_refract(arg, ray);
 	if (ft_3_vector_cos(coll.norm, ray->d) > 0)
 		coll.norm = ft_3_vector_scale(coll.norm, -1.0f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
-	if (coll.o->trans)
-		ft_refract(arg, ray);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

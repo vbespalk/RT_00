@@ -9,7 +9,7 @@
   "//": "Next data types are used:",
 
   "//": "STRING    - just string",
-  "//": "COLOR     - hexadecimal number, provided as a string in next format:",
+  "//": "COLOR     - hex number, provided as a string in the next format:",
   "//": "            \"0xrrggbb\" (case-insensitive)",
   "//": "FLOAT     - standard json number, but without 'e/E' support",
   "//": "COEF      - just like FLOAT, but it should be bounded from 0.0 to 1.0",

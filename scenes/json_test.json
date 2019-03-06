@@ -2,7 +2,8 @@
   "name": "TEST",
   "bg_color": "0x0",
   "camera": {
-    "origin": { "x": -1500 }
+    "origin": { "x": -1500 },
+    "smooth": "4x"
   },
   "lights": [
     {

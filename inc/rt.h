@@ -128,6 +128,13 @@ typedef enum		e_ltype
 	L_PARALLEL
 }					t_ltype;
 
+typedef enum		e_smooth
+{
+	SMOOTH_1X,
+	SMOOTH_4X,
+	SMOOTH_9X
+}					t_smooth;
+
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -293,6 +300,7 @@ typedef struct		s_light
 
 typedef struct		s_camera
 {
+	t_smooth		smooth;
 	t_vector		origin;
 	t_vector		direct;
 	t_vector		angles;

@@ -2,7 +2,7 @@
   "name": "TEST",
   "bg_color": "0x00",
   "camera": {
-    "origin": { "x": -600 }
+    "origin": { "x": 0 }
   },
   "lights": [
     {
@@ -16,7 +16,7 @@
       "base": { "x": 0, "z": 0 },
      "vert": { "x": 400, "z": -300  },
       "direction": {"x": 1},
-      "radius": 10,
+      "radius": 4000,
       "color": "0xff0000",
       "phong": 1
     },

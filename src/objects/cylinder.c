@@ -113,6 +113,6 @@ void		ft_scale_cylinder(Uint32 key, void *fig, float *scale)
 	else
 		*scale = 0;
 	clnd->r = clnd->r * *scale;
-	if (!(clnd->maxh == FLT_MAX))
+	if (clnd->maxh != FLT_MAX)
 		clnd->maxh = clnd->maxh * *scale;
 }

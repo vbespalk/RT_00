@@ -100,5 +100,5 @@ int			ft_is_inside_sphere(void *fig, t_vector point)
 
 t_vector	ft_get_norm_sphere(void *fig, t_vector coll)
 {
-	return (ft_3_unitvectornew(((t_sphere *)fig)->origin, coll));
+	return (ft_3_tounitvector(coll - ((t_sphere *)fig)->origin));
 }

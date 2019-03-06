@@ -72,9 +72,6 @@ void		*ft_parse_cone(char **content, t_object *o)
 	ft_get_attr(content, "max_height", (void *)(&(cone->maxh)), DT_FLOAT);
 	ft_get_attr(content, "angle", (void *)(&(cone->tan)), DT_FLOAT);
 	ft_cone_init(cone, base);
-	printf("CONE: v %f,%f,%f, tan %f, dir %f,%f,%f, maxh %f, minh %f rad0 %f, rad1 %f\n",
-			cone->o[0], cone->o[1], cone->o[2],
-		   cone->tan, cone->v[0], cone->v[1], cone->v[2], cone->maxh, cone->minh, cone->r[0], cone->r[1]);
 	return ((void *)cone);
 }
 

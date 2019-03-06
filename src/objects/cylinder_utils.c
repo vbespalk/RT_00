@@ -131,9 +131,17 @@ t_vector			ft_collide_cylinder(void *fig, t_vector origin, t_vector direct)
 int			ft_is_inside_cylinder(void *fig, t_vector point)
 {
 	t_cylinder	*clnd;
+	float 		hei;
+	t_vector	pnt_r;
 
 	clnd = (t_cylinder *)fig;
-	return ((ft_3_point_point_dist(clnd->o, point) < clnd->r) ? 1 : 0);
+	hei = ft_3_vector_dot(clnd->v, point - clnd->o);
+	if (!IN_RANGE(hei, 0.0f, clnd->maxh) && clnd->maxh != FLT_MAX)
+		return (0);
+	pnt_r = point - (clnd->o + ft_3_vector_scale(clnd->v, hei));
+//	if (ft_3_vector_dot(pnt_r, pnt_r) < clnd->r * clnd->r)
+//		printf("INSIDE\n");
+	return (ft_3_vector_dot(pnt_r, pnt_r) < clnd->r * clnd->r ? 1 : 0);
 }
 
 t_vector	ft_get_norm_cylinder(void *fig, t_vector coll)
@@ -143,9 +151,9 @@ t_vector	ft_get_norm_cylinder(void *fig, t_vector coll)
 
 	clnd = (t_cylinder *)fig;
 	h = ft_3_vector_dot(clnd->v, coll - clnd->o);
-	if (h >= clnd->maxh - 1e-2)
+	if (clnd->maxh != FLT_MAX && h >= clnd->maxh - 1e-2)
 		return (clnd->v);
-	if (h <= 1e-2)
+	if (clnd->maxh != FLT_MAX && h <= 1e-2)
 		return (-clnd->v);
 	return (ft_3_tounitvector(coll - ((t_cylinder *)fig)->o
 	- ft_3_vector_scale(((t_cylinder *)fig)->v, h)));

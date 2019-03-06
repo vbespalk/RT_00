@@ -130,14 +130,43 @@ t_vector			ft_collide_cone(void *fig, t_vector origin, t_vector direct)
 	return (get_closer_pnt(origin, coll));
 }
 
+//int			ft_is_inside_cone(void *fig, t_vector point)
+//{
+//	t_cone		*cone;
+//	float 		hei;
+//
+//	cone = (t_cone *)fig;
+//	hei = ft_3_vector_dot(cone->v, point - cone->o);
+//	if (!IN_RANGE(hei, cone->minh, cone->maxh) && cone->maxh != FLT_MAX)
+//		return (0);
+//	return ((ft_3_vector_dot(point - cone->o, point - cone->o) <
+//			 hei * hei + hei * cone->tan * hei * cone->tan) ? 1 : 0);
+//}
+
 int			ft_is_inside_cone(void *fig, t_vector point)
 {
-	t_cone	*con;
+	t_cone		*cone;
+	float 		hei;
+	float		rad;
 
-	con = (t_cone *)fig;
-	return (1);
-
-//	return ((ft_3_point_point_dist(con->o, point) < con->r[0]) ? 1 : 0);
+	cone = (t_cone *)fig;
+	hei = ft_3_vector_dot(cone->v, point - cone->o);
+	printf("hei %f\n", hei);
+	if (!IN_RANGE(hei, cone->minh, cone->maxh) && cone->maxh != FLT_MAX)
+	{
+		printf("HOORAY! OUTSIDE\n");
+		return (0);
+	}
+	rad = hei * cone->tan;
+	printf("rad %f hypot %f, cone hypot %f\n", rad,
+			ft_3_vector_dot(point - cone->o, point - cone->o), powf(hei, 4) * cone->tan * cone->tan);
+	if ((ft_3_vector_dot(point - cone->o, point - cone->o) < hei * hei + rad * rad))
+	{
+		printf("INSIDE\n");
+		return (1);
+	}
+	printf("OUTSIDE\n");
+	return (0);
 }
 
 t_vector	ft_get_norm_cone(void *fig, t_vector coll)

@@ -5,7 +5,7 @@
     "bg_color": "0x87cefa",
 
     "camera": {
-        "origin": { "x": -1500, "y": 0 }
+        "origin": { "x": -500, "y": 0 }
     },
     "lights": [
         {
@@ -17,10 +17,12 @@
         {
             "name": "cylinder",
             "base": { "x": 0, "y": 0, "z": 0 },
-            "base_rad": 50,
+            "radius": 100,
             "direction": {"x": 0, "y": 1, "z": 0},
-            "vert_rad": 50,
+            "height": 100,
             "color": "0xff0000",
+            "spclr": 0.1,
+            "phong": 1,
             "ambnt": 0.3
         },
         {

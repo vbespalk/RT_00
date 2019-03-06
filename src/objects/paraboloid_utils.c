@@ -58,10 +58,9 @@ static t_vector	get_caps_coll(t_vector origin, t_vector direct, t_prbld *par, fl
 
 int			ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct)
 {
-	t_prbld		*par;
-
-	par = (t_prbld *)fig;
-//	return ((ft_3_vector_cos(direct, par->o - origin) > 0) ? 1 : 0);
+	(void)origin;
+	(void)direct;
+	(void)fig;
 	return (1);
 }
 
@@ -114,9 +113,28 @@ t_vector	ft_collide_prbld(void *fig, t_vector origin, t_vector direct)
 
 int			ft_is_inside_prbld(void *fig, t_vector point)
 {
-	(void)fig;
-	(void)point;
-	return (1);
+	t_prbld		*par;
+	float 		hei;
+	t_vector	rad;
+
+	par = (t_prbld *)fig;
+	hei = ft_3_vector_dot(par->v, point - par->o);
+	if (!IN_RANGE(hei, -(1e-1), par->maxh) && par->maxh != FLT_MAX)
+	{
+		printf("HOORAY! OUTSIDE %f max %f\n", hei, par->maxh);
+		return (0);
+	}
+	rad = point - (par->o + ft_3_vector_scale(par->v, par->r));
+	printf("rad %f, dot %f\n", sqrtf(ft_3_vector_dot(rad, rad)), ft_3_vector_dot(point -
+	(par->o - ft_3_vector_scale(par->v, par->r)), par->v));
+	if (sqrtf(ft_3_vector_dot(rad, rad)) <= ft_3_vector_dot(point -
+	(par->o - ft_3_vector_scale(par->v, par->r)), par->v))
+	{
+		printf("INSIDE\n");
+		return (1);
+	}
+	printf("OUTSIDE\n");
+	return (0);
 }
 
 t_vector	ft_get_norm_prbld(void *fig, t_vector coll)
@@ -126,7 +144,6 @@ t_vector	ft_get_norm_prbld(void *fig, t_vector coll)
 
 	par = (t_prbld *)fig;
 	h = ft_3_vector_dot(par->v, coll - par->o);
-//	if (fabsf(ft_3_vector_dot(coll - (par->o + ft_3_vector_scale(par->v, par->maxh)), par->v)) <= 0.1)
 	if (h >= par->maxh - 1e-2)
 		return(ft_3_tounitvector(par->v));
 	else

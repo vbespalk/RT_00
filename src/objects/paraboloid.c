@@ -112,14 +112,14 @@ void		ft_scale_prbld(Uint32 key, void *fig, float *scale)
 	if (key == SDLK_z)
 	{
 		*scale += SCALE_F;
-		par->r = par->r * 1.1f * *scale;
+		par->r = par->r * *scale;
 		if (par->maxh != FLT_MAX)
 			par->maxh = par->maxh * *scale;
 	}
 	else if (key == SDLK_x && *scale >= 0.0f)
 	{
 		*scale -= SCALE_F;
-		par->r = par->r * 0.9f * *scale;
+		par->r = par->r * *scale;
 		if (par->maxh != FLT_MAX)
 			par->maxh = par->maxh * *scale;
 	}

@@ -91,14 +91,18 @@
 # include <math.h>
 # include <stdint.h>
 # include <time.h>
-// # include "SDL.h"
-// # include "SDL_image.h"
-//# include "SDL_syswm.h"
+
+# if defined(__MACOSX__)
+#  include "SDL.h"
+#  include "SDL_image.h"
+#  include "SDL_syswm.h"
 /*
-** LINUX
+**	LINUX
 */
-# include <SDL2/SDL.h>
-# include <SDL2/SDL_image.h>
+# else
+#  include <SDL2/SDL.h>
+#  include <SDL2/SDL_image.h>
+# endif
 
 # include "json.h"
 

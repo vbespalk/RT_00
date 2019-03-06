@@ -18,15 +18,16 @@ t_prbld		*ft_prbldnew(void)
 
 	par = ft_smemalloc(sizeof(t_prbld), "ft_prbldnew");
 	par->o = (t_vector){0.0f, 0.0f, 0.0f};
-	par->d = (t_vector){0.0f, 1.0f, 0.0f};
+	par->v = (t_vector){0.0f, 1.0f, 0.0f};
 	par->r = 1.f;
-	par->maxh = 200.0f;
+	par->maxh = FLT_MAX;
 	return (par);
 }
 
 char		*ft_parse_prbld(char **content, t_object *o)
 {
 	t_prbld		*par;
+	t_vector	vert;
 
 	o->ft_collide = ft_collide_prbld;
 	o->ft_is_reachable = ft_is_reachable_prbld;
@@ -36,12 +37,20 @@ char		*ft_parse_prbld(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_prbld;
 	o->ft_scale = ft_scale_prbld;
 	par = ft_prbldnew();
-	ft_get_attr(content, "origin", (void *)(&(par->o)), DT_POINT);
-	ft_get_attr(content, "direction", (void *)(&(par->d)), DT_POINT);
+	vert = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	ft_get_attr(content, "base", (void *)(&(par->o)), DT_POINT);
+	ft_get_attr(content, "vert", (void *)(&(vert)), DT_POINT);
+	ft_get_attr(content, "direction", (void *)(&(par->v)), DT_POINT);
 	ft_get_attr(content, "radius", (void *)(&(par->r)), DT_FLOAT);
 	ft_get_attr(content, "height", (void *)(&(par->maxh)), DT_FLOAT);
+	if (!ft_3_isnullpoint(vert))
+	{
+		par->maxh = ft_3_vector_len(vert - par->o);
+		par->v = ft_3_tounitvector(vert - par->o);
+	}
 	par->n = ft_3_nullpointnew();
-	par->d = ft_3_tounitvector(par->d);
+	par->v = ft_3_tounitvector(par->v);
+	printf("maxh %f\n", par->maxh);
 	return ((void *)par);
 }
 
@@ -88,7 +97,7 @@ void		ft_rotate_prbld(Uint32 key, void *fig, t_vector *rot)
 		(*rot)[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
 		(*rot)[0] -= ROTAT_F;
-	par->d = ft_3_vector_rotate(par->d, (*rot)[0], (*rot)[1], (*rot)[2]);
+	par->v = ft_3_vector_rotate(par->v, (*rot)[0], (*rot)[1], (*rot)[2]);
 
 }
 
@@ -101,11 +110,19 @@ void		ft_scale_prbld(Uint32 key, void *fig, float *scale)
 	if (!fig)
 		return ;
 	if (key == SDLK_z)
+	{
 		*scale += SCALE_F;
+		par->r = par->r * 1.1f * *scale;
+		if (par->maxh != FLT_MAX)
+			par->maxh = par->maxh * *scale;
+	}
 	else if (key == SDLK_x && *scale >= 0.0f)
+	{
 		*scale -= SCALE_F;
+		par->r = par->r * 0.9f * *scale;
+		if (par->maxh != FLT_MAX)
+			par->maxh = par->maxh * *scale;
+	}
 	else
 		*scale = 0;
-	par->r = par->r * *scale;
-	par->maxh = par->maxh * *scale;
 }

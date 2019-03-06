@@ -1,8 +1,8 @@
 {
   "name": "TEST",
-  "bg_color": "0x0",
+  "bg_color": "0x00",
   "camera": {
-    "origin": { "x": -100 }
+    "origin": { "x": -600 }
   },
   "lights": [
     {
@@ -13,13 +13,18 @@
   "objects": [
     {
       "name": "paraboloid",
-      "origin": { "x": 500, "z": -100 },
-      "direction": {"y": 1, "z": 0},
+      "base": { "x": 0, "z": 0 },
+     "vert": { "x": 400, "z": -300  },
+      "direction": {"x": 1},
       "radius": 10,
-      "height": 400,
       "color": "0xff0000",
-      "spclr": 0.1,
       "phong": 1
-    }
+    },
+    {
+        "name": "sphere",
+        "origin": { "x": 100, "z": -100 },
+        "radius": 80,
+        "color": "0xffffff"
+    }    
   ]
 }

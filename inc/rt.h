@@ -230,10 +230,9 @@ typedef struct		s_box
 typedef struct		s_paraboloid
 {
 	t_vector		o;
-	t_vector		d;
+	t_vector		v;
 	t_vector		n;
 	float			r; //radius
-	float			h; //height
 	float			maxh; //max height
 
 }					t_prbld;

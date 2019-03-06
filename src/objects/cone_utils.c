@@ -151,21 +151,15 @@ int			ft_is_inside_cone(void *fig, t_vector point)
 
 	cone = (t_cone *)fig;
 	hei = ft_3_vector_dot(cone->v, point - cone->o);
-	printf("hei %f\n", hei);
 	if (!IN_RANGE(hei, cone->minh, cone->maxh) && cone->maxh != FLT_MAX)
-	{
-		printf("HOORAY! OUTSIDE\n");
 		return (0);
-	}
 	rad = hei * cone->tan;
-	printf("rad %f hypot %f, cone hypot %f\n", rad,
-			ft_3_vector_dot(point - cone->o, point - cone->o), powf(hei, 4) * cone->tan * cone->tan);
 	if ((ft_3_vector_dot(point - cone->o, point - cone->o) < hei * hei + rad * rad))
 	{
-		printf("INSIDE\n");
+//		printf("INSIDE\n");
 		return (1);
 	}
-	printf("OUTSIDE\n");
+//	printf("OUTSIDE\n");
 	return (0);
 }
 

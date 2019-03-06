@@ -22,7 +22,6 @@
 # define DEG_TO_RAD(x) ((x) * (float)M_PI / 180.0f)
 # define RAD_TO_DEG(x) ((x) * 180.0f / M_PI)
 # define IN_RANGE(x, left, right) ((x >= left) && (x <= right))
-# define RANGE_RI_STR(x, left, right) ((x > left) && (x <= right))
 
 /*
 **	camera
@@ -44,15 +43,16 @@
 
 # define DEPTH			10
 # define STACK_SIZE		DEPTH
-# define THREADS		1
+# define THREADS		8
 
 /*
 **	includes
 */
 
 # define ROTAT_F		DEG_TO_RAD(10)
-# define TRANS_F		15
-# define SCALE_F		0.1
+# define TRANS_F		15.0f
+# define SCALE_F		0.1f
+# define SCANG_F		0.05f
 // # define SCALE_F_CAM	0.1
 
 # include <stdio.h>
@@ -173,6 +173,7 @@ typedef struct		s_cone
 {
 	t_vector		o; //vertex of the cone
 	t_vector		v;
+	t_vector		v_cp;
 	float 			r[2]; //caps radius; from vertex to base
 	float			tan;
 	float			minh; //limits of height; from vertex

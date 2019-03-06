@@ -46,6 +46,7 @@ void		ft_cone_init(t_cone *cone, t_vector base)
 		cone->r[0] = fabsf(cone->minh * cone->tan);
 		cone->r[1] = fabsf(cone->maxh * cone->tan);
 	}
+	cone->v_cp = cone->v;
 }
 
 void		*ft_parse_cone(char **content, t_object *o)
@@ -119,23 +120,36 @@ void		ft_rotate_cone(Uint32 key, void *fig, t_vector *rot)
 	else if (key == SDLK_PAGEUP)
 		(*rot)[0] -= ROTAT_F;
 	cone->v = ft_3_vector_rotate(cone->v, (*rot)[0], (*rot)[1], (*rot)[2]);
+	cone->v_cp = cone->v;
 }
 
 void		ft_scale_cone(Uint32 key, void *fig, float *scale)
 {
-	t_cone *cone;
+	t_cone 	*cone;
 
 	if (!fig)
 		return ;
 	cone = (t_cone *)fig;
-	*scale = FLT_MIN;
 	if (key == SDLK_z)
-		*scale += SCALE_F;
-	else if (key == SDLK_x && *scale - SCALE_F >= 0.0f)
-		*scale -= SCALE_F;
-	else
-		*scale = 0;
-	cone->tan = cone->tan * *scale;
-	cone->maxh = cone->maxh * *scale * 0.5f;
-	cone->minh = cone->minh / *scale * 0.5f;
+	{
+		cone->v = cone->v_cp;
+		if (cone->maxh != FLT_MAX)
+			cone->maxh = cone->maxh * (1.0f + SCALE_F);
+		cone->o -= ft_3_vector_scale(cone->v, 5);
+		cone->tan = cone->tan * (1.0f + SCANG_F);
+	}
+	else if (key == SDLK_x)
+	{
+		if (cone->maxh * (1.0f - SCALE_F) >= cone->minh)
+		{
+			if (cone->maxh != FLT_MAX)
+				cone->maxh = cone->maxh *  (1.0f - SCALE_F);
+			cone->o += ft_3_vector_scale(cone->v, 5);
+			cone->tan = cone->tan *  (1.0f - SCANG_F);
+		}
+		else
+			cone->v = (t_vector){0.f,0.f,0.f};
+	}
+	cone->r[0] = fabsf(cone->minh * cone->tan);
+	cone->r[1] = fabsf(cone->maxh * cone->tan);
 }

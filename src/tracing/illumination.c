@@ -18,22 +18,22 @@
 */
 
 int		ft_iscollide
-			(t_scene *scn, t_vector origin, t_vector direct, t_light *l)
+			(t_scene *scn, t_vector o, t_vector d, t_light *l)
 {
 	t_list		*o_node;
-	t_object	*o;
+	t_object	*obj;
 	t_vector	coll;
 
-	origin = origin + ft_3_vector_scale(direct, 0.1f);
+	o = o + ft_3_vector_scale(d, 0.1f);
 	o_node = scn->objs;
 	while (o_node)
 	{
-		o = (t_object *)(o_node->content);
-		coll = o->ft_collide(o->fig, origin, direct);
+		obj = (t_object *)(o_node->content);
+		coll = obj->ft_collide(obj->fig, o, d);
 		if (!ft_3_isnullpoint(coll) &&
 			(l->type != L_POINT ||
 				ft_3_pointcmp(
-					ft_3_unitvectornew(coll, origin),
+					ft_3_unitvectornew(coll, o),
 					ft_3_unitvectornew(l->origin, coll),
 					1e-6
 				)))
@@ -85,12 +85,13 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 	float		norm_light_cos;
 	t_vector	ldir;
 
-	ldir = (l->type == L_POINT) ? (l->origin - coll->coll_pnt) :
-		ft_3_vector_scale(l->direct, -1.0f);
+	ldir = (l->type == L_POINT)
+		? ft_3_tounitvector(l->origin - coll->coll_pnt)
+		: ft_3_vector_scale(l->direct, -1.0f);
 	norm_light_cos = ft_3_vector_cos(coll->norm, ldir);
 	// printf("norm ldir cos %f norm %f,%f,%f\n", norm_light_cos, coll->norm[0], coll->norm[1], coll->norm[2]);
-	// if (norm_light_cos >= 0 && 
-	// 	!ft_iscollide(parg->e->scn, coll->coll_pnt, ldir, l))
+	 if (norm_light_cos >= 0 &&
+	 	!ft_iscollide(parg->e->scn, coll->coll_pnt, ldir, l))
 		ft_affect_illumination(coll, l, ldir, norm_light_cos);
 }
 

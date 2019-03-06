@@ -1,5 +1,6 @@
-#include "rt.h"
 
+//#include "rt.h"
+//
 //t_quad		*ft_quadnew(void)
 //{
 //	t_quad	*qd;

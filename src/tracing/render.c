@@ -62,10 +62,10 @@ void	ft_render(t_env *e)
 {
 	pthread_t	threads[THREADS];
 	t_thrarg	thrargs[THREADS];
-	int			i;
+	int			i = 0;
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
-	ft_get_start_refr(e->scn);
+	ft_get_start_stack(e->scn);
 	i = -1;
 	while (++i < THREADS)
 	{

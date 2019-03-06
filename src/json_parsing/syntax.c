@@ -31,14 +31,14 @@ static void		ft_syntax_error(char *content, int line, int symbol)
 
 void			ft_check_syntax(char *content)
 {
-	t_checker	checker;
-	int			line;
-	int			symbol;
+	JSON_checker	checker;
+	int				line;
+	int				symbol;
 
-	checker = ft_checkernew(OBJ_DEPTH);
+	checker = new_JSON_checker(OBJ_DEPTH);
 	line = 1;
 	symbol = 0;
-	while (*content && ft_check_char(checker, *content))
+	while (*content && JSON_checker_char(checker, *content))
 	{
 		if (*content == '\n')
 		{
@@ -49,6 +49,6 @@ void			ft_check_syntax(char *content)
 		++content;
 	}
 	content = content - symbol + 1;
-	if (!ft_check_done(checker))
+	if (!JSON_checker_done(checker))
 		ft_syntax_error(content, line, symbol);
 }

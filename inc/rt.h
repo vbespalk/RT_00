@@ -56,7 +56,7 @@
 **	system
 */
 
-# define DEPTH			10
+# define DEPTH			5
 # define STACK_SIZE		DEPTH
 # define THREADS		8
 
@@ -88,23 +88,29 @@
 
 # include <stdio.h>
 # include <pthread.h>
-# include <math.h>
 # include <stdint.h>
-# include <time.h>
+# include "json.h"
+
+/*
+**	MACOSX
+*/
 
 # if defined(__MACOSX__)
+
 #  include "SDL.h"
 #  include "SDL_image.h"
 #  include "SDL_syswm.h"
+
 /*
 **	LINUX
 */
+
 # else
+
 #  include <SDL2/SDL.h>
 #  include <SDL2/SDL_image.h>
-# endif
 
-# include "json.h"
+# endif
 
 typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
@@ -547,7 +553,7 @@ void					ft_parse_scene(char **content, t_scene *scn);
 
 t_camera				*ft_cameranew(void);
 void					ft_parse_camera(char **content, t_camera *cam);
-void					ft_get_start_refr(t_scene *scn);
+void					ft_get_start_stack(t_scene *scn);
 
 /*
 ** cam_transform

@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+**	turning norm to proj
+*/
+
 #include "libpnt.h"
 
 t_vector		ft_3_vector_turn(t_vector proj, t_vector norm, float angle)

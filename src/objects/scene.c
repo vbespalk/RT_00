@@ -22,20 +22,6 @@ t_scene		*ft_scenenew(void)
 	return (scn);
 }
 
-//t_scene		*ft_get_scene(char *file_name)
-//{
-//	t_scene		*scn;
-//	int			fd;
-//
-//	scn = ft_scenenew();
-//	if ((fd = open(file_name, O_RDONLY)) < 0)
-//		ft_error("cannot open file");
-//	if ((read(fd, NULL, 0)) < 0)
-//		ft_error("cannot read file");
-//	ft_parse(ft_readfile(file_name), scn);
-//	return (scn);
-//}
-
 void		ft_parse_scene(char **content, t_scene *scn)
 {
 	ft_get_attr(content, "name", (void *)&(scn->name), DT_STRING);

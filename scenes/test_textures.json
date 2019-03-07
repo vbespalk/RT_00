@@ -1,0 +1,88 @@
+{
+    "name": "Solar System",
+
+    "//": "should try bounding volume (skybox)",
+    "bg_color": "0x00",
+
+    "camera": {
+        "origin": { "x": -5000, "y": 0 }
+    },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": 0, "y": -1, "z": 0 }
+        }
+    ],
+    "objects": [
+        {
+            "//": "sun",
+
+            "name": "sphere",
+            "origin": { "y": 0 },
+            "radius": 700,
+
+            "//": "yellow",
+            "color": "0xffff00",
+            "texture": "/texture/sun.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "mercury",
+
+            "name": "sphere",
+            "origin": {"x": -500, "y": -1000, "z": 600 },
+            "radius": 64,
+
+            "//": "light_grey",
+            "color": "0xbbbbbb",
+            "texture": "/texture/mercury.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "venus",
+
+            "name": "sphere",
+            "origin": {"x": -1000, "y": 1400, "z": -1000 },
+            "radius": 152,
+
+            "//": "blue",
+            "color": "0x0011ff",
+            "texture": "/texture/venus.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "earth",
+
+            "name": "sphere",
+            "origin": {"x": 500, "y": -1600, "z": -1400 },
+            "radius": 164,
+
+            "//": "green",
+            "color": "0x00ff36",
+            "texture": "/texture/earth.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "mars",
+
+            "name": "sphere",
+            "origin": {"x": -1400, "y": 500, "z": 1000 },
+            "radius": 78,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "/texture/mars.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        }
+    ]
+}

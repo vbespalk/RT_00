@@ -16,20 +16,20 @@ t_triangle		*ft_trianglenew(void)
 
 char		*ft_parse_triangle(char *attr, t_scene *scn, unsigned int  id)
 {
-	t_object	*obj;
+	t_object	*o;
 	t_triangle	*trgl;
 
-	// obj = ft_parse_object(attr);
-	obj = ft_objectnew(id);
-	obj->id = id;
-	obj->refr = 1.0;
-	obj->ft_collide = ft_collide_triangle;
-	obj->ft_is_reachable = ft_is_reachable_triangle;
-	obj->ft_is_inside = ft_is_inside_triangle;
-	obj->ft_get_norm = ft_get_norm_triangle;
-	obj->ft_translate = ft_translate_triangle;
-	obj->ft_rotate = ft_rotate_triangle;
-	obj->ft_scale = ft_scale_triangle;
+	// o = ft_parse_oect(attr);
+	o = ft_objectnew(id);
+	o->id = id;
+	o->refr = 1.0;
+	o->ft_collide = ft_collide_triangle;
+	o->ft_is_reachable = ft_is_reachable_triangle;
+	o->ft_is_inside = ft_is_inside_triangle;
+	o->ft_get_norm = ft_get_norm_triangle;
+	o->ft_translate = ft_translate_triangle;
+	o->ft_rotate = ft_rotate_triangle;
+	o->ft_scale = ft_scale_triangle;
 	trgl = ft_trianglenew();
 	// attr = ft_get_curve(attr, '{');
 	// ft_get_attr_in_scope(attr, "origin:", (void *)(&(trgl->origin_ini)), PNT);
@@ -42,8 +42,8 @@ char		*ft_parse_triangle(char *attr, t_scene *scn, unsigned int  id)
 	trgl->unorm = ft_3_vector_cross(trgl->v2 - trgl->v0, trgl->v1 - trgl->v0);
 	trgl->norm = ft_3_tounitvector(trgl->unorm);
 	printf("triangle normal %f,%f,%f\n", trgl->norm[0], trgl->norm[1], trgl->norm[2]);
-	obj->fig = trgl;
-	ft_lstpush(&(scn->objs), ft_nodenew((void *)obj, sizeof(obj)));
+	o->fig = trgl;
+	ft_lstpush(&(scn->objs), ft_nodenew((void *)o, sizeof(o)));
 	return (NULL);
 	// return (ft_get_curve(attr, '}'));
 }

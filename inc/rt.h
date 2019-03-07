@@ -87,6 +87,15 @@ typedef enum		e_ltype
 	L_PARALLEL
 }					t_ltype;
 
+typedef struct		s_texture
+{
+	int 			id;
+	char			*path;
+	Uint32			*pix;
+	int 			w;
+	int 			h;
+	int				pitch;
+}					t_texture;
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -119,10 +128,9 @@ typedef struct		s_object
 	float			t_blur;
 	float			phong;
 
-//	unsigned int	reflect; // my shiny val
-//
-//	t_vector		col;
 	t_color			color;
+	char 			*texture_id;
+	t_texture		*texture;
 /*
 ** functions for intersection / search etc.
 */
@@ -284,13 +292,6 @@ typedef struct		s_scene
 	unsigned int	nb_light;
 	t_color			bg_color;
 	char			*name;
-	t_vector		r_ori; //
-	// t_vector		cam_pos; //
-	// t_vector		cam_dir; //
-	// t_vector		cam_transl; //
-	// t_vector		cam_angles; //
-	// t_matrix		wto_cam; //
-	//t_hit			*(hits[THREADS]);
 	t_list			*lights;
 	t_list			*objs;
 	t_camera		*cam;

@@ -79,6 +79,8 @@ static void	ft_get_object_attrs(char **content, t_object *o)
 	ft_get_attr(content, "phong", (void *)(&(o->phong)), DT_COEF);
 	ft_get_attr(content, "translate", (void *)(&(o->translate)), DT_POINT);
 	ft_get_attr(content, "rotate", (void *)(&(o->rotate)), DT_POINT);
+
+	ft_get_attr(content, "texture", (void *)(&(o->texture_id)), DT_STRING);
 }
 
 void		ft_parse_object(char **content, t_list **lst, Uint32 id)
@@ -96,12 +98,14 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	}
 	free(name);
 	o = ft_objectnew(id);
+	o->texture_id = NULL;
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);
 	o->rotate[0] = (float)ft_torad(o->rotate[0]);
 	o->rotate[1] = (float)ft_torad(o->rotate[1]);
 	o->rotate[2] = (float)ft_torad(o->rotate[2]);
 	o->scale = 1.0f;
+	o->texture = NULL;
 	o->fig = ft_parse_figure(content, o);
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

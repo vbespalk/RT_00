@@ -48,15 +48,22 @@ int		sdl_init(t_sdl *sdl)
 {
 	SDL_RendererInfo	info;
 	Uint32				flags;
+	int					img_flags;
+	int 				img_init;
 
 	//The window we'll be rendering to
 	flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+	img_flags = IMG_INIT_JPG | IMG_INIT_PNG;
 	sdl->window = NULL;
+	sdl->scr_wid = SCR_WID;
+	sdl->scr_hei = SCR_HEI;
 	//The surface contained by the window
 	get_format_data(sdl);
 	//Initialize SDL
 	if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 		return (sdl_error("SDL could not initialize! "));
+	if (!IMG_Init(img_flags))
+		return (sdl_img_error("SDL_IMG_Init: Failed to init required jpg and png support!\n"));
 	//Create window
 	sdl->window = SDL_CreateWindow( "RayTracer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, sdl->scr_wid, sdl->scr_hei, flags);
 	if(sdl->window == NULL)
@@ -87,7 +94,7 @@ int		sdl_init(t_sdl *sdl)
 		return (ft_perr_retu(NULL));
 	}
 	ft_memset(sdl->pixels, 100, sdl->scr_hei * sdl->scr_wid * sizeof(Uint32));
-	printf("win_init: OK\n");
+
 	return (0);
 }
 
@@ -110,8 +117,18 @@ int 	sdl_error(char *message)
 {
 	if (message)
 		ft_putstr_fd(message, 2);
-	ft_putstr_fd("SDL_Error: ", 2);
+	ft_putstr_fd("SDL Error: ", 2);
 	ft_putstr_fd(SDL_GetError(), 2);
+	ft_putstr_fd("\n", 2);
+	return (-1);
+}
+
+int 	sdl_img_error(char *message)
+{
+	if (message)
+		ft_putstr_fd(message, 2);
+	ft_putstr_fd("SDL_Image Error: ", 2);
+	ft_putstr_fd(IMG_GetError(), 2);
 	ft_putstr_fd("\n", 2);
 	return (-1);
 }

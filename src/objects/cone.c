@@ -61,6 +61,8 @@ void		*ft_parse_cone(char **content, t_object *o)
 	o->ft_translate = ft_translate_cone;
 	o->ft_rotate = ft_rotate_cone;
 	o->ft_scale = ft_scale_cone;
+//	o->ft_mapping = ft_map_cone;
+	o->ft_mapping = NULL;
 	cone = ft_conenew();
 	base = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
 	ft_get_attr(content, "vert", (void *)(&(cone->o)), DT_POINT);

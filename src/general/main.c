@@ -14,14 +14,30 @@
 
 static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
+	t_list		*textures;
+	t_list		*objs;
+	t_object	*obj;
+
+	textures = NULL;
 	e->scn = scene;
-//	e->light = scn->light;
-//	e->obj = scn->obj;
+	e->scn->textures = textures;
 	e->asp_rat = (float)sdl->scr_wid / (float)sdl->scr_hei;
 	e->pix_obj = obj_pix;
 	e->sdl = sdl;
-	sdl->scr_wid = SCR_WID;
-	sdl->scr_hei = SCR_HEI;
+	objs = e->scn->objs;
+	while (objs)
+	{
+		obj = (t_object *)objs->content;
+		printf("objs id %d, tex %s\n", obj->id, obj->texture_id);
+		if (obj->texture_id != NULL)
+		{
+			if (!(obj->texture = init_texture(&textures, sdl, obj->texture_id)))
+				return (-1);
+		}
+		else
+			printf("NO TEXTURES FOUND\n");
+		objs = objs->next;
+	}
 	e->selected = NULL;
 	return (0);
 }
@@ -61,15 +77,10 @@ int			main(int argc, char **argv)
 
 	if (argc != 2)
 		ft_usage("RT scn\n");
+	if (sdl_init(&sdl) < 0)
+		exit(-1);
 	if (!(scene = ft_parse_json(argv[1])))
 		ft_error("Scene is incomplete or incorrect\n");
-	sdl.scr_wid = SCR_WID;
-	sdl.scr_hei = SCR_HEI;
-	if (sdl_init(&sdl) < 0)
-	{
-		// struct_del(scene);
-		exit(-1);
-	}
 	obj_pix = (t_object **)ft_smemalloc(
 		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main: for 'obj_pix'");
 	if (init_env(&e, scene, &obj_pix[0], &sdl))

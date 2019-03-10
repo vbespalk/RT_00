@@ -22,6 +22,7 @@ char		*ft_parse_box(char **content, t_object *o)
 	o->ft_translate = ft_translate_box;
 	o->ft_rotate = ft_rotate_box;
 	o->ft_scale = ft_scale_box;
+	o->ft_mapping = NULL;
 	bx = ft_boxnew();
 	ft_get_attr(content, "min", (void *)(&(bx->bounds_ini[0])), DT_POINT);
 	ft_get_attr(content, "max", (void *)(&(bx->bounds_ini[1])), DT_POINT);

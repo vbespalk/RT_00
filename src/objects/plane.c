@@ -36,6 +36,7 @@ void		*ft_parse_plane(char **content, t_object *o)
 	o->ft_translate = ft_translate_plane;
 	o->ft_rotate = ft_rotate_sphere;
 	o->ft_scale = ft_scale_plane;
+	o->ft_mapping = ft_map_plane;
 	pln = ft_planenew();
 	ft_get_attr(content, "origin", (void *)(&(pln->origin_ini)), DT_POINT);
 	ft_get_attr(content, "normal", (void *)(&(pln->norm_ini)), DT_POINT);

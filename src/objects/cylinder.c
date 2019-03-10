@@ -37,6 +37,8 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	o->ft_translate = ft_translate_cylinder;
 	o->ft_rotate = ft_rotate_cylinder;
 	o->ft_scale = ft_scale_cylinder;
+//	o->ft_mapping = ft_map_clndr;
+	o->ft_mapping = NULL;
 	clnd = ft_cylindernew();
 	ft_get_attr(content, "base", (void *)(&(clnd->o)), DT_POINT);
 	ft_get_attr(content, "direction", (void *)(&(clnd->v)), DT_POINT);
@@ -47,8 +49,9 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	if (!ft_3_isnullpoint(vert))
 	{
 		clnd->maxh = ft_3_vector_len(vert - clnd->o);
-		clnd->v = ft_3_tounitvector(vert - clnd->o);
+		clnd->v =vert - clnd->o;
 	}
+	clnd->v = ft_3_tounitvector(clnd->v);
 	return ((void *)clnd);
 }
 

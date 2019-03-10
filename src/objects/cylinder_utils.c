@@ -151,10 +151,10 @@ t_vector	ft_get_norm_cylinder(void *fig, t_vector coll)
 
 	clnd = (t_cylinder *)fig;
 	h = ft_3_vector_dot(clnd->v, coll - clnd->o);
-	if (clnd->maxh != FLT_MAX && h >= clnd->maxh - 1e-2)
+	if (clnd->maxh != FLT_MAX &&h >= clnd->maxh - 1e-2)
 		return (clnd->v);
-	if (clnd->maxh != FLT_MAX && h <= 1e-2)
+	if (clnd->maxh != FLT_MAX &&h <= 1e-2)
 		return (-clnd->v);
 	return (ft_3_tounitvector(coll - ((t_cylinder *)fig)->o
-	- ft_3_vector_scale(((t_cylinder *)fig)->v, h)));
+	- ft_3_vector_scale(((t_cylinder *)fig)->v,h)));
 }

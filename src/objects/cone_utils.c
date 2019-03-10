@@ -166,14 +166,13 @@ int			ft_is_inside_cone(void *fig, t_vector point)
 t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 {
 	t_cone 		*con;
-	float 		h;
 
 	con = (t_cone *)fig;
-	h = ft_3_vector_dot(con->v, coll - con->o);
-	if (con->maxh != FLT_MAX && h >= con->maxh - 1e-2)
+	con->h = ft_3_vector_dot(con->v, coll - con->o);
+	if (con->maxh != FLT_MAX && con->h >= con->maxh - 1e-2)
 		return (con->v);
-	if (con->minh != FLT_MIN && h <= con->minh + 1e-2)
+	if (con->minh != FLT_MIN && con->h <= con->minh + 1e-2)
 		return (-con->v);
 	return (ft_3_tounitvector(coll - ((t_cone *)fig)->o - (1.0f + con->tan * con->tan)
-	* ft_3_vector_scale(con->v, h)));
+	* ft_3_vector_scale(con->v, con->h)));
 }

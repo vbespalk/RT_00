@@ -76,7 +76,7 @@ typedef uint8_t		t_byte;
 
 typedef union		u_color
 {
-	int				val;
+	Uint32			val;
 	t_byte			argb[4];
 }					t_color;
 
@@ -89,12 +89,10 @@ typedef enum		e_ltype
 
 typedef struct		s_texture
 {
-	int 			id;
 	char			*path;
-	Uint32			*pix;
-	int 			w;
-	int 			h;
-	int				pitch;
+	SDL_Surface		*surface;
+	Uint32 			*pixels;
+	SDL_PixelFormat	*format;
 }					t_texture;
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
@@ -150,7 +148,11 @@ typedef struct		s_object
 						(Uint32 key, void *fig, t_vector *rotate);
 	void			(*ft_scale)
 						(Uint32 key, void *fig, float *scale);
-
+/*
+** functions for texturing obj.
+*/
+	Uint32			(*ft_mapping)
+						(void *fig, t_texture *tex, t_vector coll);
 }					t_object;
 
 typedef struct		s_plane
@@ -175,6 +177,8 @@ typedef struct		s_sphere
 	float			max_thcos;
 	float			min_phi;
 	float			max_phi;
+	float			phi;
+	float 			theta;
 }					t_sphere;
 
 typedef struct		s_cone
@@ -183,10 +187,12 @@ typedef struct		s_cone
 	t_vector		v;
 	t_vector		v_cp;
 	float 			r[2]; //caps radius; from vertex to base
+	float 			h; //height
 	float			tan;
 	float			minh; //limits of height; from vertex
 	float			maxh; //limits of height; from vertex
 	t_vector		norm;
+	float 			phi;
 }					t_cone;
 
 typedef struct		s_cylinder
@@ -194,6 +200,7 @@ typedef struct		s_cylinder
 	t_vector		o;
 	t_vector		v;
 	float			r;
+	float 			h; //height
 	float			maxh;
 	float			phi;
 }					t_cylinder;
@@ -294,6 +301,7 @@ typedef struct		s_scene
 	char			*name;
 	t_list			*lights;
 	t_list			*objs;
+	t_list			*textures;
 	t_camera		*cam;
 }					t_scene;
 
@@ -481,13 +489,14 @@ void				delete_obj(t_list **obj_lst, Uint32 id);
 void				scale_cam(Uint32 key, t_object *obj, float *sc_factor, int cam);
 
 /*
-** SDL
+** init_sdl.c
 */
 int					sdl_init(t_sdl *sdl);
 void				sdl_close(t_sdl *sdl);
 int					event_handler(t_env *env);
 int 				sdl_error(char *message);
 int					get_format_data(t_sdl *sdl);
+int 				sdl_img_error(char *message);
 
 
 
@@ -829,10 +838,42 @@ int						ft_key_hook(int key, void *p);
 int						ft_close_hook(int x, int y, void *a);
 
 /*
+**  textures.c
+*/
+
+t_texture				*init_texture(t_list **textures, t_sdl *sdl, char *id);
+t_texture				*load_texture(t_sdl *sdl, char *path);
+
+/*
+** sphere_mapping.c
+*/
+
+Uint32					ft_map_sphere(void *fig, t_texture *tex, t_vector coll);
+
+/*
+** cylinder_mapping.c
+*/
+
+Uint32					ft_map_clndr(void *fig, t_texture *tex, t_vector coll);
+
+/*
+** cone_mapping.c
+*/
+
+Uint32					ft_map_cone(void *fig, t_texture *tex, t_vector coll);
+
+/*
+** plane_mapping.c
+*/
+
+Uint32					ft_map_plane(void *fig, t_texture *tex, t_vector coll);
+
+/*
 ** FROM MY LIBFT
 */
-void	ft_perr_exit(char *message);
+//void	ft_perr_exit(char *message);
 int		ft_perr_retu(char *message);
 void	ft_usage(char *message);
+
 
 #endif

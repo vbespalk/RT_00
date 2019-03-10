@@ -105,7 +105,6 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->rotate[1] = (float)ft_torad(o->rotate[1]);
 	o->rotate[2] = (float)ft_torad(o->rotate[2]);
 	o->scale = 1.0f;
-	o->texture = NULL;
 	o->fig = ft_parse_figure(content, o);
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

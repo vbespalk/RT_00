@@ -33,6 +33,7 @@ void		*ft_parse_sphere(char **content, t_object *o)
 	o->ft_translate = ft_translate_sphere;
 	o->ft_rotate = ft_rotate_sphere;
 	o->ft_scale = ft_scale_sphere;
+	o->ft_mapping = ft_map_sphere;
 	sph = ft_spherenew();
 	ft_get_attr(content, "origin", (void *)(&(sph->origin_ini)), DT_POINT);
 	ft_get_attr(content, "radius", (void *)(&(sph->radius_ini)), DT_FLOAT);
@@ -73,10 +74,31 @@ void		ft_rotate_sphere(Uint32 key, void *fig, t_vector *rot)
 {
 	t_sphere *sph;
 
-	sph = (t_sphere *)fig;
-	(void)key;
 	if (!fig)
 		return ;
+	sph = (t_sphere *)fig;
+	if (key == SDLK_DOWN)
+		sph->theta -= ROTAT_F;
+	else if (key == SDLK_UP)
+		sph->theta += ROTAT_F;
+	else if (key == SDLK_LEFT)
+		sph->phi -= ROTAT_F;
+	else if (key == SDLK_RIGHT)
+		sph->phi += ROTAT_F;
+	else if (key == SDLK_PAGEDOWN)
+	{
+		sph->phi += 0.5 * ROTAT_F;
+		sph->theta += 0.5 * ROTAT_F;
+	}
+	else if (key == SDLK_PAGEUP)
+	{
+		sph->phi -= 0.5 * ROTAT_F;
+		sph->theta -= 0.5 * ROTAT_F;
+	}
+	if (!IN_RANGE(sph->phi, 0, 2 * M_PI))
+		sph->phi = sph->phi < 0 ? sph->phi + 2 * (float)M_PI : sph->phi - 2 * (float)M_PI;
+	if (!IN_RANGE(sph->theta, 0, M_PI))
+		sph->theta = sph->theta < 0 ? sph->theta + (float)M_PI : sph->theta - (float)M_PI;
 }
 
 void		ft_scale_sphere(Uint32 key, void *fig, float *scale)

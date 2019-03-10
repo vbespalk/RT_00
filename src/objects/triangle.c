@@ -30,6 +30,7 @@ char		*ft_parse_triangle(char *attr, t_scene *scn, unsigned int  id)
 	o->ft_translate = ft_translate_triangle;
 	o->ft_rotate = ft_rotate_triangle;
 	o->ft_scale = ft_scale_triangle;
+	o->ft_mapping = NULL;
 	trgl = ft_trianglenew();
 	// attr = ft_get_curve(attr, '{');
 	// ft_get_attr_in_scope(attr, "origin:", (void *)(&(trgl->origin_ini)), PNT);

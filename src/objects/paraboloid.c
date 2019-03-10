@@ -36,6 +36,7 @@ char		*ft_parse_prbld(char **content, t_object *o)
 	o->ft_translate = ft_translate_prbld;
 	o->ft_rotate = ft_rotate_prbld;
 	o->ft_scale = ft_scale_prbld;
+	o->ft_mapping = NULL;
 	par = ft_prbldnew();
 	vert = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
 	ft_get_attr(content, "base", (void *)(&(par->o)), DT_POINT);

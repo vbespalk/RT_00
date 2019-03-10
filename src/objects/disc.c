@@ -37,6 +37,7 @@ char		*ft_parse_disk(char **content, t_object *o)
 	o->ft_translate = ft_translate_disk;
 	o->ft_rotate = ft_rotate_disk;
 	o->ft_scale = ft_scale_disk;
+	o->ft_mapping = NULL;
 	dsk = ft_disknew();
 	ft_get_attr(content, "origin", (void *)(&(dsk->origin_ini)), DT_POINT);
 	ft_get_attr(content, "normal", (void *)(&(dsk->norm_ini)), DT_POINT);

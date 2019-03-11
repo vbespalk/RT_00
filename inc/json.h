@@ -18,7 +18,8 @@ typedef enum			e_datatype
 	DT_STRING,
 	DT_COLOR,
 	DT_FLOAT,
-	DT_COEF
+	DT_COEF,
+	DT_BOOL
 }						t_datatype;
 
 typedef struct s_scene	t_scene;
@@ -57,6 +58,9 @@ void					ft_parse_json_array
 							(char **content, char **data,
 							void *dst, t_datatype datatype);
 void					ft_parse_num
+							(char **content, char **data,
+							void *dst, t_datatype datatype);
+void					ft_parse_bool
 							(char **content, char **data,
 							void *dst, t_datatype datatype);
 

@@ -158,6 +158,7 @@ typedef struct		s_object
 /*
 ** object propetries
 */
+	int				is_neg;
 	float			ambnt;
 	float			diff;
 	float			spclr;
@@ -166,11 +167,11 @@ typedef struct		s_object
 	float			trans;
 	float			t_blur;
 	float			phong;
-
-//	unsigned int	reflect; // my shiny val
-//
-//	t_vector		col;
 	t_color			color;
+
+//	float			wave;
+//	t_vector		wave_direct;
+
 /*
 ** functions for intersection / search etc.
 */
@@ -314,17 +315,6 @@ typedef struct		s_camera
 	t_vector		vs_y_step_vec;
 	t_object		*inner_o;
 }					t_camera;
-
-/*
-**	Hit Transparent Objects List
-*/
-
-//typedef struct		s_hit
-//{
-//	struct s_object	*o;
-//	struct s_hit	*prev;
-//	struct s_hit	*next;
-//}					t_hit;
 
 typedef struct		s_scene
 {

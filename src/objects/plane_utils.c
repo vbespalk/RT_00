@@ -1,5 +1,6 @@
 
 #include "rt.h"
+
 static int 	ft_inside_quad(void *fig, t_vector coll)
 {
 	t_plane *pln;

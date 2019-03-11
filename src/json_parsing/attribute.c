@@ -70,6 +70,8 @@ void		ft_get_attr
 		ft_parse_json_object(content, &data, dst, datatype);
 	else if (*data == '[')
 		ft_parse_json_array(content, &data, dst, datatype);
+	else if (*data == 't' || *data == 'f')
+		ft_parse_bool(content, &data, dst, datatype);
 	else
 		ft_parse_num(content, &data, dst, datatype);
 }

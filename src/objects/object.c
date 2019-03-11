@@ -66,6 +66,7 @@ void		*ft_get_figure_parser(char *name)
 
 static void	ft_get_object_attrs(char **content, t_object *o)
 {
+	ft_get_attr(content, "negative", (void *)(&(o->is_neg)), DT_BOOL);
 	ft_get_attr(content, "color", (void *)(&(o->color)), DT_COLOR);
 	ft_get_attr(content, "ambnt", (void *)(&(o->ambnt)), DT_COEF);
 	ft_get_attr(content, "diff", (void *)(&(o->diff)), DT_COEF);

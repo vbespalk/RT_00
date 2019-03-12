@@ -42,14 +42,14 @@
 **	camera
 */
 
-# define FOV_MIN		60.0
-# define FOV_MAX		120.0
+# define FOV_MIN		60.0f
+# define FOV_MAX		120.0f
 
 /*
 **	tracing
 */
 
-# define BRIGHT_UNIT	20000.0
+# define BRIGHT_UNIT	20000.0f
 # define DEFAULT_REFR	1.0f
 
 /*

@@ -20,12 +20,16 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 	cam->vs_start_vec = ft_3_vector_rotate(
 		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, sdl->scr_wid / -2.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
-	cam->vs_x_step_vec = ft_3_vector_rotate(
-		(t_vector) { 0.0f, 0.0f, 1.0f },
-		cam->angles[0], cam->angles[1], cam->angles[2]);
-	cam->vs_y_step_vec = ft_3_vector_rotate(
-		(t_vector) { 0.0f, -1.0f, 0.0f },
-		cam->angles[0], cam->angles[1], cam->angles[2]);
+	cam->vs_x_step_vec = ft_3_vector_scale(
+		ft_3_vector_rotate(
+			(t_vector) { 0.0f, 0.0f, 1.0f },
+			cam->angles[0], cam->angles[1], cam->angles[2]),
+		1.0f / (float)(cam->smooth + 1));
+	cam->vs_y_step_vec = ft_3_vector_scale(
+		ft_3_vector_rotate(
+			(t_vector) { 0.0f, -1.0f, 0.0f },
+			cam->angles[0], cam->angles[1], cam->angles[2]),
+		1.0f / (float)(cam->smooth + 1));
 	cam->vs_start_point =
 		cam->vs_start_vec + cam->origin + ft_3_vector_rotate(
 			(t_vector){

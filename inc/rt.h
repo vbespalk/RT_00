@@ -95,7 +95,7 @@
 **	MACOSX
 */
 
-# if defined(__MACOSX__)
+# if defined(__MACH__) && defined(__APPLE__)
 
 #  include "SDL.h"
 #  include "SDL_image.h"
@@ -175,11 +175,10 @@ typedef struct		s_object
 /*
 ** functions for intersection / search etc.
 */
-//	int				(*intersect)();
 	int				(*ft_is_reachable)
 	 					(void *fig, t_vector origin, t_vector direct);
 	t_vector		(*ft_collide)
-	 					(void *fig, t_vector origin, t_vector direct);
+	 					(t_list **objs, void *fig, t_vector o, t_vector d);
 	int				(*ft_is_inside)(void *fig, t_vector point);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
 /*
@@ -634,7 +633,7 @@ void					ft_scale_plane(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_plane
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_plane
-							(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_plane(void *fig, t_vector point);
 t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 
@@ -655,9 +654,9 @@ void					ft_scale_disk(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_disk
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_disk
-	(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_disk(void *fig, t_vector point);
 t_vector				ft_get_norm_disk(void *fig, t_vector coll);
 
@@ -678,9 +677,9 @@ void					ft_scale_triangle(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_triangle
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_triangle
-	(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_triangle(void *fig, t_vector point);
 t_vector				ft_get_norm_triangle(void *fig, t_vector coll);
 
@@ -701,9 +700,9 @@ void					ft_scale_box(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_box
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_box
-	(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_box(void *fig, t_vector point);
 t_vector				ft_get_norm_box(void *fig, t_vector coll);
 
@@ -733,7 +732,7 @@ void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_sphere
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_sphere
-							(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_sphere(void *fig, t_vector point);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -754,7 +753,7 @@ void					ft_scale_cone(Uint32 key, void *fig, float *scale);
 */
 
 t_vector				ft_collide_cone
-							(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_cone(void *fig, t_vector point);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
@@ -790,7 +789,8 @@ void					ft_scale_prbld(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_prbld(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_prbld
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_prbld(void *fig, t_vector point);
 t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 
@@ -826,6 +826,7 @@ void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 **	collision.c
 */
 
+int						ft_is_inside_neg(t_list **objs, t_vector point);
 t_coll					ft_get_collision(t_thrarg *arg, t_ray *ray);
 
 /*

@@ -34,14 +34,14 @@ int			ft_is_reachable_plane(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector	ft_collide_plane(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_plane(t_list **objs, void *fig, t_vector o, t_vector d)
 {
 	t_plane		*pln;
 	t_vector	coll;
 
 	pln = (t_plane *)fig;
-	coll = ft_3_line_plane_inter(pln->origin, pln->norm, origin, direct);
-	if ((!ft_3_pointcmp(ft_3_unitvectornew(origin, coll), direct, 1e-6)))
+	coll = ft_3_line_plane_inter(pln->origin, pln->norm, o, d);
+	if ((!ft_3_pointcmp(ft_3_unitvectornew(o, coll), d, 1e-6)))
 		return (ft_3_nullpointnew());
 	if (ft_3_isnullpoint(pln->w) && ft_3_isnullpoint(pln->h))
 		return (coll);

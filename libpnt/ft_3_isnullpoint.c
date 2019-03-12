@@ -14,5 +14,7 @@
 
 int			ft_3_isnullpoint(t_vector point)
 {
-	return (point[0] == FLT_MIN && point[1] == FLT_MIN && point[2] == FLT_MIN);
+	return (point[0] == -FLT_MAX
+			&& point[1] == -FLT_MAX
+			&& point[2] == -FLT_MAX);
 }

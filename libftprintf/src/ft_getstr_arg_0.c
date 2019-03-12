@@ -49,7 +49,7 @@ char		*ft_getstr_arg_u(t_arg *arg, va_list *ap)
 	if (arg->conv == 'x')
 	{
 		to_free = str;
-		str = ft_strmap(str, (char (*)(char))ft_tolower);
+		str = ft_strmap(str, ft_tolower);
 		free(to_free);
 	}
 	if (!data && !arg->prec && !(arg->conv == 'o' && arg->flags & F_SHARP))

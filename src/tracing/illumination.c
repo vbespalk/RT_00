@@ -17,8 +17,7 @@
 **	(specularity and transparency will be taken into account latter)
 */
 
-int		ft_iscollide
-			(t_scene *scn, t_vector o, t_vector d, t_light *l)
+int		ft_iscollide(t_scene *scn, t_vector o, t_vector d, t_light *l)
 {
 	t_list		*o_node;
 	t_object	*obj;
@@ -29,10 +28,15 @@ int		ft_iscollide
 	while (o_node)
 	{
 		obj = (t_object *)(o_node->content);
-		coll = obj->ft_collide(obj->fig, o, d);
-		if (!ft_3_isnullpoint(coll) &&
-			(l->type != L_POINT ||
-				ft_3_pointcmp(
+		if (obj->is_neg)
+		{
+			o_node = o_node->next;
+			continue ;
+		}
+		coll = obj->ft_collide(&(scn->objs), obj->fig, o, d);
+		if (!ft_3_isnullpoint(coll)
+			&& (l->type != L_POINT
+				|| ft_3_pointcmp(
 					ft_3_unitvectornew(coll, o),
 					ft_3_unitvectornew(l->origin, coll),
 					1e-6

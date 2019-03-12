@@ -28,6 +28,8 @@ static t_smooth		ft_get_smooth_type(char *smooth_str)
 	t_smooth	res;
 	char		*tmp;
 
+	if (!smooth_str)
+		return (SMOOTH_1X);
 	res = SMOOTH_1X;
 	tmp = ft_strmap(smooth_str, ft_tolower);
 	free(smooth_str);
@@ -68,14 +70,14 @@ static t_object		*ft_get_inner_object(t_list *objs, t_vector point)
 	t_object	*o;
 	t_object	*res;
 
-	direct = (t_vector){ 1.0f, 0.0f, 0.0f };
+	direct = (t_vector) { 1.0f, 0.0f, 0.0f };
 	min_dist = FLT_MAX;
 	res = NULL;
 	while (objs)
 	{
 		o = (t_object *)(objs->content);
 		dist = ft_3_point_point_dist(
-			point, o->ft_collide(o->fig, point, direct));
+			point, o->ft_collide(&objs, o->fig, point, direct));
 		if (dist < min_dist)
 		{
 			min_dist = dist;

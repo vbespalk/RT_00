@@ -6,7 +6,8 @@
 
     "camera": {
         "origin": { "x": -1000, "y": 100 },
-        "gamma": -5
+        "gamma": -5,
+        "smooth": "4x"
     },
     "lights": [
         {

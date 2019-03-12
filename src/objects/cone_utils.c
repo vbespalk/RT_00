@@ -12,18 +12,18 @@
 
 #include "rt.h"
 
-t_vector	ft_collide_cone(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_cone(t_list **objs, void *fig, t_vector o, t_vector d)
 {
 	t_cone		*cone;
 	t_vector	pnt[4];
 
 	cone = (t_cone *)fig;
-	pnt[0] = origin;
-	pnt[1] = direct;
+	pnt[0] = o;
+	pnt[1] = d;
 	ft_get_coll_pnts(cone, &pnt, cone->base_rad == cone->vert_rad);
 	ft_is_between_planes(&pnt, cone->base, cone->vert);
-	ft_collide_cone_planes(cone, origin, direct, &pnt);
-	return (ft_get_closest(origin, pnt));
+	ft_collide_cone_planes(cone, o, d, &pnt);
+	return (ft_get_closest(o, pnt));
 }
 
 void		ft_get_coll_pnts(t_cone *cone, t_vector (*pnt)[4], int is_cyl)

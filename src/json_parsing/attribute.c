@@ -61,7 +61,11 @@ void		ft_get_attr
 
 	data = ft_search_attr(content[1], attr);
 	if (!data)
+	{
+		if (datatype == DT_STRING)
+			*((char **)dst) = NULL;
 		return ;
+	}
 	while (ft_isspace(*data))
 		++data;
 	if (*data == '\"')

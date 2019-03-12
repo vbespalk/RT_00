@@ -30,7 +30,7 @@ int			ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct)
 	// return (1);
 }
 
-t_vector	ft_collide_prbld(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_prbld(t_list **objs, void *fig, t_vector o, t_vector d)
 {
 	t_prbld		*par;
 	float		a;
@@ -40,28 +40,28 @@ t_vector	ft_collide_prbld(void *fig, t_vector origin, t_vector direct)
 	t_vector	coll;
 
 	par = (t_prbld *)fig;
-	a = ft_3_vector_dot(direct, direct) - \
-		ft_3_vector_dot(direct, par->d) * ft_3_vector_dot(direct, par->d);
-	b = 2.0f * (ft_3_vector_dot(direct, origin - par->o) - \
-		ft_3_vector_dot(direct, par->d) * (ft_3_vector_dot(origin - par->o, par->d) + 2.f * par->r));
-	c = ft_3_vector_dot(origin - par->o, origin - par->o) - \
-		ft_3_vector_dot(origin - par->o, par->d) * (ft_3_vector_dot(origin - par->o, par->d) + 4.f * par->r); 
+	a = ft_3_vector_dot(d, d) - \
+		ft_3_vector_dot(d, par->d) * ft_3_vector_dot(d, par->d);
+	b = 2.0f * (ft_3_vector_dot(d, o - par->o) - \
+		ft_3_vector_dot(d, par->d) * (ft_3_vector_dot(o - par->o, par->d) + 2.f * par->r));
+	c = ft_3_vector_dot(o - par->o, o - par->o) - \
+		ft_3_vector_dot(o - par->o, par->d) * (ft_3_vector_dot(o - par->o, par->d) + 4.f * par->r);
 	ft_solve_sqr(a, b, c, &res);
 	if (!res[0] || (res[1] < FLT_MIN && res[2] < FLT_MIN))
 		return (ft_3_nullpointnew());
 	if (res[1] < FLT_MIN || res[1] > res[2])
 		ft_swap_float(&res[1], &res[2]);
-	coll = origin + ft_3_vector_scale(direct, res[1]);
+	coll = o + ft_3_vector_scale(d, res[1]);
 	par->h = ft_3_vector_dot(coll - par->o, par->d);
 	if (par->h > par->maxh)
 	{
 		if (res[2] > FLT_MIN)
 		{
-		coll = origin + ft_3_vector_scale(direct, res[2]);
+		coll = o + ft_3_vector_scale(d, res[2]);
 		par->h = ft_3_vector_dot(coll - par->o, par->d);
 		if (par->h > par->maxh)
 			return(ft_3_nullpointnew());
-		coll = ft_collide_cap(origin, direct, par->o + ft_3_vector_scale(par->d, par->maxh), par->d);
+		coll = ft_collide_cap(o, d, par->o + ft_3_vector_scale(par->d, par->maxh), par->d);
 		}
 	}
 	return (par->h > par->maxh ? ft_3_nullpointnew() : coll);

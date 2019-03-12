@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-static int			ft_is_inside_neg(t_list **objs, t_vector point)
+int					ft_is_inside_neg(t_list **objs, t_vector point)
 {
 	t_list		*node;
 	t_object	*o;
@@ -44,8 +44,8 @@ static t_vector		ft_get_collision_point
 		o = (t_object *)(node->content);
 		if (!(o->is_neg)
 			&& o->ft_is_reachable(o->fig, od[0], od[1])
-			&& !ft_3_isnullpoint(pnt[1] = o->ft_collide(o->fig, od[0], od[1]))
-			&& !ft_is_inside_neg(objs, pnt[1])
+			&& !ft_3_isnullpoint(
+				pnt[1] = o->ft_collide(objs, o->fig, od[0], od[1]))
 			&& (dist[1] = ft_3_point_point_dist(od[0], pnt[1])) < dist[0])
 		{
 			pnt[0] = pnt[1];

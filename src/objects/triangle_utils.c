@@ -9,7 +9,8 @@ int			ft_is_reachable_triangle(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector	ft_collide_triangle(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_triangle
+				(t_list **objs, void *fig, t_vector o, t_vector d)
 {
 	t_triangle	*trgl;
 	t_vector	coll;
@@ -18,8 +19,8 @@ t_vector	ft_collide_triangle(void *fig, t_vector origin, t_vector direct)
 	t_vector	c2;
 
 	trgl = (t_triangle *)fig;
-	coll = ft_3_line_plane_inter(trgl->v0, trgl->norm, origin, direct);
-	if (ft_3_isnullpoint(coll) || !ft_3_pointcmp(ft_3_tounitvector(coll - origin), direct, 1e-6))
+	coll = ft_3_line_plane_inter(trgl->v0, trgl->norm, o, d);
+	if (ft_3_isnullpoint(coll) || !ft_3_pointcmp(ft_3_tounitvector(coll - o), d, 1e-6))
 		return (ft_3_nullpointnew());
 	c0 = coll - trgl->v0;
 	c1 = coll - trgl->v1;

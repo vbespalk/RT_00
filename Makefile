@@ -36,9 +36,9 @@ OBJ = $(SRCS:.c=.o)
 
 # LINUX SDL
 
-SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
-SDL_LNK		= -lSDL2
-SDL_IMG_LNK = -lSDL2_image
+#SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
+#SDL_LNK		= -lSDL2
+#SDL_IMG_LNK = -lSDL2_image
 LFLAGS 		= -pthread -lm
 
 HEAD = rt.h

@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-char	*ft_strmap(char const *s, char (*f)(char))
+char	*ft_strmap(char const *s, int (*f)(int))
 {
 	char			*res;
 	char			*str;
@@ -26,7 +26,7 @@ char	*ft_strmap(char const *s, char (*f)(char))
 		i = 0;
 		while (str[i])
 		{
-			res[i] = f(str[i]);
+			res[i] = (char)f(str[i]);
 			i++;
 		}
 		res[i] = 0;

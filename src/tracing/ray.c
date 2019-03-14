@@ -109,10 +109,37 @@ t_color			ft_throw_rays
 	return (color);
 }
 
+t_color			ft_blind(t_scene *scn, t_color color, t_vector o, t_vector d)
+{
+	float 		k;
+	float 		cos;
+	t_list		*node;
+	t_light		*l;
+	t_vector	l_dir;
+
+	node = scn->lights;
+	while (node)
+	{
+		l = (t_light *)(node->content);
+		l_dir = (l->type == L_POINT)
+			? ft_3_unitvectornew(o, l->origin)
+			: ft_3_vector_scale(l->direct, -1.0f);
+		if ((cos = ft_3_vector_cos(d, l_dir)) > 0.9f)
+		{
+			k = (float)(pow(cos - 0.9f, 2) * 100.0f);
+			color = ft_add_colors(color, ft_scale_color(l->color, k));
+		}
+		node = node->next;
+	}
+	return (color);
+}
+
 t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 {
 	t_ray		ray;
 	t_color		res;
+	t_vector	o;
+	t_vector	d;
 
 	ray.stack_i = -1;
 	if (parg->e->scn->cam->inner_o)
@@ -121,12 +148,17 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 		ray.stack_i = 0;
 	}
 	ray.pix = (Uint32)(y * parg->e->sdl->scr_wid + x);
-	ray.o = parg->e->scn->cam->origin;
-	ray.d = parg->e->scn->cam->vs_start_point;
-	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x);
-	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
-	ray.d = ft_3_unitvectornew(parg->e->scn->cam->origin, ray.d);
+	o = parg->e->scn->cam->origin;
+	ray.o = o;
+	d = parg->e->scn->cam->vs_start_point;
+	d = d + ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x);
+	d = d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
+	d = ft_3_unitvectornew(parg->e->scn->cam->origin, d);
+	ray.d = d;
 	res = ft_throw_ray(parg, &ray,  0);
+
+	res = ft_blind(parg->e->scn, res, o, d);
+
 	res.val = SDL_MapRGB(
 		parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
 	return (res);

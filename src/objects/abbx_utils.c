@@ -1,23 +1,58 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   abbx_utils.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/19 15:46:28 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/02/19 15:46:31 by vbespalk         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "rt.h"
 
-float	bbx_area(t_vector d)
+int			ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct)
 {
-	return (2.0f * (d[0] * d[1] + d[0] * d[2] + d[1] * d[2]));
+	(void)fig;
+	(void)origin;
+	(void)direct;
+	return (1);
 }
 
-float	bbx_volume(t_vector d)
+t_vector	ft_collide_aabb(void *fig, t_vector origin, t_vector direct)
 {
-	return (d[0] * d[1] * d[2]);
+	t_aabb		*bbx;
+	t_vector	coll;
+	float		t_min[3];
+	float		t_max[3];
+	float		t[2];
+
+	bbx = (t_aabb *)fig;
+	t_min[0] = (bbx->bounds[0][0] - origin[0]) / direct[0];
+	t_max[0] = (bbx->bounds[1][0] - origin[0]) / direct[0];
+	t_min[1] = (bbx->bounds[0][1] - origin[1]) / direct[1];
+	t_max[1] = (bbx->bounds[1][1] - origin[1]) / direct[1];
+
+	if (t_min[0] > t_max[0])
+		ft_swap_float(&t_min[0], &t_max[0]);
+	if (t_min[1] > t_max[1])
+		ft_swap_float(&t_min[1], &t_max[1]);
+	if (t_min[0] > t_max[1] || t_max[0] < t_min[1])
+		return (ft_3_nullpointnew());
+	t[0] = t_min[0] > t_min[1] ? t_min[0] : t_min[1];
+	t[1] = t_max[0] < t_max[1] ? t_max[0] : t_max[1];
+	t_min[2] = (bbx->bounds[0][2] - origin[2]) / direct[2];
+	t_max[2] = (bbx->bounds[1][2] - origin[2]) / direct[2];
+	if (t_min[2] > t_max[2])
+		ft_swap_float(&t_min[2], &t_max[2]);
+	if (t_min[2] > t[1] || t_max[2] < t[0])
+		return (ft_3_nullpointnew());
+	t[0] = t[0] > t_min[2] ? t[0] : t_min[2];
+	t[1] = t[1] < t_max[2] ? t[1] : t_max[2];
+	if (t[0] < 0 || (t[0] > t[1] && t[1] > FLT_MIN))
+		ft_swap_float(&t[0], &t[1]);
+	return (t[0] > FLT_MIN ? origin + ft_3_vector_scale(direct, t[0]) : ft_3_nullpointnew());
+}
+
+int			ft_is_inside_aabb(void *fig, t_vector point)
+{
+	(void)fig;
+	(void)point;
+	return (0);
+}
+
+t_vector	ft_get_norm_aabb(void *fig, t_vector coll)
+{
+	(void)coll;
+	return (((t_aabb *)fig)->norm);
 }

@@ -48,12 +48,8 @@ t_color			ft_sum_colors
 	int			i;
 	float		illum;
 
-	res.val = 0;
+	res.val = UINT32_MAX;
 	o = coll->o;
-	if (coll->o->ft_mapping && coll->o->texture)
-		res.val = coll->o->ft_mapping(coll->o->fig, coll->o->texture, coll->coll_pnt);
-	else
-		res.val = o->color.val;
 	i = -1;
 	while (++i < 3)
 	{
@@ -61,10 +57,10 @@ t_color			ft_sum_colors
 				0.0, 1.0, o->ambnt + (float)(coll->illum_color.argb[i]) / 255.0);
 		res.argb[i] = (t_byte)(
 				(!coll->o->spclr || !coll->o->trans)
-				? ((float)(res.argb[i]) * illum * o->diff +
+				? ((float)(o->color.argb[i]) * illum * o->diff +
 				   (float)(color_s.argb[i]) * coll->o->spclr +
 				   (float)(color_t.argb[i]) * coll->o->trans)
-				: ((float)(res.argb[i]) * illum * o->diff +
+				: ((float)(o->color.argb[i]) * illum * o->diff +
 				   (1.0f - o->diff) *
 				   ((float)(color_s.argb[i]) * coll->fresnel +
 					(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));

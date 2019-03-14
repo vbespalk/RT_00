@@ -9,7 +9,6 @@ Uint32		ft_map_sphere(void *fig, t_texture *tex, t_vector hit)
 	float		theta;
 	float		phi;
 	int			xy[2];
-	Uint32 		*ptr;
 
 	hit -= ((t_sphere *)fig)->origin;
 	phi = ((t_sphere *)fig)->phi + atan2f(hit[2], hit[0]);
@@ -22,13 +21,10 @@ Uint32		ft_map_sphere(void *fig, t_texture *tex, t_vector hit)
 		theta = theta < 0.0f ? theta + (float) M_PI : theta - (float) M_PI;
 	xy[0] = (int)((tex->surface->w - 1) * phi / 2.0f * (float)M_1_PI);
 	xy[1] = (int)((tex->surface->h - 1) * theta * (float)M_1_PI);
-	ptr = (Uint32 *)tex->surface->pixels;
-	if (IN_RANGE(xy[0], 0, tex->surface->w) &&
-		IN_RANGE(xy[1], 0, tex->surface->h))
-	{
-		ptr += xy[1] * tex->surface->w + xy[0];
-		ft_memcpy(&col, ptr, sizeof(Uint32));
-		return (col);
-	}
-	return (0xff);
+	if (!(IN_RANGE(xy[0], 0, tex->surface->w) &&
+		IN_RANGE(xy[1], 0, tex->surface->h)))
+		return (0xff);
+	ft_memcpy(&col, (Uint32 *)tex->surface->pixels + xy[1] * tex->surface->w
+			+ xy[0], sizeof(Uint32));
+	return (col);
 }

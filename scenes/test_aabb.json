@@ -1,0 +1,25 @@
+{
+  "name": "BOUNDING BOX",
+  "bg_color": "0xbbbbbb",
+  "camera": {
+    "origin": { "x": -500 }
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 1 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "sky_box",
+      "color": "0xff0000",
+      "min": { "x": -1000, "y": -1000, "z": -1000},
+      "max": { "x": 1000, "y": 1000, "z": 1000},
+      "skybox": { "./texture/box0.jpg", "./texture/box0.jpg", "./texture/box0.jpg", "./texture/box0.jpg", "./texture/box0.jpg", "./texture/box0.jpg"},
+      "spclr": 0,
+      "phong": 1,
+      "ambnt": 0.5
+    }
+  ]
+}

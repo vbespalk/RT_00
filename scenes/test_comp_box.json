@@ -1,0 +1,39 @@
+{
+  "name": "CFOMPOSED BOX",
+  "bg_color": "0xbbbbbb",
+  "camera": {
+    "origin": { "x": -1500 }
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 1 }
+    }
+  ],
+  "objects": [
+      {
+      "name": "plane",
+      "origin": { "x": -2000, "y": 0, "z": -2000 },
+      "height": {"x": 2000, "y": 0, "z": -2000},
+      "normal": {"y": 1},
+      "color": "0xffffff",
+      "translate": { "y": -300},
+      "rotate": { "z": 15},
+      "spclr": 1,
+      "diff": 0.2
+    },
+    {
+      "name": "box",
+      "color": "0xff0000",
+      "origin": { "x": 50, "y": 100, "z": -100},
+      "l_vector": { "x": 50, "y": 100, "z": 400},
+      "h_vector": { "x": 50, "y": 500, "z": -100},
+      "w_vector": { "x": 450, "y": 100, "z": -100},
+      "translate": { "y": -50, "z": -50},
+      "rotate": { "x": -45, "z": 45},
+      "texture": "./texture/oli.jpg",
+      "phong": 1,
+      "ambnt": 0.5
+    }
+  ]
+}

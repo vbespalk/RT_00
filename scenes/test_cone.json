@@ -7,6 +7,11 @@
     "camera": {
         "origin": { "x": -500, "y": 0 }
     },
+    "textures": {
+        "path": "earth.jpg",
+        "path": "moon.jpg",
+        "path": "mars.jpg"
+        },
     "lights": [
         {
             "type": "direct",
@@ -23,6 +28,7 @@
 
             "//": "sand color",
             "color": "0xc2b280",
+            "path": "earth.jpg",
 
             "diff": 1,
             "spclr": 0,
@@ -34,7 +40,6 @@
             "name": "cone",
             "base": { "x": 0, "y": -150  },
             "vert": { "x": 50, "y": 150, "z": 50 },
-            "max_height": -150,
             "angle": 60,
             "color": "0x777777",
             "spclr": 0.3,

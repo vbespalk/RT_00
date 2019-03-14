@@ -13,46 +13,57 @@ t_vector	ft_collide_box(void *fig, t_vector origin, t_vector direct)
 {
 	t_box		*bx;
 	t_vector	coll;
-	float		t_min[3];
-	float		t_max[3];
-	float		t[2];
-	
-	bx = (t_box *)fig;
-	t_min[0] = (bx->bounds[0][0] - origin[0]) / direct[0];
-	t_max[0] = (bx->bounds[1][0] - origin[0]) / direct[0];
-	t_min[1] = (bx->bounds[0][1] - origin[1]) / direct[1];
-	t_max[1] = (bx->bounds[1][1] - origin[1]) / direct[1];
+	float		t_min;
+	float 		t_cur;
+	int 		i;
 
-	if (t_min[0] > t_max[0])
-		ft_swap_float(&t_min[0], &t_max[0]);
-	if (t_min[1] > t_max[1])
-		ft_swap_float(&t_min[1], &t_max[1]);
-	if (t_min[0] > t_max[1] || t_max[0] < t_min[1])
-		return (ft_3_nullpointnew());
-	t[0] = t_min[0] > t_min[1] ? t_min[0] : t_min[1];
-	t[1] = t_max[0] < t_max[1] ? t_max[0] : t_max[1];
-	t_min[2] = (bx->bounds[0][2] - origin[2]) / direct[2];
-	t_max[2] = (bx->bounds[1][2] - origin[2]) / direct[2];
-	if (t_min[2] > t_max[2])
-		ft_swap_float(&t_min[2], &t_max[2]);
-	if (t_min[2] > t[1] || t_max[2] < t[0])
-		return (ft_3_nullpointnew());
-	t[0] = t[0] > t_min[2] ? t[0] : t_min[2];
-	t[1] = t[1] < t_max[2] ? t[1] : t_max[2];
-	if (t[0] < 0 || (t[0] > t[1] && t[1] > FLT_MIN))
-		ft_swap_float(&t[0], &t[1]);
-	return (t[0] > FLT_MIN ? origin + ft_3_vector_scale(direct, t[0]) : ft_3_nullpointnew());
+	bx = (t_box *)fig;
+	i = -1;
+
+	t_min = FLT_MAX;
+	while (++i < BOX_FACES)
+	{
+		coll = ft_collide_plane(bx->face[i], origin, direct);
+		if (ft_3_isnullpoint(coll))
+			continue ;
+		t_cur = ft_3_vector_len(coll - origin);
+		if (t_cur < t_min)
+		{
+			t_min = t_cur;
+			bx->fcoll = bx->face[i];
+		}
+	}
+	return (t_min == FLT_MAX ? ft_3_nullpointnew() : origin + ft_3_vector_scale(direct, t_min));
 }
 
 int			ft_is_inside_box(void *fig, t_vector point)
 {
-	(void)fig;
-	(void)point;
-	return (0);
+	t_box		*bx;
+	t_vector	hit_vec;
+	float		proj[3];
+
+	if (!fig)
+		return (0);
+	bx = (t_box *)fig;
+	hit_vec = point - bx->o;
+	proj[0] = ft_3_vector_dot(ft_3_tounitvector(bx->lwh[0]),  hit_vec);
+	proj[1] = ft_3_vector_dot(ft_3_tounitvector(bx->lwh[1]),  hit_vec);
+	proj[2] = ft_3_vector_dot(ft_3_tounitvector(bx->lwh[2]),  hit_vec);
+	if (!IN_RANGE(proj[0], 0, ft_3_vector_len(bx->lwh[0])) ||
+		!IN_RANGE(proj[1], 0, ft_3_vector_len(bx->lwh[1])) ||
+		!IN_RANGE(proj[2], 0, ft_3_vector_len(bx->lwh[2])))
+	{
+		printf("OUT BOX\n");
+		return (0);
+	}
+	printf("IN BOX\n");
+	return (1);
 }
 
 t_vector	ft_get_norm_box(void *fig, t_vector coll)
 {
 	(void)coll;
-	return (((t_box *)fig)->norm);
+	if (((t_box *)fig)->fcoll != NULL)
+		return (((t_box *)fig)->fcoll->norm);
+	return (ft_3_nullpointnew());
 }

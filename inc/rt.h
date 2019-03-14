@@ -43,7 +43,7 @@
 
 # define DEPTH			10
 # define STACK_SIZE		DEPTH
-# define THREADS		8
+# define THREADS		1
 
 /*
 **	includes
@@ -54,6 +54,7 @@
 # define SCALE_F		0.1f
 # define SCANG_F		0.05f
 // # define SCALE_F_CAM	0.1
+# define BOX_FACES		6
 
 # include <stdio.h>
 # include <pthread.h>
@@ -163,8 +164,10 @@ typedef struct		s_plane
 	t_vector		h_ini;
 	t_vector		origin;
 	t_vector		norm;
-	t_vector		w;
-	t_vector		h;
+	t_vector		dir_wh[2];
+	float			len_wh[2];
+	t_vector		cntr;
+	t_vector		dgnl;
 }					t_plane;
 
 typedef struct		s_sphere
@@ -231,16 +234,28 @@ typedef struct		s_triangle
 	float			v; // baricentric coordinates
 }					t_triangle;
 
-typedef struct		s_box
+typedef struct		s_bounding_box
 {
-	t_vector		bounds_ini[2];
 	t_vector		bounds[2];
 
-	t_vector		origin_ini;
-	t_vector		norm_ini;
 	t_vector		origin;
+	t_vector		cntr;
+	t_vector		dgnl;
 	t_vector		norm;
 
+}					t_aabb;
+
+typedef struct		s_box
+{
+	t_vector		o;
+	t_vector		lwh[3];
+	t_vector		dgnl;
+	t_vector		cntr;
+//	t_vector		dir_lwh[3];
+//	float 			len_lwh[3];
+
+	t_plane			*face[BOX_FACES];
+	t_plane			*fcoll;
 }					t_box;
 
 typedef struct		s_paraboloid
@@ -678,11 +693,24 @@ int						ft_is_inside_box(void *fig, t_vector point);
 t_vector				ft_get_norm_box(void *fig, t_vector coll);
 
 /*
-** abbx_utils.c
+** aabb.c
 */
 
-float					bbx_area(t_vector d);
-float					bbx_volume(t_vector d);
+char					*ft_parse_aabb(char **content, t_object *o);
+void					ft_translate_aabb(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_aabb(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_aabb(Uint32 key, void *fig, float *scale);
+
+/*
+** aabb.c
+*/
+
+int						ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_aabb(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_aabb(void *fig, t_vector point);
+t_vector				ft_get_norm_aabb(void *fig, t_vector coll);
+//float					bbx_area(t_vector d);
+//float					bbx_volume(t_vector d);
 
 /*
 **--------------------------------------------------SPHERE------------------------------------------------------------------
@@ -867,6 +895,7 @@ Uint32					ft_map_cone(void *fig, t_texture *tex, t_vector coll);
 */
 
 Uint32					ft_map_plane(void *fig, t_texture *tex, t_vector coll);
+Uint32					ft_map_box(void *fig, t_texture *tex, t_vector hit);
 
 /*
 ** FROM MY LIBFT

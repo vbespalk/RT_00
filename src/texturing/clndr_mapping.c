@@ -4,7 +4,7 @@
 #include "rt.h"
 Uint32		ft_map_caps(t_cylinder *clnd, t_texture *tex, t_vector hit, float hei)
 {
-	return (0xFF0000);
+	return (UINT32_MAX);
 }
 
 Uint32		ft_map_clndr(void *fig, t_texture *tex, t_vector hit)
@@ -17,6 +17,8 @@ Uint32		ft_map_clndr(void *fig, t_texture *tex, t_vector hit)
 	float 		p_xy[2];
 	t_vector	cross;
 
+	if (((t_cylinder *)fig)->maxh == FLT_MAX)
+		return (UINT32_MAX);
 	hei = fabsf(ft_3_vector_dot(hit - ((t_cylinder *)fig)->o, ((t_cylinder *)fig)->v));
 	if (((t_cylinder *)fig)->maxh != FLT_MAX
 		&& !IN_RANGE(hei, 1e-2, ((t_cylinder *)fig)->maxh - 1e-2))
@@ -34,12 +36,10 @@ Uint32		ft_map_clndr(void *fig, t_texture *tex, t_vector hit)
 	xy[0] = (int)((tex->surface->w - 1) * phi * 0.5f * (float)M_1_PI);
 	xy[1] = (int)((tex->surface->h - 1) * (1.0f - hei / ((t_cylinder *)fig)->maxh));
 	ptr = (Uint32 *)tex->surface->pixels;
-	if (IN_RANGE(xy[0], 0, tex->surface->w) && IN_RANGE(xy[1], 0, tex->surface->h))
-	{
-		ptr += xy[1] * tex->surface->w + xy[0];
-		ft_memcpy(&col, ptr, sizeof(Uint32));
-		return (col);
-	}
-	else
-		return (0xFF0000);
+	if (!(IN_RANGE(xy[0], 0, tex->surface->w) &&
+		  IN_RANGE(xy[1], 0, tex->surface->h)))
+		return (0xff);
+	ft_memcpy(&col, (Uint32 *)tex->surface->pixels + xy[1] * tex->surface->w
+					+ xy[0], sizeof(Uint32));
+	return (col);
 }

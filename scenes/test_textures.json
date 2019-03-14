@@ -23,52 +23,52 @@
 
             "//": "yellow",
             "color": "0xffff00",
-            "texture": "/texture/sun.jpg",
+            "texture": "./texture/solar/sun.jpg",
 
             "diff": 1,
-            "ambnt": 0.8
+            "ambnt": 1
         },
         {
             "//": "mercury",
 
             "name": "sphere",
-            "origin": {"x": -500, "y": -1000, "z": 600 },
+            "origin": {"x": -3500, "y": 50, "z": 100 },
             "radius": 64,
 
             "//": "light_grey",
             "color": "0xbbbbbb",
-            "texture": "/texture/mercury.jpg",
+            "texture": "./texture/solar/mercury.jpg",
 
             "diff": 1,
-            "ambnt": 0.8
+            "ambnt": 0.6
         },
         {
             "//": "venus",
 
             "name": "sphere",
-            "origin": {"x": -1000, "y": 1400, "z": -1000 },
+            "origin": {"x": -1000, "y": 800, "z": -1000 },
             "radius": 152,
 
             "//": "blue",
             "color": "0x0011ff",
-            "texture": "/texture/venus.jpg",
+            "texture": "./texture/solar/venus.jpg",
 
             "diff": 1,
-            "ambnt": 0.8
+            "ambnt": 0.6
         },
         {
             "//": "earth",
 
             "name": "sphere",
-            "origin": {"x": 500, "y": -1600, "z": -1400 },
+            "origin": {"x": -3500, "y": -150, "z": -300 },
             "radius": 164,
 
             "//": "green",
             "color": "0x00ff36",
-            "texture": "/texture/earth.jpg",
+            "texture": "./texture/solar/earth.jpg",
 
             "diff": 1,
-            "ambnt": 0.8
+            "ambnt": 0.6
         },
         {
             "//": "mars",
@@ -79,10 +79,24 @@
 
             "//": "red",
             "color": "0xff0000",
-            "texture": "/texture/mars.jpg",
+            "texture": "./texture/solar/mars.jpg",
 
             "diff": 1,
-            "ambnt": 0.8
+            "ambnt": 0.6
+        },
+        {
+            "//": "universe",
+
+            "name": "sphere",
+            "origin": {"x": 0, "y": 0, "z": 0 },
+            "radius": 10000,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/milky_way.jpg",
+
+            "diff": 1,
+            "ambnt": 0.4
         }
     ]
 }

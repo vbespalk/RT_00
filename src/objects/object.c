@@ -46,6 +46,8 @@ void		*ft_get_figure_parser(char *name)
 		ft_printf("PARSE WARNING: object with unspecified name ignored\n");
 		return (NULL);
 	}
+	else if (!ft_strcmp(name, "sky_box"))
+		return (ft_parse_aabb);
 	else if (!ft_strcmp(name, "plane"))
 		return (ft_parse_plane);
 	else if (!ft_strcmp(name, "sphere"))
@@ -98,6 +100,8 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	}
 	free(name);
 	o = ft_objectnew(id);
+	o->translate = ft_3_nullpointnew();
+	o->rotate = ft_3_nullpointnew();
 	o->texture_id = NULL;
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);

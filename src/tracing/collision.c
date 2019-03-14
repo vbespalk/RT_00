@@ -78,7 +78,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 {
 	t_coll		coll;
 	t_vector	od[2];
-	t_vector	norm = {0,0,0};
+	Uint32		tex_col;
 
 	coll.o = NULL;
 	od[0] = ray->o; // + ft_3_vector_scale(ray->d, 0.5f);
@@ -94,6 +94,11 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 		coll.norm = ft_3_vector_scale(coll.norm, -1.0f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
+	tex_col = coll.o->ft_mapping && coll.o->texture ? coll.o->ft_mapping(coll.o->fig,
+			coll.o->texture, coll.coll_pnt) : UINT32_MAX;
+	if (tex_col != UINT32_MAX)
+		coll.o->color.val = tex_col;
+	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

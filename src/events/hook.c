@@ -67,6 +67,17 @@ int		on_key_up(SDL_Keycode sum, Uint16 mod, t_env *e)
 	return (0);
 }
 
+//static void	ft_highlight_object(int x, int y, t_env *e)
+//{
+//	t_object	*o;
+//
+//	o = e->pix_obj[y * e->sdl->scr_wid + x];
+//	if (o == e->pointed)
+//		return ;
+//
+//	e->pointed = o;
+//}
+
 int		on_mouse_move(int x, int y, int rel_x, int rel_y, t_env *e, int left, int right, int middle)
 {
 	printf("mouse_move pos:%d,%d, rel %d,%d left %i, right %i, middle %i\n", x, y, rel_x, rel_y, left, right, middle);

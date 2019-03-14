@@ -341,6 +341,7 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	SDL_Texture		*screen;
 	SDL_Renderer	*renderer;
 	Uint32			*pixels;
+//	Uint32			*highlight;
 	SDL_PixelFormat	*format; //from SDL_Surface
 	int				pitch; //from SDL_Surface
 	int				event_loop;
@@ -354,6 +355,7 @@ typedef struct 		s_environment
 //	t_object		*obj;//
 	float			asp_rat;
 	t_object		**pix_obj;
+//	t_object		*pointed;
 	t_object		*selected;
 	t_sdl			*sdl;
 

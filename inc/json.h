@@ -35,7 +35,8 @@ typedef enum		e_datatype
 	DT_STRING,
 	DT_COLOR,
 	DT_FLOAT,
-	DT_COEF
+	DT_COEF,
+	DT_SKYBOX
 }					t_datatype;
 
 typedef enum 		e_otype

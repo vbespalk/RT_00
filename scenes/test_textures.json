@@ -1,9 +1,17 @@
 {
     "name": "Solar System",
 
-    "//": "should try bounding volume (skybox)",
-    "bg_color": "0x00",
-
+    "//": "universe",
+      "skybox": {
+      "min": { "x": -100000, "y": -100000, "z": -100000},
+      "max": { "x": 100000, "y": 100000, "z": 100000},
+      "negz": "./texture/skybox/milkyway/dark/negz.jpg", 
+      "negy": "./texture/skybox/milkyway/dark/negy.jpg", 
+      "negx":"./texture/skybox/milkyway/dark/negx.jpg", 
+      "posz": "./texture/skybox/milkyway/dark/posz.jpg", 
+      "posy": "./texture/skybox/milkyway/dark/posy.jpg",
+      "posx": "./texture/skybox/milkyway/dark/posx.jpg"
+  },
     "camera": {
         "origin": { "x": -5000, "y": 0 }
     },
@@ -83,20 +91,6 @@
 
             "diff": 1,
             "ambnt": 0.6
-        },
-        {
-            "//": "universe",
-
-            "name": "sphere",
-            "origin": {"x": 0, "y": 0, "z": 0 },
-            "radius": 10000,
-
-            "//": "red",
-            "color": "0xff0000",
-            "texture": "./texture/solar/milky_way.jpg",
-
-            "diff": 1,
-            "ambnt": 0.4
         }
     ]
 }

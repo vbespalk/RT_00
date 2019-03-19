@@ -26,6 +26,7 @@ typedef float			t_vector __attribute__((vector_size(sizeof(float)*4)));
 t_vector				ft_3_nullpointnew(void);
 int						ft_3_isnullpoint(t_vector point);
 float					ft_3_point_point_dist(t_vector pnt_0, t_vector pnt_1);
+float					ft_3_point_point_dist_square(t_vector pnt_0, t_vector pnt_1);
 float					ft_3_line_point_dist
 							(t_vector origin, t_vector direct, t_vector point);
 float					ft_3_plane_point_dist
@@ -69,4 +70,5 @@ t_vector				ft_3_vector_rotate
 t_vector				ft_3_vector_turn_near
 							(t_vector vec, t_vector axis, float angle);
 
+t_vector				ft_3_fabsf_vector(t_vector vec);
 #endif

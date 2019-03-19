@@ -17,27 +17,28 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	t_list		*textures;
 	t_list		*objs;
 	t_object	*obj;
+	int 		i;
 
-	textures = NULL;
 	e->scn = scene;
-	e->scn->textures = textures;
 	e->asp_rat = (float)sdl->scr_wid / (float)sdl->scr_hei;
 	e->pix_obj = obj_pix;
 	e->sdl = sdl;
+	textures = NULL;
+	e->scn->textures = textures;
 	objs = e->scn->objs;
 	while (objs)
 	{
 		obj = (t_object *)objs->content;
-		printf("objs id %d, tex %s\n", obj->id, obj->texture_id);
 		if (obj->texture_id != NULL)
-		{
-			if (!(obj->texture = init_texture(&textures, sdl, obj->texture_id)))
-				return (-1);
-		}
-		else
-			printf("NO TEXTURES FOUND\n");
+			obj->texture = init_texture(&textures, sdl, obj->texture_id);
 		objs = objs->next;
 	}
+	i = -1;
+	if (e->scn->skybox != NULL)
+		while (++i < BOX_FACES)
+			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
+					e->scn->skybox->textur_id[i])))
+				return (-1);
 	e->selected = NULL;
 	return (0);
 }

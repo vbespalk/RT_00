@@ -1,37 +1,60 @@
 #include "rt.h"
 
-t_aabb		*ft_aabbnew(void)
-{
-	t_aabb	*bbx;
-
-	bbx = ft_smemalloc(sizeof(t_aabb), "ft_aabbnew");
-	bbx->bounds[0] = (t_vector){-100, -100, -100};
-	bbx->bounds[1] = (t_vector){ 100, 100, 100 };
-	return (bbx);
-}
-
-
-char		*ft_parse_aabb(char **content, t_object *o)
+t_aabb		*ft_init_aabb(t_vector min, t_vector max)
 {
 	t_aabb		*bbx;
 
-	o->ft_collide = ft_collide_aabb;
-	o->ft_is_reachable = ft_is_reachable_aabb;
-	o->ft_is_inside = ft_is_inside_aabb;
-	o->ft_get_norm = ft_get_norm_aabb;
-	o->ft_translate = ft_translate_aabb;
-	o->ft_rotate = ft_rotate_aabb;
-	o->ft_scale = ft_scale_aabb;
-	o->ft_mapping = NULL;
-	bbx = ft_aabbnew();
-	ft_get_attr(content, "min", (void *)(&(bbx->bounds[0])), DT_POINT);
-	ft_get_attr(content, "max", (void *)(&(bbx->bounds[1])), DT_POINT);
-	bbx->norm = (t_vector){-1, 0, 0};
-	bbx->bounds[0] += o->translate;
-	bbx->bounds[1] += o->translate;
+	bbx = ft_smemalloc(sizeof(t_aabb), "ft_init_aabb");
+	bbx->ft_collide = ft_collide_aabb;
+	bbx->ft_is_reachable = ft_is_reachable_aabb;
+	bbx->ft_translate = ft_translate_aabb;
+	bbx->ft_scale = ft_scale_aabb;
+	if (ft_3_isnullpoint(min) || ft_3_isnullpoint(max))
+	{
+		bbx->bounds[0] = (t_vector) {-100000, -100000, -100000};
+		bbx->bounds[1] = (t_vector) {100000, 100000, 100000};
+	}
+	bbx->bounds[0] = min;
+	bbx->bounds[1] = max;
 	bbx->dgnl = bbx->bounds[1] - bbx->bounds[0];
-	bbx->cntr = bbx->bounds[0] + ft_3_vector_scale(bbx->dgnl, 0.5f);
+	bbx->cntr = ft_3_vector_scale(bbx->bounds[0] + bbx->bounds[1], 0.5f);
 	return ((void *)bbx);
+}
+
+int			ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct)
+{
+	(void)fig;
+	(void)origin;
+	(void)direct;
+	return (1);
+}
+
+t_vector	ft_collide_aabb(void *fig, t_vector origin, t_vector direct)
+{
+	int 		i;
+	float 		odd;
+	float		minmax[2];
+	float		t[2];
+
+	t[0] = -FLT_MAX;
+	t[1] = FLT_MAX;
+	i = -1;
+	while (++i < 3)
+	{
+		odd = 1.0f / direct[i];
+		minmax[0] = (((t_aabb *)fig)->bounds[0][i] - origin[i]) * odd;
+		minmax[1] = (((t_aabb *)fig)->bounds[1][i] - origin[i]) * odd;
+		if (minmax[0] > minmax[1])
+			ft_swap_float(&minmax[0], &minmax[1]);
+		t[0] = minmax[0] > t[0] ? minmax[0] : t[0];
+		t[1] = minmax[1] < t[1] ? minmax[1] : t[1];
+		if (t[0] > t[1])
+			return (ft_3_nullpointnew());
+	}
+	if (t[0] < 0 || (t[0] > t[1] && t[1] > FLT_MIN))
+		ft_swap_float(&t[0], &t[1]);
+	return (origin + ft_3_vector_scale(direct, t[0]));
+//	return (t[0] > FLT_MIN ? origin + ft_3_vector_scale(direct, t[0]) : ft_3_nullpointnew());
 }
 
 void		ft_translate_aabb(Uint32 key, void *fig, t_vector *transl)
@@ -58,13 +81,6 @@ void		ft_translate_aabb(Uint32 key, void *fig, t_vector *transl)
 	bbx->bounds[0] += *(transl);
 	bbx->bounds[1] += *(transl);
 	bbx->cntr += *(transl);
-}
-
-void		ft_rotate_aabb(Uint32 key, void *fig, t_vector *rot)
-{
-	(void)key;
-	(void)fig;
-	(void)rot;
 }
 
 void		ft_scale_aabb(Uint32 key, void *fig, float *scale)

@@ -14,7 +14,7 @@ t_texture				*load_texture(t_sdl *sdl, char *path)
 	src = IMG_Load(path);
 	if(!src)
 	{
-		sdl_img_error("Error at load_texture()\n");
+		sdl_img_error("Error at load_texture(). Texture value set to color.\n");
 		return (NULL);
 	}
 	texture->surface = SDL_ConvertSurface(src, sdl->format, 0);

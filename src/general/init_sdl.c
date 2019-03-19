@@ -53,7 +53,7 @@ int		sdl_init(t_sdl *sdl)
 
 	//The window we'll be rendering to
 	flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
-	img_flags = IMG_INIT_JPG | IMG_INIT_PNG;
+	img_flags = IMG_INIT_JPG | IMG_INIT_PNG ;
 	sdl->window = NULL;
 	sdl->scr_wid = SCR_WID;
 	sdl->scr_hei = SCR_HEI;

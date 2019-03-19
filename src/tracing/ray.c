@@ -40,7 +40,11 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	if (depth == 0)
 		parg->e->pix_obj[ray->pix] = coll.o;
 	if (coll.o == NULL)
+	{
+		if (parg->e->scn->skybox)
+			return (ft_apply_sky(parg->e->scn->skybox, ray->o, ray->d));
 		return (parg->e->scn->bg_color);
+	}
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)
 	{

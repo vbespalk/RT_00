@@ -56,6 +56,7 @@
 // # define SCALE_F_CAM	0.1
 # define BOX_FACES		6
 
+
 # include <stdio.h>
 # include <pthread.h>
 # include <math.h>
@@ -237,13 +238,36 @@ typedef struct		s_triangle
 typedef struct		s_bounding_box
 {
 	t_vector		bounds[2];
-
 	t_vector		origin;
 	t_vector		cntr;
 	t_vector		dgnl;
-	t_vector		norm;
-
+//	t_vector		norm;
+/*
+** functions for intersection / search etc.
+*/
+	int				(*ft_is_reachable)
+			(void *fig, t_vector origin, t_vector direct);
+	t_vector		(*ft_collide)
+			(void *fig, t_vector origin, t_vector direct);
+	int				(*ft_is_inside)(void *fig, t_vector point);
+	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
+/*
+** functions for transform obj.
+*/
+	void			(*ft_translate)
+			(Uint32 key, void *fig, t_vector *translate);
+	void			(*ft_rotate)
+			(Uint32 key, void *fig, t_vector *rotate);
+	void			(*ft_scale)
+			(Uint32 key, void *fig, float *scale);
 }					t_aabb;
+
+typedef struct		s_skybox
+{
+	t_aabb			*bbx;
+	char 			*textur_id[BOX_FACES];
+	t_texture		*textur[BOX_FACES];
+}					t_skybox;
 
 typedef struct		s_box
 {
@@ -268,6 +292,15 @@ typedef struct		s_paraboloid
 
 }					t_prbld;
 
+typedef struct		s_torus
+{
+	t_vector		o;
+	t_vector		v;
+	t_vector		n;
+	float			r_inner; //  small radius of the torus = r
+	float			r_outer; // big radius of the torus = R
+
+}					t_torus;
 /*
 ** ------------------------------------------ENVIRONMENT-----------------------------------------------------------
 */
@@ -317,6 +350,7 @@ typedef struct		s_scene
 	t_list			*lights;
 	t_list			*objs;
 	t_list			*textures;
+	t_skybox		*skybox;
 	t_camera		*cam;
 }					t_scene;
 
@@ -696,21 +730,11 @@ t_vector				ft_get_norm_box(void *fig, t_vector coll);
 ** aabb.c
 */
 
-char					*ft_parse_aabb(char **content, t_object *o);
-void					ft_translate_aabb(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_aabb(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_aabb(Uint32 key, void *fig, float *scale);
-
-/*
-** aabb.c
-*/
-
+t_aabb					*ft_init_aabb(t_vector min, t_vector max);
 int						ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_aabb(void *fig, t_vector origin, t_vector direct);
-int						ft_is_inside_aabb(void *fig, t_vector point);
-t_vector				ft_get_norm_aabb(void *fig, t_vector coll);
-//float					bbx_area(t_vector d);
-//float					bbx_volume(t_vector d);
+void					ft_translate_aabb(Uint32 key, void *fig, t_vector *transl);
+void					ft_scale_aabb(Uint32 key, void *fig, float *scale);
 
 /*
 **--------------------------------------------------SPHERE------------------------------------------------------------------
@@ -810,6 +834,26 @@ t_vector				ft_collide_prbld(void *fig, t_vector origin, t_vector direct);
 int						ft_is_inside_prbld(void *fig, t_vector point);
 t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 
+/*
+**------------------------------------------------TORUS----------------------------------------------------------------
+*/
+/*
+**	torus.c
+*/
+
+char					*ft_parse_torus(char **content, t_object *o);
+void					ft_translate_torus(Uint32 key, void *fig, t_vector *transl);
+void					ft_rotate_torus(Uint32 key, void *fig, t_vector *rot);
+void					ft_scale_torus(Uint32 key, void *fig, float *scale);
+
+/*
+**	torus_utils.c
+*/
+
+int						ft_is_reachable_torus(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_torus(void *fig, t_vector origin, t_vector direct);
+int						ft_is_inside_torus(void *fig, t_vector point);
+t_vector				ft_get_norm_torus(void *fig, t_vector coll);
 
 /*
 **	ray.c
@@ -897,6 +941,13 @@ Uint32					ft_map_cone(void *fig, t_texture *tex, t_vector coll);
 Uint32					ft_map_plane(void *fig, t_texture *tex, t_vector coll);
 Uint32					ft_map_box(void *fig, t_texture *tex, t_vector hit);
 
+/*
+** skybox.c
+*/
+
+void					ft_parse_skybox(char **content, t_skybox **sky);
+Uint32					ft_map_skybox(t_aabb *bbx, t_texture *tex[6], t_vector hit);
+t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 /*
 ** FROM MY LIBFT
 */

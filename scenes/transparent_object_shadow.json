@@ -1,0 +1,48 @@
+{
+  "name": "Shadow from the Transparent Object",
+
+  "bg_color": "0x0",
+
+  "camera": {
+    "origin": { "x": -1000, "y": 500 },
+    "gamma": -15,
+    "smooth": "4x"
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 0, "y": -1, "z": 0 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "plane",
+      "origin": { "y": -700 },
+      "norm": { "x": 0, "y": 1 }
+    },
+    {
+      "name": "sphere",
+      "origin": { "x": 1000, "z": -500 },
+      "radius": 300,
+      "color": "0xff0000",
+      "diff": 1,
+      "trans": 0
+    },
+    {
+      "name": "sphere",
+      "origin": { "x": 2000 },
+      "radius": 300,
+      "color": "0xff0000",
+      "diff": 1,
+      "trans": 1
+    },
+    {
+      "name": "sphere",
+      "origin": { "x": 1000, "z": 500 },
+      "radius": 300,
+      "color": "0xff0000",
+      "diff": 0.2,
+      "trans": 1
+    }
+  ]
+}

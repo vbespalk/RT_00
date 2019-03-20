@@ -1,32 +1,15 @@
 
-/*
-**	https://github.com/douglascrockford/JSON-c
-*/
-
 #ifndef JSON_H
 
 # define JSON_H
 
+# include "JSON_checker.h"
 # include "libftprintf.h"
 # include "libpnt.h"
 
-# define TRUE		1
-# define FALSE		0
-# define GOOD		0xBABAB00E
-# define _			-1
+# define OBJ_DEPTH		5
 
-# define OBJ_DEPTH	5
-
-typedef struct		s_checker
-{
-    int				valid;
-    int				state;
-    int				depth;
-    int				top;
-    int				*stack;
-}					*t_checker;
-
-typedef enum		e_datatype
+typedef enum			e_datatype
 {
 	DT_POINT,
 	DT_CAMERA,
@@ -36,6 +19,7 @@ typedef enum		e_datatype
 	DT_COLOR,
 	DT_FLOAT,
 	DT_COEF,
+<<<<<<< HEAD
 	DT_SKYBOX
 }					t_datatype;
 
@@ -126,6 +110,10 @@ typedef enum		e_modes
     MODE_KEY,
     MODE_OBJECT
 }					t_modes;
+=======
+	DT_BOOL
+}						t_datatype;
+>>>>>>> refr_debug
 
 typedef struct s_scene	t_scene;
 
@@ -133,64 +121,47 @@ typedef struct s_scene	t_scene;
 **	parse.c
 */
 
-t_scene				*ft_parse_json(char *filename);
-
-/*
-**	checker_utils.c
-*/
-
-void				ft_destroy(t_checker checker);
-int					ft_reject(t_checker checker);
-int					ft_push(t_checker checker, int mode);
-int					ft_pop(t_checker jc, int mode);
-int					ft_handle_next_state
-						(t_checker checker, int is_push,
-						t_modes mode, t_states state);
-
-/*
-**	checker.c
-*/
-
-t_checker			ft_checkernew(int depth);
-int					ft_check_char(t_checker checker, int c);
-int					ft_check_done(t_checker parser);
+t_scene					*ft_parse_json(char *filename);
 
 /*
 **	syntax.c
 */
 
-void				ft_check_syntax(char *content);
+void					ft_check_syntax(char *content);
 
 /*
 **	attribute.c
 */
 
-void				ft_get_attr
-						(char **content, char *attr,
-						void *dst, t_datatype datatype);
+void					ft_get_attr
+							(char **content, char *attr,
+							void *dst, t_datatype datatype);
 
 /*
 **	attribute_utils.c
 */
 
-void				ft_parse_str
-						(char **content, char **data,
-						void *dst, t_datatype datatype);
-void				ft_parse_json_object
-						(char **content, char **data,
-						void *dst, t_datatype datatype);
-void				ft_parse_json_array
-						(char **content, char **data,
-						void *dst, t_datatype datatype);
-void				ft_parse_num
-						(char **content, char **data,
-						void *dst, t_datatype datatype);
+void					ft_parse_str
+							(char **content, char **data,
+							void *dst, t_datatype datatype);
+void					ft_parse_json_object
+							(char **content, char **data,
+							void *dst, t_datatype datatype);
+void					ft_parse_json_array
+							(char **content, char **data,
+							void *dst, t_datatype datatype);
+void					ft_parse_num
+							(char **content, char **data,
+							void *dst, t_datatype datatype);
+void					ft_parse_bool
+							(char **content, char **data,
+							void *dst, t_datatype datatype);
 
 /*
 **	warning.c
 */
 
-void				ft_parse_warning_datatype
-						(char *content, char *attr, t_datatype datatype);
+void					ft_parse_warning_datatype
+							(char *content, char *attr, t_datatype datatype);
 
 #endif

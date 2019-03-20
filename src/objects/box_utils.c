@@ -9,7 +9,7 @@ int			ft_is_reachable_box(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector	ft_collide_box(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_box(t_list **objs, void *fig, t_vector o, t_vector d)
 {
 	t_box		*bx;
 	t_vector	coll;
@@ -23,17 +23,18 @@ t_vector	ft_collide_box(void *fig, t_vector origin, t_vector direct)
 	t_min = FLT_MAX;
 	while (++i < BOX_FACES)
 	{
-		coll = ft_collide_plane(bx->face[i], origin, direct);
+		coll = ft_collide_plane(bx->face[i], o, d);
 		if (ft_3_isnullpoint(coll))
 			continue ;
-		t_cur = ft_3_vector_len(coll - origin);
+		t_cur = ft_3_vector_len(coll - o);
 		if (t_cur < t_min)
 		{
 			t_min = t_cur;
 			bx->fcoll = bx->face[i];
 		}
 	}
-	return (t_min == FLT_MAX ? ft_3_nullpointnew() : origin + ft_3_vector_scale(direct, t_min));
+	return (t_min == FLT_MAX
+		? ft_3_nullpointnew() : o + ft_3_vector_scale(d, t_min));
 }
 
 int			ft_is_inside_box(void *fig, t_vector point)

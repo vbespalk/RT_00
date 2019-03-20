@@ -120,3 +120,13 @@ void			ft_parse_num
 	else
 		ft_parse_warning_datatype(content[0], *data, datatype);
 }
+
+void			ft_parse_bool
+					(char **content, char **data,
+					void *dst, t_datatype datatype)
+{
+	if (datatype == DT_BOOL)
+		*((int *)dst) = (**data == 't') ? 1 : 0;
+	else
+		ft_parse_warning_datatype(content[0], *data, datatype);
+}

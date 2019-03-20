@@ -23,7 +23,6 @@ t_scene		*ft_scenenew(void)
 	return (scn);
 }
 
-
 void		ft_parse_scene(char **content, t_scene *scn)
 {
 	ft_get_attr(content, "name", (void *)&(scn->name), DT_STRING);

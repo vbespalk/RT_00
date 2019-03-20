@@ -88,7 +88,7 @@ static t_vector	get_cides_coll(t_vector origin, t_vector direct, float *t, t_prb
 	return (ft_3_nullpointnew());
 }
 
-t_vector	ft_collide_prbld(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_prbld(t_list **objs, void *fig, t_vector o, t_vector d)
 {
 	t_prbld		*par;
 	t_vector	coll[2];
@@ -97,18 +97,18 @@ t_vector	ft_collide_prbld(void *fig, t_vector origin, t_vector direct)
 	float 		dot_vx;
 
 	par = (t_prbld *)fig;
-	dot_dv = ft_3_vector_dot(direct, par->v);
-	dot_vx = ft_3_vector_dot(origin - par->o, par->v);
-	if (!ft_solve_sqr_(ft_3_vector_dot(direct, direct) - dot_dv * dot_dv,
-		2.0f * (ft_3_vector_dot(direct, origin - par->o) - dot_dv * (dot_vx + 2.f * par->r)),
-		ft_3_vector_dot(origin - par->o, origin - par->o) - dot_vx * (dot_vx + 4.f * par->r),
+	dot_dv = ft_3_vector_dot(d, par->v);
+	dot_vx = ft_3_vector_dot(o - par->o, par->v);
+	if (!ft_solve_sqr_(ft_3_vector_dot(d, d) - dot_dv * dot_dv,
+		2.0f * (ft_3_vector_dot(d, o - par->o) - dot_dv * (dot_vx + 2.f * par->r)),
+		ft_3_vector_dot(o - par->o, o - par->o) - dot_vx * (dot_vx + 4.f * par->r),
 		&res) || (res[0] < FLT_MIN && res[1] < FLT_MIN))
 		return (ft_3_nullpointnew());
-	coll[0] = get_cides_coll(origin, direct, res, par);
+	coll[0] = get_cides_coll(o, d, res, par);
 	if (par->maxh == FLT_MAX || fabsf(dot_dv) < 1e-6)
 		return (coll[0]);
-	coll[1] = get_caps_coll(origin, direct, par, 1.0f / dot_dv);
-	return (get_closer_pnt(origin, coll));
+	coll[1] = get_caps_coll(o, d, par, 1.0f / dot_dv);
+	return (get_closer_pnt(o, coll));
 }
 
 int			ft_is_inside_prbld(void *fig, t_vector point)

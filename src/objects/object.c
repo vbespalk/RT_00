@@ -66,14 +66,13 @@ void		*ft_get_figure_parser(char *name)
 		return (ft_parse_disk);
 	else if (!ft_strcmp(name, "torus"))
 		return (ft_parse_torus);
-	// else if (!ft_strcmp(name, "triangle"))
-	// 	return (ft_parse_triangle);
 	ft_printf("PARSE WARNING: unknown object name '%s'\n", name);
 	return (NULL);
 }
 
 static void	ft_get_object_attrs(char **content, t_object *o)
 {
+	ft_get_attr(content, "negative", (void *)(&(o->is_neg)), DT_BOOL);
 	ft_get_attr(content, "color", (void *)(&(o->color)), DT_COLOR);
 	ft_get_attr(content, "ambnt", (void *)(&(o->ambnt)), DT_COEF);
 	ft_get_attr(content, "diff", (void *)(&(o->diff)), DT_COEF);
@@ -106,9 +105,9 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o = ft_objectnew(id);
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);
-	o->rotate[0] = (float)ft_torad(o->rotate[0]);
-	o->rotate[1] = (float)ft_torad(o->rotate[1]);
-	o->rotate[2] = (float)ft_torad(o->rotate[2]);
+	o->rotate[0] = ft_torad(o->rotate[0]);
+	o->rotate[1] = ft_torad(o->rotate[1]);
+	o->rotate[2] = ft_torad(o->rotate[2]);
 	o->scale = 1.0f;
 	o->fig = ft_parse_figure(content, o);
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));

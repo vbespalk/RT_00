@@ -23,7 +23,7 @@ char		*ft_getstr_arg_p(t_arg *arg, va_list *ap)
 	str = ft_uitoa_base((unsigned long long)data, 16);
 	arg->flags |= F_SHARP;
 	to_free = str;
-	str = ft_strmap(str, (char (*)(char))ft_tolower);
+	str = ft_strmap(str, ft_tolower);
 	free(to_free);
 	if (!data && !arg->prec)
 		*str = 0;

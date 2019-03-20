@@ -12,20 +12,24 @@
 
 #include "rt.h"
 
-static void	ft_get_vs_params(t_sdl *sdl, t_camera *cam)
+static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 {
 	cam->direct = ft_3_vector_rotate(
-		(t_vector){ 1.0f, 0.0f, 0.0f },
+		(t_vector) { 1.0f, 0.0f, 0.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_vec = ft_3_vector_rotate(
-		(t_vector){ 0.0f, sdl->scr_hei / 2.0f, sdl->scr_wid / -2.0f },
+		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, sdl->scr_wid / -2.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
-	cam->vs_x_step_vec = ft_3_vector_rotate(
-		(t_vector){ 0.0f, 0.0f, 1.0f },
-		cam->angles[0], cam->angles[1], cam->angles[2]);
-	cam->vs_y_step_vec = ft_3_vector_rotate(
-		(t_vector){ 0.0f, -1.0f, 0.0f },
-		cam->angles[0], cam->angles[1], cam->angles[2]);
+	cam->vs_x_step_vec = ft_3_vector_scale(
+		ft_3_vector_rotate(
+			(t_vector) { 0.0f, 0.0f, 1.0f },
+			cam->angles[0], cam->angles[1], cam->angles[2]),
+		1.0f / (float)(cam->smooth + 1));
+	cam->vs_y_step_vec = ft_3_vector_scale(
+		ft_3_vector_rotate(
+			(t_vector) { 0.0f, -1.0f, 0.0f },
+			cam->angles[0], cam->angles[1], cam->angles[2]),
+		1.0f / (float)(cam->smooth + 1));
 	cam->vs_start_point =
 		cam->vs_start_vec + cam->origin + ft_3_vector_rotate(
 			(t_vector){
@@ -33,39 +37,72 @@ static void	ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
+static t_color	ft_get_pixel_color(t_thrarg	*thrarg, int x, int y, int smth)
+{
+	t_color	color;
+	float	color_sum[3];
+	int		i;
+	int		j;
+	float	smth_2;
+
+	x = x * smth - 1;
+	y = y * smth - 1;
+	i = x + smth + 1;
+	j = y + smth + 1;
+	smth_2 = smth * smth;
+	ft_bzero((void *)color_sum, sizeof(color_sum));
+	while (++x < i)
+	{
+		y = j - smth - 1;
+		while (++y < j)
+		{
+			color = ft_trace_ray(thrarg, x, y);
+			color_sum[0] += (float)(color.argb[0]) / smth_2;
+			color_sum[1] += (float)(color.argb[1]) / smth_2;
+			color_sum[2] += (float)(color.argb[2]) / smth_2;
+		}
+	}
+	color.argb[0] = (t_byte)(color_sum[0]);
+	color.argb[1] = (t_byte)(color_sum[1]);
+	color.argb[2] = (t_byte)(color_sum[2]);
+	return (color);
+}
+
 /*
 **	x/y[0] - start point, iterator;
 **	x/y[1] - end point;
 */
 
-void	*ft_section_handle(void *arg)
+void			*ft_section_handle(void *arg)
 {
 	t_thrarg	*thrarg;
 	int			x;
 	int			y;
+	int			smth;
 
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
+	smth = thrarg->e->scn->cam->smooth + 1;
 	while (x < thrarg->e->sdl->scr_wid)
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
 			img_pixel_put(
 				thrarg->e, x, y,
-					(unsigned int)ft_trace_ray(thrarg, x, y).val);
+				(unsigned int)(ft_get_pixel_color(thrarg, x, y, smth).val));
 		x += THREADS;
 	}
 	return (NULL);
 }
 
-void	ft_render(t_env *e)
+void			ft_render(t_env *e)
 {
 	pthread_t	threads[THREADS];
 	t_thrarg	thrargs[THREADS];
-	int			i;
+	int			i = 0;
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
-	ft_get_start_refr(e->scn);
+	ft_get_start_stack(e->scn);
 	i = -1;
 	while (++i < THREADS)
 	{

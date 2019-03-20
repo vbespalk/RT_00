@@ -39,8 +39,10 @@ static char *ft_get_dt_str(t_datatype datatype)
 		dt = ft_strdup("COLOR");
 	else if (datatype == DT_FLOAT)
 		dt = ft_strdup("FLOAT");
-	else
+	else if (datatype == DT_COEF)
 		dt = ft_strdup("0 - 1 COEF");
+	else
+		dt = ft_strdup("BOOLEAN");
 	return (dt);
 }
 

@@ -27,21 +27,21 @@
 **	camera
 */
 
-# define FOV_MIN		60.0
-# define FOV_MAX		120.0
+# define FOV_MIN		60.0f
+# define FOV_MAX		120.0f
 
 /*
 **	tracing
 */
 
-# define BRIGHT_UNIT	20000.0
+# define BRIGHT_UNIT	20000.0f
 # define DEFAULT_REFR	1.0f
 
 /*
 **	system
 */
 
-# define DEPTH			10
+# define DEPTH			5
 # define STACK_SIZE		DEPTH
 # define THREADS		1
 
@@ -59,19 +59,29 @@
 
 # include <stdio.h>
 # include <pthread.h>
-# include <math.h>
 # include <stdint.h>
-# include <time.h>
-// # include "SDL.h"
-// # include "SDL_image.h"
-//# include "SDL_syswm.h"
-/*
-** LINUX
-*/
-# include <SDL2/SDL.h>
-# include <SDL2/SDL_image.h>
-
 # include "json.h"
+
+/*
+**	MACOSX
+*/
+
+# if defined(__MACH__) && defined(__APPLE__)
+
+#  include "SDL.h"
+#  include "SDL_image.h"
+#  include "SDL_syswm.h"
+
+/*
+**	LINUX
+*/
+
+# else
+
+#  include <SDL2/SDL.h>
+#  include <SDL2/SDL_image.h>
+
+# endif
 
 typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
@@ -89,6 +99,7 @@ typedef enum		e_ltype
 	L_PARALLEL
 }					t_ltype;
 
+<<<<<<< HEAD
 typedef struct		s_texture
 {
 	char			*path;
@@ -96,6 +107,15 @@ typedef struct		s_texture
 	Uint32 			*pixels;
 	SDL_PixelFormat	*format;
 }					t_texture;
+=======
+typedef enum		e_smooth
+{
+	SMOOTH_1X,
+	SMOOTH_4X,
+	SMOOTH_9X
+}					t_smooth;
+
+>>>>>>> refr_debug
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -119,6 +139,7 @@ typedef struct		s_object
 /*
 ** object propetries
 */
+	int				is_neg;
 	float			ambnt;
 	float			diff;
 	float			spclr;
@@ -127,18 +148,25 @@ typedef struct		s_object
 	float			trans;
 	float			t_blur;
 	float			phong;
+<<<<<<< HEAD
 
 	t_color			color;
 	char 			*texture_id;
 	t_texture		*texture;
+=======
+	t_color			color;
+
+//	float			wave;
+//	t_vector		wave_direct;
+
+>>>>>>> refr_debug
 /*
 ** functions for intersection / search etc.
 */
-//	int				(*intersect)();
 	int				(*ft_is_reachable)
 	 					(void *fig, t_vector origin, t_vector direct);
 	t_vector		(*ft_collide)
-	 					(void *fig, t_vector origin, t_vector direct);
+	 					(t_list **objs, void *fig, t_vector o, t_vector d);
 	int				(*ft_is_inside)(void *fig, t_vector point);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
 /*
@@ -316,6 +344,7 @@ typedef struct		s_light
 
 typedef struct		s_camera
 {
+	t_smooth		smooth;
 	t_vector		origin;
 	t_vector		direct;
 	t_vector		angles;
@@ -329,17 +358,6 @@ typedef struct		s_camera
 	t_vector		vs_y_step_vec;
 	t_object		*inner_o;
 }					t_camera;
-
-/*
-**	Hit Transparent Objects List
-*/
-
-//typedef struct		s_hit
-//{
-//	struct s_object	*o;
-//	struct s_hit	*prev;
-//	struct s_hit	*next;
-//}					t_hit;
 
 typedef struct		s_scene
 {
@@ -362,6 +380,7 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	SDL_Texture		*screen;
 	SDL_Renderer	*renderer;
 	Uint32			*pixels;
+//	Uint32			*highlight;
 	SDL_PixelFormat	*format; //from SDL_Surface
 	int				pitch; //from SDL_Surface
 	int				event_loop;
@@ -375,6 +394,7 @@ typedef struct 		s_environment
 //	t_object		*obj;//
 	float			asp_rat;
 	t_object		**pix_obj;
+//	t_object		*pointed;
 	t_object		*selected;
 	t_sdl			*sdl;
 
@@ -571,7 +591,7 @@ void					ft_parse_scene(char **content, t_scene *scn);
 
 t_camera				*ft_cameranew(void);
 void					ft_parse_camera(char **content, t_camera *cam);
-void					ft_get_start_refr(t_scene *scn);
+void					ft_get_start_stack(t_scene *scn);
 
 /*
 ** cam_transform
@@ -629,6 +649,7 @@ void					ft_parse_light(char **content, t_list **lst, Uint32 id);
 **	object.c
 */
 
+t_object				*ft_objectnew(Uint32 id);
 void					ft_parse_object
 							(char **content, t_list **lst, Uint32 id);
 t_object				*ft_objectnew(Uint32 id);
@@ -653,7 +674,7 @@ void					ft_scale_plane(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_plane
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_plane
-							(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_plane(void *fig, t_vector point);
 t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 
@@ -674,9 +695,9 @@ void					ft_scale_disk(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_disk
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_disk
-	(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_disk(void *fig, t_vector point);
 t_vector				ft_get_norm_disk(void *fig, t_vector coll);
 
@@ -697,9 +718,9 @@ void					ft_scale_triangle(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_triangle
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_triangle
-	(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_triangle(void *fig, t_vector point);
 t_vector				ft_get_norm_triangle(void *fig, t_vector coll);
 
@@ -720,9 +741,9 @@ void					ft_scale_box(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_box
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_box
-	(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_box(void *fig, t_vector point);
 t_vector				ft_get_norm_box(void *fig, t_vector coll);
 
@@ -755,7 +776,7 @@ void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_sphere
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_sphere
-							(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_sphere(void *fig, t_vector point);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -776,7 +797,7 @@ void					ft_scale_cone(Uint32 key, void *fig, float *scale);
 */
 
 t_vector				ft_collide_cone
-							(void *fig, t_vector origin, t_vector direct);
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_cone(void *fig, t_vector point);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
@@ -830,7 +851,8 @@ void					ft_scale_prbld(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_prbld(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_prbld
+							(t_list **objs, void *fig, t_vector o, t_vector d);
 int						ft_is_inside_prbld(void *fig, t_vector point);
 t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 
@@ -886,6 +908,7 @@ void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 **	collision.c
 */
 
+int						ft_is_inside_neg(t_list **objs, t_vector point);
 t_coll					ft_get_collision(t_thrarg *arg, t_ray *ray);
 
 /*

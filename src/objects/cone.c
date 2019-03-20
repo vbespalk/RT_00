@@ -64,12 +64,11 @@ void		*ft_parse_cone(char **content, t_object *o)
 //	o->ft_mapping = ft_map_cone;
 	o->ft_mapping = NULL;
 	cone = ft_conenew();
-	base = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	base = ft_3_nullpointnew();
 	ft_get_attr(content, "vert", (void *)(&(cone->o)), DT_POINT);
 	ft_get_attr(content, "base_rad", (void *)(&(cone->r[1])), DT_FLOAT);
 	ft_get_attr(content, "vert_rad", (void *)(&(cone->r[0])), DT_FLOAT);
 	ft_get_attr(content, "base", (void *)(&base), DT_POINT);
-
 	ft_get_attr(content, "direction", (void *)&(cone->v), DT_POINT);
 	ft_get_attr(content, "min_height", (void *)(&(cone->minh)), DT_FLOAT);
 	ft_get_attr(content, "max_height", (void *)(&(cone->maxh)), DT_FLOAT);

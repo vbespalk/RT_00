@@ -12,8 +12,8 @@ t_torus		*ft_torusnew(void)
 	trs = ft_smemalloc(sizeof(t_torus), "ft_torusnew");
 	trs->o = (t_vector){0.0f, 0.0f, 0.0f};
 	trs->v = (t_vector){0.0f, 1.0f, 0.0f};
-	trs->r_inner = 1.f;
-	trs->r_outer = 5.f;
+	trs->r_inner = 10.f;
+	trs->r_outer = 500.f;
 	trs->n = ft_3_nullpointnew();
 	return (trs);
 }
@@ -21,7 +21,6 @@ t_torus		*ft_torusnew(void)
 char		*ft_parse_torus(char **content, t_object *o)
 {
 	t_torus		*trs;
-	t_vector	vert;
 
 	o->ft_collide = ft_collide_torus;
 	o->ft_is_reachable = ft_is_reachable_torus;
@@ -32,12 +31,20 @@ char		*ft_parse_torus(char **content, t_object *o)
 	o->ft_scale = ft_scale_torus;
 	o->ft_mapping = NULL;
 	trs = ft_torusnew();
-	vert = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
 	ft_get_attr(content, "origin", (void *)(&(trs->o)), DT_POINT);
-	ft_get_attr(content, "direction", (void *)(&(trs->v)), DT_POINT);
+	ft_get_attr(content, "direct", (void *)(&(trs->v)), DT_POINT);
 	ft_get_attr(content, "inner_radius", (void *)(&(trs->r_inner)), DT_FLOAT);
 	ft_get_attr(content, "outer_radius", (void *)(&(trs->r_outer)), DT_FLOAT);
 	trs->v = ft_3_tounitvector(trs->v);
+	if (trs->r_inner > trs->r_outer)
+		ft_swap_float(&(trs->r_inner), &(trs->r_outer));
+	if (!ft_3_isnullpoint(o->rotate))
+		trs->v = ft_3_tounitvector(ft_3_vector_rotate(trs->v, (o->rotate)[0],
+				(o->rotate)[1], (o->rotate)[2]));
+	if (!ft_3_isnullpoint(o->translate))
+		trs->o = trs->o + o->translate;
+	printf("ORI %f,%f,%f DIR %f,%f,%f, inner %f, outer %f\n", trs->o[0], trs->o[1], trs->o[2],
+		   trs->v[0], trs->v[1], trs->v[2], trs->r_inner, trs->r_outer);
 	return ((void *)trs);
 }
 
@@ -84,8 +91,7 @@ void		ft_rotate_torus(Uint32 key, void *fig, t_vector *rot)
 		(*rot)[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
 		(*rot)[0] -= ROTAT_F;
-	trs->v = ft_3_vector_rotate(trs->v, (*rot)[0], (*rot)[1], (*rot)[2]);
-
+	trs->v = ft_3_tounitvector(ft_3_vector_rotate(trs->v, (*rot)[0], (*rot)[1], (*rot)[2]));
 }
 
 void		ft_scale_torus(Uint32 key, void *fig, float *scale)

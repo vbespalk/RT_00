@@ -14,14 +14,16 @@
 
 # define RT_H
 
-# define SCR_WID 640
-# define SCR_HEI 480
-# define FOV 1.570796
+# define SCR_WID		640
+# define SCR_HEI		480
+# define FOV			1.570796
+# define EQN_EPS		1e-30
 # define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a >= _b ? _b : _a;})
 # define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a <= _b ? _b : _a;})
 # define DEG_TO_RAD(x) ((x) * (float)M_PI / 180.0f)
 # define RAD_TO_DEG(x) ((x) * 180.0f / M_PI)
 # define IN_RANGE(x, left, right) ((x >= left) && (x <= right))
+# define IS_ZERO(x) ((x > -EQN_EPS) && (x < EQN_EPS))
 
 /*
 **	camera
@@ -43,7 +45,7 @@
 
 # define DEPTH			10
 # define STACK_SIZE		DEPTH
-# define THREADS		1
+# define THREADS		8
 
 /*
 **	includes
@@ -948,6 +950,16 @@ Uint32					ft_map_box(void *fig, t_texture *tex, t_vector hit);
 void					ft_parse_skybox(char **content, t_skybox **sky);
 Uint32					ft_map_skybox(t_aabb *bbx, t_texture *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
+
+/*
+** equations.c
+*/
+
+//int 					ft_solve_quartic(const float coef[5],  float res[4]);
+//int 					ft_solve_cubic(const float coef[4],  float res[3]);
+int 					ft_solve_quartic(const double coef[5],  double res[4]);
+int 					ft_solve_cubic(const double coef[4],  double res[3]);
+
 /*
 ** FROM MY LIBFT
 */

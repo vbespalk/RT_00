@@ -22,7 +22,6 @@
             "color": "0xEEEEEE",
             "spclr": 0,
             "phong": 0,
-            "texture": "./texture/solar/earth.jpg",
             "ambnt": 0.8
         },
         {

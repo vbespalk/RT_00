@@ -1,0 +1,39 @@
+{
+    "name": "Test TORUS",
+
+    "camera": {
+        "origin": { "x": -1000, "y": 0 }
+    },
+      "skybox": {
+      "min": { "x": -100000, "y": -100000, "z": -100000},
+      "max": { "x": 100000, "y": 100000, "z": 100000},
+      "negz": "./texture/skybox/thunder/negz.tga", 
+      "negy": "./texture/skybox/thunder/negy.tga", 
+      "negx":"./texture/skybox/thunder/negx.tga", 
+      "posz": "./texture/skybox/thunder/posz.tga", 
+      "posy": "./texture/skybox/thunder/posy.tga",
+      "posx": "./texture/skybox/thunder/posx.tga"
+  },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        }
+    ],
+    "objects": [
+        {
+
+            "name": "torus",
+            "origin": { "y": 0 },
+            "direct": { "y": -1, "z": 0 },
+            "inner_radius": 80,
+            "outer_radius": 100,
+            "rotate": { "x": 15, "z": 75},
+            "translate": {"z" : -100},
+            "color": "0x666666",
+            "spclr": 0.1,
+            "diff": 1,
+            "ambnt": 0.3
+        }
+    ]
+}

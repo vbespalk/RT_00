@@ -42,24 +42,32 @@ int			ft_is_reachable_sphere(void *fig, t_vector origin, t_vector direct)
 	return ((cos > 0) ? 1 : 0);
 }
 
-t_vector	ft_collide_sphere(t_list **objs, void *fig, t_vector o, t_vector d)
+t_vector	ft_collide_sphere(t_list **objs, t_object *obj, t_vector o, t_vector d)
 {
 	t_sphere	*sph;
 	float		t1t2[2];
 	t_vector	pos;
+	t_vector	hit;
 
 
-	sph = (t_sphere *)fig;
+	sph = (t_sphere *)(obj->fig);
 	pos = o - sph->origin;
-	if (!ft_solve_sqr_(ft_3_vector_dot(d, d),
+	if (!ft_solve_sqr_(
+		ft_3_vector_dot(d, d),
 		2.0f * ft_3_vector_dot(d, pos),
-		ft_3_vector_dot(pos, pos) - sph->radius * sph->radius, &t1t2)
+		ft_3_vector_dot(pos, pos) - sph->radius * sph->radius,
+		&t1t2)
 		|| (t1t2[0] < FLT_MIN && t1t2[1] < FLT_MIN))
 		return (ft_3_nullpointnew());
+	if (t1t2[0] >= FLT_MIN)
+	{
+		hit = o + ft_3_vector_scale(d, t1t2[0]);
+		if ((!(obj->is_neg) && ft_inside_what(objs, hit) < 0)
+			|| (obj->is_neg && ft_inside_what(objs, hit) > 0))
+	}
 	return (t1t2[0] > FLT_MIN ? o + ft_3_vector_scale(d, t1t2[0]) :
 		o + ft_3_vector_scale(d, t1t2[1]));
 
-//	t_vector	hit;
 //	float		phi;
 //	if (t1t2[0] > FLT_MIN)
 //	{

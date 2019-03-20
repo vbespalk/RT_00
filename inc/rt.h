@@ -898,7 +898,7 @@ void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 **	collision.c
 */
 
-int						ft_is_inside_neg(t_list **objs, t_vector point);
+int						ft_inside_what(t_list **objs, t_vector point);
 t_coll					ft_get_collision(t_thrarg *arg, t_ray *ray);
 
 /*

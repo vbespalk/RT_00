@@ -83,7 +83,7 @@
 
 # endif
 
-typedef	float		t_matrix[4][4];
+//typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
 
 typedef union		u_color
@@ -99,7 +99,6 @@ typedef enum		e_ltype
 	L_PARALLEL
 }					t_ltype;
 
-<<<<<<< HEAD
 typedef struct		s_texture
 {
 	char			*path;
@@ -107,7 +106,7 @@ typedef struct		s_texture
 	Uint32 			*pixels;
 	SDL_PixelFormat	*format;
 }					t_texture;
-=======
+
 typedef enum		e_smooth
 {
 	SMOOTH_1X,
@@ -115,7 +114,6 @@ typedef enum		e_smooth
 	SMOOTH_9X
 }					t_smooth;
 
->>>>>>> refr_debug
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -148,18 +146,10 @@ typedef struct		s_object
 	float			trans;
 	float			t_blur;
 	float			phong;
-<<<<<<< HEAD
 
 	t_color			color;
 	char 			*texture_id;
 	t_texture		*texture;
-=======
-	t_color			color;
-
-//	float			wave;
-//	t_vector		wave_direct;
-
->>>>>>> refr_debug
 /*
 ** functions for intersection / search etc.
 */

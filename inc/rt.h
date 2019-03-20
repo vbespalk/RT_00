@@ -898,8 +898,17 @@ void					ft_illuminate(t_thrarg *parg, t_coll *coll);
 **	collision.c
 */
 
-int						ft_inside_what(t_list **objs, t_vector point);
 t_coll					ft_get_collision(t_thrarg *arg, t_ray *ray);
+
+/*
+**	collision_utils.c
+*/
+
+int						ft_inside_type(t_list **objs, t_vector point);
+t_object				*ft_get_inner_object(t_list *objs, t_vector point);
+t_object				*ft_inside_obj(
+							t_list **objs, t_vector point,
+							t_object *(*ft_choose)(t_list *, t_vector));
 
 /*
 **	utils.c

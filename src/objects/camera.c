@@ -62,32 +62,6 @@ void				ft_parse_camera(char **content, t_camera *cam)
 	cam->angles[2] = ft_torad(cam->angles[2]);
 }
 
-static t_object		*ft_get_inner_object(t_list *objs, t_vector point)
-{
-	t_vector	direct;
-	float		dist;
-	float		min_dist;
-	t_object	*o;
-	t_object	*res;
-
-	direct = (t_vector) { 1.0f, 0.0f, 0.0f };
-	min_dist = FLT_MAX;
-	res = NULL;
-	while (objs)
-	{
-		o = (t_object *)(objs->content);
-		dist = ft_3_point_point_dist(
-			point, o->ft_collide(&objs, o->fig, point, direct));
-		if (dist < min_dist)
-		{
-			min_dist = dist;
-			res = o;
-		}
-		objs = objs->next;
-	}
-	return (res);
-}
-
 static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
 {
 	t_dlist		*node;

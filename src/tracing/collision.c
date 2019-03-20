@@ -12,22 +12,6 @@
 
 #include "rt.h"
 
-int					ft_inside_what(t_list **objs, t_vector point)
-{
-	t_list		*node;
-	t_object	*o;
-
-	node = *objs;
-	while (node)
-	{
-		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, point))
-			return ((o->is_neg) ? -1 : 1);
-		node = node->next;
-	}
-	return (0);
-}
-
 static t_vector		ft_get_collision_point
 						(t_coll *coll, t_list **objs, t_vector od[2])
 {

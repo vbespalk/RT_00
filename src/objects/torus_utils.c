@@ -53,25 +53,45 @@ t_vector	ft_collide_torus(void *fig, t_vector origin, t_vector direct)
 int			ft_is_inside_torus(void *fig, t_vector point)
 {
 	t_torus		*trs;
+	double		k;
+	double		r_outer;
+	double		r_inner;
+	t_vector	a;
 
 	trs = (t_torus *)fig;
-
-	return (0);
+	k = ft_3_vector_dot(point - trs->o, trs->v);
+	if (fabs(k) > trs->r_inner)
+	{
+		printf("OUT\n");
+		return (0);
+	}
+	a = point - ft_3_vector_scale(trs->v, (float)k);
+	r_outer = ft_3_vector_db_dot(a - trs->o, a - trs->o);
+	a = point - trs->o - ft_3_vector_scale(ft_3_tounitvector(a - trs->o), trs->r_outer);
+	r_inner = ft_3_vector_dot(a, a);
+	if (r_outer > (trs->r_outer  + trs->r_inner) * (trs->r_outer + trs->r_inner) ||
+		r_inner > trs->r_inner * trs->r_inner)
+	{
+		printf("OUT\n");
+		return (0);
+	}
+	printf("IN\n");
+	return (1);
 }
 
 t_vector	ft_get_norm_torus(void *fig, t_vector coll)
 {
 	t_torus		*trs;
-	float 		k;
+	double		k;
 //	float 		m;
 	t_vector	a;
 	t_vector	norm;
 
 	trs = (t_torus *)fig;
 	k = ft_3_vector_dot(coll - trs->o, trs->v);
-	if (fabsf(k) > trs->r_inner)
+	if (fabs(k) > trs->r_inner)
 		k = k > 0 ? trs->r_inner : -trs->r_inner;
-	a = coll - ft_3_vector_scale(trs->v, k);
+	a = coll - ft_3_vector_scale(trs->v, (float)k);
 	if (trs->r_inner * trs->r_inner - k * k < -0.1f)
 	{
 //		printf("here r %f, k %f, dif %f, coll %f,%f,%f\n", trs->r_inner, k, trs->r_inner * trs->r_inner - k * k,

@@ -106,28 +106,28 @@ int					ft_is_reachable_cone(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector			ft_collide_cone(void *fig, t_vector origin, t_vector direct)
+t_vector			ft_collide_cone(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
 {
 	t_cone	*con;
-	t_vector	coll[2];
+	t_vector	coll_pnt[2];
 	float		res[2];
 	float 		dot_dv;
 	float 		dot_vx;
 
-	con = (t_cone *)fig;
-	dot_dv = ft_3_vector_dot(direct, con->v);
-	dot_vx = ft_3_vector_dot(origin - con->o, con->v);
-	if (!ft_solve_sqr_(ft_3_vector_dot(direct, direct) - (1 + con->tan * con->tan) * dot_dv * dot_dv,
-		2.0f * (ft_3_vector_dot(origin - con->o, direct) - (1 + con->tan * con->tan) * dot_dv * dot_vx),
-		ft_3_vector_dot(origin - con->o, origin - con->o) - (1 + con->tan * con->tan) * dot_vx * dot_vx,
+	con = (t_cone *)(obj->fig);
+	dot_dv = ft_3_vector_dot(od[1], con->v);
+	dot_vx = ft_3_vector_dot(od[0] - con->o, con->v);
+	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - (1 + con->tan * con->tan) * dot_dv * dot_dv,
+		2.0f * (ft_3_vector_dot(od[0] - con->o, od[1]) - (1 + con->tan * con->tan) * dot_dv * dot_vx),
+		ft_3_vector_dot(od[0] - con->o, od[0] - con->o) - (1 + con->tan * con->tan) * dot_vx * dot_vx,
 		&res))
 		return (fabsf(dot_dv) < 1e-6 ? ft_3_nullpointnew() :
-			get_caps_coll(origin, direct, con, 1.0f / dot_dv));
-	coll[0] = get_cides_coll(origin, direct, res, con);
+			get_caps_coll(od[0], od[1], con, 1.0f / dot_dv));
+	coll_pnt[0] = get_cides_coll(od[0], od[1], res, con);
 	if ((con->maxh == FLT_MAX && con->minh == FLT_MIN) || fabsf(dot_dv) < 1e-6)
-		return (coll[0]);
-	coll[1] = get_caps_coll(origin, direct, con, 1.0f / dot_dv);
-	return (get_closer_pnt(origin, coll));
+		return (coll_pnt[0]);
+	coll_pnt[1] = get_caps_coll(od[0], od[1], con, 1.0f / dot_dv);
+	return (get_closer_pnt(od[0], coll_pnt));
 }
 
 //int			ft_is_inside_cone(void *fig, t_vector point)
@@ -163,6 +163,10 @@ int			ft_is_inside_cone(void *fig, t_vector point)
 	return (0);
 }
 
+//
+// CHECK RETURN |
+//              V
+
 t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 {
 	t_cone 		*con;
@@ -173,6 +177,7 @@ t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 		return (con->v);
 	if (con->minh != FLT_MIN && con->h <= con->minh + 1e-2)
 		return (-con->v);
-	return (ft_3_tounitvector(coll - ((t_cone *)fig)->o - (1.0f + con->tan * con->tan)
-	* ft_3_vector_scale(con->v, con->h)));
+	return (ft_3_tounitvector(
+		coll - ((t_cone *)fig)->o - ft_3_vector_scale(
+			con->v, con->h * (1.0f + con->tan * con->tan))));
 }

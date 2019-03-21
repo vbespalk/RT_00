@@ -29,7 +29,7 @@ int			ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector	ft_collide_aabb(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_aabb(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
 {
 	int 		i;
 	float 		odd;
@@ -41,9 +41,9 @@ t_vector	ft_collide_aabb(void *fig, t_vector origin, t_vector direct)
 	i = -1;
 	while (++i < 3)
 	{
-		odd = 1.0f / direct[i];
-		minmax[0] = (((t_aabb *)fig)->bounds[0][i] - origin[i]) * odd;
-		minmax[1] = (((t_aabb *)fig)->bounds[1][i] - origin[i]) * odd;
+		odd = 1.0f / od[1][i];
+		minmax[0] = (((t_aabb *)(obj->fig))->bounds[0][i] - od[0][i]) * odd;
+		minmax[1] = (((t_aabb *)(obj->fig))->bounds[1][i] - od[0][i]) * odd;
 		if (minmax[0] > minmax[1])
 			ft_swap_float(&minmax[0], &minmax[1]);
 		t[0] = minmax[0] > t[0] ? minmax[0] : t[0];
@@ -53,7 +53,7 @@ t_vector	ft_collide_aabb(void *fig, t_vector origin, t_vector direct)
 	}
 	if (t[0] < 0 || (t[0] > t[1] && t[1] > FLT_MIN))
 		ft_swap_float(&t[0], &t[1]);
-	return (origin + ft_3_vector_scale(direct, t[0]));
+	return (od[0] + ft_3_vector_scale(od[1], t[0]));
 //	return (t[0] > FLT_MIN ? origin + ft_3_vector_scale(direct, t[0]) : ft_3_nullpointnew());
 }
 

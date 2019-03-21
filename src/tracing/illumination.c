@@ -22,10 +22,15 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 	float		res;
 	t_list		*o_node;
 	t_object	*obj;
-	t_vector	coll;
+	t_vector	coll_pnt;
+
+	t_vector	od[2];
+	t_coll		*coll;
 
 	res = 1.0f;
 	o = o + ft_3_vector_scale(d, 0.1f);
+	od[0] = o;
+	od[1] = d;
 	o_node = scn->objs;
 	while (o_node)
 	{
@@ -35,11 +40,11 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 			o_node = o_node->next;
 			continue ;
 		}
-		coll = obj->ft_collide(&(scn->objs), obj->fig, o, d);
-		if (!ft_3_isnullpoint(coll)
+		coll_pnt = obj->ft_collide(&(scn->objs), obj, coll, od);
+		if (!ft_3_isnullpoint(coll_pnt)
 			&& (l->type != L_POINT || ft_3_pointcmp(
-				ft_3_unitvectornew(coll, o),
-				ft_3_unitvectornew(l->origin, coll),
+				ft_3_unitvectornew(coll_pnt, o),
+				ft_3_unitvectornew(l->origin, coll_pnt),
 				1e-6
 			)))
 			res *= obj->trans;

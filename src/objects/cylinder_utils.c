@@ -104,28 +104,28 @@ int					ft_is_reachable_cylinder(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector			ft_collide_cylinder(void *fig, t_vector origin, t_vector direct)
+t_vector			ft_collide_cylinder(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
 {
 	t_cylinder	*clnd;
-	t_vector	coll[2];
+	t_vector	coll_pnt[2];
 	float		res[2];
 	float 		dot_dv;
 	float 		dot_vx;
 
-	clnd = (t_cylinder *)fig;
-	dot_dv = ft_3_vector_dot(direct, clnd->v);
-	dot_vx = ft_3_vector_dot(origin - clnd->o, clnd->v);
-	if (!ft_solve_sqr_(ft_3_vector_dot(direct, direct) - dot_dv * dot_dv,
-		2.0f * (ft_3_vector_dot(origin - clnd->o, direct) - dot_dv * dot_vx),
-		ft_3_vector_dot(origin - clnd->o, origin - clnd->o) - dot_vx *
+	clnd = (t_cylinder *)(obj->fig);
+	dot_dv = ft_3_vector_dot(od[1], clnd->v);
+	dot_vx = ft_3_vector_dot(od[0] - clnd->o, clnd->v);
+	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - dot_dv * dot_dv,
+		2.0f * (ft_3_vector_dot(od[0] - clnd->o, od[1]) - dot_dv * dot_vx),
+		ft_3_vector_dot(od[0] - clnd->o, od[0] - clnd->o) - dot_vx *
 		dot_vx - clnd->r * clnd->r, &res))
 		return (fabsf(dot_dv) < 1e-6 ? ft_3_nullpointnew() : \
-			get_caps_coll(origin, direct, clnd, 1.0f / dot_dv));
-	coll[0] = get_cides_coll(origin, direct, res, clnd);
+			get_caps_coll(od[0], od[1], clnd, 1.0f / dot_dv));
+	coll_pnt[0] = get_cides_coll(od[0], od[1], res, clnd);
 	if (clnd->maxh == FLT_MAX || fabsf(dot_dv) < 1e-6)
-		return (coll[0]);
-	coll[1] = get_caps_coll(origin, direct, clnd, 1.0f / dot_dv);
-	return (get_closer_pnt(origin, coll));
+		return (coll_pnt[0]);
+	coll_pnt[1] = get_caps_coll(od[0], od[1], clnd, 1.0f / dot_dv);
+	return (get_closer_pnt(od[0], coll_pnt));
 }
 
 int			ft_is_inside_cylinder(void *fig, t_vector point)

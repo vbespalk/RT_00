@@ -67,9 +67,9 @@ void		*ft_parse_plane(char **content, t_object *o)
 	if (ft_3_vector_len(pln->norm_ini) == 0.0)
 		pln->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
 	pln->norm = ft_3_tounitvector(pln->norm_ini);
-	if (!ft_3_isnullpoint(o->rotate))
+	if (!o->rotate[0] && !o->rotate[1] && !o->rotate[2])
 		ft_rotate_plane(UINT32_MAX, pln, &o->rotate);
-	if (!ft_3_isnullpoint(o->translate))
+	if (!o->translate[0] && !o->translate[1] && !o->translate[2])
 		ft_translate_plane(UINT32_MAX, pln, &o->translate);
 	return ((void *)pln);
 }
@@ -82,7 +82,7 @@ void		ft_translate_plane(Uint32 key, void *fig, t_vector *transl)
 		return ;
 	pln = (t_plane *)fig;
 	if (key != UINT32_MAX)
-		*transl = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+		*transl = ft_3_nullpointnew();
 	if (key == SDLK_d)
 		(*transl)[2] += TRANS_F;
 	if (key == SDLK_a)
@@ -109,7 +109,7 @@ void		ft_rotate_plane(Uint32 key, void *fig, t_vector *rot)
 		return ;
 	pln = (t_plane *)fig;
 	if (key != UINT32_MAX)
-		*rot = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+		*rot = ft_3_nullpointnew();
 	if (key == SDLK_DOWN)
 		(*rot)[2] += ROTAT_F;
 	else if (key == SDLK_UP)

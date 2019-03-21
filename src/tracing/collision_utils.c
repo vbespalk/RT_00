@@ -19,20 +19,23 @@ int			ft_inside_type(t_list **objs, t_vector point)
 
 t_object	*ft_get_inner_object(t_list *objs, t_vector point)
 {
-	t_vector	direct;
+	t_vector	od[2];
 	float		dist;
 	float		min_dist;
 	t_object	*o;
 	t_object	*res;
 
-	direct = (t_vector) { 1.0f, 0.0f, 0.0f };
+	t_coll		*coll;
+
+	od[0] = point;
+	od[1] = (t_vector) { 1.0f, 0.0f, 0.0f };
 	min_dist = FLT_MAX;
 	res = NULL;
 	while (objs)
 	{
 		o = (t_object *)(objs->content);
 		dist = ft_3_point_point_dist(
-			point, o->ft_collide(&objs, o->fig, point, direct));
+			point, o->ft_collide(&objs, o, coll, od));
 		if (dist < min_dist)
 		{
 			min_dist = dist;

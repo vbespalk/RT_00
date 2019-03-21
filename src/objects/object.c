@@ -23,8 +23,8 @@ t_object	*ft_objectnew(Uint32 id)
 	o->diff = 1.0f;
 	o->phong = 0;
 	o->refr = 1.0f;
-	o->translate = ft_3_nullpointnew();
-	o->rotate = ft_3_nullpointnew();
+//	o->translate = ft_3_nullpointnew();
+//	o->rotate = ft_3_nullpointnew();
 	o->texture_id = NULL;
 	ft_bzero(&(o->texture_id), sizeof(char**) * BOX_FACES);
 	return (o);

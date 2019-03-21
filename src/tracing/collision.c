@@ -28,7 +28,7 @@ static t_vector		ft_get_collision_point
 		o = (t_object *)(node->content);
 		if (o->ft_is_reachable(o->fig, od[0], od[1])
 			&& !ft_3_isnullpoint(
-				pnt[1] = o->ft_collide(objs, o->fig, od[0], od[1]))
+				pnt[1] = o->ft_collide(objs, o, coll, od))
 			&& (dist[1] = ft_3_point_point_dist(od[0], pnt[1])) < dist[0])
 		{
 			pnt[0] = pnt[1];
@@ -78,7 +78,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	od[1] = ray->d;
 	ray->coll = &coll;
 	if (ft_3_isnullpoint(coll.coll_pnt =
-		ft_get_collision_point(&(arg->e->scn->objs), &(coll.o), od)))
+		ft_get_collision_point(&coll, &(arg->e->scn->objs), od)))
 		return (coll);
 	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
 	if (coll.o->trans)

@@ -28,20 +28,20 @@ int			ft_is_reachable_torus(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector	ft_collide_torus(void *fig, t_vector origin, t_vector direct)
+t_vector	ft_collide_torus(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
 {
 	t_torus		*trs;
-	t_vector	coll;
+	t_vector	coll_pnt;
 	float		res[2];
 	float 		dots[6];
 	float 		koef[5];
 
-	trs = (t_torus *)fig;
-	dots[0] = ft_3_vector_dot(direct, direct);
-	dots[1] = ft_3_vector_dot(direct, origin - trs->o);
-	dots[2] = ft_3_vector_dot(origin - trs->o, origin - trs->o);
-	dots[3] = ft_3_vector_dot(direct, trs->v);
-	dots[4] = ft_3_vector_dot(origin - trs->o, trs->v);
+	trs = (t_torus *)(obj->fig);
+	dots[0] = ft_3_vector_dot(od[1], od[1]);
+	dots[1] = ft_3_vector_dot(od[1], od[0] - trs->o);
+	dots[2] = ft_3_vector_dot(od[0] - trs->o, od[0] - trs->o);
+	dots[3] = ft_3_vector_dot(od[1], trs->v);
+	dots[4] = ft_3_vector_dot(od[0] - trs->o, trs->v);
 	dots[5] = trs->r_outer * trs->r_outer + trs->r_inner * trs->r_inner;
 	koef[0] = dots[0] * dots[0];
 	koef[1] = 4.0f * dots[0] * dots[1];

@@ -64,10 +64,10 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 			ft_throw_rays(parg, &next_ray, &(coll.trans_vec), num) :
 			ft_throw_ray(parg, &next_ray, depth + 1);
 	}
-	return ((coll.o->phong != 0.0) ?
-		ft_apply_phong(ft_sum_colors(&coll, spclr_col, trans_col, depth),
-			coll.phong, coll.phong_color) :
-		ft_sum_colors(&coll, spclr_col, trans_col, depth));
+	return ((coll.o->phong != 0.0)
+		? ft_apply_phong(ft_sum_colors(&coll, spclr_col, trans_col, depth),
+			coll.phong, coll.phong_color)
+		: ft_sum_colors(&coll, spclr_col, trans_col, depth));
 }
 
 //void			ft_add_blur_colors(float (*sum)[3], int num, t_color new)
@@ -161,7 +161,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	ray.d = d;
 	res = ft_throw_ray(parg, &ray,  0);
 
-	res = ft_blind(parg->e->scn, res, o, d);
+//	res = ft_blind(parg->e->scn, res, o, d);
 
 	res.val = SDL_MapRGB(
 		parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);

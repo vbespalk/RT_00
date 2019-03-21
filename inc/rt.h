@@ -83,7 +83,7 @@
 
 # endif
 
-//typedef	float		t_matrix[4][4];
+typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
 
 typedef union		u_color
@@ -117,6 +117,8 @@ typedef enum		e_smooth
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
+
+struct s_collision;
 
 typedef struct		s_object
 {
@@ -156,7 +158,8 @@ typedef struct		s_object
 	int				(*ft_is_reachable)
 	 					(void *fig, t_vector origin, t_vector direct);
 	t_vector		(*ft_collide)
-	 					(t_list **objs, void *fig, t_vector o, t_vector d);
+	 					(t_list **objs, struct s_object *obj,
+	 					struct s_collision *coll, t_vector od[2]);
 	int				(*ft_is_inside)(void *fig, t_vector point);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
 /*
@@ -664,7 +667,8 @@ void					ft_scale_plane(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_plane
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_plane
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+							(t_list **objs, struct s_object *obj,
+							t_coll *coll, t_vector od[2]);
 int						ft_is_inside_plane(void *fig, t_vector point);
 t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 
@@ -687,7 +691,8 @@ void					ft_scale_disk(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_disk
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_disk
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+	(t_list **objs, struct s_object *obj,
+	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_disk(void *fig, t_vector point);
 t_vector				ft_get_norm_disk(void *fig, t_vector coll);
 
@@ -710,7 +715,8 @@ void					ft_scale_triangle(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_triangle
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_triangle
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+	(t_list **objs, struct s_object *obj,
+	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_triangle(void *fig, t_vector point);
 t_vector				ft_get_norm_triangle(void *fig, t_vector coll);
 
@@ -733,7 +739,8 @@ void					ft_scale_box(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_box
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_box
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+	(t_list **objs, struct s_object *obj,
+	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_box(void *fig, t_vector point);
 t_vector				ft_get_norm_box(void *fig, t_vector coll);
 
@@ -743,7 +750,8 @@ t_vector				ft_get_norm_box(void *fig, t_vector coll);
 
 t_aabb					*ft_init_aabb(t_vector min, t_vector max);
 int						ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_aabb(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_aabb(t_list **objs, struct s_object *obj,
+										t_coll *coll, t_vector od[2]);
 void					ft_translate_aabb(Uint32 key, void *fig, t_vector *transl);
 void					ft_scale_aabb(Uint32 key, void *fig, float *scale);
 
@@ -766,7 +774,8 @@ void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
 int						ft_is_reachable_sphere
 							(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_sphere
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+	(t_list **objs, struct s_object *obj,
+	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_sphere(void *fig, t_vector point);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -787,7 +796,8 @@ void					ft_scale_cone(Uint32 key, void *fig, float *scale);
 */
 
 t_vector				ft_collide_cone
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+	(t_list **objs, struct s_object *obj,
+	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cone(void *fig, t_vector point);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
@@ -820,7 +830,8 @@ void					ft_scale_cylinder(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_cylinder(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_cylinder(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_cylinder(t_list **objs, struct s_object *obj,
+											t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cylinder(void *fig, t_vector point);
 t_vector				ft_get_norm_cylinder(void *fig, t_vector coll);
 
@@ -842,7 +853,8 @@ void					ft_scale_prbld(Uint32 key, void *fig, float *scale);
 
 int						ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_prbld
-							(t_list **objs, void *fig, t_vector o, t_vector d);
+	(t_list **objs, struct s_object *obj,
+	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_prbld(void *fig, t_vector point);
 t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 
@@ -863,7 +875,8 @@ void					ft_scale_torus(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_torus(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_torus(void *fig, t_vector origin, t_vector direct);
+t_vector				ft_collide_torus(t_list **objs, struct s_object *obj,
+										 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_torus(void *fig, t_vector point);
 t_vector				ft_get_norm_torus(void *fig, t_vector coll);
 

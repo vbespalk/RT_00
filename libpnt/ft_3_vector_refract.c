@@ -22,9 +22,10 @@ t_vector	ft_3_vector_refract
 
 //	printf("k = %f;\n", k);
 
-	return ((k < 0) ? ft_3_nullpointnew() :
-		ft_3_vector_scale(direct, n) +
-		ft_3_vector_scale(norm, n * c1 - sqrtf(k)));
+	return ((k < 0)
+		? ft_3_nullpointnew()
+		: ft_3_vector_scale(direct, n) +
+			ft_3_vector_scale(norm, n * c1 - sqrtf(k)));
 
 //	if (refr1 > refr2) printf("[ %f -> %f ]:(%f, %f, %f);\n", refr1, refr2, t[0], t[1], t[2]);
 

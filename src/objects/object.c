@@ -50,22 +50,22 @@ void		*ft_get_figure_parser(char *name)
 		ft_printf("PARSE WARNING: object with unspecified name ignored\n");
 		return (NULL);
 	}
-	else if (!ft_strcmp(name, "plane"))
-		return (ft_parse_plane);
+//	else if (!ft_strcmp(name, "plane"))
+//		return (ft_parse_plane);
 	else if (!ft_strcmp(name, "sphere"))
 		return (ft_parse_sphere);
-	else if (!ft_strcmp(name, "cone"))
-		return (ft_parse_cone);
-	else if (!ft_strcmp(name, "cylinder"))
-		return (ft_parse_cylinder);
-	else if (!ft_strcmp(name, "paraboloid"))
-		return (ft_parse_prbld);
-	else if (!ft_strcmp(name, "box"))
-		return (ft_parse_box);
-	else if (!ft_strcmp(name, "disk"))
-		return (ft_parse_disk);
-	else if (!ft_strcmp(name, "torus"))
-		return (ft_parse_torus);
+//	else if (!ft_strcmp(name, "cone"))
+//		return (ft_parse_cone);
+//	else if (!ft_strcmp(name, "cylinder"))
+//		return (ft_parse_cylinder);
+//	else if (!ft_strcmp(name, "paraboloid"))
+//		return (ft_parse_prbld);
+//	else if (!ft_strcmp(name, "box"))
+//		return (ft_parse_box);
+//	else if (!ft_strcmp(name, "disk"))
+//		return (ft_parse_disk);
+//	else if (!ft_strcmp(name, "torus"))
+//		return (ft_parse_torus);
 	ft_printf("PARSE WARNING: unknown object name '%s'\n", name);
 	return (NULL);
 }

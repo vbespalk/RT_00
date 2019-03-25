@@ -22,7 +22,7 @@ static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
 	d = sqrtf(d);
 	(*res)[0] = (-b + d) / (2.0f * a);
 	(*res)[1] = (-b - d) / (2.0f * a);
-	if ((*res)[0] > (*res)[1] || (*res)[0] < FLT_MIN)
+	if ((*res)[0] > (*res)[1] || (*res)[0] < 0)
 		ft_swap_float(&(*res)[0], &(*res)[1]);
 	return (1);
 }
@@ -42,7 +42,11 @@ int			ft_is_reachable_sphere(void *fig, t_vector origin, t_vector direct)
 	return ((cos > 0) ? 1 : 0);
 }
 
-t_vector	ft_collide_sphere(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
+void		ft_collide_sphere(
+				t_list **objs,
+				t_object *obj,
+				t_coll *coll,
+				t_vector od[2])
 {
 	float		t1t2[2];
 	int			i;
@@ -57,28 +61,31 @@ t_vector	ft_collide_sphere(t_list **objs, t_object *obj, t_coll *coll, t_vector 
 		2.0f * ft_3_vector_dot(od[1], pos),
 		ft_3_vector_dot(pos, pos) - sph->radius * sph->radius,
 		&t1t2)
-		|| (t1t2[0] < FLT_MIN && t1t2[1] < FLT_MIN))
-		return (ft_3_nullpointnew());
+		|| (t1t2[0] < 0 && t1t2[1] < 0))
+		return ;
 	i = -1;
 	while (++i < 2)
 	{
-		if (t1t2[i] >= FLT_MIN)
+		if (t1t2[i] > 0)
 		{
 			hit = od[0] + ft_3_vector_scale(od[1], t1t2[i]);
 			if ((obj->is_neg || ft_inside_type(objs, hit) < 0)
 				&& (!(obj->is_neg) || ft_inside_type(objs, hit) <= 0))
-				t1t2[i] = FLT_MIN;
+				t1t2[i] = 0;
 		}
 	}
-	hit = (t1t2[0] > FLT_MIN)
+	if (t1t2[0] <= 0 && t1t2[1] <= 0)
+		return ;
+	hit = (t1t2[0] > 0)
 		? od[0] + ft_3_vector_scale(od[1], t1t2[0])
 		: od[0] + ft_3_vector_scale(od[1], t1t2[1]);
 	coll->coll_pnt = hit;
-	coll->norm = ft_3_vector_scale(obj->ft_get_norm(obj->fig, hit), -1.0f);
+	coll->norm = (obj->is_neg)
+		? ft_3_vector_invert(obj->ft_get_norm(obj->fig, hit))
+		: obj->ft_get_norm(obj->fig, hit);
 	coll->o = (obj->is_neg)
 		? ft_inside_obj(objs, hit, ft_get_inner_object)
 		: obj;
-	return (hit);
 
 //	float		phi;
 //	if (t1t2[0] > FLT_MIN)

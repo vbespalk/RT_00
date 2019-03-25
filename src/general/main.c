@@ -26,19 +26,19 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	textures = NULL;
 	e->scn->textures = textures;
 	objs = e->scn->objs;
-	while (objs)
-	{
-		obj = (t_object *)objs->content;
-		if (obj->texture_id != NULL)
-			obj->texture = init_texture(&textures, sdl, obj->texture_id);
-		objs = objs->next;
-	}
-	i = -1;
-	if (e->scn->skybox != NULL)
-		while (++i < BOX_FACES)
-			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
-					e->scn->skybox->textur_id[i])))
-				return (-1);
+//	while (objs)
+//	{
+//		obj = (t_object *)objs->content;
+//		if (obj->texture_id != NULL)
+//			obj->texture = init_texture(&textures, sdl, obj->texture_id);
+//		objs = objs->next;
+//	}
+//	i = -1;
+//	if (e->scn->skybox != NULL)
+//		while (++i < BOX_FACES)
+//			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
+//					e->scn->skybox->textur_id[i])))
+//				return (-1);
 	e->selected = NULL;
 	return (0);
 }

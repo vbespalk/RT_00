@@ -22,16 +22,15 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 	float		res;
 	t_list		*o_node;
 	t_object	*obj;
-	t_vector	coll_pnt;
-
 	t_vector	od[2];
-	t_coll		*coll;
+	t_coll		coll;
 
 	res = 1.0f;
 	o = o + ft_3_vector_scale(d, 0.1f);
 	od[0] = o;
 	od[1] = d;
 	o_node = scn->objs;
+	coll.o = NULL;
 	while (o_node)
 	{
 		obj = (t_object *)(o_node->content);
@@ -40,11 +39,11 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 			o_node = o_node->next;
 			continue ;
 		}
-		coll_pnt = obj->ft_collide(&(scn->objs), obj, coll, od);
-		if (!ft_3_isnullpoint(coll_pnt)
+		obj->ft_collide(&(scn->objs), obj, &coll, od);
+		if (coll.o
 			&& (l->type != L_POINT || ft_3_pointcmp(
-				ft_3_unitvectornew(coll_pnt, o),
-				ft_3_unitvectornew(l->origin, coll_pnt),
+				ft_3_unitvectornew(coll.coll_pnt, o),
+				ft_3_unitvectornew(l->origin, coll.coll_pnt),
 				1e-6
 			)))
 			res *= obj->trans;
@@ -96,7 +95,7 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 
 	ldir = (l->type == L_POINT)
 		? ft_3_tounitvector(l->origin - coll->coll_pnt)
-		: ft_3_vector_scale(l->direct, -1.0f);
+		: ft_3_vector_invert(l->direct);
 	nl_cos = ft_3_vector_cos(coll->norm, ldir);
 	if (nl_cos >= 0)
 	{

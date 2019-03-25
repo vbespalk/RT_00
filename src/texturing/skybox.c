@@ -1,8 +1,6 @@
-//
-// Created by ivoriik on 15.03.19.
-//
 
 #include "rt.h"
+
 void		ft_parse_skybox(char **content, t_skybox **sky)
 {
 	int			i;
@@ -33,7 +31,7 @@ void		ft_parse_skybox(char **content, t_skybox **sky)
 	bounds[1] = ft_3_nullpointnew();
 	ft_get_attr(content, "min", (void *)(&(bounds[0])), DT_POINT);
 	ft_get_attr(content, "max", (void *)(&(bounds[1])), DT_POINT);
-	(*sky)->bbx = ft_init_aabb(bounds[0], bounds[1]);
+//	(*sky)->bbx = ft_init_aabb(bounds[0], bounds[1]);
 }
 
 static t_vector	ft_get_rst(t_vector vec, t_vector norm)

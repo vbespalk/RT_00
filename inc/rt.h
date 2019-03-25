@@ -14,8 +14,8 @@
 
 # define RT_H
 
-# define SCR_WID 640
-# define SCR_HEI 480
+# define SCR_WID 600
+# define SCR_HEI 400
 # define FOV 1.570796
 # define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a >= _b ? _b : _a;})
 # define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a <= _b ? _b : _a;})
@@ -157,7 +157,7 @@ typedef struct		s_object
 */
 	int				(*ft_is_reachable)
 	 					(void *fig, t_vector origin, t_vector direct);
-	t_vector		(*ft_collide)
+	void			(*ft_collide)
 	 					(t_list **objs, struct s_object *obj,
 	 					struct s_collision *coll, t_vector od[2]);
 	int				(*ft_is_inside)(void *fig, t_vector point);
@@ -758,6 +758,7 @@ void					ft_scale_aabb(Uint32 key, void *fig, float *scale);
 /*
 **--------------------------------------------------SPHERE------------------------------------------------------------------
 */
+
 /*
 **	sphere.c
 */
@@ -773,7 +774,7 @@ void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
 
 int						ft_is_reachable_sphere
 							(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_sphere
+void					ft_collide_sphere
 	(t_list **objs, struct s_object *obj,
 	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_sphere(void *fig, t_vector point);
@@ -782,6 +783,7 @@ t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 /*
 **--------------------------------------------------CONE------------------------------------------------------------------
 */
+
 /*
 **	cone.c
 */
@@ -918,10 +920,10 @@ t_coll					ft_get_collision(t_thrarg *arg, t_ray *ray);
 */
 
 int						ft_inside_type(t_list **objs, t_vector point);
-t_object				*ft_get_inner_object(t_list *objs, t_vector point);
+t_object				*ft_get_inner_object(t_list **objs, t_vector point);
 t_object				*ft_inside_obj(
 							t_list **objs, t_vector point,
-							t_object *(*ft_choose)(t_list *, t_vector));
+							t_object *(*ft_choose)(t_list **, t_vector));
 
 /*
 **	utils.c

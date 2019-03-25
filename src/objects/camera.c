@@ -115,5 +115,5 @@ void				ft_get_start_stack(t_scene *scn)
 	else if (len == 1)
 		scn->cam->inner_o = (t_object *)(objs->content);
 	else
-		scn->cam->inner_o = ft_get_inner_object(objs, scn->cam->origin);
+		scn->cam->inner_o = ft_get_inner_object(&objs, scn->cam->origin);
 }

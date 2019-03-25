@@ -3,45 +3,51 @@
 
 int			ft_inside_type(t_list **objs, t_vector point)
 {
+	int			res;
 	t_list		*node;
 	t_object	*o;
 
+	res = 0;
 	node = *objs;
 	while (node)
 	{
 		o = (t_object *)(node->content);
 		if (o->ft_is_inside(o->fig, point))
-			return ((o->is_neg) ? -1 : 1);
+		{
+			if (o->is_neg)
+				return (-1);
+			res = 1;
+		}
 		node = node->next;
 	}
-	return (0);
+	return (res);
 }
 
-t_object	*ft_get_inner_object(t_list *objs, t_vector point)
+t_object	*ft_get_inner_object(t_list **objs, t_vector point)
 {
+	t_list		*node;
 	t_vector	od[2];
-	float		dist;
-	float		min_dist;
+	float		dist[2];
 	t_object	*o;
 	t_object	*res;
+	t_coll		coll;
 
-	t_coll		*coll;
-
+	node = *objs;
 	od[0] = point;
 	od[1] = (t_vector) { 1.0f, 0.0f, 0.0f };
-	min_dist = FLT_MAX;
+	dist[0] = FLT_MAX;
 	res = NULL;
-	while (objs)
+	while (node)
 	{
-		o = (t_object *)(objs->content);
-		dist = ft_3_point_point_dist(
-			point, o->ft_collide(&objs, o, coll, od));
-		if (dist < min_dist)
+		o = (t_object *)(node->content);
+		o->ft_collide(objs, o, &coll, od);
+		dist[1] = ft_3_point_point_dist(point, coll.coll_pnt);
+		if (dist[1] < dist[0])
 		{
-			min_dist = dist;
+			dist[0] = dist[1];
 			res = o;
 		}
-		objs = objs->next;
+		node = node->next;
 	}
 	return (res);
 }
@@ -49,7 +55,7 @@ t_object	*ft_get_inner_object(t_list *objs, t_vector point)
 t_object	*ft_inside_obj(
 				t_list **objs,
 				t_vector point,
-				t_object *(*ft_choose)(t_list *objs, t_vector point))
+				t_object *(*ft_choose)(t_list **objs, t_vector point))
 {
 	t_list		*res_objs;
 	t_list		*node;
@@ -64,7 +70,7 @@ t_object	*ft_inside_obj(
 		o = (t_object *)(node->content);
 		if (o->ft_is_inside(o->fig, point))
 		{
-			ft_lstpush(&res_objs, ft_nodenew((void *)o, sizeof(o)));
+			ft_lstpush(&res_objs, ft_nodenew((void *)o, sizeof(t_object)));
 			++len;
 		}
 		node = node->next;
@@ -74,5 +80,5 @@ t_object	*ft_inside_obj(
 	else if (len == 1)
 		return ((t_object *)(res_objs->content));
 	else
-		return (ft_choose(res_objs, point));
+		return (ft_choose(&res_objs, point));
 }

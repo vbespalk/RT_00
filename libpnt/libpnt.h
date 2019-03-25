@@ -54,9 +54,10 @@ int						ft_3_pointcmp
 */
 
 t_vector				ft_3_unitvectornew(t_vector origin, t_vector direct);
+t_vector				ft_3_tounitvector(t_vector vec);
+t_vector				ft_3_vector_invert(t_vector vector);
 t_vector				ft_3_vector_random(void);
 t_vector				ft_3_vector_random_cone(t_vector d, float cone_angle);
-t_vector				ft_3_tounitvector(t_vector vec);
 t_vector				ft_3_vector_scale(t_vector vec, float k);
 float					ft_3_vector_dot(t_vector vec_1, t_vector vec_2);
 t_vector				ft_3_vector_cross(t_vector vec_1, t_vector vec_2);

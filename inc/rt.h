@@ -45,7 +45,7 @@
 
 # define DEPTH			10
 # define STACK_SIZE		DEPTH
-# define THREADS		1
+# define THREADS		8
 
 /*
 **	includes
@@ -94,14 +94,14 @@ static const unsigned char
 # include <math.h>
 # include <stdint.h>
 # include <time.h>
-// # include "SDL.h"
-// # include "SDL_image.h"
+# include "SDL.h"
+# include "SDL_image.h"
 //# include "SDL_syswm.h"
 /*
 ** LINUX
 */
-# include <SDL2/SDL.h>
-# include <SDL2/SDL_image.h>
+//# include <SDL2/SDL.h>
+//# include <SDL2/SDL_image.h>
 
 # include "json.h"
 
@@ -128,6 +128,12 @@ typedef struct		s_texture
 	Uint32 			*pixels;
 	SDL_PixelFormat	*format;
 }					t_texture;
+
+typedef struct		s_chessboard
+{
+    unsigned int	size;
+    Uint32	        color[2];
+}					t_chess;
 
 typedef struct		s_lattice_noise
 {
@@ -194,6 +200,8 @@ typedef struct		s_object
 */
 	Uint32			(*ft_mapping)
 						(void *fig, t_texture *tex, t_vector coll);
+    Uint32			(*ft_checker)
+            (void *fig, t_chess *tex, t_vector coll);
 }					t_object;
 
 typedef struct		s_plane
@@ -961,25 +969,29 @@ t_texture				*load_texture(t_sdl *sdl, char *path);
 */
 
 Uint32					ft_map_sphere(void *fig, t_texture *tex, t_vector coll);
+Uint32		            ft_checker_sph(void *fig, t_chess *tex, t_vector coll);
 
 /*
 ** cylinder_mapping.c
 */
 
 Uint32					ft_map_clndr(void *fig, t_texture *tex, t_vector coll);
+Uint32		            ft_checker_cyl(void *fig, t_chess *tex, t_vector coll);
 
 /*
 ** cone_mapping.c
 */
 
 Uint32					ft_map_cone(void *fig, t_texture *tex, t_vector coll);
-
+Uint32		            ft_checker_con(void *fig, t_chess *tex, t_vector coll);
 /*
 ** plane_mapping.c
 */
 
 Uint32					ft_map_plane(void *fig, t_texture *tex, t_vector coll);
 Uint32					ft_map_box(void *fig, t_texture *tex, t_vector hit);
+Uint32		            ft_checker_pln(void *fig, t_chess *tex, t_vector coll);
+Uint32		            ft_checker_box(void *fig, t_chess *tex, t_vector coll);
 
 /*
 ** skybox.c

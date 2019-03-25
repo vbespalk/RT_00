@@ -101,9 +101,13 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	else
 	{
 //		coll.px_color.val = coll.o->color.val;
-//		coll.px_color.val = ft_checker_mapping(coll.coll_pnt - ((t_plane *)(coll.o->fig))->origin, od[0]);
-		coll.px_color.val = ft_basic_noise(coll.o->color, coll.o->noise->ft_noise_value(coll.coll_pnt,
-				coll.o->noise->value_table));
+		t_chess		chess;
+		chess.size = 10;
+		chess.color[0] = 0xffffff;
+		chess.color[1] = 0x888888;
+		coll.px_color.val = coll.o->ft_checker(coll.o->fig, &chess, coll.coll_pnt);
+//		coll.px_color.val = ft_basic_noise(coll.o->color, coll.o->noise->ft_noise_value(coll.coll_pnt,
+//				coll.o->noise->value_table));
 	}
 	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
 	ft_illuminate(arg, &coll);

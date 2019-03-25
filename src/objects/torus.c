@@ -30,6 +30,7 @@ char		*ft_parse_torus(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_torus;
 	o->ft_scale = ft_scale_torus;
 	o->ft_mapping = NULL;
+	o->ft_checker =  NULL;
 	trs = ft_torusnew();
 	ft_get_attr(content, "origin", (void *)(&(trs->o)), DT_POINT);
 	ft_get_attr(content, "direct", (void *)(&(trs->v)), DT_POINT);

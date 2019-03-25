@@ -28,3 +28,25 @@ Uint32		ft_map_sphere(void *fig, t_texture *tex, t_vector hit)
 			+ xy[0], sizeof(Uint32));
 	return (col);
 }
+
+    Uint32		ft_checker_sph(void *fig, t_chess *tex, t_vector norm)
+{
+	float		uv[2];
+	t_sphere	*sph;
+	float		theta;
+	float		phi;
+	int 		patt;
+
+	sph = (t_sphere *)fig;
+	norm = ft_3_tounitvector(norm - sph->origin);
+	phi = ((t_sphere *)fig)->phi + atan2f(norm[2], norm[0]);
+	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
+		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
+	theta = acosf(norm[1]) + ((t_sphere *)fig)->theta;
+	if (!(IN_RANGE(theta, 0.0f, M_PI)))
+		theta = theta < 0.0f ? theta + (float) M_PI : theta - (float) M_PI;
+	uv[0] = (1 + phi / (float)M_PI);
+	uv[1] = theta / (float)M_PI;
+	patt = L_N((fmodf(uv[0] * tex->size, 1) > 0.5) ^ (fmodf(uv[1] * tex->size, 1) > 0.5), 0);
+	return (patt == 0 ? tex->color[0] : tex->color[1]);
+}

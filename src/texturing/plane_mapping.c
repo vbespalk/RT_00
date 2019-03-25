@@ -37,3 +37,31 @@ Uint32		ft_map_box(void *fig, t_texture *tex, t_vector hit)
 		return (ft_map_plane(bx->fcoll, tex, hit));
 	return (UINT32_MAX);
 }
+
+Uint32		ft_checker_pln(void *fig, t_chess *tex, t_vector coll)
+{
+	t_vector	eps;
+	int 		ix;
+	int 		iz;
+	float 		x;
+	float 		z;
+
+	if (tex->size == 0)
+		tex->size = 1;
+//	eps = (t_vector){1e-6, 1e-6, 1e-6};
+//	ix = (int)(floorf(coll[1] / tex->size));
+//	iz = (int)(floorf(coll[2] / tex->size));
+//	if ((ix + iz) % 2 == 0)
+//		return (tex->color[0]);
+//	printf("COLL %f,%f,%f\n");
+	x = (sinf((float)M_PI * coll[0] / tex->size));
+	z = (sinf((float)M_PI * coll[2] / tex->size));
+	if ((x * z < 0))
+		return (tex->color[0]);
+	return (tex->color[1]);
+}
+
+Uint32		ft_checker_box(void *fig, t_chess *tex, t_vector coll)
+{
+	return (UINT_MAX);
+}

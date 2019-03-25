@@ -11,3 +11,8 @@ Uint32		ft_map_cone(void *fig, t_texture *tex, t_vector hit)
 
 		return (1);
 }
+
+Uint32		ft_checker_con(void *fig, t_chess *tex, t_vector coll)
+{
+	return (UINT_MAX);
+}

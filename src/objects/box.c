@@ -56,6 +56,7 @@ char		*ft_parse_box(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_box;
 	o->ft_scale = ft_scale_box;
 	o->ft_mapping = ft_map_box;
+	o->ft_checker = ft_checker_box;
 	bx = ft_boxnew();
 	ft_get_attr(content, "origin", (void *)(&(bx->o)), DT_POINT);
 	ft_get_attr(content, "l_vector", (void *)(&(bx->lwh[0])), DT_POINT);

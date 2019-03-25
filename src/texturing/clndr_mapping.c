@@ -23,13 +23,8 @@ Uint32		ft_map_clndr(void *fig, t_texture *tex, t_vector hit)
 	if (((t_cylinder *)fig)->maxh != FLT_MAX
 		&& !IN_RANGE(hei, 1e-2, ((t_cylinder *)fig)->maxh - 1e-2))
 		return (ft_map_caps(((t_cylinder *)fig), tex, hit, hei));
-	hit = hit - (((t_cylinder *)fig)->o + ft_3_vector_scale(((t_cylinder *)fig)->v, hei));
-	float ang = atanf(((t_cylinder *)fig)->v[1] / ((t_cylinder *)fig)->v[2]);
-//	if (fabsf(atanf(((t_cylinder *)fig)->v[1] / ((t_cylinder *)fig)->v[2])) < DEG_TO_RAD(45))
-//		phi = atan2f(hit[1], hit[0]);
-//	else if (fabsf(atanf(((t_cylinder *)fig)->v[1] / ((t_cylinder *)fig)->v[0])) < DEG_TO_RAD(45))
-//		phi = atan2f(hit[1], hit[2]);
-//	else
+	hit -= (((t_cylinder *)fig)->o + ft_3_vector_scale(((t_cylinder *)fig)->v, hei));
+
 	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;
@@ -42,4 +37,9 @@ Uint32		ft_map_clndr(void *fig, t_texture *tex, t_vector hit)
 	ft_memcpy(&col, (Uint32 *)tex->surface->pixels + xy[1] * tex->surface->w
 					+ xy[0], sizeof(Uint32));
 	return (col);
+}
+
+Uint32		ft_checker_cyl(void *fig, t_chess *tex, t_vector coll)
+{
+	return (UINT_MAX);
 }

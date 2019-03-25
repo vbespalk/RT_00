@@ -104,6 +104,9 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	}
 	free(name);
 	o = ft_objectnew(id);
+	o->noise = NULL;
+	o->texture_id = NULL;
+	o->texture = NULL;
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);
 	o->rotate[0] = (float)ft_torad(o->rotate[0]);
@@ -111,5 +114,12 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->rotate[2] = (float)ft_torad(o->rotate[2]);
 	o->scale = 1.0f;
 	o->fig = ft_parse_figure(content, o);
+	// SET METHOD TO INITIALISE IT FROM SCENE FILE / GUI
+	o->noise = ft_smemalloc(sizeof(t_lattice), "ft_parse_object");
+	o->noise->value_table = ft_smemalloc(sizeof(float) * LTABLE_SIZE, "ft_parse_object");
+	ft_init_value_table(o->noise->value_table);
+//	o->noise->ft_noise_value = ft_linear_noise;
+	o->noise->ft_noise_value = ft_cubic_noise;
+	//
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

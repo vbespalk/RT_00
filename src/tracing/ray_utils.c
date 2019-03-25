@@ -57,10 +57,10 @@ t_color			ft_sum_colors
 				0.0, 1.0, o->ambnt + (float)(coll->illum_color.argb[i]) / 255.0);
 		res.argb[i] = (t_byte)(
 				(!coll->o->spclr || !coll->o->trans)
-				? ((float)(o->color.argb[i]) * illum * o->diff +
+				? ((float)(coll->px_color.argb[i]) * illum * o->diff +
 				   (float)(color_s.argb[i]) * coll->o->spclr +
 				   (float)(color_t.argb[i]) * coll->o->trans)
-				: ((float)(o->color.argb[i]) * illum * o->diff +
+				: ((float)(coll->px_color.argb[i]) * illum * o->diff +
 				   (1.0f - o->diff) *
 				   ((float)(color_s.argb[i]) * coll->fresnel +
 					(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));

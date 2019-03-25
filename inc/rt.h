@@ -24,7 +24,7 @@
 # define RAD_TO_DEG(x) ((x) * 180.0f / M_PI)
 # define IN_RANGE(x, left, right) ((x >= left) && (x <= right))
 # define IS_ZERO(x) ((x > -EQN_EPS) && (x < EQN_EPS))
-
+# define CLAMP(x, min, max) (x < min ? min : (x > max ? max : x))
 /*
 **	camera
 */
@@ -45,7 +45,7 @@
 
 # define DEPTH			10
 # define STACK_SIZE		DEPTH
-# define THREADS		8
+# define THREADS		1
 
 /*
 **	includes
@@ -58,6 +58,36 @@
 // # define SCALE_F_CAM	0.1
 # define BOX_FACES		6
 
+/*
+** LATTICE NOISE
+*/
+# define LTABLE_SIZE		256
+# define LTABLE_MASK		LTABLE_SIZE - 1
+# define SEED_VAL		253
+
+static const unsigned char
+		permutation_table[LTABLE_SIZE] =
+		{
+				225,155,210,108,175,199,221,144,203,116, 70,213, 69,158, 33,252,
+				5, 82,173,133,222,139,174, 27,  9, 71, 90,246, 75,130, 91,191,
+				169,138,  2,151,194,235, 81,  7, 25,113,228,159,205,253,134,142,
+				248, 65,224,217, 22,121,229, 63, 89,103, 96,104,156, 17,201,129,
+				36,  8,165,110,237,117,231, 56,132,211,152, 20,181,111,239,218,
+				170,163, 51,172,157, 47, 80,212,176,250, 87, 49, 99,242,136,189,
+				162,115, 44, 43,124, 94,150, 16,141,247, 32, 10,198,223,255, 72,
+				53,131, 84, 57,220,197, 58, 50,208, 11,241, 28,  3,192, 62,202,
+				18,215,153, 24, 76, 41, 15,179, 39, 46, 55,  6,128,167, 23,188,
+				106, 34,187,140,164, 73,112,182,244,195,227, 13, 35, 77,196,185,
+				26,200,226,119, 31,123,168,125,249, 68,183,230,177,135,160,180,
+				12,  1,243,148,102,166, 38,238,251, 37,240,126, 64, 74,161, 40,
+				184,149,171,178,101, 66, 29, 59,146, 61,254,107, 42, 86,154,  4,
+				236,232,120, 21,233,209, 45, 98,193,114, 78, 19,206, 14,118,127,
+				48, 79,147, 85, 30,207,219, 54, 88,234,190,122, 95, 67,143,109,
+				137,214,145, 93, 92,100,245,  0,216,186, 60, 83,105, 97,204, 52
+		};
+
+# define PERM(x)		(permutation_table[x & LTABLE_MASK])
+# define INDEX(x, y, z)	(PERM(x + PERM(y + PERM(z))))
 
 # include <stdio.h>
 # include <pthread.h>
@@ -98,6 +128,12 @@ typedef struct		s_texture
 	Uint32 			*pixels;
 	SDL_PixelFormat	*format;
 }					t_texture;
+
+typedef struct		s_lattice_noise
+{
+	float 			*value_table;
+	float 			(*ft_noise_value)(t_vector point, const float *value_table);
+}					t_lattice;
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -133,6 +169,7 @@ typedef struct		s_object
 	t_color			color;
 	char 			*texture_id;
 	t_texture		*texture;
+	t_lattice		*noise;
 /*
 ** functions for intersection / search etc.
 */
@@ -386,6 +423,7 @@ typedef struct 		s_environment
 
 typedef struct			s_collision
 {
+	t_color				px_color;
 	t_color				illum_color;
 	t_color				phong_color;
 	float				phong;
@@ -952,6 +990,12 @@ Uint32					ft_map_skybox(t_aabb *bbx, t_texture *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 
 /*
+** checker.c
+*/
+
+Uint32					ft_checker_mapping(t_vector hit_p, t_vector o);
+
+/*
 ** equations.c
 */
 
@@ -959,6 +1003,15 @@ t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 //int 					ft_solve_cubic(const float coef[4],  float res[3]);
 int 					ft_solve_quartic(const double coef[5],  double res[4]);
 int 					ft_solve_cubic(const double coef[4],  double res[3]);
+
+
+
+void 					ft_init_value_table(float *vtable);
+float 					ft_linear_noise(t_vector point, const float *value_table);
+float					ft_cubic_noise(t_vector point, const float *value_table);
+Uint32					ft_basic_noise(t_color col, float noise_val);
+
+
 
 /*
 ** FROM MY LIBFT

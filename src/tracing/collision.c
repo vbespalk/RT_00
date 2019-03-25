@@ -97,7 +97,14 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	tex_col = coll.o->ft_mapping && coll.o->texture ? coll.o->ft_mapping(coll.o->fig,
 			coll.o->texture, coll.coll_pnt) : UINT32_MAX;
 	if (tex_col != UINT32_MAX)
-		coll.o->color.val = tex_col;
+		coll.px_color.val = tex_col;
+	else
+	{
+//		coll.px_color.val = coll.o->color.val;
+//		coll.px_color.val = ft_checker_mapping(coll.coll_pnt - ((t_plane *)(coll.o->fig))->origin, od[0]);
+		coll.px_color.val = ft_basic_noise(coll.o->color, coll.o->noise->ft_noise_value(coll.coll_pnt,
+				coll.o->noise->value_table));
+	}
 	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
 	ft_illuminate(arg, &coll);
 	return (coll);

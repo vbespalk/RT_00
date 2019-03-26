@@ -50,8 +50,8 @@ void		*ft_get_figure_parser(char *name)
 		ft_printf("PARSE WARNING: object with unspecified name ignored\n");
 		return (NULL);
 	}
-//	else if (!ft_strcmp(name, "plane"))
-//		return (ft_parse_plane);
+	else if (!ft_strcmp(name, "plane"))
+		return (ft_parse_plane);
 	else if (!ft_strcmp(name, "sphere"))
 		return (ft_parse_sphere);
 //	else if (!ft_strcmp(name, "cone"))

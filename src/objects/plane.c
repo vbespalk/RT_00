@@ -19,14 +19,9 @@ t_plane		*ft_planenew(void)
 	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
 	pln->origin_ini = (t_vector){ 0.0f, -500.0f, 0.0f };
 	pln->norm_ini = (t_vector){ 0.0f, 1.0f, 0.0f };
-	pln->w_ini = ft_3_nullpointnew();
-	pln->h_ini = ft_3_nullpointnew();
-	pln->dir_wh[0] = ft_3_nullpointnew();
-	pln->dir_wh[1] = ft_3_nullpointnew();
-	pln->len_wh[0] = FLT_MIN;
-	pln->len_wh[1] = FLT_MIN;
-	pln->dgnl = ft_3_nullpointnew();
 	pln->cntr = ft_3_nullpointnew();
+	pln->len_wh[0] = 0;
+	pln->len_wh[1] = 0;
 	return (pln);
 }
 
@@ -82,7 +77,7 @@ void		ft_translate_plane(Uint32 key, void *fig, t_vector *transl)
 		return ;
 	pln = (t_plane *)fig;
 	if (key != UINT32_MAX)
-		*transl = ft_3_nullpointnew();
+		*transl = (t_vector) { 0.0f, 0.0f, 0.0f };
 	if (key == SDLK_d)
 		(*transl)[2] += TRANS_F;
 	if (key == SDLK_a)
@@ -109,7 +104,7 @@ void		ft_rotate_plane(Uint32 key, void *fig, t_vector *rot)
 		return ;
 	pln = (t_plane *)fig;
 	if (key != UINT32_MAX)
-		*rot = ft_3_nullpointnew();
+		*rot = (t_vector) { 0.0f, 0.0f, 0.0f };
 	if (key == SDLK_DOWN)
 		(*rot)[2] += ROTAT_F;
 	else if (key == SDLK_UP)
@@ -122,7 +117,7 @@ void		ft_rotate_plane(Uint32 key, void *fig, t_vector *rot)
 		(*rot)[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
 		(*rot)[0] -= ROTAT_F;
-	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
+	if (pln->len_wh[0] == 0 || pln->len_wh[1] == 0)
 	{
 		pln->norm = ft_3_vector_rotate(pln->norm, (*rot)[0], (*rot)[1], (*rot)[2]);
 		return ;
@@ -148,7 +143,7 @@ void		ft_scale_plane(Uint32 key, void *fig, float *scale)
 	if (!fig)
 		return ;
 	pln = (t_plane *)fig;
-	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
+	if (pln->len_wh[0] == 0 || pln->len_wh[1] == 0)
 		return;
 	*scale = 1.0f;
 	if (key == SDLK_z)

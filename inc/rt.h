@@ -666,7 +666,7 @@ void					ft_scale_plane(Uint32 key, void *fig, float *scale);
 
 int						ft_is_reachable_plane
 							(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_plane
+void				ft_collide_plane
 							(t_list **objs, struct s_object *obj,
 							t_coll *coll, t_vector od[2]);
 int						ft_is_inside_plane(void *fig, t_vector point);

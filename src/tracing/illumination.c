@@ -30,7 +30,6 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 	od[0] = o;
 	od[1] = d;
 	o_node = scn->objs;
-	coll.o = NULL;
 	while (o_node)
 	{
 		obj = (t_object *)(o_node->content);
@@ -39,6 +38,7 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 			o_node = o_node->next;
 			continue ;
 		}
+		coll.o = NULL;
 		obj->ft_collide(&(scn->objs), obj, &coll, od);
 		if (coll.o
 			&& (l->type != L_POINT || ft_3_pointcmp(

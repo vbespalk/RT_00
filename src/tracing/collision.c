@@ -110,7 +110,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 		: UINT32_MAX;
 	if (tex_col != UINT32_MAX)
 		coll.o->color.val = tex_col;
-	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
+	//coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

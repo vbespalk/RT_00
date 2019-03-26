@@ -55,7 +55,7 @@ void		ft_translate_sphere(Uint32 key, void *fig, t_vector *transl)
 	sph = (t_sphere *)fig;
 	if (!fig)
 		return ;
-		if (key == SDLK_d)
+	if (key == SDLK_d)
 		(*transl)[2] += TRANS_F;
 	if (key == SDLK_a)
 		(*transl)[2] -= TRANS_F;

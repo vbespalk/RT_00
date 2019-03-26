@@ -15,7 +15,7 @@ t_vector	ft_3_vector_refract
 		c1 *= -1.0f;
 	else
 	{
-		norm = ft_3_vector_scale(norm, -1.0f);
+		norm = ft_3_vector_invert(norm);
 		n = 1.0f / n;
 	}
 	k = 1 - n * n * (1 - c1 * c1);

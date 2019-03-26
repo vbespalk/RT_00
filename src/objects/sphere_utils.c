@@ -69,6 +69,8 @@ void		ft_collide_sphere(
 		if (t1t2[i] > 0)
 		{
 			hit = od[0] + ft_3_vector_scale(od[1], t1t2[i]);
+			if (obj->is_neg)
+				hit += ft_3_vector_scale(obj->ft_get_norm(obj->fig, hit), 0.1f);
 			if ((obj->is_neg || ft_inside_type(objs, hit) < 0)
 				&& (!(obj->is_neg) || ft_inside_type(objs, hit) <= 0))
 				t1t2[i] = 0;
@@ -79,6 +81,8 @@ void		ft_collide_sphere(
 	hit = (t1t2[0] > 0)
 		? od[0] + ft_3_vector_scale(od[1], t1t2[0])
 		: od[0] + ft_3_vector_scale(od[1], t1t2[1]);
+	if (obj->is_neg)
+		hit += ft_3_vector_scale(obj->ft_get_norm(obj->fig, hit), 0.1f);
 	coll->coll_pnt = hit;
 	coll->norm = (obj->is_neg)
 		? ft_3_vector_invert(obj->ft_get_norm(obj->fig, hit))

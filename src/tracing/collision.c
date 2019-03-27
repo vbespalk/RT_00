@@ -98,18 +98,27 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 			coll.o->texture, coll.coll_pnt) : UINT32_MAX;
 	if (tex_col != UINT32_MAX)
 		coll.px_color.val = tex_col;
-	else
+	else if (coll.o->noise)
 	{
 //		coll.px_color.val = coll.o->color.val;
 		t_chess		chess;
 		chess.size = 10;
 		chess.color[0] = 0xffffff;
 		chess.color[1] = 0x888888;
-		coll.px_color.val = coll.o->ft_checker(coll.o->fig, &chess, coll.coll_pnt);
-//		coll.px_color.val = ft_basic_noise(coll.o->color, coll.o->noise->ft_noise_value(coll.coll_pnt,
-//				coll.o->noise->value_table));
+//		coll.px_color.val = coll.o->ft_checker(coll.o->fig, &chess, coll.coll_pnt);
+		coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o, coll.coll_pnt);
 	}
-	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
+	else
+        coll.px_color.val = coll.o->color.val;
+        coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }
+
+/*
+** FOR SPHERE PROCEDURAL TEXTURING
+**
+**        coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o,
+**            ft_3_vector_scale(coll.coll_pnt - ((t_sphere *)coll.o->fig)->origin,
+**            10.0f / ((t_sphere *)coll.o->fig)->radius));
+*/

@@ -38,6 +38,7 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_cylinder;
 	o->ft_scale = ft_scale_cylinder;
 	o->ft_mapping = ft_map_clndr;
+	o->ft_checker = ft_checker_cyl;
 //	o->ft_mapping = NULL;
 	clnd = ft_cylindernew();
 	ft_get_attr(content, "base", (void *)(&(clnd->o)), DT_POINT);

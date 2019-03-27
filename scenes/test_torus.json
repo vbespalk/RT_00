@@ -30,7 +30,7 @@
             "outer_radius": 100,
             "rotate": { "x": 15, "z": 75},
             "translate": {"z" : -100},
-            "color": "0x666666",
+            "color": "0xff6666",
             "spclr": 0.1,
             "diff": 1,
             "ambnt": 0.3

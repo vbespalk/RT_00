@@ -173,6 +173,6 @@ t_vector	ft_get_norm_cone(void *fig, t_vector coll)
 		return (con->v);
 	if (con->minh != FLT_MIN && con->h <= con->minh + 1e-2)
 		return (-con->v);
-	return (ft_3_tounitvector(coll - ((t_cone *)fig)->o - (1.0f + con->tan * con->tan)
-	* ft_3_vector_scale(con->v, con->h)));
+	return (ft_3_tounitvector(coll - ((t_cone *)fig)->o - ft_3_vector_scale(con->v,
+			(1.0f + con->tan * con->tan) * con->h)));
 }

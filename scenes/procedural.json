@@ -1,0 +1,35 @@
+{
+  "name": "PROCEDURAL_TEXTURING",
+  "bg_color": "0xEEEEEE",
+  "camera": {
+    "origin": { "x": -250 }
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 0 }
+    }
+  ],
+  "objects": [
+
+        {
+            "name": "sphere",
+            "origin": { "x": 0, "z": 0 },
+            "radius": 100,
+            "color": "0xff0000",
+            "procedural": 
+            {
+              "ramp": "./texture/procedural/marble_warm.png",
+              "octaves": 4,
+              "scale_min": 0,
+              "scale_max": 1,
+              "expansion": 3,
+              "perturbation": 6,
+              "gain": 0.5,
+              "lacunarity": 0.5
+            },
+            "phong": 1,
+            "ambnt": 0.1
+        }
+  ]
+}

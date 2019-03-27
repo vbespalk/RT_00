@@ -42,14 +42,15 @@ void			ft_parse_json_object
 	if (datatype == DT_POINT)
 		*((t_vector *)dst) = ft_parse_point(new_content);
 	else if (datatype == DT_CAMERA)
-	{
 		ft_parse_camera(new_content, *((t_camera **) dst));
-		printf("CAMERA %p\n", *((t_camera **) dst));
-	}
 	else if (datatype == DT_SKYBOX)
 	{
 		ft_parse_skybox(new_content, ((t_skybox **) dst));
 		printf("PARSED SKY %p\n", *((t_skybox **) dst));
+	}
+	else if (datatype == DT_PROCEDURAL)
+	{
+		ft_parse_procedural(new_content, ((t_procedural **) dst));
 	}
 	else
 		ft_parse_warning_datatype(content[0], *data, datatype);

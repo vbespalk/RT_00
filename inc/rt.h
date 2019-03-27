@@ -63,6 +63,11 @@
 */
 # define LTABLE_SIZE		256
 # define LTABLE_MASK		LTABLE_SIZE - 1
+# define TURBULANCE         "turbulance"
+# define FRACTAL_SUM        "fractal"
+# define TEX_MARBLE             "marble"
+# define TEX_SANDSTONE          "sandstone"
+
 # define SEED_VAL		253
 
 static const unsigned char
@@ -94,14 +99,14 @@ static const unsigned char
 # include <math.h>
 # include <stdint.h>
 # include <time.h>
-//# include "SDL.h"
-//# include "SDL_image.h"
+# include "SDL.h"
+# include "SDL_image.h"
 //# include "SDL_syswm.h"
 /*
 ** LINUX
 */
-# include <SDL2/SDL.h>
-# include <SDL2/SDL_image.h>
+//# include <SDL2/SDL.h>
+//# include <SDL2/SDL_image.h>
 
 # include "json.h"
 
@@ -145,7 +150,7 @@ typedef struct 		s_procedural
 {
 	t_lattice		*noise_ptr;
 
-	int 			octaves;
+	float 			octaves;
 	float 			gain;
 	float 			lacunarity;
 	float			bounds[2];
@@ -156,14 +161,12 @@ typedef struct 		s_procedural
 	float			pertubation;
 	char 			*ramp_id;
 	SDL_Surface		*ramp;
-	float 			(*ft_noise_value)(struct s_procedural *tex, t_vector hit);
-	Uint32			(*ft_get_color)(struct s_procedural *tex, t_vector hit);
+//	float 			(*ft_noise_value)(struct s_procedural *tex, t_vector hit);
+//	Uint32			(*ft_get_color)(struct s_procedural *tex, struct s_object * o, t_vector hit);
+	float 			(*ft_noise_value)();
+	Uint32			(*ft_get_color)();
 }					t_procedural;
 
-typedef struct 		turbulense_texture
-{
-
-}					trbl_t;
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -199,7 +202,7 @@ typedef struct		s_object
 	t_color			color;
 	char 			*texture_id;
 	t_texture		*texture;
-	t_lattice		*noise;
+	t_procedural	*noise;
 /*
 ** functions for intersection / search etc.
 */
@@ -1044,10 +1047,11 @@ int 					ft_solve_cubic(const double coef[4],  double res[3]);
 ** lattice_noise.c
 */
 
-void 					ft_init_value_table(float *vtable);
+void 					ft_init_value_table(float **vtable);
 float 					ft_linear_noise(t_vector point, const float *value_table);
 float					ft_cubic_noise(t_vector point, const float *value_table);
 Uint32					ft_basic_noise(t_color col, float noise_val);
+void	                ft_lattice_bounds(int octaves, float gain, float bounds[2]);
 
 /*
 ** noise_val.c
@@ -1056,8 +1060,14 @@ Uint32					ft_basic_noise(t_color col, float noise_val);
 float 					ft_fractal_noise(t_procedural *tex, t_vector hit);
 float 					ft_turbulance_noise(t_procedural *tex, t_vector hit);
 Uint32 					ft_noise_col(t_procedural *tex, t_vector hit);
-Uint32 					ft_wrapped_noise_col(t_procedural *tex, t_vector hit);
-Uint32 					ft_ramp_noise_col(t_procedural *tex, t_vector hit);
+Uint32 					ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit);
+Uint32 					ft_ramp_noise_col(t_procedural *tex, t_object *o, t_vector hit);
+
+/*
+** init_procedural.c
+*/
+
+void                    ft_parse_procedural(char **content, t_procedural **tex);
 
 /*
 ** FROM MY LIBFT

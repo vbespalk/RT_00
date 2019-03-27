@@ -15,17 +15,18 @@ float					fk_spline_val(float x, const float knots[4])
 	return (((coef[3] * x + coef[2]) * x + coef[1]) * x + coef[0]);
 }
 
-void					ft_init_value_table(float *vtable) {
+void					ft_init_value_table(float **vtable) {
 	int i;
 
+	*vtable = ft_smemalloc(sizeof(float) * LTABLE_SIZE, "ft_init_value_table");
 	i = -1;
 	while (++i < LTABLE_SIZE)
 	{
-//		vtable[i] = 1.f - (2.f * (float) ((float) rand() / (float) RAND_MAX));
-		vtable[i] = (float) ((float) rand() / (float) RAND_MAX);
-//		i % 8 == 0 ? printf("\n") : printf("val %0.4f ", vtable[i]);
+		(*vtable)[i] = 1.f - (2.f * ((float) rand() / (float) RAND_MAX));
+//		(*vtable)[i] = (float) ((float) rand() / (float) RAND_MAX);
+		i % 8 == 0 ? printf("\n") : printf("val %0.4f ", (*vtable)[i]);
 	}
-//	printf("\n");
+	printf("\n");
 }
 
 static float		ft_spline_noise_val(const int *i_xyz, const float *f_xyz, const float *value_table)
@@ -66,7 +67,10 @@ float					ft_cubic_noise(t_vector point, const float *value_table)
 		f_xyz[i] = point[i] - i_xyz[i];
 	}
 	res = ft_spline_noise_val(i_xyz, f_xyz, value_table);
-	return (CLAMP(res, 0, 1));
+	//	res = (ft_spline_noise_val(i_xyz, f_xyz, value_table) + 1) * 0.5f;
+//	printf("RES %f, CLAMP %f\n", res, CLAMP(res, 0, 1));
+//	return (CLAMP(res, 0, 1));
+	return (res);
 };
 
 Uint32	ft_basic_noise(t_color col, float noise_val)
@@ -78,11 +82,9 @@ Uint32	ft_basic_noise(t_color col, float noise_val)
 	return (col.val);
 }
 
-void	ft_lattice_bounds(t_procedural *tex, float bounds[2])
+void	ft_lattice_bounds(int octaves, float gain, float bounds[2])
 {
-	if (!tex)
-		return ;
-	bounds[1] = tex->gain == 1.0f ? tex->octaves : (1.0f - powf(tex->gain, tex->octaves))
-				/ (1.0f - tex->gain);
+	bounds[1] = gain == 1.0f ? octaves : (1.0f - powf(gain, octaves))
+				/ (1.0f - gain);
 	bounds[0] = -bounds[1];
 }

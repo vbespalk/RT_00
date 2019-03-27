@@ -118,8 +118,8 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->noise = ft_smemalloc(sizeof(t_lattice), "ft_parse_object");
 	o->noise->value_table = ft_smemalloc(sizeof(float) * LTABLE_SIZE, "ft_parse_object");
 	ft_init_value_table(o->noise->value_table);
-//	o->noise->ft_noise_value = ft_linear_noise;
-	o->noise->ft_noise_value = ft_cubic_noise;
+//	o->noise->ft_generate_noise = ft_linear_noise;
+	o->noise->ft_generate_noise = ft_cubic_noise;
 	//
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

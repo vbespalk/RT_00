@@ -94,14 +94,14 @@ static const unsigned char
 # include <math.h>
 # include <stdint.h>
 # include <time.h>
-# include "SDL.h"
-# include "SDL_image.h"
+//# include "SDL.h"
+//# include "SDL_image.h"
 //# include "SDL_syswm.h"
 /*
 ** LINUX
 */
-//# include <SDL2/SDL.h>
-//# include <SDL2/SDL_image.h>
+# include <SDL2/SDL.h>
+# include <SDL2/SDL_image.h>
 
 # include "json.h"
 
@@ -138,8 +138,32 @@ typedef struct		s_chessboard
 typedef struct		s_lattice_noise
 {
 	float 			*value_table;
-	float 			(*ft_noise_value)(t_vector point, const float *value_table);
+	float 			(*ft_generate_noise)(t_vector point, const float *value_table);
 }					t_lattice;
+
+typedef struct 		s_procedural
+{
+	t_lattice		*noise_ptr;
+
+	int 			octaves;
+	float 			gain;
+	float 			lacunarity;
+	float			bounds[2];
+
+	t_color			color;
+	float 			min_max[2];
+	float 			expansion;
+	float			pertubation;
+	char 			*ramp_id;
+	SDL_Surface		*ramp;
+	float 			(*ft_noise_value)(struct s_procedural *tex, t_vector hit);
+	Uint32			(*ft_get_color)(struct s_procedural *tex, t_vector hit);
+}					t_procedural;
+
+typedef struct 		turbulense_texture
+{
+
+}					trbl_t;
 /*
 ** -------------------------------------------OBJECTS-----------------------------------------------
 */
@@ -1016,14 +1040,24 @@ Uint32					ft_checker_mapping(t_vector hit_p, t_vector o);
 int 					ft_solve_quartic(const double coef[5],  double res[4]);
 int 					ft_solve_cubic(const double coef[4],  double res[3]);
 
-
+/*
+** lattice_noise.c
+*/
 
 void 					ft_init_value_table(float *vtable);
 float 					ft_linear_noise(t_vector point, const float *value_table);
 float					ft_cubic_noise(t_vector point, const float *value_table);
 Uint32					ft_basic_noise(t_color col, float noise_val);
 
+/*
+** noise_val.c
+*/
 
+float 					ft_fractal_noise(t_procedural *tex, t_vector hit);
+float 					ft_turbulance_noise(t_procedural *tex, t_vector hit);
+Uint32 					ft_noise_col(t_procedural *tex, t_vector hit);
+Uint32 					ft_wrapped_noise_col(t_procedural *tex, t_vector hit);
+Uint32 					ft_ramp_noise_col(t_procedural *tex, t_vector hit);
 
 /*
 ** FROM MY LIBFT

@@ -35,6 +35,7 @@ void		*ft_parse_sphere(char **content, t_object *o)
 	o->ft_scale = ft_scale_sphere;
 	o->ft_mapping = ft_map_sphere;
 	o->ft_checker = ft_checker_sph;
+	o->ft_procedural = ft_procedural_sph;
 	sph = ft_spherenew();
 	ft_get_attr(content, "origin", (void *)(&(sph->origin_ini)), DT_POINT);
 	ft_get_attr(content, "radius", (void *)(&(sph->radius_ini)), DT_FLOAT);

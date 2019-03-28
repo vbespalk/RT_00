@@ -29,7 +29,7 @@ Uint32		ft_map_sphere(void *fig, t_texture *tex, t_vector hit)
 	return (col);
 }
 
-    Uint32		ft_checker_sph(void *fig, t_chess *tex, t_vector norm)
+Uint32		ft_checker_sph(void *fig, t_chess *tex, t_vector norm)
 {
 	float		uv[2];
 	t_sphere	*sph;
@@ -49,4 +49,17 @@ Uint32		ft_map_sphere(void *fig, t_texture *tex, t_vector hit)
 	uv[1] = theta / (float)M_PI;
 	patt = L_N((fmodf(uv[0] * tex->size, 1) > 0.5) ^ (fmodf(uv[1] * tex->size, 1) > 0.5), 0);
 	return (patt == 0 ? tex->color[0] : tex->color[1]);
+}
+
+Uint32		ft_procedural_sph(void *fig, t_procedural *tex, t_vector coll)
+{
+	t_sphere	*sph;
+	t_vector	point;
+	float		theta;
+
+	sph = (t_sphere *)fig;
+	point = ft_3_vector_scale(coll - sph->origin, 1.0f / sph->radius);
+    theta = sph->theta * 2.0f;
+	point = ft_3_vector_rotate(point, 0, -sph->phi, theta);
+	return (tex->ft_get_color(tex, NULL, point));
 }

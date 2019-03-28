@@ -101,12 +101,13 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	else if (coll.o->noise)
 	{
 //		coll.px_color.val = coll.o->color.val;
-		t_chess		chess;
-		chess.size = 10;
-		chess.color[0] = 0xffffff;
-		chess.color[1] = 0x888888;
+//		t_chess		chess;
+//		chess.size = 10;
+//		chess.color[0] = 0xffffff;
+//		chess.color[1] = 0x888888;
 //		coll.px_color.val = coll.o->ft_checker(coll.o->fig, &chess, coll.coll_pnt);
-		coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o, coll.coll_pnt);
+//		coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o, coll.coll_pnt);
+        coll.px_color.val = coll.o->ft_procedural(coll.o->fig, coll.o->noise, coll.coll_pnt);
 	}
 	else
         coll.px_color.val = coll.o->color.val;

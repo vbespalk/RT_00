@@ -67,20 +67,10 @@ float					ft_cubic_noise(t_vector point, const float *value_table)
 		f_xyz[i] = point[i] - i_xyz[i];
 	}
 	res = ft_spline_noise_val(i_xyz, f_xyz, value_table);
-	//	res = (ft_spline_noise_val(i_xyz, f_xyz, value_table) + 1) * 0.5f;
+//	res = (ft_spline_noise_val(i_xyz, f_xyz, value_table) + 1) * 0.5f;
 //	printf("RES %f, CLAMP %f\n", res, CLAMP(res, 0, 1));
-//	return (CLAMP(res, 0, 1));
-	return (res);
+	return (CLAMP(res, -1, 1));
 };
-
-Uint32	ft_basic_noise(t_color col, float noise_val)
-{
-	col.argb[0] = (t_byte)(col.argb[0] * noise_val);
-	col.argb[1] = (t_byte)(col.argb[1] * noise_val);
-	col.argb[2] = (t_byte)(col.argb[2] * noise_val);
-	col.argb[3] = (t_byte)(col.argb[3] * noise_val);
-	return (col.val);
-}
 
 void	ft_lattice_bounds(int octaves, float gain, float bounds[2])
 {

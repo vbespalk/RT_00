@@ -40,6 +40,7 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	o->ft_mapping = ft_map_clndr;
 	o->ft_checker = ft_checker_cyl;
 //	o->ft_mapping = NULL;
+    o->ft_procedural = ft_procedural_cyl;
 	clnd = ft_cylindernew();
 	ft_get_attr(content, "base", (void *)(&(clnd->o)), DT_POINT);
 	ft_get_attr(content, "direction", (void *)(&(clnd->v)), DT_POINT);

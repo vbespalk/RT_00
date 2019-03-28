@@ -3,7 +3,30 @@
 //
 
 #include "rt.h"
-static void             ft_init_procedural(t_procedural *tex, char *name, char *function)
+
+static void     ft_init_marble(t_procedural *tex)
+{
+    if (tex->ramp_id == NULL)
+        tex->ramp_id = ft_strdup(MARBLE_RAMP);
+    tex->octaves = (int)tex->octaves == 0 ? 6 : tex->octaves;
+    tex->gain = tex->gain <= FLT_MIN ? 0.5f : tex->gain;
+    tex->lacunarity = tex->lacunarity <= FLT_MIN ? 2.0f : CLAMP(tex->lacunarity, 0, 20);
+    tex->pertubation = tex->pertubation <= FLT_MIN ? 10.0f : tex->pertubation;
+    ft_lattice_bounds((int)tex->octaves, tex->gain, tex->bounds);
+}
+
+static void     ft_init_sandstone(t_procedural *tex)
+{
+    if (tex->ramp_id == NULL)
+        tex->ramp_id = ft_strdup(SANDSTONE_RAMP);
+    tex->octaves = (int)tex->octaves == 0 ? 1 : tex->octaves;
+    tex->gain = tex->gain <= FLT_MIN ? 0.5f : tex->gain;
+    tex->lacunarity = tex->lacunarity <= FLT_MIN ? 2.0f : CLAMP(tex->lacunarity, 0, 20);
+    tex->pertubation = tex->pertubation <= FLT_MIN ? 0.05f : tex->pertubation;
+    ft_lattice_bounds((int)tex->octaves, tex->gain, tex->bounds);
+}
+
+void             ft_init_procedural(t_procedural *tex, char *name, char *function)
 {
     tex->noise_ptr = (t_lattice *)ft_smemalloc(sizeof(t_lattice), "ft_init_procedural");
     ft_init_value_table(&(tex->noise_ptr->value_table));
@@ -12,12 +35,25 @@ static void             ft_init_procedural(t_procedural *tex, char *name, char *
     tex->ft_noise_value = function != NULL && ft_strcmp(function, TURBULANCE) == 0 ?
                 ft_turbulance_noise : ft_fractal_noise;
     if (name != NULL)
+    {
         printf("NAME OF NOISE %s. SET VALUES ACCORDINGLY\n", name);
+        if (ft_strcmp(name, MARBLE) == 0)
+        {
+            ft_init_marble(tex);
+            return ;
+        }
+        else if (ft_strcmp(name, SANDSTONE) == 0)
+        {
+            ft_init_sandstone(tex);
+            return ;
+        }
+        else
+            printf("WARNING: NO TEXTURES FOUND. SET VALUES TO DEFAULT");
+    }
     tex->octaves = (int)tex->octaves == 0 ? 6 : tex->octaves;
     tex->gain = tex->gain <= FLT_MIN ? 0.5f : tex->gain;
     tex->lacunarity = tex->lacunarity <= FLT_MIN ? 2.0f : CLAMP(tex->lacunarity, 0, 20);
     tex->pertubation = tex->pertubation <= FLT_MIN ? 1.0f : tex->pertubation;
-    tex->color.val = 0xff0000;
     ft_lattice_bounds((int)tex->octaves, tex->gain, tex->bounds);
 }
 
@@ -52,8 +88,4 @@ void                    ft_parse_procedural(char **content, t_procedural **tex)
     ft_init_procedural(*tex, name, function);
     ft_memdel((void **)&name);
     ft_memdel((void **)&function);
-    printf("PROEDURAL: ramp: %s, octav %d, gain %f, lacun %f, pert %f, expans %f, scale %f : %f,"
-           "color %u\n",
-           (*tex)->ramp_id, (int)(*tex)->octaves, (*tex)->gain, (*tex)->lacunarity, (*tex)->pertubation,
-           (*tex)->expansion, (*tex)->min_max[0], (*tex)->min_max[1],  (*tex)->color.val);
 }

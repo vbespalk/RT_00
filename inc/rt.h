@@ -797,7 +797,7 @@ void					ft_scale_cone(Uint32 key, void *fig, float *scale);
 **	cone_utils.c
 */
 
-t_vector				ft_collide_cone
+void					ft_collide_cone
 	(t_list **objs, struct s_object *obj,
 	 t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cone(void *fig, t_vector point);

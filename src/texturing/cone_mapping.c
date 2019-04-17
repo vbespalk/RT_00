@@ -28,7 +28,6 @@ Uint32		ft_map_cone(void *fig, t_texture *tex, t_vector hit)
 	}
 	hei = fabsf(cone->maxh) > fabsf(cone->minh) ?
 			fabsf((hit[1]) / cone->maxh) : fabsf((hit[1]) / cone->minh);
-//	hit = ft_3_tounitvector(hit - ((t_cone *)fig)->o - ft_3_vector_scale(((t_cone *)fig)->v, hei));
 	hit = ft_3_tounitvector(hit);
 	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
@@ -46,7 +45,31 @@ Uint32		ft_map_cone(void *fig, t_texture *tex, t_vector hit)
 
 Uint32		ft_checker_cone(void *fig, t_chess *tex, t_vector coll)
 {
-	return (UINT_MAX);
+	float		uv[2];
+	t_cone		*cone;
+	float		hei;
+	float		phi;
+	int 		patt;
+
+	cone = (t_cone *)fig;
+    if (IN_RANGE(coll[1], -1e-4, 1e-4))
+    {
+//        coll = ft_3_vector_scale(coll, 1.0f / (cone->minh * cone->tan));
+        phi = atan2f(coll[2] / cone->tan, coll[0] / cone->tan);
+        uv[0] = (phi / (float) M_PI + 1);
+        uv[1] = 0;
+        patt = (fmodf(uv[0] * tex->size, 1) > 0.5) ^ (fmodf(uv[1] * tex->size, 1) > 0.5);
+        return (patt == 0 ? tex->color[0] : tex->color[1]);
+    }
+	phi = atan2f(coll[2] / cone->tan, coll[0] / cone->tan);
+	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
+		phi = phi < 0.0f ? phi + 2 * (float) M_PI : phi - 2 * (float) M_PI;
+	uv[0] = (phi / (float) M_PI + 1);
+	uv[1] = coll[1] / cone->minh;
+//	printf("UV %f, %f fmodf %f, %f AND %i\n", uv[0], uv[1], fmodf(uv[0] * tex->size, 1), fmodf(uv[1] * tex->size, 1),
+//		   (fmodf(uv[0] * tex->size, 1) > 0.5) ^ (fmodf(uv[1] * tex->size, 1) > 0.5));
+	patt = (fmodf(uv[0] * tex->size, 1) > 0.5) ^ (fmodf(uv[1] * tex->size, 1) > 0.5);
+	return (patt == 0 ? tex->color[0] : tex->color[1]);
 }
 
 Uint32		ft_procedural_cone(void *fig, t_procedural *tex, t_vector coll)

@@ -40,7 +40,6 @@ Uint32		ft_checker_sph(void *fig, t_chess *tex, t_vector norm)
 	int 		patt;
 
 	sph = (t_sphere *)fig;
-	norm = ft_3_tounitvector(norm - sph->origin);
 	phi = ((t_sphere *)fig)->phi + atan2f(norm[2], norm[0]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;

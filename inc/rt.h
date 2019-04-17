@@ -65,8 +65,10 @@
 # define LTABLE_MASK		LTABLE_SIZE - 1
 # define TURBULANCE         "turbulance"
 # define FRACTAL_SUM        "fractal"
-# define TEX_MARBLE             "marble"
-# define TEX_SANDSTONE          "sandstone"
+# define MARBLE             "marble"
+# define SANDSTONE          "sandstone"
+# define MARBLE_RAMP		"./texture/procedural/BlueMarbleRamp.jpg"
+# define SANDSTONE_RAMP		"./texture/procedural/sandstone_ramp1.jpg"
 
 # define SEED_VAL		253
 
@@ -99,18 +101,17 @@ static const unsigned char
 # include <math.h>
 # include <stdint.h>
 # include <time.h>
-# include "SDL.h"
-# include "SDL_image.h"
+//# include "SDL.h"
+//# include "SDL_image.h"
 //# include "SDL_syswm.h"
 /*
 ** LINUX
 */
-//# include <SDL2/SDL.h>
-//# include <SDL2/SDL_image.h>
+# include <SDL2/SDL.h>
+# include <SDL2/SDL_image.h>
 
 # include "json.h"
 
-typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
 
 typedef union		u_color
@@ -203,25 +204,28 @@ typedef struct		s_object
 	char 			*texture_id;
 	t_texture		*texture;
 	t_procedural	*noise;
+	t_matrix		transform;
+	t_matrix		inverse;
 /*
 ** functions for intersection / search etc.
 */
 //	int				(*intersect)();
 	int				(*ft_is_reachable)
 	 					(void *fig, t_vector origin, t_vector direct);
-	t_vector		(*ft_collide)
-	 					(void *fig, t_vector origin, t_vector direct);
+	float			(*ft_collide)
+					(t_list **objs, struct s_object *obj,
+			 		struct s_collision *coll, t_vector od[2]);
 	int				(*ft_is_inside)(void *fig, t_vector point);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
 /*
 ** functions for transform obj.
 */
 	void			(*ft_translate)
-						(Uint32 key, void *fig, t_vector *translate);
+						(Uint32 key, struct s_object *o, t_matrix *tr_m, t_matrix *inv_m);
 	void			(*ft_rotate)
-						(Uint32 key, void *fig, t_vector *rotate);
+						(Uint32 key, struct s_object *o, t_matrix *tr_m, t_matrix *inv_m);
 	void			(*ft_scale)
-						(Uint32 key, void *fig, float *scale);
+						(Uint32 key, struct s_object *o, t_matrix *tr_m, t_matrix *inv_m);
 /*
 ** functions for texturing obj.
 */
@@ -229,26 +233,18 @@ typedef struct		s_object
 						(void *fig, t_texture *tex, t_vector coll);
     Uint32			(*ft_checker)
             (void *fig, t_chess *tex, t_vector coll);
+	Uint32			(*ft_procedural)
+			(void *fig, t_procedural *tex, t_vector coll);
 }					t_object;
 
 typedef struct		s_plane
 {
-	t_vector		origin_ini;
-	t_vector		norm_ini;
-	t_vector		w_ini;
-	t_vector		h_ini;
-	t_vector		origin;
-	t_vector		norm;
-	t_vector		dir_wh[2];
 	float			len_wh[2];
-	t_vector		cntr;
-	t_vector		dgnl;
+	float 			ratio;
 }					t_plane;
 
 typedef struct		s_sphere
 {
-	t_vector		origin_ini;
-	float			radius_ini;
 	t_vector		origin;
 	float			radius;
 	float			min_thcos;
@@ -261,38 +257,24 @@ typedef struct		s_sphere
 
 typedef struct		s_cone
 {
-	t_vector		o; //vertex of the cone
-	t_vector		v;
-	t_vector		v_cp;
-	float 			r[2]; //caps radius; from vertex to base
-	float 			h; //height
+	float 			r[2]; //from vertex
 	float			tan;
 	float			minh; //limits of height; from vertex
 	float			maxh; //limits of height; from vertex
-	t_vector		norm;
-	float 			phi;
 }					t_cone;
 
 typedef struct		s_cylinder
 {
-	t_vector		o;
-	t_vector		v;
 	float			r;
-	float 			h; //height
 	float			maxh;
-	float			phi;
 }					t_cylinder;
 
 typedef struct		s_disc
 {
-	t_vector		origin_ini;
-	t_vector		norm_ini;
-	float			in_r_ini;
-	float			out_r_ini;
-	t_vector		origin;
-	t_vector		norm;
 	float			in_r;
 	float			out_r;
+	float			sq_in_r;
+	float			sq_out_r;
 }					t_disk;
 
 typedef struct		s_triangle
@@ -345,32 +327,19 @@ typedef struct		s_skybox
 
 typedef struct		s_box
 {
-	t_vector		o;
-	t_vector		lwh[3];
-	t_vector		dgnl;
-	t_vector		cntr;
-//	t_vector		dir_lwh[3];
-//	float 			len_lwh[3];
-
-	t_plane			*face[BOX_FACES];
-	t_plane			*fcoll;
+	float			whl[3];
+	t_object		*face[BOX_FACES];
+	float 			scale;
 }					t_box;
 
 typedef struct		s_paraboloid
 {
-	t_vector		o;
-	t_vector		v;
-	t_vector		n;
 	float			r; //radius
 	float			maxh; //max height
-
 }					t_prbld;
 
 typedef struct		s_torus
 {
-	t_vector		o;
-	t_vector		v;
-	t_vector		n;
 	float			r_inner; //  small radius of the torus = r
 	float			r_outer; // big radius of the torus = R
 
@@ -464,7 +433,9 @@ typedef struct			s_collision
 	float				phong;
 	float				fresnel;
 	t_object			*o;
+	t_object			*tex_o;
 	t_vector			coll_pnt;
+	t_vector			ucoll_pnt; //untransformed coll_pnt
 	t_vector			norm;
 	t_vector			spclr_vec;
 	t_vector			trans_vec;
@@ -571,38 +542,10 @@ int					trace_shad(t_vector l_dir, t_ray *ray, t_object *objs, \
 /*
 ** GRAPH_TRANSFORMATION LIBRARY
 */
-t_matrix			*matrix_scale(t_matrix *m_scale, float scale);
-t_matrix			*matrix_move(t_matrix *m_move, int x_m, int y_m, int z_m);
-t_matrix			*matrix_rotate(t_matrix *m, float x, float y, float z);
-t_matrix			*matrix_mult(t_matrix *right, t_matrix *left);
-t_vector			*vec_multipl(const t_matrix *m, t_vector *p);
-t_vector			*dir_multipl(const t_matrix *m, t_vector *p);
-float				vec_mod(t_vector *v);
-t_vector			*normilize_vec(t_vector *v);
-float				dot_product(t_vector v1, t_vector v2);
-t_vector			vec_scalar_mult(t_vector v, float s);
-t_matrix			*inverse(t_matrix *m_inv, t_matrix *m4);
+
 void				img_pixel_put(t_env *env, int x, int y, unsigned int color);
-// unsigned int		get_rgb(unsigned int red, unsigned int green, \
-// 	unsigned int blue);
 unsigned int	get_rgb(t_sdl *sdl, unsigned int red, \
 	unsigned int green, unsigned int blue);
-// int					hook_keydown(int key, void *env);
-// int					mouse_hook(int button, int x, int y, void *env);
-// int					exit_x(void *env);
-// void				put_to_window(t_env *ptr);
-// void				translate(int key, t_vector *translation, int cam);
-// void				scale(int key, float *scale, int cam);
-t_matrix			*transform_mat(t_matrix *lm, t_vector translation, \
-	t_vector rot, float scale);
-t_matrix			*transform_mat_inv(t_matrix *lm, t_vector translation, \
-	t_vector rot, float scale);
-
-void				cam_rotate(Uint32 key, t_vector *angles);
-t_matrix			*x_rotate(t_matrix *m_xrot, float angle);
-t_matrix			*y_rotate(t_matrix *m_yrot, float angle);
-t_matrix			*z_rotate(t_matrix *m_zrot, float angle);
-t_vector			cross_prod(t_vector u, t_vector v);
 void				reset(t_env *e);
 void				delete_obj(t_list **obj_lst, Uint32 id);
 
@@ -717,9 +660,9 @@ t_object				*ft_objectnew(Uint32 id);
 */
 
 void					*ft_parse_plane(char **content, t_object *o);
-void					ft_translate_plane(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_plane(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_plane(Uint32 key, void *fig, float *scale);
+void					ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	plane_utils.c
@@ -727,8 +670,8 @@ void					ft_scale_plane(Uint32 key, void *fig, float *scale);
 
 int						ft_is_reachable_plane
 							(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_plane
-							(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_plane
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_plane(void *fig, t_vector point);
 t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 
@@ -740,18 +683,18 @@ t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 */
 
 char					*ft_parse_disk(char **content, t_object *o);
-void					ft_translate_disk(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_disk(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_disk(Uint32 key, void *fig, float *scale);
+void					ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	disk_utils.c
 */
 
 int						ft_is_reachable_disk
-	(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_disk
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_disk
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_disk(void *fig, t_vector point);
 t_vector				ft_get_norm_disk(void *fig, t_vector coll);
 
@@ -772,9 +715,9 @@ void					ft_scale_triangle(Uint32 key, void *fig, float *scale);
 */
 
 int						ft_is_reachable_triangle
-	(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_triangle
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_triangle
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_triangle(void *fig, t_vector point);
 t_vector				ft_get_norm_triangle(void *fig, t_vector coll);
 
@@ -786,18 +729,18 @@ t_vector				ft_get_norm_triangle(void *fig, t_vector coll);
 */
 
 char					*ft_parse_box(char **content, t_object *o);
-void					ft_translate_box(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_box(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_box(Uint32 key, void *fig, float *scale);
+void					ft_translate_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	box_utils.c
 */
 
 int						ft_is_reachable_box
-	(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_box
-	(void *fig, t_vector origin, t_vector direct);
+							(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_box
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_box(void *fig, t_vector point);
 t_vector				ft_get_norm_box(void *fig, t_vector coll);
 
@@ -819,9 +762,9 @@ void					ft_scale_aabb(Uint32 key, void *fig, float *scale);
 */
 
 void					*ft_parse_sphere(char **content, t_object *o);
-void					ft_translate_sphere(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_sphere(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
+void					ft_translate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	sphere_utils.c
@@ -829,8 +772,8 @@ void					ft_scale_sphere(Uint32 key, void *fig, float *scale);
 
 int						ft_is_reachable_sphere
 							(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_sphere
-							(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_sphere
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_sphere(void *fig, t_vector point);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -842,16 +785,16 @@ t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 */
 
 void					*ft_parse_cone(char **content, t_object *o);
-void					ft_translate_cone(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_cone(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_cone(Uint32 key, void *fig, float *scale);
+void					ft_translate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	cone_utils.c
 */
 
-t_vector				ft_collide_cone
-							(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_cone
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cone(void *fig, t_vector point);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
@@ -861,30 +804,33 @@ void					ft_get_coll_pnts
 **	cone_utils_2.c
 */
 
-void					ft_set_coll_pnts_null(t_vector *pnt1, t_vector *pnt2);
-void					ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4]);
-void					ft_is_between_planes
-							(t_vector (*pnt)[4], t_vector base, t_vector vert);
-void					ft_collide_cone_planes
-							(t_cone *cone, t_vector origin,
-							t_vector direct, t_vector (*pnt)[4]);
-t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
+//void					ft_set_coll_pnts_null(t_vector *pnt1, t_vector *pnt2);
+//void					ft_get_coll_pnts_cyl(t_cone *cone, t_vector (*pnt)[4]);
+//void					ft_is_between_planes
+//							(t_vector (*pnt)[4], t_vector base, t_vector vert)intf		t_collide_cone_planes
+//							(t_cone *cone, t_vector origin,
+//							t_vector direct, t_vector (*pnt)[4]);
+//t_vector				ft_get_closest(t_vector cam, t_vector pnt[4]);
 
 /*
 **	cylinder_utils.c
 */
 
 void					*ft_parse_cylinder(char **content, t_object *o);
-void					ft_translate_cylinder(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_cylinder(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_cylinder(Uint32 key, void *fig, float *scale);
+void					ft_translate_cylinder
+							(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_cylinder
+							(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_cylinder
+							(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	cone_utils.c
 */
 
 int						ft_is_reachable_cylinder(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_cylinder(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_cylinder
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cylinder(void *fig, t_vector point);
 t_vector				ft_get_norm_cylinder(void *fig, t_vector coll);
 
@@ -896,16 +842,17 @@ t_vector				ft_get_norm_cylinder(void *fig, t_vector coll);
 */
 
 char					*ft_parse_prbld(char **content, t_object *o);
-void					ft_translate_prbld(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_prbld(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_prbld(Uint32 key, void *fig, float *scale);
+void					ft_translate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	paraboloid_utils.c
 */
 
 int						ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_prbld(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_prbld
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_prbld(void *fig, t_vector point);
 t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 
@@ -917,16 +864,17 @@ t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 */
 
 char					*ft_parse_torus(char **content, t_object *o);
-void					ft_translate_torus(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_torus(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_torus(Uint32 key, void *fig, float *scale);
+void					ft_translate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_rotate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	torus_utils.c
 */
 
 int						ft_is_reachable_torus(void *fig, t_vector origin, t_vector direct);
-t_vector				ft_collide_torus(void *fig, t_vector origin, t_vector direct);
+float					ft_collide_torus
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_torus(void *fig, t_vector point);
 t_vector				ft_get_norm_torus(void *fig, t_vector coll);
 
@@ -997,13 +945,16 @@ t_texture				*load_texture(t_sdl *sdl, char *path);
 
 Uint32					ft_map_sphere(void *fig, t_texture *tex, t_vector coll);
 Uint32		            ft_checker_sph(void *fig, t_chess *tex, t_vector coll);
-
+Uint32					ft_procedural_sph(void *fig, t_procedural *tex, t_vector coll);
 /*
 ** cylinder_mapping.c
 */
 
 Uint32					ft_map_clndr(void *fig, t_texture *tex, t_vector coll);
 Uint32		            ft_checker_cyl(void *fig, t_chess *tex, t_vector coll);
+Uint32					ft_procedural_cyl(void *fig, t_procedural *tex, t_vector coll);
+
+Uint32					ft_procedural_prbld(void *fig, t_procedural *tex, t_vector coll);
 
 /*
 ** cone_mapping.c
@@ -1011,14 +962,19 @@ Uint32		            ft_checker_cyl(void *fig, t_chess *tex, t_vector coll);
 
 Uint32					ft_map_cone(void *fig, t_texture *tex, t_vector coll);
 Uint32		            ft_checker_con(void *fig, t_chess *tex, t_vector coll);
+Uint32					ft_procedural_cone(void *fig, t_procedural *tex, t_vector coll);
 /*
 ** plane_mapping.c
 */
 
 Uint32					ft_map_plane(void *fig, t_texture *tex, t_vector coll);
-Uint32					ft_map_box(void *fig, t_texture *tex, t_vector hit);
+Uint32					ft_map_box(void *fig, t_texture *tex, t_vector hit, t_vector tr_hit);
 Uint32		            ft_checker_pln(void *fig, t_chess *tex, t_vector coll);
 Uint32		            ft_checker_box(void *fig, t_chess *tex, t_vector coll);
+
+Uint32					ft_procedural_pln(void *fig, t_procedural *tex, t_vector coll);
+
+Uint32					ft_procedural_dsc(void *fig, t_procedural *tex, t_vector coll);
 
 /*
 ** skybox.c
@@ -1076,5 +1032,6 @@ void                    ft_parse_procedural(char **content, t_procedural **tex);
 int		ft_perr_retu(char *message);
 void	ft_usage(char *message);
 
+Uint32		ft_procedural_tor(void *fig, t_procedural *tex, t_vector coll);
 
 #endif

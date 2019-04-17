@@ -10,11 +10,8 @@ t_torus		*ft_torusnew(void)
 	t_torus	*trs;
 
 	trs = ft_smemalloc(sizeof(t_torus), "ft_torusnew");
-	trs->o = (t_vector){0.0f, 0.0f, 0.0f};
-	trs->v = (t_vector){0.0f, 1.0f, 0.0f};
 	trs->r_inner = 10.f;
 	trs->r_outer = 500.f;
-	trs->n = ft_3_nullpointnew();
 	return (trs);
 }
 
@@ -31,88 +28,90 @@ char		*ft_parse_torus(char **content, t_object *o)
 	o->ft_scale = ft_scale_torus;
 	o->ft_mapping = NULL;
 	o->ft_checker =  NULL;
+	o->ft_procedural = ft_procedural_tor;
 	trs = ft_torusnew();
-	ft_get_attr(content, "origin", (void *)(&(trs->o)), DT_POINT);
-	ft_get_attr(content, "direct", (void *)(&(trs->v)), DT_POINT);
 	ft_get_attr(content, "inner_radius", (void *)(&(trs->r_inner)), DT_FLOAT);
 	ft_get_attr(content, "outer_radius", (void *)(&(trs->r_outer)), DT_FLOAT);
-	trs->v = ft_3_tounitvector(trs->v);
 	if (trs->r_inner > trs->r_outer)
 		ft_swap_float(&(trs->r_inner), &(trs->r_outer));
-	if (!ft_3_isnullpoint(o->rotate))
-		trs->v = ft_3_tounitvector(ft_3_vector_rotate(trs->v, (o->rotate)[0],
-				(o->rotate)[1], (o->rotate)[2]));
-	if (!ft_3_isnullpoint(o->translate))
-		trs->o = trs->o + o->translate;
-	printf("ORI %f,%f,%f DIR %f,%f,%f, inner %f, outer %f\n", trs->o[0], trs->o[1], trs->o[2],
-		   trs->v[0], trs->v[1], trs->v[2], trs->r_inner, trs->r_outer);
+	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
+	printf("MATRIX\n");
+	for (int i = 0; i < 4; ++i)
+		printf("%f, %f, %f, %f\n", o->transform[i][0], o->transform[i][1], o->transform[i][2], o->transform[i][3]);
+	printf("INVERTED\n");
+	for (int i = 0; i < 4; ++i)
+		printf("%f, %f, %f, %f\n", o->inverse[i][0], o->inverse[i][1], o->inverse[i][2], o->inverse[i][3]);
+
 	return ((void *)trs);
 }
 
-void		ft_translate_torus(Uint32 key, void *fig, t_vector *transl)
+void		ft_translate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_torus	*trs;
 
-	trs = (t_torus *)fig;
-	*transl = (t_vector){0,0,0};
-	if (!fig)
+	if (!o)
 		return ;
+	trs = (t_torus *)o->fig;
 	if (key == SDLK_d)
-		(*transl)[2] += TRANS_F;
+		o->translate[2] += TRANS_F;
 	if (key == SDLK_a)
-		(*transl)[2] -= TRANS_F;
+		o->translate[2] -= TRANS_F;
 	if (key == SDLK_w)
-		(*transl)[1] += TRANS_F;
+		o->translate[1] += TRANS_F;
 	if (key == SDLK_s)
-		(*transl)[1] -= TRANS_F;
+		o->translate[1] -= TRANS_F;
 	if (key == SDLK_e)
-		(*transl)[0] += TRANS_F;
+		o->translate[0] += TRANS_F;
 	if (key == SDLK_q)
-		(*transl)[0] -= TRANS_F;
-	trs->o = trs->o + *(transl);
+		o->translate[0] -= TRANS_F;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }
 
-void		ft_rotate_torus(Uint32 key, void *fig, t_vector *rot)
+void		ft_rotate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_torus *trs;
 
-	trs = (t_torus *)fig;
-	*rot = (t_vector){0,0,0};
-	if (!fig)
+	if (!o)
 		return ;
+	trs = (t_torus *)o->fig;
 	if (key == SDLK_DOWN)
-		(*rot)[2] += ROTAT_F;
+		o->rotate[2] += ROTAT_F;
 	else if (key == SDLK_UP)
-		(*rot)[2] -= ROTAT_F;
+		o->rotate[2] -= ROTAT_F;
 	else if (key == SDLK_LEFT)
-		(*rot)[1] -= ROTAT_F;
+		o->rotate[1] -= ROTAT_F;
 	else if (key == SDLK_RIGHT)
-		(*rot)[1] += ROTAT_F;
+		o->rotate[1] += ROTAT_F;
 	else if (key == SDLK_PAGEDOWN)
-		(*rot)[0] += ROTAT_F;
+		o->rotate[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
-		(*rot)[0] -= ROTAT_F;
-	trs->v = ft_3_tounitvector(ft_3_vector_rotate(trs->v, (*rot)[0], (*rot)[1], (*rot)[2]));
+		o->rotate[0] -= ROTAT_F;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }
 
-void		ft_scale_torus(Uint32 key, void *fig, float *scale)
+void		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_torus *trs;
 
-	trs = (t_torus *)fig;
-	*scale = 1;
-	if (!fig)
+	if (!o)
 		return ;
+	(void)tr_m;
+	(void)inv_m;
+	trs = (t_torus *)o->fig;
+	float scale = 1;
 	if (key == SDLK_z)
 	{
-		*scale += SCALE_F;
+		scale += SCALE_F;
 	}
-	else if (key == SDLK_x && *scale >= 0.0f)
+	else if (key == SDLK_x && scale >= 0.0f)
 	{
-		*scale -= SCALE_F;
+		scale -= SCALE_F;
 	}
 	else
-		*scale = 0;
-	trs->r_inner = trs->r_inner * *scale;
-	trs->r_outer = trs->r_outer * *scale;
+		scale = 0;
+	trs->r_inner = trs->r_inner * scale;
+	trs->r_outer = trs->r_outer * scale;
 }

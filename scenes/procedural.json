@@ -2,7 +2,7 @@
   "name": "PROCEDURAL_TEXTURING",
   "bg_color": "0xEEEEEE",
   "camera": {
-    "origin": { "x": -250 }
+    "origin": { "x": -400, "y": -50 }
   },
   "lights": [
     {
@@ -14,22 +14,41 @@
 
         {
             "name": "sphere",
-            "origin": { "x": 0, "z": 0 },
-            "radius": 100,
+            "origin": { "x": -50, "z": 0 },
+            "radius": 50,
             "color": "0xff0000",
-            "procedural": 
+            "procedural":
             {
-              "ramp": "./texture/procedural/marble_warm.png",
-              "octaves": 4,
+              "octaves": 5,
               "scale_min": 0,
               "scale_max": 1,
-              "expansion": 3,
-              "perturbation": 6,
+              "expansion": 1,
+              "perturbation": 1,
               "gain": 0.5,
-              "lacunarity": 0.5
+              "lacunarity": 2
             },
             "phong": 1,
             "ambnt": 0.1
-        }
+        },
+    {
+      "name": "cylinder",
+      "base": { "x": 0, "y": -100, "z": 0 },
+      "radius": 50,
+      "rotation": {"x": 90, "y": 30, "z": -420},
+      "height": 200,
+      "procedural":
+      {
+        "octaves": 5,
+        "scale_min": 0,
+        "scale_max": 1,
+        "expansion": 1,
+        "perturbation": 1,
+        "gain": 0.5,
+        "lacunarity": 2
+      },
+      "spclr": 0,
+      "phong": 1,
+      "ambnt": 0.1
+    }
   ]
 }

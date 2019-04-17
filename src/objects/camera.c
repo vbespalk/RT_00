@@ -40,28 +40,53 @@ void				ft_parse_camera(char **content, t_camera *cam)
 	cam->angles[2] = ft_torad(cam->angles[2]);
 }
 
-static t_object		*ft_get_inner_object(t_list *objs, t_vector point)
+static t_object		*ft_get_inner_object(t_list **objs, t_vector point)
 {
-	t_vector	direct;
-	float		dist;
-	float		min_dist;
+//	t_vector	direct;
+//	float		dist;
+//	float		min_dist;
+//	t_object	*o;
+//	t_object	*res;
+//
+//	direct = (t_vector){ 1.0f, 0.0f, 0.0f };
+//	min_dist = FLT_MAX;
+//	res = NULL;
+//	while (objs)
+//	{
+//		o = (t_object *)(objs->content);
+//		dist = ft_3_point_point_dist(
+//			point, o->ft_collide(objs, , point, direct));
+//		if (dist < min_dist)
+//		{
+//			min_dist = dist;
+//			res = o;
+//		}
+//		objs = objs->next;
+//	}
+//	return (res);
+	t_list		*node;
+	t_vector	od[2];
+	float		dist[2];
 	t_object	*o;
 	t_object	*res;
+	t_coll		coll;
 
-	direct = (t_vector){ 1.0f, 0.0f, 0.0f };
-	min_dist = FLT_MAX;
+	node = *objs;
+	od[0] = point;
+	od[1] = (t_vector) { 1.0f, 0.0f, 0.0f };
+	dist[0] = FLT_MAX;
 	res = NULL;
-	while (objs)
+	while (node)
 	{
-		o = (t_object *)(objs->content);
-		dist = ft_3_point_point_dist(
-			point, o->ft_collide(o->fig, point, direct));
-		if (dist < min_dist)
+		o = (t_object *)(node->content);
+		o->ft_collide(objs, o, &coll, od);
+		dist[1] = ft_3_point_point_dist(point, coll.coll_pnt);
+		if (dist[1] < dist[0])
 		{
-			min_dist = dist;
+			dist[0] = dist[1];
 			res = o;
 		}
-		objs = objs->next;
+		node = node->next;
 	}
 	return (res);
 }
@@ -91,5 +116,5 @@ void				ft_get_start_refr(t_scene *scn)
 	else if (len == 1)
 		scn->cam->inner_o = (t_object *)(objs->content);
 	else
-		scn->cam->inner_o = ft_get_inner_object(objs, scn->cam->origin);
+		scn->cam->inner_o = ft_get_inner_object(&objs, scn->cam->origin);
 }

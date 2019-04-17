@@ -44,8 +44,16 @@ static float		ft_spline_noise_val(const int *i_xyz, const float *f_xyz, const fl
 		{
 			ijk[2] = -2;
 			while (++ijk[2] <= 2)
+			{
 				xi[ijk[2] + 1] = value_table[INDEX((i_xyz[0] + ijk[2]),
-								 (i_xyz[1] + ijk[1]), (i_xyz[2] + ijk[0]))];
+					(i_xyz[1] + ijk[1]), (i_xyz[2] + ijk[0]))];
+//				printf("XYZ %d, %d, %d, INDEX %d, VALUE %f\n", (i_xyz[0] + ijk[2]),
+//					   (i_xyz[1] + ijk[1]), (i_xyz[2] + ijk[0]),
+//					   INDEX((i_xyz[0] + ijk[2]),
+//							 (i_xyz[1] + ijk[1]), (i_xyz[2] + ijk[0])),
+//					   value_table[INDEX((i_xyz[0] + ijk[2]),
+//													   (i_xyz[1] + ijk[1]), (i_xyz[2] + ijk[0]))]);
+			}
 			yi[ijk[1] + 1] = fk_spline_val(f_xyz[0], xi);
 		}
 		zi[ijk[0] + 1] = fk_spline_val(f_xyz[1], yi);
@@ -74,6 +82,12 @@ float					ft_cubic_noise(t_vector point, const float *value_table)
 
 void	ft_lattice_bounds(int octaves, float gain, float bounds[2])
 {
+	if (octaves == 0)
+	{
+		bounds[1] = 1;
+		bounds[0] = -1;
+		return ;
+	}
 	bounds[1] = gain == 1.0f ? octaves : (1.0f - powf(gain, octaves))
 				/ (1.0f - gain);
 	bounds[0] = -bounds[1];

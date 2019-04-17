@@ -127,6 +127,7 @@ void				ft_dlstadd(t_dlist **alst, t_dlist *new);
 void				ft_dlstpush(t_dlist **alst, t_dlist *new);
 
 int					ft_sqrt_high(int nb);
+void				ft_swap(void *nb1, void *nb2, size_t size);
 void				ft_swap_int(int *a, int *b);
 void				ft_swap_uint(unsigned int *a, unsigned int *b);
 void				ft_swap_float(float *a, float *b);

@@ -12,7 +12,7 @@ float 	ft_fractal_noise(t_procedural *tex, t_vector hit)
 	float 	freq;
 
 	i = -1;
-	noise = 0.f;
+	noise = 0.0f;
 	ampl = 1.0f;
 	freq = 1.0f;
 	while (++i < (int)tex->octaves)
@@ -35,7 +35,7 @@ float 	ft_turbulance_noise(t_procedural *tex, t_vector hit)
 	float 	freq;
 
 	i = -1;
-	noise = 0.f;
+	noise = 0.0f;
 	ampl = 1.0f;
 	freq = 1.0f;
 	while (++i < (int)tex->octaves)
@@ -54,17 +54,18 @@ Uint32 	ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit)
 	float   noise_val;
 	t_color color;
 
-	color.val = 0x006688;
+	color.val = 0xffffff;
+	noise_val = tex->ft_noise_value(tex, hit);
 	if (tex->expansion != 1.0f)
 	{
-		noise_val = tex->expansion * tex->ft_noise_value(tex, hit);
+		noise_val *= tex->expansion;
 		noise_val -= floorf(noise_val);
 	}
-	else
-	{
-		noise_val = tex->ft_noise_value(tex, hit);
-		noise_val =tex->min_max[0] + (tex->min_max[1] - tex->min_max[0]) * noise_val;
-	}
+	/*
+** EFFECTS: SINUS PERTURBATION
+*/
+//	noise_val = (sinf((noise_val * 100.0f) * 2 * (float)M_PI / 200.f) + 1) * 0.5f;
+	noise_val = tex->min_max[0] + (tex->min_max[1] - tex->min_max[0]) * noise_val;
 	noise_val = CLAMP(noise_val, 0, 1);
 //	color.argb[0] = (t_byte)(o->color.argb[0] * noise_val);
 //	color.argb[1] = (t_byte)(o->color.argb[1] * noise_val);

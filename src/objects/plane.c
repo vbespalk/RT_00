@@ -17,32 +17,9 @@ t_plane		*ft_planenew(void)
 	t_plane	*pln;
 
 	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
-	pln->origin_ini = (t_vector){ 0.0f, -500.0f, 0.0f };
-	pln->norm_ini = (t_vector){ 0.0f, 1.0f, 0.0f };
-	pln->w_ini = ft_3_nullpointnew();
-	pln->h_ini = ft_3_nullpointnew();
-	pln->dir_wh[0] = ft_3_nullpointnew();
-	pln->dir_wh[1] = ft_3_nullpointnew();
 	pln->len_wh[0] = FLT_MIN;
 	pln->len_wh[1] = FLT_MIN;
-	pln->dgnl = ft_3_nullpointnew();
-	pln->cntr = ft_3_nullpointnew();
 	return (pln);
-}
-
-static void		init_quad(t_plane *pln)
-{
-	if(ft_3_isnullpoint(pln->w_ini) || ft_3_isnullpoint(pln->h_ini) ||
-		fabsf(ft_3_vector_dot(pln->w_ini - pln->origin, pln->h_ini - pln->origin)) > 1e-6)
-		return ;
-	pln->len_wh[0] = ft_3_vector_len(pln->w_ini - pln->origin);
-	pln->len_wh[1] = ft_3_vector_len(pln->h_ini - pln->origin);
-	pln->dir_wh[0] = ft_3_tounitvector(pln->w_ini - pln->origin);
-	pln->dir_wh[1] = ft_3_tounitvector(pln->h_ini - pln->origin);
-	pln->dgnl = pln->w_ini + pln->h_ini - ft_3_vector_scale(pln->origin, 2.0f);
-	pln->cntr = pln->origin + ft_3_vector_scale(ft_3_tounitvector(pln->dgnl),
-			ft_3_vector_len(pln->dgnl) * 0.5f);
-	pln->norm_ini = ft_3_vector_cross(pln->dir_wh[0], pln->dir_wh[1]);
 }
 
 void		*ft_parse_plane(char **content, t_object *o)
@@ -58,114 +35,80 @@ void		*ft_parse_plane(char **content, t_object *o)
 	o->ft_scale = ft_scale_plane;
 	o->ft_mapping = ft_map_plane;
 	o->ft_checker = ft_checker_pln;
+	o->ft_procedural = ft_procedural_pln;
 	pln = ft_planenew();
-	ft_get_attr(content, "origin", (void *)(&(pln->origin_ini)), DT_POINT);
-	ft_get_attr(content, "normal", (void *)(&(pln->norm_ini)), DT_POINT);
-	ft_get_attr(content, "width", (void *)(&(pln->w_ini)), DT_POINT);
-	ft_get_attr(content, "height", (void *)(&(pln->h_ini)), DT_POINT);
-	pln->origin = pln->origin_ini;
-	init_quad(pln);
-	if (ft_3_vector_len(pln->norm_ini) == 0.0)
-		pln->norm_ini = (t_vector){ 0.0, 1.0, 0.0 };
-	pln->norm = ft_3_tounitvector(pln->norm_ini);
-	if (!ft_3_isnullpoint(o->rotate))
-		ft_rotate_plane(UINT32_MAX, pln, &o->rotate);
-	if (!ft_3_isnullpoint(o->translate))
-		ft_translate_plane(UINT32_MAX, pln, &o->translate);
+	ft_get_attr(content, "width", (void *)(&(pln->len_wh[0])), DT_FLOAT);
+	ft_get_attr(content, "height", (void *)(&(pln->len_wh[1])), DT_FLOAT);
+	if (pln->len_wh[0] != FLT_MIN && pln->len_wh[1] != FLT_MIN)
+		pln->ratio = pln->len_wh[1] / pln->len_wh[0];
+	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, pln->len_wh[0]);
+	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, 1.0f / pln->len_wh[0]);
 	return ((void *)pln);
 }
 
-void		ft_translate_plane(Uint32 key, void *fig, t_vector *transl)
+void		ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_plane *pln;
 
-	if (!fig)
+	if (!o)
 		return ;
-	pln = (t_plane *)fig;
-	if (key != UINT32_MAX)
-		*transl = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	pln = (t_plane *)o->fig;
 	if (key == SDLK_d)
-		(*transl)[2] += TRANS_F;
+		o->translate[2] += TRANS_F;
 	if (key == SDLK_a)
-		(*transl)[2] -= TRANS_F;
+		o->translate[2] -= TRANS_F;
 	if (key == SDLK_w)
-		(*transl)[1] += TRANS_F;
+		o->translate[1] += TRANS_F;
 	if (key == SDLK_s)
-		(*transl)[1] -= TRANS_F;
+		o->translate[1] -= TRANS_F;
 	if (key == SDLK_e)
-		(*transl)[0] += TRANS_F;
+		o->translate[0] += TRANS_F;
 	if (key == SDLK_q)
-		(*transl)[0] -= TRANS_F;
-	pln->origin += *(transl);
-	if (!ft_3_isnullpoint(pln->cntr))
-		pln->cntr += *(transl);
-//	printf("AFTER_TRANSLATION DOT %f \n",ft_3_vector_dot(pln->dir_wh[0], pln->dir_wh[1]));
+		o->translate[0] -= TRANS_F;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / pln->len_wh[0]);
 }
 
-void		ft_rotate_plane(Uint32 key, void *fig, t_vector *rot)
+void		ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_plane		*pln;
 
-	if (!fig)
+	if (!o)
 		return ;
-	pln = (t_plane *)fig;
-	if (key != UINT32_MAX)
-		*rot = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	pln = (t_plane *)o->fig;
 	if (key == SDLK_DOWN)
-		(*rot)[2] += ROTAT_F;
+		o->rotate[2] += ROTAT_F;
 	else if (key == SDLK_UP)
-		(*rot)[2] -= ROTAT_F;
+		o->rotate[2] -= ROTAT_F;
 	else if (key == SDLK_LEFT)
-		(*rot)[1] -= ROTAT_F;
+		o->rotate[1] -= ROTAT_F;
 	else if (key == SDLK_RIGHT)
-		(*rot)[1] += ROTAT_F;
+		o->rotate[1] += ROTAT_F;
 	else if (key == SDLK_PAGEDOWN)
-		(*rot)[0] += ROTAT_F;
+		o->rotate[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
-		(*rot)[0] -= ROTAT_F;
-	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
-	{
-		pln->norm = ft_3_vector_rotate(pln->norm, (*rot)[0], (*rot)[1], (*rot)[2]);
-		return ;
-	}
-	if (!ft_3_isnullpoint(pln->cntr))
-	{
-		pln->origin = pln->cntr - ft_3_vector_rotate(pln->cntr - pln->origin,
-				(*rot)[0], (*rot)[1], (*rot)[2]);
-		pln->dgnl = ft_3_vector_rotate(pln->dgnl, (*rot)[0], (*rot)[1], (*rot)[2]);
-	}
-	pln->dir_wh[0] = ft_3_tounitvector(ft_3_vector_rotate(pln->dir_wh[0], (*rot)[0], (*rot)[1], (*rot)[2]));
-	pln->dir_wh[1] = ft_3_tounitvector(ft_3_vector_rotate(pln->dir_wh[1], (*rot)[0], (*rot)[1], (*rot)[2]));
-	pln->norm = ft_3_tounitvector(ft_3_vector_cross(pln->dir_wh[0], pln->dir_wh[1]));
-//	printf("AFTER_ROTATING DOT %f \n",ft_3_vector_dot(pln->dir_wh[0], pln->dir_wh[1]));
+		o->rotate[0] -= ROTAT_F;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / pln->len_wh[0]);
 }
 
-void		ft_scale_plane(Uint32 key, void *fig, float *scale)
+void		ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_plane		*pln;
-	t_vector	dir;
-	float 		len;
 
-	if (!fig)
+	if (!o)
 		return ;
-	pln = (t_plane *)fig;
+	pln = (t_plane *)o->fig;
 	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
 		return;
-	*scale = 1.0f;
+	float scale = 1.0f;
 	if (key == SDLK_z)
-		*scale += SCALE_F;
+		scale += SCALE_F;
 	else if (key == SDLK_x )
-		*scale -= SCALE_F;
-//	else
-//		*scale = 0;
-	dir = ft_3_tounitvector(pln->dgnl);
-	len = ft_3_vector_len(pln->dgnl) * *scale;
-	if (!ft_3_isnullpoint(pln->cntr))
-	{
-		pln->origin = pln->cntr - ft_3_vector_scale(dir, 0.5f * len);
-		pln->dgnl = ft_3_vector_scale(dir, len);
-	}
-	pln->len_wh[0] *= (*scale);
-	pln->len_wh[1] *= (*scale);
+		scale -= SCALE_F;
+	pln->len_wh[0] *= scale;
+	pln->len_wh[1] *= scale;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / pln->len_wh[0]);
 //	printf("AFTER SCALING DOT %f\n",ft_3_vector_dot(pln->dir_wh[0], pln->dir_wh[1]));
 }

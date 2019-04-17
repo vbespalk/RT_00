@@ -17,42 +17,34 @@ t_cone		*ft_conenew(void)
 	t_cone	*cone;
 
 	cone = ft_smemalloc(sizeof(t_cone), "ft_conenew");
-	cone->o = (t_vector){ 100.0f, 0.0f, 0.0f };
-	cone->v = (t_vector){0.0f, 1.0f, 0.0f};
 	cone->tan = 90;
-	cone->minh = FLT_MIN;
+	cone->minh = -FLT_MAX;
 	cone->maxh = FLT_MAX;
 	cone->r[0] = FLT_MIN;
 	cone->r[1] = FLT_MIN;
 	return (cone);
 }
 
-void		ft_cone_init(t_cone *cone, t_vector base)
+void		ft_cone_init(t_cone *cone)
 {
-	cone->r[0] = fabsf(cone->r[0]);
-	cone->r[1] = fabsf(cone->r[1]);
 	if (cone->minh > cone->maxh)
 		ft_swap_float(&cone->minh, &cone->maxh);
 	if (cone->minh == cone->maxh)
-		ft_bzero(&cone->r, sizeof(float) * 2);
-	cone->tan = fabsf(cone->tan);
-	if (cone->tan >= 175)
-		cone->tan = (int)cone->tan % 175;
-	cone->tan = (int)cone->tan == 180 ? 0.0f : tanf(DEG_TO_RAD(cone->tan / 2.0f));
-	if (!ft_3_isnullpoint(base))
-		cone->v = ft_3_tounitvector(base - cone->o);
-	if (cone->r[1] == FLT_MIN)
 	{
-		cone->r[0] = fabsf(cone->minh * cone->tan);
-		cone->r[1] = fabsf(cone->maxh * cone->tan);
+		cone->minh = -FLT_MAX;
+		cone->maxh = FLT_MAX;
 	}
-	cone->v_cp = cone->v;
+	if ((cone->tan = fabsf(cone->tan)) >= 175)
+		cone->tan = (int)cone->tan % 175;
+	cone->tan = cone->tan < 1 ? tanf(DEG_TO_RAD(1)) : tanf(DEG_TO_RAD(cone->tan / 2.0f));
+	cone->r[0] = cone->minh != -FLT_MAX ? fabsf(cone->minh * cone->tan) : FLT_MIN;
+	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
+	printf("MINH %f, R %f, MAXH %f, R %f\n", cone->minh, cone->r[0], cone->maxh, cone->r[1]);
 }
 
 void		*ft_parse_cone(char **content, t_object *o)
 {
 	t_cone		*cone;
-	t_vector	base;
 
 	o->ft_collide = ft_collide_cone;
 	o->ft_is_reachable = ft_is_reachable_plane;
@@ -61,98 +53,86 @@ void		*ft_parse_cone(char **content, t_object *o)
 	o->ft_translate = ft_translate_cone;
 	o->ft_rotate = ft_rotate_cone;
 	o->ft_scale = ft_scale_cone;
-//	o->ft_mapping = ft_map_cone;
-	o->ft_mapping = NULL;
+	o->ft_mapping = ft_map_cone;
 	o->ft_checker = ft_checker_cyl;
+	o->ft_procedural = ft_procedural_cone;
 	cone = ft_conenew();
-	base = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
-	ft_get_attr(content, "vert", (void *)(&(cone->o)), DT_POINT);
-	ft_get_attr(content, "base_rad", (void *)(&(cone->r[1])), DT_FLOAT);
-	ft_get_attr(content, "vert_rad", (void *)(&(cone->r[0])), DT_FLOAT);
-	ft_get_attr(content, "base", (void *)(&base), DT_POINT);
-
-	ft_get_attr(content, "direction", (void *)&(cone->v), DT_POINT);
-	ft_get_attr(content, "min_height", (void *)(&(cone->minh)), DT_FLOAT);
-	ft_get_attr(content, "max_height", (void *)(&(cone->maxh)), DT_FLOAT);
+	ft_get_attr(content, "minh", (void *)(&(cone->minh)), DT_FLOAT);
+	ft_get_attr(content, "maxh", (void *)(&(cone->maxh)), DT_FLOAT);
 	ft_get_attr(content, "angle", (void *)(&(cone->tan)), DT_FLOAT);
-	ft_cone_init(cone, base);
+	ft_cone_init(cone);
+	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
+	printf("MATRIX\n");
+	for (int i = 0; i < 4; ++i)
+		printf("%f, %f, %f, %f\n", o->transform[i][0], o->transform[i][1], o->transform[i][2], o->transform[i][3]);
+	printf("INVERTED\n");
+	for (int i = 0; i < 4; ++i)
+		printf("%f, %f, %f, %f\n", o->inverse[i][0], o->inverse[i][1], o->inverse[i][2], o->inverse[i][3]);
 	return ((void *)cone);
 }
 
-void		ft_translate_cone(Uint32 key, void *fig, t_vector *transl)
+void		ft_translate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone *cone;
 
-	if (!fig)
+	if (!o)
 		return ;
-	cone = (t_cone *)fig;
-	*transl = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	cone = (t_cone *)o->fig;
 	if (key == SDLK_d)
-		(*transl)[2] += TRANS_F;
+		o->translate[2] += TRANS_F;
 	if (key == SDLK_a)
-		(*transl)[2] -= TRANS_F;
+		o->translate[2] -= TRANS_F;
 	if (key == SDLK_w)
-		(*transl)[1] += TRANS_F;
+		o->translate[1] += TRANS_F;
 	if (key == SDLK_s)
-		(*transl)[1] -= TRANS_F;
+		o->translate[1] -= TRANS_F;
 	if (key == SDLK_e)
-		(*transl)[0] += TRANS_F;
+		o->translate[0] += TRANS_F;
 	if (key == SDLK_q)
-		(*transl)[0] -= TRANS_F;
-	cone->o = cone->o + *(transl);
+		o->translate[0] -= TRANS_F;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }
 
-void		ft_rotate_cone(Uint32 key, void *fig, t_vector *rot)
+void		ft_rotate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone *cone;
 
-	if (!fig)
+	if (!o)
 		return ;
-	cone = (t_cone *)fig;
-	*rot = (t_vector){FLT_MIN, FLT_MIN, FLT_MIN};
+	cone = (t_cone *)o->fig;
 	if (key == SDLK_DOWN)
-		(*rot)[2] += ROTAT_F;
+		o->rotate[2] += ROTAT_F;
 	else if (key == SDLK_UP)
-		(*rot)[2] -= ROTAT_F;
+		o->rotate[2] -= ROTAT_F;
 	else if (key == SDLK_LEFT)
-		(*rot)[1] -= ROTAT_F;
+		o->rotate[1] -= ROTAT_F;
 	else if (key == SDLK_RIGHT)
-		(*rot)[1] += ROTAT_F;
+		o->rotate[1] += ROTAT_F;
 	else if (key == SDLK_PAGEDOWN)
-		(*rot)[0] += ROTAT_F;
+		o->rotate[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
-		(*rot)[0] -= ROTAT_F;
-	cone->v = ft_3_vector_rotate(cone->v, (*rot)[0], (*rot)[1], (*rot)[2]);
-	cone->v_cp = cone->v;
+		o->rotate[0] -= ROTAT_F;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }
 
-void		ft_scale_cone(Uint32 key, void *fig, float *scale)
+void		ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone 	*cone;
 
-	if (!fig)
+	if (!o)
 		return ;
-	cone = (t_cone *)fig;
+	(void)tr_m;
+	(void)inv_m;
+	cone = (t_cone *)o->fig;
 	if (key == SDLK_z)
-	{
-		cone->v = cone->v_cp;
-		if (cone->maxh != FLT_MAX)
-			cone->maxh = cone->maxh * (1.0f + SCALE_F);
-		cone->o -= ft_3_vector_scale(cone->v, 5);
 		cone->tan = cone->tan * (1.0f + SCANG_F);
-	}
 	else if (key == SDLK_x)
-	{
-		if (cone->maxh * (1.0f - SCALE_F) >= cone->minh)
-		{
-			if (cone->maxh != FLT_MAX)
-				cone->maxh = cone->maxh *  (1.0f - SCALE_F);
-			cone->o += ft_3_vector_scale(cone->v, 5);
 			cone->tan = cone->tan *  (1.0f - SCANG_F);
-		}
-		else
-			cone->v = (t_vector){0.f,0.f,0.f};
-	}
-	cone->r[0] = fabsf(cone->minh * cone->tan);
-	cone->r[1] = fabsf(cone->maxh * cone->tan);
+	cone->r[0] = cone->minh != -FLT_MAX ? fabsf(cone->minh * cone->tan) : FLT_MIN;
+	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
+//	ft_3_transform_mat(tr_m, cone->o, cone->v, FLT_MIN);
+//	ft_3_inv_trans_mat(inv_m, -cone->o, -cone->v, FLT_MIN);
 }

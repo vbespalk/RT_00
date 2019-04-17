@@ -1,0 +1,38 @@
+{
+  "name": "CFOMPOSED BOX",
+  "bg_color": "0xbbbbbb",
+          "skybox": {
+      "min": { "x": -100000, "y": -100000, "z": -100000},
+      "max": { "x": 100000, "y": 100000, "z": 100000},
+      "negz": "./texture/skybox/thunder/negz.tga", 
+      "negy": "./texture/skybox/thunder/negy.tga", 
+      "negx":"./texture/skybox/thunder/negx.tga", 
+      "posz": "./texture/skybox/thunder/posz.tga", 
+      "posy": "./texture/skybox/thunder/posy.tga",
+      "posx": "./texture/skybox/thunder/posx.tga"
+  },
+  "camera": {
+    "origin": { "x": -50000 }
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 1 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "box",
+      "color": "0xff0000",
+      "length": 400,
+      "width": 400,
+      "height": 400,
+      "phong": 1,
+      "ambnt": 0.2,
+       "spclr": 1,
+       "diff": 0,
+      "translate": { "x": 0, "y": -50, "z": 50 },
+      "rotate": {"z": 30}
+    }
+  ]
+}

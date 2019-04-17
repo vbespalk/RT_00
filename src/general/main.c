@@ -86,7 +86,8 @@ int			main(int argc, char **argv)
 	t_sdl		sdl;
 	t_object	**obj_pix;
 
-	srand((unsigned int) time(NULL));
+//	srand((unsigned int) time(NULL));
+	srand((unsigned int) 14);
 	if (argc != 2)
 		ft_usage("RT scn\n");
 	if (sdl_init(&sdl) < 0)

@@ -12,31 +12,62 @@
 
 #include "rt.h"
 
-static t_vector		ft_get_collision_point
-						(t_list *objs, t_object **obj, t_vector od[2])
+static void			ft_update(
+		t_coll *coll,
+		t_object **res_o,
+		float (*dist)[2],
+		t_vector (*pnt)[3])
+{
+	(*pnt)[0] = coll->ucoll_pnt;
+	(*pnt)[1] = coll->coll_pnt;
+	(*pnt)[2] = coll->norm;
+	(*dist)[0] = (*dist)[1];
+	*res_o = coll->o;
+}
+
+static void			ft_init(t_coll *coll, t_object *res_o, t_vector pnt[2])
+{
+	coll->o = res_o;
+	coll->ucoll_pnt = pnt[0];
+	coll->coll_pnt = pnt[1];
+	coll->norm = pnt[2];
+}
+//static t_vector		ft_get_collision_point
+//						(t_list *objs, t_object **obj, t_vector od[2])
+static void			ft_init_collision(t_coll *coll, t_list **objs, t_vector *od)
 {
 	t_list		*node;
-	t_vector	pnt[2];
+	t_vector	pnt[3];
 	float		dist[2];
 	t_object	*o;
+	t_object	*res_o;
+	t_object	*tex_o;
+//	t_vector	tmp_od[2];
 
-	node = objs;
+	node = *objs;
 	pnt[0] = ft_3_nullpointnew();
+	pnt[1] = ft_3_nullpointnew();
+	pnt[2] = ft_3_nullpointnew();
 	dist[0] = FLT_MAX;
+	res_o = NULL;
+	tex_o = NULL;
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_reachable(o->fig, od[0], od[1]) &&
-			!ft_3_isnullpoint(pnt[1] = o->ft_collide(o->fig, od[0], od[1])) &&
-			(dist[1] = ft_3_point_point_dist(od[0], pnt[1])) < dist[0])
+		if (o->ft_is_reachable(o->fig, od[0], od[1]))
 		{
-			pnt[0] = pnt[1];
-			dist[0] = dist[1];
-			*obj = o;
+			dist[1] = o->ft_collide(objs, o, coll, od);
+			if (dist[1] > FLT_MIN && dist[1] < dist[0])
+			{
+				coll->coll_pnt = od[0] + ft_3_vector_scale(od[1], dist[1]);
+				tex_o = coll->tex_o;
+				ft_update(coll, &res_o, &dist, &pnt);
+			}
 		}
 		node = node->next;
 	}
-	return (pnt[0]);
+	ft_init(coll, res_o, pnt);
+	coll->tex_o = tex_o;
 }
 
 static void			ft_refract(t_thrarg *arg, t_ray *ray)
@@ -84,30 +115,33 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	od[0] = ray->o; // + ft_3_vector_scale(ray->d, 0.5f);
 	od[1] = ray->d;
 	ray->coll = &coll;
-	if (ft_3_isnullpoint(coll.coll_pnt =
-		ft_get_collision_point(arg->e->scn->objs, &(coll.o), od)))
+	ft_init_collision(&coll, &(arg->e->scn->objs), od);
+//	if (ft_3_isnullpoint(coll.coll_pnt =
+//		ft_get_collision_point(arg->e->scn->objs, &(coll.o), od)))
+//		return (coll);
+	if (!(coll.o))
 		return (coll);
-	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
+//	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
 	if (coll.o->trans)
 		ft_refract(arg, ray);
 	if (ft_3_vector_cos(coll.norm, ray->d) > 0)
 		coll.norm = ft_3_vector_scale(coll.norm, -1.0f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
-	tex_col = coll.o->ft_mapping && coll.o->texture ? coll.o->ft_mapping(coll.o->fig,
-			coll.o->texture, coll.coll_pnt) : UINT32_MAX;
+	tex_col = coll.tex_o->ft_mapping && coll.o->texture ? coll.tex_o->ft_mapping(coll.tex_o->fig,
+			coll.o->texture, coll.ucoll_pnt) : UINT32_MAX;
 	if (tex_col != UINT32_MAX)
 		coll.px_color.val = tex_col;
 	else if (coll.o->noise)
 	{
-//		coll.px_color.val = coll.o->color.val;
-//		t_chess		chess;
-//		chess.size = 10;
-//		chess.color[0] = 0xffffff;
-//		chess.color[1] = 0x888888;
-//		coll.px_color.val = coll.o->ft_checker(coll.o->fig, &chess, coll.coll_pnt);
+		coll.px_color.val = coll.o->color.val;
+		t_chess		chess;
+		chess.size = 10;
+		chess.color[0] = 0xf2f280;
+		chess.color[1] = 0xffffff;
+		coll.px_color.val = coll.tex_o->ft_checker(coll.tex_o->fig, &chess, coll.ucoll_pnt);
 //		coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o, coll.coll_pnt);
-        coll.px_color.val = coll.o->ft_procedural(coll.o->fig, coll.o->noise, coll.coll_pnt);
+//        coll.px_color.val = coll.o->ft_procedural(coll.o->fig, coll.o->noise, coll.ucoll_pnt);
 	}
 	else
         coll.px_color.val = coll.o->color.val;

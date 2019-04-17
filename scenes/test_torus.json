@@ -25,15 +25,23 @@
 
             "name": "torus",
             "origin": { "y": 0 },
-            "direct": { "y": -1, "z": 0 },
-            "inner_radius": 80,
+            "inner_radius": 50,
             "outer_radius": 100,
-            "rotate": { "x": 15, "z": 75},
             "translate": {"z" : -100},
             "color": "0xff6666",
+                  "procedural":
+      {
+        "octaves": 5,
+        "scale_min": 0,
+        "scale_max": 1,
+        "expansion": 1,
+        "perturbation": 1,
+        "gain": 0.5,
+        "lacunarity": 2
+      },
             "spclr": 0.1,
             "diff": 1,
-            "ambnt": 0.3
+            "ambnt": 0.1
         }
     ]
 }

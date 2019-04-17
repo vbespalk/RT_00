@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/08/17 21:49:15 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:40:53 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,31 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	return (0);
 }
 
+void		ft_interface(t_env *e)
+{
+	const uint32_t w = e->sdl->scr_wid;
+	const uint32_t h = e->sdl->scr_hei;
+
+	SDL_SetRenderDrawColor(e->sdl->renderer, 200, 245, 218, 255);
+	const SDL_Rect buttons[] = { // need to add this to env struct or make global
+		(SDL_Rect){45, 20, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){10, 55, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){45, 55, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){80, 55, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){10, 20, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){80, 20, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){45, 110, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){10, 145, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){45, 145, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){80, 145, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+		(SDL_Rect){10, 110, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE}, // rotation 
+		(SDL_Rect){80, 110, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE}  // by view ray, it might be removed
+	};
+	SDL_RenderFillRects(e->sdl->renderer, buttons, 6);
+	SDL_SetRenderDrawColor(e->sdl->renderer, 143, 68, 218, 173);
+	SDL_RenderFillRects(e->sdl->renderer, &(buttons[6]), 6);
+}
+
 static void	ft_rt_loop(t_env *e)
 {
 	t_sdl	*sdl;
@@ -54,6 +79,7 @@ static void	ft_rt_loop(t_env *e)
 		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+	ft_interface(e);
 	SDL_RenderPresent(sdl->renderer);
 	while (sdl->event_loop)
 	{
@@ -64,6 +90,7 @@ static void	ft_rt_loop(t_env *e)
 				sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 			SDL_RenderClear(sdl->renderer);
 			SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+			ft_interface(e);
 			SDL_RenderPresent(sdl->renderer);
 		}
 	}

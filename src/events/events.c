@@ -3,18 +3,74 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/11/07 19:52:26 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/17 19:13:02 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sdl_event.h"
 
+const SDL_Rect buttons[] = { // need to add this to env struct
+	(SDL_Rect){45, 20, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){10, 55, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){45, 55, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){80, 55, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){10, 20, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){80, 20, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){45, 110, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){10, 145, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){45, 145, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){80, 145, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){10, 110, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE},
+	(SDL_Rect){80, 110, DEFAULT_BUTTTON_SIZE, DEFAULT_BUTTTON_SIZE}
+};
+
+uint8_t	mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
+{
+	// read buttons from e struct
+	uint8_t id;
+	uint8_t i;
+
+	id = 0;
+	i = 0;
+	while (i < 12)
+	{
+		if (x > buttons[i].x && x < buttons[i].x + buttons[i].w &&
+			y > buttons[i].y && y < buttons[i].y + buttons[i].h)
+			return i + 1;
+		i++;
+	}
+	return (id);
+}
+
+int		handle_button(const int32_t x, const int32_t y, t_env *e, uint32_t btn_id, SDL_Keycode sum)
+{
+	const SDL_Keycode buttons_codes[] = {
+		SDLK_w, SDLK_a, SDLK_s, SDLK_d, SDLK_q, SDLK_e,
+		SDLK_PAGEDOWN, SDLK_LEFT, SDLK_PAGEUP, SDLK_RIGHT, SDLK_UP, SDLK_DOWN,
+	};
+	// tmp id table:
+	// 1 - w
+	// 2 - a
+	// 3 - s
+	// 4 - d 
+	// 5 - q
+	// 6 - e
+	printf("clicked btn with id %d\n", btn_id);
+	// TODO create functions pointers array
+	if (btn_id < 7)
+		e->selected ? e->selected->ft_translate(buttons_codes[btn_id - 1], e->selected->fig, &e->selected->translate) : ft_translate_cam(buttons_codes[btn_id - 1], &(e->scn->cam->origin));
+	else if (btn_id < 13)
+		e->selected ? e->selected->ft_rotate(buttons_codes[btn_id - 1], e->selected->fig, &e->selected->rotate) : ft_rotate_cam(buttons_codes[btn_id - 1], &(e->scn->cam->angles));
+	return (1);
+}
+
 int		event_handler(t_env *e)
 {
-	SDL_Event	event;
+	SDL_Event		event;
+	uint32_t		btn_id;
 
 	if (SDL_WaitEvent(&event))
 	{
@@ -33,6 +89,8 @@ int		event_handler(t_env *e)
 		// 		event.motion.state == SDL_BUTTON_MMASK);
 		else if (event.type == SDL_MOUSEBUTTONDOWN)
 		{
+			if ((btn_id = mouse_on_btn(event.button.x, event.button.y, e)))
+				return (handle_button(event.button.x, event.button.y, e, btn_id, event.key.keysym.sym));
 			if (event.button.button == SDL_BUTTON_LEFT)
 				return (on_lbutton_down(event.button.x, event.button.y, e));
 			if (event.button.button == SDL_BUTTON_RIGHT)
@@ -48,7 +106,7 @@ int		event_handler(t_env *e)
 		else
 			return (0);
 	}
-	return (0);
+	return (1);
 }
 
 

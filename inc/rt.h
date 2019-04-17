@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/08/17 21:50:10 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:27:29 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@
 #  include <SDL2/SDL_image.h>
 
 # endif
+
+/*
+** some interface defines
+*/
+
+#define DEFAULT_BUTTTON_SIZE 25
 
 typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;

@@ -110,6 +110,7 @@ void	sdl_close(t_sdl *sdl)
 	SDL_DestroyWindow(sdl->window);
 	sdl->window = NULL;
 	//Quit SDL subsystems
+	TTF_Quit();
 	SDL_Quit();
 }
 

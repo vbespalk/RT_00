@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/18 14:31:50 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/20 13:23:53 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int			main(int argc, char **argv)
 	t_scene		*scene;
 	t_env		e;
 	t_sdl		sdl;
-	t_ttf		ttf;
 	t_object	**obj_pix;
 
 	if (argc != 2)
@@ -87,6 +86,8 @@ int			main(int argc, char **argv)
 	if (sdl_init(&sdl) < 0)
 		exit(-1);
 	if (ttf_init(&sdl) < 0)
+		exit(-1);
+	if (image_init(&sdl) < 0)
 		exit(-1);
 //	SDL_UpdateTexture(
 //		sdl.screen, NULL, sdl.pixels, sdl.scr_wid * sizeof(Uint32));

@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/18 16:29:05 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/20 19:55:56 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,22 @@
 
 # include <SDL_ttf.h>
 
-# define DEFAULT_BUTTTON_SIZE 30
-# define BUTTONS_AMOUNT 13
+# define TEST(test) if (!(test)) { ft_printf("%s\n", SDL_GetError()); exit(-1);}
+
+# define DEFAULT_BUTTTON_SIZE 25
+# define LONG_BTN_WIDTH 35
+# define LONG_BTN_HEIGHT 17
+# define AXIS_TEXT_SIZE 20
+# define ARROW_BTNS_AMOUNT 30
+# define BUTTONS_AMOUNT 4
+# define TEXT_MSGS_AMOUNT 22
 # define DELETE_BUTTON_WIDTH 100
 # define DELETE_BUTTON_HEIGHT 35
+# define GUI_WIDTH 190
 # define BLACK_TEXT_COLOR ((SDL_Color){0, 0, 0})
 # define WHITE_TEXT_COLOR ((SDL_Color){255, 255, 255})
-# define BTN_TEXT_AMOUNT 13
+# define DEFAULT_TEXT_COLOR ((SDL_Color){155, 166, 177})
 # define SDL_SURF_TO_TEX SDL_CreateTextureFromSurface
-# define NEW_TTF_TEXT(f, t) TTF_RenderText_Blended(f, t, DEFAULT_TEXT_COLOR)
 # define NEW_TTF_MSG(r, s) SDL_SURF_TO_TEX(r, s); SDL_FreeSurface(s); s = NULL
 
 typedef struct s_environment	t_env;
@@ -109,15 +116,17 @@ typedef struct	s_vec2
     int32_t y;
 }               t_vec2;
 
-typedef struct	s_ttf
+typedef struct	s_gui
 {
 	TTF_Font	*font;
 	SDL_Texture	**messages;
 	SDL_Rect	*rects;
-}				t_ttf;
+	SDL_Texture	**imgs;
+}				t_gui;
 
 extern const SDL_Rect g_buttons[];
 
+int		image_init(t_sdl *sdl);
 int		ttf_init(t_sdl *sdl);
 void    ft_gui(t_env *e);
 
@@ -431,7 +440,7 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	int				pitch; //from SDL_Surface
 	int				event_loop;
 	// SDL_Event 		event;
-	t_ttf			*ttf;
+	t_gui			*gui;
 }					t_sdl;
 
 typedef struct 		s_environment

@@ -109,8 +109,8 @@ void	sdl_close(t_sdl *sdl)
 	//Destroy window
 	SDL_DestroyWindow(sdl->window);
 	sdl->window = NULL;
+	SDL_DestroyTexture(sdl->gui->gui_texture);
 	//Quit SDL subsystems
-	TTF_Quit();
 	SDL_Quit();
 }
 

@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 17:35:53 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/20 15:26:31 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/23 13:25:29 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,13 @@ int		on_lbutton_down(int x, int y, t_env *e)
 {
 	if (e->pix_obj[y * e->sdl->scr_wid + x])
 	{
-		printf("selected pix %d\n", x * y);
+		// printf("selected pix %d\n", x * y);
 		e->selected = (e->pix_obj)[y * e->sdl->scr_wid + x];
-		printf("selected obj, id %d\n", e->selected->id);
+		// printf("selected obj, id %d\n", e->selected->id);
 	}
 	else
 	{
-		printf("unselected, cum\n");
+		// printf("unselected, cum\n");
 		e->selected = NULL;
 	}
 	return (0);

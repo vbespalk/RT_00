@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/20 19:55:56 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/23 16:54:11 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,25 +87,47 @@
 ** GUI STUFF - includes, structures, defines etc. 
 */
 
-# include <SDL_ttf.h>
+# define MLC_TEST(t, msg) if (!(t)) {ft_putendl(msg);exit(-1);}
 
-# define TEST(test) if (!(test)) { ft_printf("%s\n", SDL_GetError()); exit(-1);}
+# define DEFAULT_BUTTTON_WIDTH 93
+# define DEFAULT_BUTTTON_HEIGHT 20
+# define ARROW_BUTTON_WIDTH 30
+# define ARROW_BUTTON_HEIGHT 20
+# define GUI_WIDTH 220
+# define GUI_HEIGHT 250 * 1250 / 570
+# define BUTTONS_AMOUNT 40
 
-# define DEFAULT_BUTTTON_SIZE 25
-# define LONG_BTN_WIDTH 35
-# define LONG_BTN_HEIGHT 17
-# define AXIS_TEXT_SIZE 20
-# define ARROW_BTNS_AMOUNT 30
-# define BUTTONS_AMOUNT 4
-# define TEXT_MSGS_AMOUNT 22
-# define DELETE_BUTTON_WIDTH 100
-# define DELETE_BUTTON_HEIGHT 35
-# define GUI_WIDTH 190
-# define BLACK_TEXT_COLOR ((SDL_Color){0, 0, 0})
-# define WHITE_TEXT_COLOR ((SDL_Color){255, 255, 255})
-# define DEFAULT_TEXT_COLOR ((SDL_Color){155, 166, 177})
-# define SDL_SURF_TO_TEX SDL_CreateTextureFromSurface
-# define NEW_TTF_MSG(r, s) SDL_SURF_TO_TEX(r, s); SDL_FreeSurface(s); s = NULL
+/*
+** buttons ids enum
+*/
+
+typedef enum	e_btn_code
+{
+	SAVE_IMG = 1,
+	GRAYSCALE,
+	INVERTED_COLOR,
+	SEPIA,
+	COLOR_FILTER_TMP_NAME,
+	CAMERA_MODE,
+	FOV_DOWN, FOV_UP,
+	TRANS_OX_DOWN, TRANS_OX_UP,
+	TRANS_OY_DOWN, TRANS_OY_UP,
+	TRANS_OZ_DOWN, TRANS_OZ_UP,
+	ROT_OX_DOWN, ROT_OX_UP,
+	ROT_OY_DOWN, ROT_OY_UP,
+	ROT_OZ_DOWN, ROT_OZ_UP,
+	SKYBOX,
+	DELETE_OBJ,
+	RADIUS_DOWN, RADIUS_UP,
+	HEIGHT_DOWN, HEIGHT_UP,
+	REFL_DOWN, REFL_UP,
+	R_BLUR_DOWN, R_BLUR_UP,
+	T_BLUR_DOWN, T_BLUR_UP,
+	TRANSP_DOWN, TRANSP_UP,
+	REFR_DOWN, REFR_UP,
+	DIFFUSE_DOWN, DIFFUSE_UP,
+	AMBIENT_DOWN, AMBIENT_UP
+}				t_btn_code;
 
 typedef struct s_environment	t_env;
 typedef struct s_sdl			t_sdl;
@@ -118,16 +140,10 @@ typedef struct	s_vec2
 
 typedef struct	s_gui
 {
-	TTF_Font	*font;
-	SDL_Texture	**messages;
-	SDL_Rect	*rects;
-	SDL_Texture	**imgs;
+	SDL_Texture	*gui_texture;
 }				t_gui;
 
-extern const SDL_Rect g_buttons[];
-
-int		image_init(t_sdl *sdl);
-int		ttf_init(t_sdl *sdl);
+int		gui_init(t_sdl *sdl);
 void    ft_gui(t_env *e);
 
 /*
@@ -135,7 +151,7 @@ void    ft_gui(t_env *e);
 */
 
 uint8_t     mouse_on_btn(const int32_t x, const int32_t y, t_env *e);
-uint8_t		handle_button(t_env *e, uint32_t btn_id, SDL_Keycode sum);
+uint8_t		handle_button(t_env *e, uint32_t btn_id);
 
 /*
 ** Gui stuff end

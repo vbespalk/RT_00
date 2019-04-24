@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/23 16:54:11 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 12:37:06 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@
 ** buttons ids enum
 */
 
+extern const SDL_Rect g_btn_containers[];
+
 typedef enum	e_btn_code
 {
 	SAVE_IMG = 1,
@@ -121,7 +123,7 @@ typedef enum	e_btn_code
 	RADIUS_DOWN, RADIUS_UP,
 	HEIGHT_DOWN, HEIGHT_UP,
 	REFL_DOWN, REFL_UP,
-	R_BLUR_DOWN, R_BLUR_UP,
+	S_BLUR_DOWN, S_BLUR_UP,
 	T_BLUR_DOWN, T_BLUR_UP,
 	TRANSP_DOWN, TRANSP_UP,
 	REFR_DOWN, REFR_UP,
@@ -152,6 +154,16 @@ void    ft_gui(t_env *e);
 
 uint8_t     mouse_on_btn(const int32_t x, const int32_t y, t_env *e);
 uint8_t		handle_button(t_env *e, uint32_t btn_id);
+
+/*
+** gui utils
+*/
+
+float		clamp(float lo, float hi, float v);
+void		other_buttons(t_env *e, const uint32_t id);
+void		color_filter(t_env *e, const uint32_t id);
+void		translate(t_env *e, const uint32_t id);
+void		rotate(t_env *e, const uint32_t id);
 
 /*
 ** Gui stuff end

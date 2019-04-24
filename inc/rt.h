@@ -54,6 +54,18 @@
 # define IN_RANGE(x, left, right) ((x >= left) && (x <= right))
 # define IS_ZERO(x) ((x > -EQN_EPS) && (x < EQN_EPS))
 # define CLAMP(x, min, max) (x < min ? min : (x > max ? max : x))
+
+/*
+**	color modes
+*/
+
+# define MD_COLOR		0
+# define MD_GRAYSCALE	1
+# define MD_SEPIA		2
+# define MD_NEGATIVE	3
+# define MD_INVERTED	4
+
+
 /*
 **	camera
 */
@@ -539,6 +551,7 @@ typedef struct 		s_environment
 //	t_object		*pointed;
 	t_object		*selected;
 	t_sdl			*sdl;
+	unsigned int    color_mode;
 
 	unsigned int	nb_obj;
 	unsigned int	nb_light;
@@ -610,7 +623,7 @@ typedef struct		s_thrarg
 */
 
 void				img_pixel_put(t_env *env, int x, int y, unsigned int color);
-unsigned int		get_rgb(t_sdl *sdl, unsigned int red, unsigned int green, unsigned int blue);
+Uint32				get_rgb(t_sdl *sdl, Uint8 red, Uint8 green, Uint8 blue);
 void				reset(t_env *e);
 void				delete_obj(t_list **obj_lst, Uint32 id);
 
@@ -1093,6 +1106,22 @@ void           			ft_init_lattice(t_procedural **tex, char *function, unsigned i
 */
 
 void                    ft_parse_checker(char **content, t_checkbrd **tex);
+
+/*
+** color_modes.c
+*/
+void                    mode_grey(t_sdl *sdl, int x, int y);
+void                    mode_sepia(t_sdl *sdl, int x, int y);
+void                    mode_negative(t_sdl *sdl, int x, int y);
+void                    mode_inverted(t_sdl *sdl, int x, int y);
+
+/*
+** color_man.c
+*/
+
+t_color                 hsv_to_rgb(float h, float s, float v);
+float                   min_max(float r, float g, float b, Uint32 flag);
+t_vector                rgb_to_hsv(float r, float g, float b);
 
 /*
 ** FROM MY LIBFT

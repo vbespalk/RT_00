@@ -90,6 +90,7 @@ void			*ft_section_handle(void *arg)
 	int			x;
 	int			y;
 	int			smth;
+    t_color     color;
 
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
@@ -98,9 +99,12 @@ void			*ft_section_handle(void *arg)
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
-			img_pixel_put(
-				thrarg->e, x, y,
-				(unsigned int)(ft_get_pixel_color(thrarg, x, y, smth).val));
+		{
+            color = ft_get_pixel_color(thrarg, x, y, smth);
+		    img_pixel_put(
+                    thrarg->e, x, y,
+                    (unsigned int) color.val);
+        }
 		x += THREADS;
 	}
 	return (NULL);

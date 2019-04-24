@@ -21,13 +21,12 @@
 // 	SDL_RenderPresent(ptr->sdl->renderer);
 // }
 
-unsigned int	get_rgb(t_sdl *sdl, unsigned int red, unsigned int green, unsigned int blue)
+Uint32			get_rgb(t_sdl *sdl, Uint8 red, Uint8 green, Uint8 blue)
 {
-	unsigned int color;
 	Uint32 col;
 
 	col = SDL_MapRGB(sdl->format, red, green, blue);
-	return ((unsigned int)col);
+	return (col);
 }
 
 void			img_pixel_put(t_env *e, int x, int y, unsigned int color)

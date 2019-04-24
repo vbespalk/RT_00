@@ -6,12 +6,11 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/23 14:49:17 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 16:38:40 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-#include "rt_gui.h"
 
 static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
@@ -44,31 +43,35 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	return (0);
 }
 
-static void	ft_rt_loop(t_env *e)
+static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
 {
-	t_sdl	*sdl;
-
-	sdl = e->sdl;
-	sdl->event_loop = 1;
 	ft_render(e);
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
-	ft_gui(e);
+	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
+}
+
+static void	ft_rt_loop(t_env *e)
+{
+	t_sdl		*sdl;
+	uint32_t	btn_id;
+
+	sdl = e->sdl;
+	sdl->event_loop = 1;
+	sdl_draw_screen(e, e->sdl, 0);
 	while (sdl->event_loop)
 	{
-		if (event_handler(e))
-		{
-			ft_render(e);
-			SDL_UpdateTexture(
-				sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
-			SDL_RenderClear(sdl->renderer);
-			SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
-			ft_gui(e);
-			SDL_RenderPresent(sdl->renderer);
-		}
+		int x = SDL_GetTicks();
+		if ((btn_id = event_handler(e)))
+			sdl_draw_screen(e, e->sdl, btn_id);
+		if (!btn_id)
+			sdl_draw_screen(e, e->sdl, 0);
+		int y = SDL_GetTicks() - x;
+		if (y != 0)
+			printf("%f\n", 1000 / (float)y);
 	}
 }
 

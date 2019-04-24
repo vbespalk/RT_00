@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 12:37:06 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 17:39:23 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@
 # define GUI_WIDTH 220
 # define GUI_HEIGHT 250 * 1250 / 570
 # define BUTTONS_AMOUNT 40
+# define BTN_ID_SHIFT 100
 
 /*
 ** buttons ids enum
@@ -143,17 +144,20 @@ typedef struct	s_vec2
 typedef struct	s_gui
 {
 	SDL_Texture	*gui_texture;
+	SDL_Surface	*gui_surface;
+	int			h;
+	int			w;
 }				t_gui;
 
 int		gui_init(t_sdl *sdl);
-void    ft_gui(t_env *e);
+void    ft_gui(t_env *e, uint32_t btn_id);
 
 /*
 ** buttons event handlers
 */
 
-uint8_t     mouse_on_btn(const int32_t x, const int32_t y, t_env *e);
-uint8_t		handle_button(t_env *e, uint32_t btn_id);
+uint32_t    mouse_on_btn(const int32_t x, const int32_t y, t_env *e);
+uint32_t	handle_button(t_env *e, uint32_t btn_id);
 
 /*
 ** gui utils

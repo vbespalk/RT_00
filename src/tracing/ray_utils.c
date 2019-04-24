@@ -57,13 +57,51 @@ t_color			ft_sum_colors
 				0.0, 1.0, o->ambnt + (float)(coll->illum_color.argb[i]) / 255.0);
 		res.argb[i] = (t_byte)(
 				(!coll->o->spclr || !coll->o->trans)
-				? ((float)(o->color.argb[i]) * illum * o->diff +
+				? ((float)(coll->px_color.argb[i]) * illum * o->diff +
 				   (float)(color_s.argb[i]) * coll->o->spclr +
 				   (float)(color_t.argb[i]) * coll->o->trans)
-				: ((float)(o->color.argb[i]) * illum * o->diff +
+				: ((float)(coll->px_color.argb[i]) * illum * o->diff +
 				   (1.0f - o->diff) *
 				   ((float)(color_s.argb[i]) * coll->fresnel +
 					(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));
 	}
+//	if ((!coll->o->spclr && !coll->o->trans))
+//		printf("RES %u\n", res.val);
+//	printf("SPCLR %u TRANS %u FRES %f RES %u\n", color_s.val, color_t.val, coll->fresnel,
+//			res.val);
 	return (res);
 }
+
+
+//t_color			ft_sum_colors
+//		(t_coll *coll, t_color color_s, t_color color_t, int depth) {
+//	t_color res;
+//	t_object *o;
+//	int i;
+//	float illum;
+//
+//	res.val = UINT32_MAX;
+//	o = coll->o;
+//	i = -1;
+//	while (++i < 3)
+//	{
+//		illum = (float) ft_limitf(
+//				0.0, 1.0, o->ambnt + (float) (coll->illum_color.argb[i]) / 255.0);
+//		res.argb[i] = (t_byte) (
+//				(!coll->o->spclr || !coll->o->trans)
+//				? ((float) (coll->px_color.argb[i]) * illum *
+//				   (coll->o->trans && coll->px_color.val != UINT32_MAX ? 1 : o->diff) +
+//				   (float) (color_s.argb[i]) * coll->o->spclr +
+//				   (float) (color_t.argb[i]) * coll->o->trans)
+//				: ((float) (coll->px_color.argb[i]) * illum *
+//				   (coll->o->trans && coll->px_color.val != UINT32_MAX ? 1 : o->diff) +
+//				   (1.0f - (coll->o->trans && coll->px_color.val != UINT32_MAX ? 1 : o->diff)) *
+//				   ((float) (color_s.argb[i]) * coll->fresnel +
+//					(float) (color_t.argb[i]) * (1.0f - coll->fresnel))));
+//	}
+////	if ((!coll->o->spclr && !coll->o->trans))
+////		printf("RES %u\n", res.val);
+////	printf("SPCLR %u TRANS %u FRES %f RES %u\n", color_s.val, color_t.val, coll->fresnel,
+////			res.val);
+//	return (res);
+//}

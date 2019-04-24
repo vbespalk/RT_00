@@ -1,0 +1,43 @@
+{
+    "name": "Reflection and Refraction",
+
+    "//": "sky blue color",
+    "bg_color": "0x87cefa",
+
+    "camera": {
+        "origin": { "x": -1500, "y": 200 }
+    },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": -1, "y": -1, "z": 1 }
+        }
+    ],
+    "objects": [
+        {
+            "//": "water cover",
+
+            "name": "sphere",
+            "translate": { "y": 0 },
+            "radius": 200,
+
+            "//": "water blue color",
+            "color": "0xff0000",
+
+            "diff": 0.2,
+            "spclr": 1,
+            "transparent": 1,
+            "phong": 0,
+            "refr": 4.5
+        },
+        {
+            "name": "cylinder",
+            "translate": { "y": 0 },
+            "rotate":{"z": 30, "y": 15},
+            "radius": 50,
+            "height": 1000,
+            "color": "0x00ffff",
+            "ambnt": 0.3
+        }
+    ]
+}

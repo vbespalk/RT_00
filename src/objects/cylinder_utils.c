@@ -27,76 +27,75 @@ static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
 	return (1);
 }
 
-static t_vector	get_closer_pnt(t_vector origin, t_vector *coll)
+static float	get_closer_pnt(const float *t, const t_vector *hit, t_coll *coll, t_object *obj)
 {
-	float t[2];
-
-	if (ft_3_isnullpoint(coll[0]))
-		return (coll[1]);
-	if (ft_3_isnullpoint(coll[1]))
-		return (coll[0]);
-	t[0] = ft_3_vector_len(coll[0] - origin);
-	t[1] = ft_3_vector_len(coll[1] - origin);
-	return (t[0] < t[1] ? coll[0] : coll[1]);
+	coll->o = obj;
+	coll->tex_o = obj;
+	if ((t[0] < t[1] || t[1] < 0) && t[0] > 0)
+	{
+		coll->ucoll_pnt = hit[0];
+		coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse),
+					(coll->ucoll_pnt - (t_vector){0, coll->ucoll_pnt[1], 0})));
+		return (t[0]);
+	}
+	else
+	{
+		coll->ucoll_pnt = hit[1];
+		coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));
+		return (t[1]);
+	}
 }
 
 /*
 ** ADD 1e-1 TO t TO AVOID MISSES BETW SIDES AND CAPS
 */
 
-static t_vector	get_cides_coll(t_vector origin, t_vector direct, float *t, t_cylinder *clnd)
+static float	get_cides_coll(const t_vector *od, float *t, t_vector *coll, t_cylinder *clnd)
 {
-	t_vector	coll[2];
-	float 		m[2];
+	t_vector	hit[2];
 
-	coll[0] = origin + ft_3_vector_scale(direct, t[0]);
-	m[0] = ft_3_vector_dot(clnd->v, coll[0] - clnd->o);
-	coll[1] = origin + ft_3_vector_scale(direct, t[1]);
-	m[1] = ft_3_vector_dot(clnd->v, coll[1] - clnd->o);
-	if (clnd->maxh == FLT_MAX)
+	hit[0] = od[0] + ft_3_vector_scale(od[1], t[0]);
+	hit[1] = od[0] + ft_3_vector_scale(od[1], t[1]);
+	if (t[0] >= FLT_MIN && IN_RANGE(hit[0][1], -clnd->maxh, clnd->maxh))
 	{
-		if (t[0] > FLT_MIN)
-			return (coll[0]);
-		else if (t[1] > FLT_MIN)
-			return (coll[1]);
-		return (ft_3_nullpointnew());
+		*coll = hit[0];
+		return (t[0]);
 	}
-	if (t[0] >= FLT_MIN && IN_RANGE(m[0], 0.0f, clnd->maxh))
-		return (coll[0]);
-	else if (t[1] >= FLT_MIN && IN_RANGE(m[1], 0.0f, clnd->maxh))
-		return (coll[1]);
-	return (ft_3_nullpointnew());
+	else if (t[1] >= FLT_MIN && IN_RANGE(hit[1][1], -clnd->maxh, clnd->maxh))
+	{
+		*coll = hit[1];
+		return (t[1]);
+	}
+	return (-FLT_MAX);
 }
 
-static t_vector	get_caps_coll(t_vector origin, t_vector direct, t_cylinder *clnd, float dot)
+static float	get_caps_coll(const t_vector *od, t_vector *coll, t_cylinder *clnd)
 {
-	float		t[2];
-	t_vector	coll[2];
-	t_vector 	o[2];
+	float 		t[2];
+	t_vector	ori[2];
+	t_vector	hit[2];
 
-	o[0] = clnd->o;
-	o[1] = clnd->o + ft_3_vector_scale(clnd->v, clnd->maxh);
-	t[0] = (ft_3_vector_dot(o[0], -clnd->v) - ft_3_vector_dot(origin, -clnd->v)) * -dot;
-	t[1] = (ft_3_vector_dot(o[1], clnd->v) - ft_3_vector_dot(origin, clnd->v)) * dot;
-	if (t[0] < 1e-6 && t[1] < 1e-6)
-		return (ft_3_nullpointnew());
-	coll[0] = ft_3_nullpointnew();
-	coll[1] = ft_3_nullpointnew();
-	if (t[0] > FLT_MIN) {
-		coll[0] = origin + ft_3_vector_scale(direct, t[0]);
-		if (ft_3_vector_dot(coll[0] - o[0], coll[0] - o[0]) > clnd->r * clnd->r)
-			coll[0] = ft_3_nullpointnew();
+	ori[0] = od[0] + (t_vector){FLT_MIN, clnd->maxh, FLT_MIN};
+	ori[1] = od[0] - (t_vector){FLT_MIN, clnd->maxh, FLT_MIN};
+	t[0] = -(ori[0][1]) / od[1][1];
+	t[1] = -(ori[1][1]) / od[1][1];
+	if (t[0] < FLT_MIN && t[1] < FLT_MIN)
+		return (-FLT_MAX);
+	t[0] > t[1] || t[0] < 0 ? ft_swap_float(&t[0], &t[1]),
+			ft_swap(&ori[0], &ori[1], sizeof(t_vector)) : 1;
+	hit[0] = ori[0] + ft_3_vector_scale(od[1], t[0]);
+	hit[1] = ori[1] + ft_3_vector_scale(od[1], t[1]);
+	if (t[0] > FLT_MIN && ft_3_vector_dot(hit[0], hit[0]) < 1)
+	{
+		*coll = (t_vector){hit[0][0], hit[0][1] + clnd->maxh, hit[0][2]};
+		return (t[0]);
 	}
-	if (t[1] > FLT_MIN) {
-		coll[1] = origin + ft_3_vector_scale(direct, t[1]);
-		if (ft_3_vector_dot(coll[1] - o[1], coll[1]	- o[1]) > clnd->r * clnd->r)
-			coll[1] = ft_3_nullpointnew();
+	else if (t[1] > FLT_MIN && ft_3_vector_dot(hit[1], hit[1]) < 1)
+	{
+		*coll = (t_vector){hit[1][0], hit[1][1] - clnd->maxh, hit[1][2]};
+		return (t[1]);
 	}
-	if (t[0] < FLT_MIN)
-		return (coll[1]);
-	else if (t[1] < FLT_MIN)
-		return (coll[0]);
-	return (t[0] < t[1] && !ft_3_isnullpoint(coll[0]) ? coll[0] : coll[1]);
+	return (-FLT_MAX);
 }
 
 int					ft_is_reachable_cylinder(void *fig, t_vector origin, t_vector direct)
@@ -104,57 +103,61 @@ int					ft_is_reachable_cylinder(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-t_vector			ft_collide_cylinder(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
+float			ft_collide_cylinder(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
 {
 	t_cylinder	*clnd;
-	t_vector	coll_pnt[2];
+	t_vector	hit[2];
 	float		res[2];
-	float 		dot_dv;
-	float 		dot_vx;
+	t_vector	od[2];
 
-	clnd = (t_cylinder *)(obj->fig);
-	dot_dv = ft_3_vector_dot(od[1], clnd->v);
-	dot_vx = ft_3_vector_dot(od[0] - clnd->o, clnd->v);
-	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - dot_dv * dot_dv,
-		2.0f * (ft_3_vector_dot(od[0] - clnd->o, od[1]) - dot_dv * dot_vx),
-		ft_3_vector_dot(od[0] - clnd->o, od[0] - clnd->o) - dot_vx *
-		dot_vx - clnd->r * clnd->r, &res))
-		return (fabsf(dot_dv) < 1e-6 ? ft_3_nullpointnew() : \
-			get_caps_coll(od[0], od[1], clnd, 1.0f / dot_dv));
-	coll_pnt[0] = get_cides_coll(od[0], od[1], res, clnd);
-	if (clnd->maxh == FLT_MAX || fabsf(dot_dv) < 1e-6)
-		return (coll_pnt[0]);
-	coll_pnt[1] = get_caps_coll(od[0], od[1], clnd, 1.0f / dot_dv);
-	return (get_closer_pnt(od[0], coll_pnt));
+	clnd = (t_cylinder *)obj->fig;
+	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
+	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
+	if (!ft_solve_sqr_(od[1][0] * od[1][0] + od[1][2] * od[1][2],
+		2.0f * (od[0][0] * od[1][0] + od[0][2] * od[1][2]),
+		od[0][0] * od[0][0] + od[0][2] * od[0][2] - 1,
+		&res))
+		return (-FLT_MAX);
+	res[0] = get_cides_coll(od, res, &hit[0], clnd);
+	res[1] = (clnd->maxh == FLT_MAX || fabsf(od[1][1]) < 1e-6) ?
+			-FLT_MAX : get_caps_coll(od, &hit[1], clnd);
+	if (res[0] < 0 && res[1] < 0)
+		return (-FLT_MAX);
+	return (get_closer_pnt(res, hit, coll, obj));
 }
 
-int			ft_is_inside_cylinder(void *fig, t_vector point)
+int			ft_is_inside_cylinder(t_object *o, t_vector point)
 {
-	t_cylinder	*clnd;
-	float 		hei;
-	t_vector	pnt_r;
+	float 		maxh;
 
-	clnd = (t_cylinder *)fig;
-	hei = ft_3_vector_dot(clnd->v, point - clnd->o);
-	if (!IN_RANGE(hei, 0.0f, clnd->maxh) && clnd->maxh != FLT_MAX)
+	maxh = ((t_cylinder *)o->fig)->maxh;
+	point = ft_3_pnt_transform(&(o->inverse), point);
+	if (!IN_RANGE(point[1], -maxh, maxh) && maxh != FLT_MAX)
+	{
+		printf("OUTSIDE HEI\n");
 		return (0);
-	pnt_r = point - (clnd->o + ft_3_vector_scale(clnd->v, hei));
-//	if (ft_3_vector_dot(pnt_r, pnt_r) < clnd->r * clnd->r)
-//		printf("INSIDE\n");
-	return (ft_3_vector_dot(pnt_r, pnt_r) < clnd->r * clnd->r ? 1 : 0);
+	}
+	if (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
+			(t_vector){point[0], 0, point[2]}) <= 1)
+		printf("INSIDE\n");
+	else
+		printf("OUTSIDE\n");
+	return (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
+			(t_vector){point[0], 0, point[2]}) <= 1 ? 1 : 0);
 }
 
 t_vector	ft_get_norm_cylinder(void *fig, t_vector coll)
 {
-	t_cylinder *clnd;
-	float 		h;
-
-	clnd = (t_cylinder *)fig;
-	h = ft_3_vector_dot(clnd->v, coll - clnd->o);
-	if (clnd->maxh != FLT_MAX &&h >= clnd->maxh - 1e-2)
-		return (clnd->v);
-	if (clnd->maxh != FLT_MAX &&h <= 1e-2)
-		return (-clnd->v);
-	return (ft_3_tounitvector(coll - ((t_cylinder *)fig)->o
-	- ft_3_vector_scale(((t_cylinder *)fig)->v,h)));
+//	t_cylinder *clnd;
+//	float 		h;
+//
+//	clnd = (t_cylinder *)fig;
+//	h = ft_3_vector_dot(clnd->v, coll - clnd->o);
+//	if (clnd->maxh != FLT_MAX &&h >= clnd->maxh - 1e-2)
+//		return (clnd->v);
+//	if (clnd->maxh != FLT_MAX &&h <= 1e-2)
+//		return (-clnd->v);
+//	return (ft_3_tounitvector(coll - ((t_cylinder *)fig)->o
+//	- ft_3_vector_scale(((t_cylinder *)fig)->v,h)));
+	return (ft_3_nullpointnew());
 }

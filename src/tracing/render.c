@@ -72,6 +72,17 @@ static t_color	ft_get_pixel_color(t_thrarg	*thrarg, int x, int y, int smth)
 **	x/y[0] - start point, iterator;
 **	x/y[1] - end point;
 */
+static void	ft_update_obj_lst(t_camera *cam, t_list *objs)
+{
+	t_object *o;
+
+	while (objs)
+	{
+		o = ((t_object *)objs->content);
+		o->dist = ft_3_vector_len(o->translate - cam->origin);
+		objs = objs->next;
+	}
+}
 
 void			*ft_section_handle(void *arg)
 {
@@ -103,6 +114,7 @@ void			ft_render(t_env *e)
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
 	ft_get_start_stack(e->scn);
+	ft_update_obj_lst(e->scn->cam, e->scn->objs);
 	i = -1;
 	while (++i < THREADS)
 	{

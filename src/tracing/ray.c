@@ -33,6 +33,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	t_color		spclr_col;
 	t_color		trans_col;
 	float		num[2];
+	t_vector	coll_pnt;
 
 	spclr_col.val = 0;
 	trans_col.val = 0;
@@ -43,13 +44,14 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	if (coll.o == NULL)
 	{
 		if (parg->e->scn->skybox)
-			return (ft_apply_sky(parg->e->scn->skybox, ray->o, ray->d));
+		    return (ft_apply_sky(parg->e->scn->skybox, ray->o, ray->d));
 		return (parg->e->scn->bg_color);
 	}
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)
 	{
-		ft_init_ray(ray, &next_ray, &(coll.coll_pnt), &(coll.spclr_vec));
+		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, 1e-1);
+		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.spclr_vec));
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
 			ft_throw_rays(parg, &next_ray, &(coll.spclr_vec), num) :
@@ -57,7 +59,8 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	}
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
-		ft_init_ray(ray, &next_ray, &(coll.coll_pnt), &(coll.trans_vec));
+		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, 1e-1);
+		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.trans_vec));
 		ft_handle_hit(&next_ray, coll.o);
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?

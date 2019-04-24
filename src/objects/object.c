@@ -56,16 +56,16 @@ void		*ft_get_figure_parser(char *name)
 		return (ft_parse_sphere);
 	else if (!ft_strcmp(name, "cone"))
 		return (ft_parse_cone);
-//	else if (!ft_strcmp(name, "cylinder"))
-//		return (ft_parse_cylinder);
-//	else if (!ft_strcmp(name, "paraboloid"))
-//		return (ft_parse_prbld);
-//	else if (!ft_strcmp(name, "box"))
-//		return (ft_parse_box);
-//	else if (!ft_strcmp(name, "disk"))
-//		return (ft_parse_disk);
-//	else if (!ft_strcmp(name, "torus"))
-//		return (ft_parse_torus);
+	else if (!ft_strcmp(name, "cylinder"))
+		return (ft_parse_cylinder);
+	else if (!ft_strcmp(name, "paraboloid"))
+		return (ft_parse_prbld);
+	else if (!ft_strcmp(name, "box"))
+		return (ft_parse_box);
+	else if (!ft_strcmp(name, "disk"))
+		return (ft_parse_disk);
+	else if (!ft_strcmp(name, "torus"))
+		return (ft_parse_torus);
 	ft_printf("PARSE WARNING: unknown object name '%s'\n", name);
 	return (NULL);
 }
@@ -79,13 +79,15 @@ static void	ft_get_object_attrs(char **content, t_object *o)
 	ft_get_attr(content, "spclr", (void *)(&(o->spclr)), DT_COEF);
 	ft_get_attr(content, "s_blur", (void *)(&(o->s_blur)), DT_COEF);
 	ft_get_attr(content, "refr", (void *)(&(o->refr)), DT_FLOAT);
-	ft_get_attr(content, "trans", (void *)(&(o->trans)), DT_COEF);
+	ft_get_attr(content, "transparent", (void *)(&(o->trans)), DT_COEF);
 	ft_get_attr(content, "t_blur", (void *)(&(o->t_blur)), DT_COEF);
 	ft_get_attr(content, "phong", (void *)(&(o->phong)), DT_COEF);
 	ft_get_attr(content, "translate", (void *)(&(o->translate)), DT_POINT);
 	ft_get_attr(content, "rotate", (void *)(&(o->rotate)), DT_POINT);
 
 	ft_get_attr(content, "texture", (void *)(&(o->texture_id)), DT_STRING);
+	ft_get_attr(content, "procedural", (void *)(&(o->noise)), DT_PROCEDURAL);
+	ft_get_attr(content, "checker", (void *)(&(o->checker)), DT_CHECKER);
 }
 
 void		ft_parse_object(char **content, t_list **lst, Uint32 id)
@@ -103,6 +105,11 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	}
 	free(name);
 	o = ft_objectnew(id);
+	o->color.val = UINT32_MAX;
+	o->noise = NULL;
+	o->checker = NULL;
+	o->texture_id = NULL;
+	o->texture = NULL;
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);
 	o->rotate[0] = ft_torad(o->rotate[0]);

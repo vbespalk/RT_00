@@ -1,0 +1,39 @@
+{
+  "name": "PROCEDURAL_TEXTURING",
+  "bg_color": "0xEEEEEE",
+  "camera": {
+    "origin": { "x": -500, "y": 0 }
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 0 }
+    }
+  ],
+  "objects": [
+
+        {
+            "name": "sphere",
+            "translate": { "x": -50, "y": 60 },
+            "radius": 50,
+            "color": "0xff0000",
+                  "//procedural":
+      {
+        "name": ""
+      },
+            "phong": 1,
+            "ambnt": 0.1
+        },
+    {
+      "name": "cylinder",
+      "translate": { "x": 0, "y": -50, "z": 0 },
+      "radius": 50,
+      "rotate": {"x": 90, "y": 30, "z": -420},
+      "height": 200,
+      "//checker": { "color2": "gray_marble", "color1": "blue_marble", "size": 1},
+      "spclr": 0,
+      "phong": 1,
+      "ambnt": 0.1
+    }
+  ]
+}

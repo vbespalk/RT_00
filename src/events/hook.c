@@ -18,19 +18,19 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		|| sum == SDLK_s || sum == SDLK_d \
 		|| sum == SDLK_q || sum == SDLK_e)
 	{
-		e->selected ? e->selected->ft_translate(sum, e->selected->fig, &e->selected->translate) : \
+		e->selected ? e->selected->ft_translate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_translate_cam(sum, &(e->scn->cam->origin)); //<-----------------------------CAMERA TRANSLATION??????
 	}
 	if (sum == SDLK_UP || sum == SDLK_DOWN || \
 		sum == SDLK_LEFT || sum == SDLK_RIGHT || \
 		sum == SDLK_PAGEDOWN|| sum == SDLK_PAGEUP)
 	{
-		e->selected ? e->selected->ft_rotate(sum, e->selected->fig, &e->selected->rotate) : \
+		e->selected ? e->selected->ft_rotate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_rotate_cam(sum, &(e->scn->cam->angles));
 	}
 	if (sum == SDLK_z || sum == SDLK_x)
 	{
-		e->selected ? e->selected->ft_scale(sum, e->selected->fig, &e->selected->scale) : \
+		e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	}
 	if (sum == SDLK_DELETE && e->selected)
@@ -56,7 +56,7 @@ int		on_mouse_wheel(Sint32 y, Uint32 dir, t_env *e)
 		sum = (y > 0) ? SDLK_z : SDLK_x;
 	else
 		sum = (y < 0) ? SDLK_z : SDLK_x;
-	e->selected ? e->selected->ft_scale(sum, e->selected->fig, &e->selected->scale) : \
+	e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	return (1);
 }

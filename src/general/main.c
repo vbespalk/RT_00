@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "rt.h"
-#include "rt_gui.h"
+//#include "rt_gui.h"
 
 static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
@@ -27,19 +27,46 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	textures = NULL;
 	e->scn->textures = textures;
 	objs = e->scn->objs;
-//	while (objs)
-//	{
-//		obj = (t_object *)objs->content;
-//		if (obj->texture_id != NULL)
-//			obj->texture = init_texture(&textures, sdl, obj->texture_id);
-//		objs = objs->next;
-//	}
-//	i = -1;
-//	if (e->scn->skybox != NULL)
-//		while (++i < BOX_FACES)
-//			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
-//					e->scn->skybox->textur_id[i])))
-//				return (-1);
+	while (objs)
+	{
+		obj = (t_object *)objs->content;
+		if (obj->texture_id != NULL)
+			obj->texture = init_texture(&textures, sdl, obj->texture_id);
+		if (obj->noise != NULL && obj->noise->ramp_id != NULL)
+        {
+		    printf("RUMP %s to init\n", obj->noise->ramp_id);
+		    obj->noise->ramp = init_texture(&textures, sdl, obj->noise->ramp_id)->surface;
+		    if (obj->noise->ramp != NULL)
+            {
+		        printf("RUMP INITIALISED\n");
+		        obj->noise->ft_get_color = ft_ramp_noise_col;
+            }
+        }
+		if (obj->checker != NULL)
+		{
+        	i = -1;
+        	while (++i < 2 && obj->checker->noise[i] != NULL)
+			{
+        		if (obj->checker->noise[i]->ramp_id != NULL)
+				{
+					obj->checker->noise[i]->ramp = init_texture(&textures, sdl,
+							obj->checker->noise[i]->ramp_id)->surface;
+					if (obj->checker->noise[i]->ramp != NULL)
+					{
+						printf("RUMP INITIALISED\n");
+						obj->checker->noise[i]->ft_get_color = ft_ramp_noise_col;
+					}
+				}
+			}
+		}
+		objs = objs->next;
+	}
+	i = -1;
+	if (e->scn->skybox != NULL)
+		while (++i < BOX_FACES)
+			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
+					e->scn->skybox->textur_id[i])))
+				return (-1);
 	e->selected = NULL;
 	return (0);
 }

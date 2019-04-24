@@ -61,7 +61,6 @@ void				ft_parse_camera(char **content, t_camera *cam)
 	cam->angles[1] = ft_torad(cam->angles[1]);
 	cam->angles[2] = ft_torad(cam->angles[2]);
 }
-
 static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
 {
 	t_dlist		*node;
@@ -103,7 +102,7 @@ void				ft_get_start_stack(t_scene *scn)
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, scn->cam->origin))
+		if (o->ft_is_inside(o, scn->cam->origin))
 		{
 			ft_lstpush(&objs, ft_nodenew((void *)o, sizeof(o)));
 			++len;

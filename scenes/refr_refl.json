@@ -20,14 +20,20 @@
             "//": "water cover",
 
             "name": "sphere",
+<<<<<<< HEAD
             "origin": { "y": -500000 },
             "radius": 500000,
+=======
+            "translate": { "y": -100000 },
+            "radius": 100000,
+>>>>>>> upstream/torus
 
             "//": "water blue color",
             "color": "0x0077be",
 
             "diff": 0.2,
             "spclr": 1,
+<<<<<<< HEAD
             "trans": 1,
             "phong": 1,
             "ambnt": 0.8,
@@ -48,6 +54,35 @@
             "color": "0xff0000",
             "diff": 1,
             "phong": 1,
+=======
+            "transparent": 0.1,
+            "phong": 0,
+            "refr": 1.5
+        },
+        {
+            "//": "sand ground",
+
+            "name": "sphere",
+            "translate": { "y": -100000 },
+            "radius": 99800,
+
+            "//": "sand color",
+            "color": "0xc2b280",
+
+            "diff": 1,
+            "spclr": 0,
+            "trans": 0,
+            "phong": 0,
+            "ambnt": 0.8
+        },
+        {
+            "name": "cylinder",
+            "translate": { "y": -150 },
+            "rotate":{"z": 30, "y": 15},
+            "radius": 100,
+            "height": 1000,
+            "color": "0x00ffff",
+>>>>>>> upstream/torus
             "ambnt": 0.3
         }
     ]

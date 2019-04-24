@@ -1,6 +1,7 @@
 
 #include "libpnt.h"
 #include <stdio.h>
+#include "libft.h"
 
 t_vector	ft_3_vector_refract
 				(t_vector norm, t_vector direct, float refr1, float refr2)
@@ -9,10 +10,13 @@ t_vector	ft_3_vector_refract
 	float		c1;
 	float		k;
 
-	n = refr1 / refr2;
 	c1 = ft_3_vector_cos(norm, direct);
+	n = 1.f;
 	if (c1 < 0)
-		c1 *= -1.0f;
+	{
+		c1 = -c1;
+		n = refr1 / refr2;
+	}
 	else
 	{
 		norm = ft_3_vector_invert(norm);
@@ -28,6 +32,4 @@ t_vector	ft_3_vector_refract
 			ft_3_vector_scale(norm, n * c1 - sqrtf(k)));
 
 //	if (refr1 > refr2) printf("[ %f -> %f ]:(%f, %f, %f);\n", refr1, refr2, t[0], t[1], t[2]);
-
-
 }

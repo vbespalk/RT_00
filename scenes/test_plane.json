@@ -1,44 +1,36 @@
 {
   "name": "TEST",
-  "bg_color": "0x0",
+  "bg_color": "0xEEEEEE",
   "camera": {
-    "origin": { "x": -1500 }
+    "origin": { "x": -2000, "y": 0 },
+    "gamma": 0
   },
   "lights": [
     {
       "type": "direct",
-      "direct": { "x": 1, "y": -1, "z": 1 }
+      "direct": { "x": 1, "y": 0, "z": 0 }
     }
   ],
   "objects": [
     {
       "name": "plane",
-      "origin": { "x": -500, "y": 0, "z": 0 },
-      "width": {"x": -300, "y": 0, "z": -200},
-      "height": {"x": -500, "y": 100, "z": 0},
-      "normal": {"x": 1},
-      "color": "0xff0000",
-      "spclr": 0.1,
-      "texture": "./texture/noise.jpg",
+      "origin": { "x": 100, "y": 0, "z": 0 },
+      "rotate": {"z": 80},
+
+      "color": "0xff00ff",
+    "checker": {"color1": "blue_marble", "color2": "lattice", "size": 2},
+      "spclr": 0,
       "phong": 1
     },
-    {
+        {
       "name": "plane",
-      "origin": { "x": 500, "y": -20, "z": 0 },
-      "normal": {"x": 1},
-      "color": "0x00ff00",
-      "spclr": 0.1,
-      "texture": "./texture/noise.jpg",
-      "phong": 1
-    },
-    {
-      "name": "disk",
-      "origin": { "x": -500, "y": 0, "z": 0 },
-      "outer_radius": 20,
-      "inner_radius": 100,
-      "norm": {"x": 1},
-      "color": "0x0000ff",
-      "spclr": 0.1,
+      "origin": { "x": -100, "y": 0, "z": 0 },
+      "width": 480,
+      "height": 480,
+      "rotate": {"z": 45, "y": 45},
+      "color": "0xff0000",
+      "spclr": 1,
+      "diffuse": 0,
       "phong": 1
     }
   ]

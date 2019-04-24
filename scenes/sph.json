@@ -1,0 +1,54 @@
+{
+  "name": "TEST",
+  "bg_color": "0xEEEEEE",
+  "camera": {
+    "origin": {
+      "x": 120,
+      "y": 1200
+    },
+    "gamma": -90
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": {
+        "x": 1,
+        "z": 0
+      }
+    }
+  ],
+  "objects": [
+    {
+      "name": "sphere",
+      "origin": {
+        "x": 120,
+        "z": 0
+      },
+      "radius": 100,
+      "color": "0x00ffff",
+      "procedural":
+      {
+        "octaves": 5,
+        "scale_min": 0,
+        "scale_max": 1,
+        "expansion": 1,
+        "perturbation": 1,
+        "gain": 0.5,
+        "lacunarity": 2
+      },
+      "phong": 1,
+      "ambnt": 0.5
+    },
+    {
+      "name": "sphere",
+      "origin": {
+        "x": 500,
+        "z": 100
+      },
+      "radius": 50,
+      "color": "0xff0000",
+      "phong": 1,
+      "ambnt": 0.5
+    }
+  ]
+}

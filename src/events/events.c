@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/23 15:08:01 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 13:57:48 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		event_handler(t_env *e)
 			// btn_id = mouse_on_btn(event.button.x, event.button.y, e);
 			// printf("id: %d\n", btn_id);
 			// if (btn_id)
-				return (handle_button(e, btn_id));
+				return (handle_button(e, btn_id) + BTN_ID_SHIFT);
 			if (event.button.button == SDL_BUTTON_LEFT)
 				return (on_lbutton_down(event.button.x, event.button.y, e));
 			if (event.button.button == SDL_BUTTON_RIGHT)

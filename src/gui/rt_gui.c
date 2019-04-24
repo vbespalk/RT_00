@@ -6,13 +6,13 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 12:17:16 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 12:25:38 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 14:06:58 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-void		ft_gui(t_env *e)
+void		ft_gui(t_env *e, uint32_t btn_id)
 {
 	SDL_Rect	background;
 	SDL_Rect	gui_container;
@@ -31,4 +31,11 @@ void		ft_gui(t_env *e)
 	}
 	SDL_RenderCopy(e->sdl->renderer, e->sdl->gui->gui_texture,
 	NULL, &gui_container);
+	if (btn_id > BTN_ID_SHIFT)
+	{
+		SDL_SetRenderDrawColor(e->sdl->renderer, 255, 255, 255, 255);
+		background = g_btn_containers[btn_id - BTN_ID_SHIFT - 1];
+		background.x = e->sdl->scr_wid - background.x;
+		SDL_RenderDrawRect(e->sdl->renderer, &background);
+	}
 }

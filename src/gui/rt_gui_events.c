@@ -6,15 +6,15 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 12:38:10 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 13:55:19 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-uint8_t		mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
+uint32_t	mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
 {
-	uint8_t			i;
+	uint32_t		i;
 	const uint32_t	w = e->sdl->scr_wid;
 
 	i = -1;
@@ -65,7 +65,7 @@ static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
 		object_mode_events_handle_2(e, id);
 }
 
-uint8_t		handle_button(t_env *e, const uint32_t id)
+uint32_t	handle_button(t_env *e, const uint32_t id)
 {
 	printf("clicked btn with id %d\n", id); // remove this test stuff
 	if (id == SAVE_IMG || id == CAMERA_MODE ||
@@ -81,5 +81,5 @@ uint8_t		handle_button(t_env *e, const uint32_t id)
 		rotate(e, id);
 	else if (id > ROT_OZ_UP && id <= AMBIENT_UP && e->selected)
 		object_mode_events_handle_1(e, id);
-	return (1);
+	return (id);
 }

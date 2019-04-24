@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/23 15:08:01 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 15:20:35 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,7 @@ int		event_handler(t_env *e)
 				v = (t_vector){event.button.x, event.button.y, 0, 0};
 			mouse_pressed = SDL_TRUE;
 			if ((btn_id = mouse_on_btn((const int32_t)v[0], (const int32_t)v[1], e)))
-			// btn_id = mouse_on_btn(event.button.x, event.button.y, e);
-			// printf("id: %d\n", btn_id);
-			// if (btn_id)
-				return (handle_button(e, btn_id));
+				return (handle_button(e, btn_id) + BTN_ID_SHIFT);
 			if (event.button.button == SDL_BUTTON_LEFT)
 				return (on_lbutton_down(event.button.x, event.button.y, e));
 			if (event.button.button == SDL_BUTTON_RIGHT)

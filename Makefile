@@ -6,7 +6,7 @@
 #    By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/19 11:58:45 by domelche          #+#    #+#              #
-#    Updated: 2019/04/18 14:00:35 by mdovhopo         ###   ########.fr        #
+#    Updated: 2019/04/24 12:47:59 by mdovhopo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,6 @@ LIBPNT_INC  = -Ilibpnt
 LIBJSON_NAME = libjsonchecker.a
 LIBJSON_PATH = JSON-c/$(LIBJSON_NAME)
 LIBJSON_INC = -IJSON-c
-
-TTF_INC =	-I frameworks/SDL2_ttf.framework/Headers/
-TTF_LNK =	-F ./frameworks -rpath ./frameworks -framework SDL2_ttf
 
 SDL_INC =	-I frameworks/SDL2.framework/Headers/
 SDL_LNK	=	-F ./frameworks -rpath ./frameworks -framework SDL2
@@ -47,7 +44,7 @@ LFLAGS 		= -pthread -lm
 HEAD = rt.h
 
 CFLAGS = -pthread $(LIBFT_INC) $(LIBPNT_INC) $(LIBJSON_INC) $(INC) $(SDL_INC)\
-			$(SDL_IMG_INC) $(TTF_INC)
+			$(SDL_IMG_INC)
 
 EFLAGS =  -Wall -Wextra -Werror
 
@@ -77,7 +74,7 @@ $(NAME): $(OBJ) ./inc/rt.h
 	@$(MAKE) -C JSON-c
 	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \
 		$(LIBFT_PATH) $(LIBMLX_PATH) $(LIBPNT_PATH) $(LIBJSON_PATH) \
-		$(SDL_LNK) $(SDL_IMG_LNK) $(TTF_LNK) $(LFLAGS)
+		$(SDL_LNK) $(SDL_IMG_LNK) $(LFLAGS)
 
 clean:
 	@/bin/rm -f src/*/*.o

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/08/17 21:50:10 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/24 12:37:06 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,96 @@
 #  include <SDL2/SDL_image.h>
 
 # endif
+
+/*
+** GUI STUFF - includes, structures, defines etc. 
+*/
+
+# define MLC_TEST(t, msg) if (!(t)) {ft_putendl(msg);exit(-1);}
+
+# define DEFAULT_BUTTTON_WIDTH 93
+# define DEFAULT_BUTTTON_HEIGHT 20
+# define ARROW_BUTTON_WIDTH 30
+# define ARROW_BUTTON_HEIGHT 20
+# define GUI_WIDTH 220
+# define GUI_HEIGHT 250 * 1250 / 570
+# define BUTTONS_AMOUNT 40
+
+/*
+** buttons ids enum
+*/
+
+extern const SDL_Rect g_btn_containers[];
+
+typedef enum	e_btn_code
+{
+	SAVE_IMG = 1,
+	GRAYSCALE,
+	INVERTED_COLOR,
+	SEPIA,
+	COLOR_FILTER_TMP_NAME,
+	CAMERA_MODE,
+	FOV_DOWN, FOV_UP,
+	TRANS_OX_DOWN, TRANS_OX_UP,
+	TRANS_OY_DOWN, TRANS_OY_UP,
+	TRANS_OZ_DOWN, TRANS_OZ_UP,
+	ROT_OX_DOWN, ROT_OX_UP,
+	ROT_OY_DOWN, ROT_OY_UP,
+	ROT_OZ_DOWN, ROT_OZ_UP,
+	SKYBOX,
+	DELETE_OBJ,
+	RADIUS_DOWN, RADIUS_UP,
+	HEIGHT_DOWN, HEIGHT_UP,
+	REFL_DOWN, REFL_UP,
+	S_BLUR_DOWN, S_BLUR_UP,
+	T_BLUR_DOWN, T_BLUR_UP,
+	TRANSP_DOWN, TRANSP_UP,
+	REFR_DOWN, REFR_UP,
+	DIFFUSE_DOWN, DIFFUSE_UP,
+	AMBIENT_DOWN, AMBIENT_UP
+}				t_btn_code;
+
+typedef struct s_environment	t_env;
+typedef struct s_sdl			t_sdl;
+
+typedef struct	s_vec2
+{
+    int32_t x;
+    int32_t y;
+}               t_vec2;
+
+typedef struct	s_gui
+{
+	SDL_Texture	*gui_texture;
+}				t_gui;
+
+int		gui_init(t_sdl *sdl);
+void    ft_gui(t_env *e);
+
+/*
+** buttons event handlers
+*/
+
+uint8_t     mouse_on_btn(const int32_t x, const int32_t y, t_env *e);
+uint8_t		handle_button(t_env *e, uint32_t btn_id);
+
+/*
+** gui utils
+*/
+
+float		clamp(float lo, float hi, float v);
+void		other_buttons(t_env *e, const uint32_t id);
+void		color_filter(t_env *e, const uint32_t id);
+void		translate(t_env *e, const uint32_t id);
+void		rotate(t_env *e, const uint32_t id);
+
+/*
+** Gui stuff end
+*/
+
+/*
+** some interface defines
+*/
 
 typedef	float		t_matrix[4][4];
 typedef uint8_t		t_byte;
@@ -378,6 +468,7 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	int				pitch; //from SDL_Surface
 	int				event_loop;
 	// SDL_Event 		event;
+	t_gui			*gui;
 }					t_sdl;
 
 typedef struct 		s_environment

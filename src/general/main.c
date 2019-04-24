@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/08/17 21:49:15 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/23 14:49:17 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+#include "rt_gui.h"
 
 static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
@@ -54,6 +55,7 @@ static void	ft_rt_loop(t_env *e)
 		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+	ft_gui(e);
 	SDL_RenderPresent(sdl->renderer);
 	while (sdl->event_loop)
 	{
@@ -64,6 +66,7 @@ static void	ft_rt_loop(t_env *e)
 				sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 			SDL_RenderClear(sdl->renderer);
 			SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+			ft_gui(e);
 			SDL_RenderPresent(sdl->renderer);
 		}
 	}
@@ -81,6 +84,8 @@ int			main(int argc, char **argv)
 	sdl.scr_wid = SCR_WID;
 	sdl.scr_hei = SCR_HEI;
 	if (sdl_init(&sdl) < 0)
+		exit(-1);
+	if (gui_init(&sdl) < 0)
 		exit(-1);
 //	SDL_UpdateTexture(
 //		sdl.screen, NULL, sdl.pixels, sdl.scr_wid * sizeof(Uint32));

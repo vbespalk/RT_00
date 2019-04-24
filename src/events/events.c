@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/11/07 19:52:26 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/23 15:08:01 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,15 @@
 
 int		event_handler(t_env *e)
 {
-	SDL_Event	event;
+	SDL_Event			event;
+	static SDL_bool		mouse_pressed = SDL_FALSE;
+	static t_vector		v = {0, 0, 0, 0};
+	uint32_t			btn_id;
 
-	if (SDL_WaitEvent(&event))
+	if (SDL_PollEvent(&event) || mouse_pressed)
 	{
+		if (event.type == SDL_MOUSEBUTTONUP)
+			mouse_pressed = 0;
 		//User requests quit
 		if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
 			return (ft_on_exit(e));
@@ -31,8 +36,16 @@ int		event_handler(t_env *e)
 		// 	on_mouse_move(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel, e, \
 		// 		event.motion.state == SDL_BUTTON_LMASK, event.motion.state == SDL_BUTTON_RMASK, \
 		// 		event.motion.state == SDL_BUTTON_MMASK);
-		else if (event.type == SDL_MOUSEBUTTONDOWN)
+		else if (mouse_pressed || event.type == SDL_MOUSEBUTTONDOWN)
 		{
+			if (!mouse_pressed)
+				v = (t_vector){event.button.x, event.button.y, 0, 0};
+			mouse_pressed = SDL_TRUE;
+			if ((btn_id = mouse_on_btn((const int32_t)v[0], (const int32_t)v[1], e)))
+			// btn_id = mouse_on_btn(event.button.x, event.button.y, e);
+			// printf("id: %d\n", btn_id);
+			// if (btn_id)
+				return (handle_button(e, btn_id));
 			if (event.button.button == SDL_BUTTON_LEFT)
 				return (on_lbutton_down(event.button.x, event.button.y, e));
 			if (event.button.button == SDL_BUTTON_RIGHT)

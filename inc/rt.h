@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 14:00:48 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 17:39:23 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,9 @@ typedef struct	s_vec2
 typedef struct	s_gui
 {
 	SDL_Texture	*gui_texture;
+	SDL_Surface	*gui_surface;
+	int			h;
+	int			w;
 }				t_gui;
 
 int		gui_init(t_sdl *sdl);

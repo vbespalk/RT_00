@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 13:55:19 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 15:14:11 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
 
 uint32_t	handle_button(t_env *e, const uint32_t id)
 {
-	printf("clicked btn with id %d\n", id); // remove this test stuff
+	// printf("clicked btn with id %d\n", id); // remove this test stuff
 	if (id == SAVE_IMG || id == CAMERA_MODE ||
 		id == SKYBOX || id == DELETE_OBJ)
 		other_buttons(e, id);

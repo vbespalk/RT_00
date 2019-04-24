@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 14:59:47 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 16:38:40 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
 		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
-	ft_gui(e, 0);
+	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
 }
 
@@ -64,8 +64,14 @@ static void	ft_rt_loop(t_env *e)
 	sdl_draw_screen(e, e->sdl, 0);
 	while (sdl->event_loop)
 	{
+		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
 			sdl_draw_screen(e, e->sdl, btn_id);
+		if (!btn_id)
+			sdl_draw_screen(e, e->sdl, 0);
+		int y = SDL_GetTicks() - x;
+		if (y != 0)
+			printf("%f\n", 1000 / (float)y);
 	}
 }
 

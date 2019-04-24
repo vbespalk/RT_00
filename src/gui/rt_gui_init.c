@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:14:15 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 12:14:54 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 17:40:24 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ const SDL_Rect g_btn_containers[] = (const SDL_Rect[]){
 int			gui_init(t_sdl *sdl)
 {
 	SDL_Surface *image;
+	SDL_Rect	r;
 
 	if (IMG_Init(IMG_INIT_PNG) < 0)
 		return -1;
@@ -79,5 +80,7 @@ int			gui_init(t_sdl *sdl)
 	MLC_TEST((sdl->gui->gui_texture =
 	SDL_CreateTextureFromSurface(sdl->renderer, image)), "Texture could not created")
 	SDL_FreeSurface(image);
+	SDL_QueryTexture(sdl->gui->gui_texture, NULL, NULL, &(sdl->gui->w), &(sdl->gui->h));
+	printf("%d %d\n", sdl->gui->w ,sdl->gui->h);
 	return 1;
 }

@@ -6,36 +6,57 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 12:17:16 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 14:06:58 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/24 18:04:22 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
+void		button_pressed(t_env *e, int id)
+{
+	float		x_m;
+	float		y_m;
+	SDL_Rect	src;
+	SDL_Rect	dst;
+
+	dst = g_btn_containers[id - BTN_ID_SHIFT - 1];
+	dst.x = e->sdl->scr_wid - dst.x;
+	x_m = (float)(e->sdl->gui->w) / (float)GUI_WIDTH;
+	y_m = (float)(e->sdl->gui->h) / ((float)GUI_HEIGHT);
+	src = g_btn_containers[id - BTN_ID_SHIFT - 1];
+	src.x = GUI_WIDTH - src.x;
+	src.x *= x_m;
+	src.y *= y_m;
+	src.w *= x_m;
+	src.h *= y_m;
+	src.x += 3;
+	src.y += 10;
+	src.h -= 15;
+	SDL_SetTextureColorMod(e->sdl->gui->gui_texture, 128, 128, 128);
+	SDL_RenderCopy(e->sdl->renderer, e->sdl->gui->gui_texture, &src, &dst);
+	SDL_SetTextureColorMod(e->sdl->gui->gui_texture, 255, 255, 255);
+}
+
 void		ft_gui(t_env *e, uint32_t btn_id)
 {
-	SDL_Rect	background;
 	SDL_Rect	gui_container;
+	SDL_Rect	tmp;
+	float		k;
 
-	background = (SDL_Rect){
+	tmp = (SDL_Rect){
 		e->sdl->scr_wid - GUI_WIDTH, GUI_HEIGHT, GUI_WIDTH,
 		e->sdl->scr_hei - GUI_HEIGHT
 	};
 	gui_container = (SDL_Rect){
 		e->sdl->scr_wid - GUI_WIDTH, 0, GUI_WIDTH, GUI_HEIGHT
 	};
-	if (background.h > 0)
+	if (tmp.h > 0)
 	{
 		SDL_SetRenderDrawColor(e->sdl->renderer, 49, 61, 66, 255);
-		SDL_RenderFillRect(e->sdl->renderer, &background);
+		SDL_RenderFillRect(e->sdl->renderer, &tmp);
 	}
 	SDL_RenderCopy(e->sdl->renderer, e->sdl->gui->gui_texture,
 	NULL, &gui_container);
 	if (btn_id > BTN_ID_SHIFT)
-	{
-		SDL_SetRenderDrawColor(e->sdl->renderer, 255, 255, 255, 255);
-		background = g_btn_containers[btn_id - BTN_ID_SHIFT - 1];
-		background.x = e->sdl->scr_wid - background.x;
-		SDL_RenderDrawRect(e->sdl->renderer, &background);
-	}
+		button_pressed(e, btn_id);
 }

@@ -68,12 +68,10 @@ float	ft_collide_sphere (t_list **objs, struct s_object *obj, t_coll *coll, t_ve
 	return (t1t2[0] > FLT_MIN ? t1t2[0] : t1t2[1]);
 }
 
-int			ft_is_inside_sphere(void *fig, t_vector point)
+int			ft_is_inside_sphere(t_object *o, t_vector point)
 {
-	t_sphere	*sph;
-
-	sph = (t_sphere *)fig;
-	return ((ft_3_point_point_dist(sph->origin, point) < sph->radius) ? 1 : 0);
+	point = ft_3_pnt_transform(&(o->inverse), point);
+	return ((ft_3_point_point_dist(((t_sphere *)o->fig)->origin, point) < 1) ? 1 : 0);
 }
 
 t_vector	ft_get_norm_sphere(void *fig, t_vector coll)

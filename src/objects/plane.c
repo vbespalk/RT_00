@@ -39,10 +39,15 @@ void		*ft_parse_plane(char **content, t_object *o)
 	pln = ft_planenew();
 	ft_get_attr(content, "width", (void *)(&(pln->len_wh[0])), DT_FLOAT);
 	ft_get_attr(content, "height", (void *)(&(pln->len_wh[1])), DT_FLOAT);
-	if (pln->len_wh[0] != FLT_MIN && pln->len_wh[1] != FLT_MIN)
-		pln->ratio = pln->len_wh[1] / pln->len_wh[0];
+	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
+	{
+		pln->len_wh[0] = FLT_MIN;
+		pln->len_wh[1] = FLT_MIN;
+	}
+	pln->ratio = (pln->len_wh[0] != FLT_MIN) ? pln->len_wh[1] / pln->len_wh[0] : FLT_MIN;
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, pln->len_wh[0]);
-	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, 1.0f / pln->len_wh[0]);
+	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate,
+			(pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
 	return ((void *)pln);
 }
 
@@ -66,7 +71,8 @@ void		ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_
 	if (key == SDLK_q)
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
-	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / pln->len_wh[0]);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate,
+			(pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
 }
 
 void		ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
@@ -89,7 +95,8 @@ void		ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	else if (key == SDLK_PAGEUP)
 		o->rotate[0] -= ROTAT_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
-	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / pln->len_wh[0]);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate,
+					   (pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
 }
 
 void		ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)

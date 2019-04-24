@@ -5,8 +5,8 @@
         "origin": { "x": -1000, "y": 0 }
     },
       "skybox": {
-      "min": { "x": -100000, "y": -100000, "z": -100000},
-      "max": { "x": 100000, "y": 100000, "z": 100000},
+      "min": { "x": -10000000000000, "y": -10000000000000, "z": -10000000000000},
+      "max": { "x": 10000000000000, "y": 10000000000000, "z": 10000000000000},
       "negz": "./texture/skybox/thunder/negz.tga", 
       "negy": "./texture/skybox/thunder/negy.tga", 
       "negx":"./texture/skybox/thunder/negx.tga", 
@@ -24,24 +24,16 @@
         {
 
             "name": "torus",
-            "origin": { "y": 0 },
-            "inner_radius": 50,
-            "outer_radius": 100,
+            "translate": { "x": -100 },
+            "rotate": {"z": 45, "y": 20},
+            "inner_radius": 500,
+            "outer_radius": 1000,
             "translate": {"z" : -100},
+            "checker": { "color1": "warm_marble", "color2": "lattice", "size": 2},
             "color": "0xff6666",
-                  "procedural":
-      {
-        "octaves": 5,
-        "scale_min": 0,
-        "scale_max": 1,
-        "expansion": 1,
-        "perturbation": 1,
-        "gain": 0.5,
-        "lacunarity": 2
-      },
-            "spclr": 0.1,
+            "spclr": 0,
             "diff": 1,
-            "ambnt": 0.1
+            "ambnt": 0.5
         }
     ]
 }

@@ -26,8 +26,8 @@ char		*ft_parse_torus(char **content, t_object *o)
 	o->ft_translate = ft_translate_torus;
 	o->ft_rotate = ft_rotate_torus;
 	o->ft_scale = ft_scale_torus;
-	o->ft_mapping = NULL;
-	o->ft_checker =  NULL;
+	o->ft_mapping = ft_map_torus;
+	o->ft_checker =  ft_checker_tor;
 	o->ft_procedural = ft_procedural_tor;
 	trs = ft_torusnew();
 	ft_get_attr(content, "inner_radius", (void *)(&(trs->r_inner)), DT_FLOAT);

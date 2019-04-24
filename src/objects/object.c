@@ -80,7 +80,7 @@ static void	ft_get_object_attrs(char **content, t_object *o)
 	ft_get_attr(content, "spclr", (void *)(&(o->spclr)), DT_COEF);
 	ft_get_attr(content, "s_blur", (void *)(&(o->s_blur)), DT_COEF);
 	ft_get_attr(content, "refr", (void *)(&(o->refr)), DT_FLOAT);
-	ft_get_attr(content, "trans", (void *)(&(o->trans)), DT_COEF);
+	ft_get_attr(content, "transparent", (void *)(&(o->trans)), DT_COEF);
 	ft_get_attr(content, "t_blur", (void *)(&(o->t_blur)), DT_COEF);
 	ft_get_attr(content, "phong", (void *)(&(o->phong)), DT_COEF);
 	ft_get_attr(content, "translate", (void *)(&(o->translate)), DT_POINT);
@@ -88,6 +88,7 @@ static void	ft_get_object_attrs(char **content, t_object *o)
 
 	ft_get_attr(content, "texture", (void *)(&(o->texture_id)), DT_STRING);
 	ft_get_attr(content, "procedural", (void *)(&(o->noise)), DT_PROCEDURAL);
+	ft_get_attr(content, "checker", (void *)(&(o->checker)), DT_CHECKER);
 }
 
 void		ft_parse_object(char **content, t_list **lst, Uint32 id)
@@ -105,7 +106,9 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	}
 	free(name);
 	o = ft_objectnew(id);
+	o->color.val = UINT32_MAX;
 	o->noise = NULL;
+	o->checker = NULL;
 	o->texture_id = NULL;
 	o->texture = NULL;
 	ft_get_object_attrs(content, o);

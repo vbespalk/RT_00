@@ -38,7 +38,6 @@ float		ft_collide_plane(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	t =  -od[0][1] / od[1][1];
 	if (fabsf(t) < 1e-6)
 		return (-FLT_MAX);
-//	printf("T %f\n", t);
 	coll->ucoll_pnt = od[0] + ft_3_vector_scale(od[1], t);
 //	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
 //	{
@@ -59,9 +58,9 @@ float		ft_collide_plane(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	return (t);
 }
 
-int			ft_is_inside_plane(void *fig, t_vector point)
+int			ft_is_inside_plane(t_object *o, t_vector point)
 {
-	(void)fig;
+	(void)o;
 	(void)point;
 	return (0);
 }

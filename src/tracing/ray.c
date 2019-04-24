@@ -32,6 +32,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	t_color		spclr_col;
 	t_color		trans_col;
 	float		num[2];
+	t_vector	coll_pnt;
 
 	spclr_col.val = 0;
 	trans_col.val = 0;
@@ -48,7 +49,8 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)
 	{
-		ft_init_ray(ray, &next_ray, &(coll.coll_pnt), &(coll.spclr_vec));
+		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, 1e-1);
+		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.spclr_vec));
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
 			ft_throw_rays(parg, &next_ray, &(coll.spclr_vec), num) :
@@ -56,7 +58,8 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	}
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
-		ft_init_ray(ray, &next_ray, &(coll.coll_pnt), &(coll.trans_vec));
+		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, 1e-1);
+		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.trans_vec));
 		ft_handle_hit(&next_ray, coll.o);
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
@@ -96,6 +99,7 @@ t_color			ft_throw_rays
 	i = -1;
 	color[1].val = 0;
 	*vec = ft_change_blur_vec(ray->coll->norm, *vec, max_angle);
+
 	while (++i < rays)
 	{
 		od[0] = ray->coll->coll_pnt;
@@ -124,6 +128,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x);
 	ray.d = ray.d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	ray.d = ft_3_unitvectornew(parg->e->scn->cam->origin, ray.d);
+//	printf("ORI %f,%f,%f, DIR %f,%f,%f\n", ray.o[0], ray.o[1], ray.o[2], ray.d[0], ray.d[1], ray.d[2]);
 	res = ft_throw_ray(parg, &ray,  0);
 	res.val = SDL_MapRGB(parg->e->sdl->format, res.argb[0], res.argb[1], res.argb[2]);
 	return (res);

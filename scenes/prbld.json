@@ -2,8 +2,8 @@
   "name": "TEST",
   "bg_color": "0xffffff",
         "skybox": {
-      "min": { "x": -100000, "y": -100000, "z": -100000},
-      "max": { "x": 100000, "y": 100000, "z": 100000},
+      "min": { "x": -1000000000, "y": -1000000000, "z": -1000000000},
+      "max": { "x": 1000000000, "y": 1000000000, "z": 1000000000},
       "negz": "./texture/skybox/thunder/negz.tga", 
       "negy": "./texture/skybox/thunder/negy.tga", 
       "negx":"./texture/skybox/thunder/negx.tga", 
@@ -12,7 +12,8 @@
       "posx": "./texture/skybox/thunder/posx.tga"
   },
   "camera": {
-    "origin": { "x": -300 }
+    "origin": { "x": 0 },
+    "rotate": {"z": 0} 
   },
   "lights": [
     {
@@ -23,33 +24,16 @@
   "objects": [
     {
       "name": "paraboloid",
-      "origin": { "x": 0, "z": 0 },
-      "rotation": {"z": 0},
-      "radius": 50,
+      "translate": { "x": 3000, "y": -150 },
+      "rotate": {"x": 0, "z": 90},
+      "color": "0x00aab0",
+      "procedural": { "name": "warm_marble"},
+      "checker": { "color1": "gray_marble", "color2": "blue_marble", "size": 2},
+      "diffuse": 1,
+      "radius": 3000,
+    "height": 100,
 
-      "color": "0xff0000",
-           "procedural":
-      {
-        "octaves": 5,
-        "scale_min": 0,
-        "scale_max": 1,
-        "expansion": 1,
-        "perturbation": 1,
-        "gain": 0.5,
-        "lacunarity": 2
-      },
-      "spclr": 0,
-      "ambnt": 0.2,
       "phong": 1
-    },
-    {
-            "name": "sphere",
-            "origin": { "x": 0, "z": 0 },
-            "radius": 50,
-            "color": "0x00aab0",
-            "spclr": 0.5,
-            "phong": 1,
-            "diffuse": 0
-        }
+    }
   ]
 } 

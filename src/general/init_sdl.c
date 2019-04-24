@@ -65,7 +65,7 @@ int		sdl_init(t_sdl *sdl)
 	if (!IMG_Init(img_flags))
 		return (sdl_img_error("SDL_IMG_Init: Failed to init required jpg and png support!\n"));
 	//Create window
-	sdl->window = SDL_CreateWindow( "RayTracer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, sdl->scr_wid, sdl->scr_hei, flags);
+	sdl->window = SDL_CreateWindow( "RayTracer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCR_WID, SCR_HEI, flags);
 	if(sdl->window == NULL)
 	{
 		SDL_Quit();

@@ -35,8 +35,8 @@ char		*ft_parse_disk(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_disk;
 	o->ft_scale = ft_scale_disk;
 	o->ft_mapping = NULL;
-	o->ft_checker = NULL;
-	o->ft_procedural = ft_procedural_dsc;
+	o->ft_checker = ft_checker_dsk;
+	o->ft_procedural = ft_procedural_dsk;
 	dsk = ft_disknew();
 	ft_get_attr(content, "inner_radius", (void *)(&(dsk->in_r)), DT_FLOAT);
 	ft_get_attr(content, "outer_radius", (void *)(&(dsk->out_r)), DT_FLOAT);
@@ -44,7 +44,6 @@ char		*ft_parse_disk(char **content, t_object *o)
 		ft_swap_float(&dsk->in_r, &dsk->out_r);
 	dsk->sq_in_r = dsk->in_r * dsk->in_r;
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
-	printf(" INN %f\n OUTER %f\n",  dsk->sq_in_r, dsk->sq_out_r);
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
 	printf("MATRIX\n");
@@ -118,7 +117,7 @@ void		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	else
 		scale = 0;
 	dsk->in_r *= scale;
-	dsk->out_r *= scale;
+	dsk->out_r = dsk->out_r == FLT_MAX ? FLT_MAX : scale;
 	dsk->sq_in_r = dsk->in_r * dsk->in_r;
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);

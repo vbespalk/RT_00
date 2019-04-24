@@ -87,12 +87,12 @@ static float	get_caps_coll(const t_vector *od, t_vector *coll, t_cylinder *clnd)
 	hit[1] = ori[1] + ft_3_vector_scale(od[1], t[1]);
 	if (t[0] > FLT_MIN && ft_3_vector_dot(hit[0], hit[0]) < 1)
 	{
-		*coll = hit[0] + clnd->maxh;
+		*coll = (t_vector){hit[0][0], hit[0][1] + clnd->maxh, hit[0][2]};
 		return (t[0]);
 	}
 	else if (t[1] > FLT_MIN && ft_3_vector_dot(hit[1], hit[1]) < 1)
 	{
-		*coll = hit[1] - clnd->maxh;
+		*coll = (t_vector){hit[1][0], hit[1][1] - clnd->maxh, hit[1][2]};
 		return (t[1]);
 	}
 	return (-FLT_MAX);
@@ -126,20 +126,24 @@ float			ft_collide_cylinder(t_list **objs, struct s_object *obj, t_coll *coll, t
 	return (get_closer_pnt(res, hit, coll, obj));
 }
 
-int			ft_is_inside_cylinder(void *fig, t_vector point)
+int			ft_is_inside_cylinder(t_object *o, t_vector point)
 {
-//	t_cylinder	*clnd;
-//	float 		hei;
-//	t_vector	pnt_r;
-//
-//	clnd = (t_cylinder *)fig;
-//	hei = ft_3_vector_dot(clnd->v, point - clnd->o);
-//	if (!IN_RANGE(hei, 0.0f, clnd->maxh) && clnd->maxh != FLT_MAX)
+	float 		maxh;
+
+	maxh = ((t_cylinder *)o->fig)->maxh;
+	point = ft_3_pnt_transform(&(o->inverse), point);
+	if (!IN_RANGE(point[1], -maxh, maxh) && maxh != FLT_MAX)
+	{
+		printf("OUTSIDE HEI\n");
 		return (0);
-//	pnt_r = point - (clnd->o + ft_3_vector_scale(clnd->v, hei));
-////	if (ft_3_vector_dot(pnt_r, pnt_r) < clnd->r * clnd->r)
-////		printf("INSIDE\n");
-//	return (ft_3_vector_dot(pnt_r, pnt_r) < clnd->r * clnd->r ? 1 : 0);
+	}
+	if (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
+			(t_vector){point[0], 0, point[2]}) <= 1)
+		printf("INSIDE\n");
+	else
+		printf("OUTSIDE\n");
+	return (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
+			(t_vector){point[0], 0, point[2]}) <= 1 ? 1 : 0);
 }
 
 t_vector	ft_get_norm_cylinder(void *fig, t_vector coll)

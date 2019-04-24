@@ -108,7 +108,9 @@ void		ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 	else
 		scale = 0;
 	clnd->r = clnd->r * scale > 900000 ? clnd->r : clnd->r * scale;
-	printf("RAD %f\n", clnd->r);
+	if (clnd->maxh != FLT_MAX)
+		clnd->maxh = clnd->maxh / scale;
+	printf("RAD %f maxh %f\n", clnd->r, clnd->maxh);
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.0f / clnd->r);
 }

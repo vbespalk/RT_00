@@ -64,32 +64,35 @@ float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	return ((float)t);
 }
 
-int			ft_is_inside_torus(void *fig, t_vector point)
+int			ft_is_inside_torus(t_object *o, t_vector point)
 {
-//	t_torus		*trs;
-//	double		k;
-//	double		r_outer;
-//	double		r_inner;
-//	t_vector	a;
-//
-//	trs = (t_torus *)fig;
-//	k = ft_3_vector_dot(point - trs->o, trs->v);
-//	if (fabs(k) > trs->r_inner)
-//	{
-////		printf("OUT\n");
-//		return (0);
-//	}
+	t_torus		*trs;
+	double		k;
+	double		r_outer;
+	double		r_inner;
+	t_vector	a;
+
+	trs = (t_torus *)o->fig;
+	point = ft_3_pnt_transform(&(o->inverse), point);
+	k = point[1];
+	if (fabs(k) > trs->r_inner)
+	{
+		printf("OUT HEI\n");
+		return (0);
+	}
 //	a = point - ft_3_vector_scale(trs->v, (float)k);
-//	r_outer = ft_3_vector_dot(a - trs->o, a - trs->o);
-//	a = point - trs->o - ft_3_vector_scale(ft_3_tounitvector(a - trs->o), trs->r_outer);
-//	r_inner = ft_3_vector_dot(a, a);
-//	if (r_outer > (trs->r_outer  + trs->r_inner) * (trs->r_outer + trs->r_inner) ||
-//		r_inner > trs->r_inner * trs->r_inner)
-//	{
-////		printf("OUT\n");
-//		return (0);
-//	}
-//	printf("IN\n");
+	a = (t_vector){point[0], FLT_MIN, point[2]};
+	r_outer = ft_3_vector_dot(a, a);
+	a = point - ft_3_vector_scale(ft_3_tounitvector(a), trs->r_outer);
+	r_inner = ft_3_vector_dot(a, a);
+	if (r_outer > (trs->r_outer + trs->r_inner) * (trs->r_outer + trs->r_inner) ||
+		r_inner > trs->r_inner * trs->r_inner)
+	{
+		printf("OUT r_outer %f inn %f or %f, %f\n", r_outer, r_inner, (trs->r_outer + trs->r_inner) *
+		(trs->r_outer + trs->r_inner), trs->r_inner * trs->r_inner);
+		return (0);
+	}
+	printf("IN\n");
 	return (1);
 }
 

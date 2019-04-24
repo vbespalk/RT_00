@@ -18,39 +18,23 @@
             "//": "water cover",
 
             "name": "sphere",
-            "translate": { "y": -100000 },
-            "radius": 100000,
+            "translate": { "y": 0 },
+            "radius": 200,
 
             "//": "water blue color",
-            "color": "0x0077be",
+            "color": "0xff0000",
 
             "diff": 0.2,
             "spclr": 1,
-            "transparent": 0.1,
+            "transparent": 1,
             "phong": 0,
-            "refr": 1.5
-        },
-        {
-            "//": "sand ground",
-
-            "name": "sphere",
-            "translate": { "y": -100000 },
-            "radius": 99800,
-
-            "//": "sand color",
-            "color": "0xc2b280",
-
-            "diff": 1,
-            "spclr": 0,
-            "trans": 0,
-            "phong": 0,
-            "ambnt": 0.8
+            "refr": 4.5
         },
         {
             "name": "cylinder",
-            "translate": { "y": -150 },
+            "translate": { "y": 0 },
             "rotate":{"z": 30, "y": 15},
-            "radius": 100,
+            "radius": 50,
             "height": 1000,
             "color": "0x00ffff",
             "ambnt": 0.3

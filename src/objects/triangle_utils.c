@@ -32,9 +32,9 @@ float	ft_collide_triangle(t_list **objs, struct s_object *obj, t_coll *coll, t_v
 	return (1);
 }
 
-int			ft_is_inside_triangle(void *fig, t_vector point)
+int			ft_is_inside_triangle(t_object *o, t_vector point)
 {
-	(void)fig;
+	(void)o;
 	(void)point;
 	return (0);
 }

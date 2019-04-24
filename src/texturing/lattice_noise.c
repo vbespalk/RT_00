@@ -15,10 +15,12 @@ float					fk_spline_val(float x, const float knots[4])
 	return (((coef[3] * x + coef[2]) * x + coef[1]) * x + coef[0]);
 }
 
-void					ft_init_value_table(float **vtable) {
+void				ft_init_value_table(float **vtable, unsigned int seed)
+{
 	int i;
 
 	*vtable = ft_smemalloc(sizeof(float) * LTABLE_SIZE, "ft_init_value_table");
+	srand(seed);
 	i = -1;
 	while (++i < LTABLE_SIZE)
 	{

@@ -15,22 +15,12 @@
     {
       "name": "plane",
       "origin": { "x": 100, "y": 0, "z": 0 },
-      "rotate": {"z": 80},
-
+      "rotate": {"z": 90},
+      "width": 485,
+      "height": 1024,
       "color": "0xff00ff",
-    "checker": {"color1": "blue_marble", "color2": "lattice", "size": 2},
+    "texture": "./text5747.jpeg",
       "spclr": 0,
-      "phong": 1
-    },
-        {
-      "name": "plane",
-      "origin": { "x": -100, "y": 0, "z": 0 },
-      "width": 480,
-      "height": 480,
-      "rotate": {"z": 45, "y": 45},
-      "color": "0xff0000",
-      "spclr": 1,
-      "diffuse": 0,
       "phong": 1
     }
   ]

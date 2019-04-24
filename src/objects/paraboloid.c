@@ -18,7 +18,7 @@ t_prbld		*ft_prbldnew(void)
 
 	prbl = ft_smemalloc(sizeof(t_prbld), "ft_prbldnew");
 	prbl->r = 1.f;
-	prbl->maxh = 1000;
+	prbl->maxh = FLT_MAX;
 	return (prbl);
 }
 
@@ -33,16 +33,19 @@ char		*ft_parse_prbld(char **content, t_object *o)
 	o->ft_translate = ft_translate_prbld;
 	o->ft_rotate = ft_rotate_prbld;
 	o->ft_scale = ft_scale_prbld;
-	o->ft_mapping = NULL;
-	o->ft_checker = NULL;
+	o->ft_mapping = ft_map_prbld;
+	o->ft_checker = ft_checker_prbld;
 	o->ft_procedural = ft_procedural_prbld;
 	prbl = ft_prbldnew();
 	ft_get_attr(content, "radius", (void *)(&(prbl->r)), DT_FLOAT);
 	ft_get_attr(content, "height", (void *)(&(prbl->maxh)), DT_FLOAT);
-//	ft_3_transform_mat(&(o->transform), prbl->o, prbl->v, prbl->r);
-//	ft_3_inv_trans_mat(&(o->inverse), -prbl->o, -prbl->v, 1.0f / prbl->r);
-	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
-	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
+	prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX : prbl->maxh / prbl->r;
+//	prbl->tex_h = prbl->maxh;
+	ft_3_transform_mat(&(o->transform),o->translate, o->rotate, prbl->r);
+	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, 1.0f / prbl->r);
+//	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
+//	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
+	printf("RAD %f\n", prbl->r);
 	printf("maxh %f\n", prbl->maxh);
 	return ((void *)prbl);
 }
@@ -66,10 +69,10 @@ void		ft_translate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_
 		o->translate[0] += TRANS_F;
 	if (key == SDLK_q)
 		o->translate[0] -= TRANS_F;
-//	ft_3_transform_mat(tr_m, prbl->o, prbl->v, prbl->r);
-//	ft_3_inv_trans_mat(inv_m, -prbl->o, -prbl->v, 1.f / prbl->r);
-	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
-	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, prbl->r);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
+//	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+//	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }
 
 void		ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
@@ -78,7 +81,7 @@ void		ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 
 	if (!o)
 		return ;
-	prbl = (t_prbld *)0;
+	prbl = (t_prbld *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
 	else if (key == SDLK_UP)
@@ -91,10 +94,10 @@ void		ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		o->rotate[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
 		o->rotate[0] -= ROTAT_F;
-//	ft_3_transform_mat(tr_m, prbl->o, prbl->v, prbl->r);
-//	ft_3_inv_trans_mat(inv_m, -prbl->o, -prbl->v, 1.f / prbl->r);
-	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
-	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, prbl->r);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
+//	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+//	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }
 
 void		ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
@@ -109,16 +112,19 @@ void		ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	{
 		scale += SCALE_F;
 		prbl->r = prbl->r * scale;
+		prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX :  prbl->maxh / scale;
 	}
 	else if (key == SDLK_x && prbl->r * scale >= 1.0f)
 	{
 		scale -= SCALE_F;
 		prbl->r = prbl->r * scale;
+		prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX :  prbl->maxh / scale;
 	}
 	else
 		scale = 0;
-//	ft_3_transform_mat(tr_m, prbl->o, prbl->v, prbl->r);
-//	ft_3_inv_trans_mat(inv_m, -prbl->o, -prbl->v, 1.f / prbl->r);
-	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
-	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+	printf("RAD %f\n", prbl->r);
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, prbl->r);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
+////	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+////	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 }

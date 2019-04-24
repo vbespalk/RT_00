@@ -34,9 +34,9 @@ float		ft_collide_disk(t_list **objs, struct s_object *obj, t_coll *coll, t_vect
 	return (IN_RANGE(dis, dsk->sq_in_r, dsk->sq_out_r) ? t : -1);
 }
 
-int			ft_is_inside_disk(void *fig, t_vector point)
+int			ft_is_inside_disk(t_object *o, t_vector point)
 {
-	(void)fig;
+	(void)o;
 	(void)point;
 	return (0);
 }

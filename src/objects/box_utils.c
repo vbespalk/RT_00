@@ -26,10 +26,8 @@ float		ft_collide_box(t_list **objs, struct s_object *obj, t_coll *coll, t_vecto
 	while (++i < BOX_FACES)
 	{
 		t_cur = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
-//		printf("T_CUR %f\n", t_cur);
 		if (IN_RANGE(t_cur, FLT_MIN, t_min))
 		{
-//			printf("here\n");
 			t_min = t_cur;
 			coll->ucoll_pnt = pln_coll.ucoll_pnt;
 			coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
@@ -40,27 +38,26 @@ float		ft_collide_box(t_list **objs, struct s_object *obj, t_coll *coll, t_vecto
 	return (t_min == FLT_MAX ? -FLT_MAX: t_min);
 }
 
-int			ft_is_inside_box(void *fig, t_vector point)
+int			ft_is_inside_box(t_object *o, t_vector point)
 {
-//	t_box		*bx;
-//	t_vector	hit_vec;
-//	float		proj[3];
-//
-//	if (!fig)
-//		return (0);
-//	bx = (t_box *)fig;
-//	hit_vec = point - bx->o;
-//	proj[0] = ft_3_vector_dot(ft_3_tounitvector(bx->lwh[0]),  hit_vec);
-//	proj[1] = ft_3_vector_dot(ft_3_tounitvector(bx->lwh[1]),  hit_vec);
-//	proj[2] = ft_3_vector_dot(ft_3_tounitvector(bx->lwh[2]),  hit_vec);
-//	if (!IN_RANGE(proj[0], 0, ft_3_vector_len(bx->lwh[0])) ||
-//		!IN_RANGE(proj[1], 0, ft_3_vector_len(bx->lwh[1])) ||
-//		!IN_RANGE(proj[2], 0, ft_3_vector_len(bx->lwh[2])))
-//	{
-//		printf("OUT BOX\n");
-//		return (0);
-//	}
-//	printf("IN BOX\n");
+	t_box		*bx;
+	float		proj[3];
+
+	if (!o->fig)
+		return (0);
+	bx = (t_box *)o->fig;
+	point = ft_3_pnt_transform(&(o->inverse), point);
+	proj[0] = fabsf(ft_3_vector_dot(Z_AXIS,  point));
+	proj[1] = fabsf(ft_3_vector_dot(Y_AXIS,  point));
+	proj[2] = fabsf(ft_3_vector_dot(X_AXIS,  point));
+	if (!IN_RANGE(proj[0], 0, bx->whl[0]) ||
+		!IN_RANGE(proj[1], 0, bx->whl[1]) ||
+		!IN_RANGE(proj[2], 0, bx->whl[2]))
+	{
+		printf("OUT BOX\n");
+		return (0);
+	}
+	printf("IN BOX\n");
 	return (1);
 }
 

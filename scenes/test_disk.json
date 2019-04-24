@@ -2,7 +2,7 @@
   "name": "TEST",
   "bg_color": "0xEEEEEE",
   "camera": {
-    "origin": { "x": -500, "y": 0 },
+    "origin": { "x": -300000, "y": 0 },
     "gamma": 0
   },
   "lights": [
@@ -14,21 +14,11 @@
   "objects": [
     {
       "name": "disk",
-      "outer_radius": 300,
-      "inner_radius": 250,
+      "inner_radius": 5000,
       "rotate": {"z": 90},
-      "procedural":
-{
-"octaves": 5,
-"scale_min": 0,
-"scale_max": 1,
-"expansion": 1,
-"perturbation": 1,
-"gain": 0.5,
-"lacunarity": 2
-},
+      "checker": {"color2": "lattice", "color1": "blue_marble", "size": 10},
       "color": "0xff00ff",
-      "spclr": 0.1,
+      "spclr": 0,
       "phong": 1
     }
   ]

@@ -159,24 +159,23 @@ float			ft_collide_cone(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 //	return (res[0] > FLT_MIN ? res[0] : -FLT_MAX);
 }
 
-int			ft_is_inside_cone(void *fig, t_vector point)
+int			ft_is_inside_cone(t_object *o, t_vector point)
 {
 	t_cone		*cone;
-	float 		hei;
-	float		rad;
 
-	cone = (t_cone *)fig;
-//	hei = ft_3_vector_dot(cone->v, point - cone->o);
-//	if (!IN_RANGE(hei, cone->minh, cone->maxh) && cone->maxh != FLT_MAX)
-//		return (0);
-//	rad = hei * cone->tan;
-//	if ((ft_3_vector_dot(point - cone->o, point - cone->o) < hei * hei + rad * rad))
-//	{
-////		printf("INSIDE\n");
-//		return (1);
-//	}
-////	printf("OUTSIDE\n");
-	return (1);
+	cone = (t_cone *)o->fig;
+	point = ft_3_pnt_transform(&(o->inverse), point);
+	if (!IN_RANGE(point[1], cone->minh, cone->maxh))
+	{
+		printf("OUTSIDE HEI\n");
+		return (0);
+	}
+	if ((ft_3_vector_dot(point, point) < point[1] * point[1] + powf(point[1] * cone->tan, 2)))
+		printf("INSIDE\n");
+	else
+		printf("OUTSIDE\n");
+	return ((ft_3_vector_dot(point, point) < point[1] * point[1] +
+			powf(point[1] * cone->tan, 2)) ? 1 : 0);
 }
 
 t_vector	ft_get_norm_cone(void *fig, t_vector coll)

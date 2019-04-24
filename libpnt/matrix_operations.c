@@ -130,7 +130,7 @@ void		ft_3_inv_trans_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 		ft_3_matrix_rotate(rm, rot, 1);
 	if (!(ft_3_isnullpoint(transl)))
 		ft_3_matrix_move(rm, transl, 1);
-//	printf("INVERTED\n");
-//	for (int i = 0; i < 4; ++i)
-//		printf("%f, %f, %f, %f\n", (*rm)[i][0], (*rm)[i][1], (*rm)[i][2], (*rm)[i][3]);
+	printf("INVERTED\n");
+	for (int i = 0; i < 4; ++i)
+		printf("%.10f, %.10f, %.10f, %.10f\n", (*rm)[i][0], (*rm)[i][1], (*rm)[i][2], (*rm)[i][3]);
 }

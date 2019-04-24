@@ -31,7 +31,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 		obj = (t_object *)objs->content;
 		if (obj->texture_id != NULL)
 			obj->texture = init_texture(&textures, sdl, obj->texture_id);
-		else if (obj->noise != NULL && obj->noise->ramp_id != NULL)
+		if (obj->noise != NULL && obj->noise->ramp_id != NULL)
         {
 		    printf("RUMP %s to init\n", obj->noise->ramp_id);
 		    obj->noise->ramp = init_texture(&textures, sdl, obj->noise->ramp_id)->surface;
@@ -41,6 +41,23 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 		        obj->noise->ft_get_color = ft_ramp_noise_col;
             }
         }
+		if (obj->checker != NULL)
+		{
+        	i = -1;
+        	while (++i < 2 && obj->checker->noise[i] != NULL)
+			{
+        		if (obj->checker->noise[i]->ramp_id != NULL)
+				{
+					obj->checker->noise[i]->ramp = init_texture(&textures, sdl,
+							obj->checker->noise[i]->ramp_id)->surface;
+					if (obj->checker->noise[i]->ramp != NULL)
+					{
+						printf("RUMP INITIALISED\n");
+						obj->checker->noise[i]->ft_get_color = ft_ramp_noise_col;
+					}
+				}
+			}
+		}
 		objs = objs->next;
 	}
 	i = -1;
@@ -86,8 +103,6 @@ int			main(int argc, char **argv)
 	t_sdl		sdl;
 	t_object	**obj_pix;
 
-//	srand((unsigned int) time(NULL));
-	srand((unsigned int) 14);
 	if (argc != 2)
 		ft_usage("RT scn\n");
 	if (sdl_init(&sdl) < 0)

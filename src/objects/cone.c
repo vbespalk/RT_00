@@ -54,7 +54,7 @@ void		*ft_parse_cone(char **content, t_object *o)
 	o->ft_rotate = ft_rotate_cone;
 	o->ft_scale = ft_scale_cone;
 	o->ft_mapping = ft_map_cone;
-	o->ft_checker = ft_checker_cyl;
+	o->ft_checker = ft_checker_cone;
 	o->ft_procedural = ft_procedural_cone;
 	cone = ft_conenew();
 	ft_get_attr(content, "minh", (void *)(&(cone->minh)), DT_FLOAT);

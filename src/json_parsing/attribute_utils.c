@@ -25,8 +25,8 @@ void			ft_parse_str
 		*((char **)dst) = ft_strsub(
 			*data, 0, ft_strchr(*data, '\"') - *data);
 	else if (datatype == DT_COLOR)
-		(*((int *)dst)) = ft_limit(
-			0, 0xffffff, (int)ft_atoi_base(*data, 16));
+		(*((Uint32 *)dst)) = ft_limit_uint(
+			0, 0xffffff, (unsigned int)ft_atoi_base(*data, 16));
 	else
 		ft_parse_warning_datatype(content[0], *data, datatype);
 }
@@ -44,13 +44,14 @@ void			ft_parse_json_object
 	else if (datatype == DT_CAMERA)
 		ft_parse_camera(new_content, *((t_camera **) dst));
 	else if (datatype == DT_SKYBOX)
-	{
 		ft_parse_skybox(new_content, ((t_skybox **) dst));
-		printf("PARSED SKY %p\n", *((t_skybox **) dst));
-	}
 	else if (datatype == DT_PROCEDURAL)
 	{
 		ft_parse_procedural(new_content, ((t_procedural **) dst));
+	}
+	else if (datatype == DT_CHECKER)
+	{
+		ft_parse_checker(new_content, ((t_checker **) dst));
 	}
 	else
 		ft_parse_warning_datatype(content[0], *data, datatype);

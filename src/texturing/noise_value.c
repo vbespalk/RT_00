@@ -45,7 +45,6 @@ float 	ft_turbulance_noise(t_procedural *tex, t_vector hit)
 		ampl *= 0.5;
 		freq *= 2;
 	}
-//	noise /= tex->bounds[1];
 	return (noise / tex->bounds[1]);
 }
 
@@ -54,11 +53,11 @@ Uint32 	ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit)
 	float   noise_val;
 	t_color color;
 
-	color.val = 0xffffff;
+//	color.val = 0xffffff;
 	noise_val = tex->ft_noise_value(tex, hit);
-	if (tex->expansion != 1.0f)
+	if (tex->pertubation != 1.0f)
 	{
-		noise_val *= tex->expansion;
+		noise_val *= tex->pertubation;
 		noise_val -= floorf(noise_val);
 	}
 	/*
@@ -71,10 +70,10 @@ Uint32 	ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit)
 //	color.argb[1] = (t_byte)(o->color.argb[1] * noise_val);
 //	color.argb[2] = (t_byte)(o->color.argb[2] * noise_val);
 //	color.argb[3] = (t_byte)(o->color.argb[3] * noise_val);
-    color.argb[0] = (t_byte)(color.argb[0] * noise_val);
-	color.argb[1] = (t_byte)(color.argb[1] * noise_val);
-	color.argb[2] = (t_byte)(color.argb[2] * noise_val);
-	color.argb[3] = (t_byte)(color.argb[3] * noise_val);
+    color.argb[0] = (t_byte)(tex->color.argb[0] * noise_val);
+	color.argb[1] = (t_byte)(tex->color.argb[1] * noise_val);
+	color.argb[2] = (t_byte)(tex->color.argb[2] * noise_val);
+	color.argb[3] = (t_byte)(tex->color.argb[3] * noise_val);
 	return (color.val);
 }
 
@@ -83,10 +82,12 @@ Uint32 	ft_ramp_noise_col(t_procedural *tex, t_object *o, t_vector hit)
 	float			noise_val;
 	Uint32			col;
 	int 			x;
+	float 			y;
 	float			u;
 
 	noise_val = tex->ft_noise_value(tex, hit);
-	u = hit[1] + tex->pertubation * noise_val;
+	y = (hit[1] + hit[2] + hit[0]) * 0.6f;
+	u = y + tex->pertubation * noise_val;
 	u = 0.5f * (1.0f + sinf(u));
 	x = (int)(u * (tex->ramp->w - 1));
 	if (!(IN_RANGE(x, 0, tex->ramp->w)))

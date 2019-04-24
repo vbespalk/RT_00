@@ -86,7 +86,10 @@ static void			ft_refract(t_thrarg *arg, t_ray *ray)
 	}
 	cos[0] = fabsf(ft_3_vector_cos(ray->d, ray->coll->norm));
 	cos[1] = fabsf(ft_3_vector_cos(ray->coll->trans_vec, ray->coll->norm));
-
+//	if (cos[0] < 0)
+//		cos[0] = -cos[0];
+//	else
+//		ft_swap_float(&refr[0], &refr[1]);
 //	printf("norm: (%f, %f, %f); trans: (%f, %f, %f)\n",
 //		coll->norm[0], coll->norm[1], coll->norm[2],
 //		coll->trans_vec[0], coll->trans_vec[1], coll->trans_vec[2]);
@@ -101,7 +104,7 @@ static void			ft_refract(t_thrarg *arg, t_ray *ray)
 			(refr[0] * cos[1] + refr[1] * cos[0]),
 			2.0f)) / 2.0f;
 
-		//printf("%f\n", coll->fresnel);
+//		printf("%f\n", ray->coll->fresnel);
 	}
 }
 
@@ -121,6 +124,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 //		return (coll);
 	if (!(coll.o))
 		return (coll);
+//	printf("HERE_0\n");
 //	coll.norm = coll.o->ft_get_norm(coll.o->fig, coll.coll_pnt);
 	if (coll.o->trans)
 		ft_refract(arg, ray);
@@ -128,32 +132,21 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 		coll.norm = ft_3_vector_scale(coll.norm, -1.0f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
-	tex_col = coll.tex_o->ft_mapping && coll.o->texture ? coll.tex_o->ft_mapping(coll.tex_o->fig,
+	tex_col = coll.tex_o->ft_mapping && coll.o->texture ? coll.tex_o->ft_mapping(coll.tex_o,
 			coll.o->texture, coll.ucoll_pnt) : UINT32_MAX;
 	if (tex_col != UINT32_MAX)
 		coll.px_color.val = tex_col;
-	else if (coll.o->noise)
+	else if (coll.o->checker != NULL)
 	{
-		coll.px_color.val = coll.o->color.val;
-		t_chess		chess;
-		chess.size = 10;
-		chess.color[0] = 0xf2f280;
-		chess.color[1] = 0xffffff;
-		coll.px_color.val = coll.tex_o->ft_checker(coll.tex_o->fig, &chess, coll.ucoll_pnt);
-//		coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o, coll.coll_pnt);
-//        coll.px_color.val = coll.o->ft_procedural(coll.o->fig, coll.o->noise, coll.ucoll_pnt);
+		coll.px_color.val = coll.tex_o->ft_checker(coll.tex_o, coll.tex_o->checker, coll.ucoll_pnt);
+	}
+	else if (coll.o->noise != NULL)
+	{
+		coll.px_color.val = coll.tex_o->ft_procedural(coll.tex_o, coll.o->noise, coll.ucoll_pnt);
 	}
 	else
         coll.px_color.val = coll.o->color.val;
-        coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.5f);
+//	printf("HERE_1\n");
 	ft_illuminate(arg, &coll);
 	return (coll);
 }
-
-/*
-** FOR SPHERE PROCEDURAL TEXTURING
-**
-**        coll.px_color.val = coll.o->noise->ft_get_color(coll.o->noise, coll.o,
-**            ft_3_vector_scale(coll.coll_pnt - ((t_sphere *)coll.o->fig)->origin,
-**            10.0f / ((t_sphere *)coll.o->fig)->radius));
-*/

@@ -13,7 +13,7 @@
       "posx": "./texture/skybox/milkyway/dark/posx.jpg"
   },
     "camera": {
-        "origin": { "x": -5000, "y": 0 }
+        "origin": { "x": -1000, "y": 0 }
     },
     "lights": [
         {

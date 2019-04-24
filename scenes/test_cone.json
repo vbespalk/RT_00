@@ -5,7 +5,7 @@
     "bg_color": "0x87cefa",
 
     "camera": {
-        "origin": { "x": -600, "y": 0 },
+        "origin": { "x": -150000, "y": 0 },
         "beta": 0
     },
     "textures": {
@@ -16,20 +16,23 @@
     "lights": [
         {
             "type": "direct",
-            "direct": { "x": 1, "y": 0, "z": 0 }
+            "direct": { "x": 1, "y": -1, "z": 0 }
         }
     ],
     "objects": [
         {
             "name": "cone",
-            "translate": { "x": 0, "y": 100, "z": 0 },
-            "rotate": { "z": 45},
-            "minh": -100,
-            "maxh": -300,
-            "angle": 0,
+            "translate": { "x": -120000, "y": 0, "z": 0 },
+            "rotate": { "z": -90},
+            "minh": 10000,
+            "angle": 45,
             "color": "0x777777",
             "spclr": 0,
-             "texture": "./texture/solar/earth.jpg"
+             "procedural":
+            {
+              "name": "sandstone"
+            },
+            "checker": {"color1": "sandstone", "color2": "warm_marble", "size": 3}
              }
     ]
 }

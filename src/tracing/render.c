@@ -18,11 +18,7 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 		(t_vector) { 1.0f, 0.0f, 0.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_vec = ft_3_vector_rotate(
-<<<<<<< HEAD
-		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, (sdl->scr_wid - GUI_WIDTH) / -2.0f },
-=======
 		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, sdl->rt_wid / -2.0f },
->>>>>>> origin/master
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_x_step_vec = ft_3_vector_scale(
 		ft_3_vector_rotate(
@@ -36,13 +32,8 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 		1.0f / (float)(cam->smooth + 1));
 	cam->vs_start_point =
 		cam->vs_start_vec + cam->origin + ft_3_vector_rotate(
-<<<<<<< HEAD
-			(t_vector) {
-				((sdl->scr_wid - GUI_WIDTH) / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
-=======
 			(t_vector){
 				(sdl->rt_wid / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
->>>>>>> origin/master
 			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
@@ -77,12 +68,6 @@ static t_color	ft_get_pixel_color(t_thrarg	*thrarg, int x, int y, int smth)
 	return (color);
 }
 
-<<<<<<< HEAD
-=======
-/*
-**	x/y[0] - start point, iterator;
-**	x/y[1] - end point;
-*/
 static void	ft_update_obj_lst(t_camera *cam, t_list *objs)
 {
 	t_object *o;
@@ -95,7 +80,6 @@ static void	ft_update_obj_lst(t_camera *cam, t_list *objs)
 	}
 }
 
->>>>>>> origin/master
 void			*ft_section_handle(void *arg)
 {
 	t_thrarg	*thrarg;
@@ -107,11 +91,7 @@ void			*ft_section_handle(void *arg)
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
 	smth = thrarg->e->scn->cam->smooth + 1;
-<<<<<<< HEAD
-	while (x < thrarg->e->sdl->scr_wid - GUI_WIDTH)
-=======
 	while (x < thrarg->e->sdl->rt_wid)
->>>>>>> origin/master
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)

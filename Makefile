@@ -18,7 +18,7 @@ LIBFT_INC  = -Ilibftprintf
 
 LIBPNT_NAME = libpnt.a
 LIBPNT_PATH = libpnt/$(LIBPNT_NAME)
-LIBPNT_INC  = -Ilibpnt
+LIBPNT_INC  = -I libpnt
 
 LIBJSON_NAME = libjsonchecker.a
 LIBJSON_PATH = JSON-c/$(LIBJSON_NAME)

@@ -12,61 +12,54 @@
 
 #include "rt.h"
 
-static void			ft_update(
-		t_coll *coll,
-		t_object **res_o,
-		float (*dist)[2],
-		t_vector (*pnt)[3])
-{
-	(*pnt)[0] = coll->ucoll_pnt;
-	(*pnt)[1] = coll->coll_pnt;
-	(*pnt)[2] = coll->norm;
-	(*dist)[0] = (*dist)[1];
-	*res_o = coll->o;
-}
-
-static void			ft_init(t_coll *coll, t_object *res_o, t_vector pnt[2])
-{
-	coll->o = res_o;
-	coll->ucoll_pnt = pnt[0];
-	coll->coll_pnt = pnt[1];
-	coll->norm = pnt[2];
-}
+//static void			ft_update(
+//		t_coll *coll,
+//		t_object **res_o,
+//		float (*dist)[2],
+//		t_vector (*pnt)[3])
+//{
+//	(*pnt)[0] = coll->ucoll_pnt;
+//	(*pnt)[1] = coll->coll_pnt;
+//	(*pnt)[2] = coll->norm;
+//	(*dist)[0] = (*dist)[1];
+//	*res_o = coll->o;
+//}
+//
+//static void			ft_init(t_coll *coll, t_object *res_o, t_vector pnt[2])
+//{
+//	coll->o = res_o;
+//	coll->ucoll_pnt = pnt[0];
+//	coll->coll_pnt = pnt[1];
+//	coll->norm = pnt[2];
+//}
 
 static void			ft_init_collision(t_coll *coll, t_list **objs, t_vector *od)
 {
 	t_list		*node;
-	t_vector	pnt[3];
+//	t_vector	pnt[3];
+	t_coll		tmp_coll;
 	float		dist[2];
 	t_object	*o;
-	t_object	*res_o;
-	t_object	*tex_o;
 
 	node = *objs;
 	coll->o = NULL;
-	pnt[0] = ft_3_nullpointnew();
-	pnt[1] = ft_3_nullpointnew();
-	pnt[2] = ft_3_nullpointnew();
+//	pnt[0] = ft_3_nullpointnew();
+//	pnt[1] = ft_3_nullpointnew();
+//	pnt[2] = ft_3_nullpointnew();
 	dist[0] = FLT_MAX;
-	res_o = NULL;
-	tex_o = NULL;
+	tmp_coll = *coll;
 	while (node)
 	{
 		o = (t_object *)(node->content);
 		if (o->ft_is_reachable(o->fig, od[0], od[1]))
 		{
 			dist[1] = o->ft_collide(objs, o, coll, od);
-			if (dist[1] > FLT_MIN && dist[1] < dist[0])
-			{
-				coll->coll_pnt = od[0] + ft_3_vector_scale(od[1], dist[1]);
-				tex_o = coll->tex_o;
-				ft_update(coll, &res_o, &dist, &pnt);
-			}
+			if (dist[1] < dist[0])
+				tmp_coll = *coll;
 		}
 		node = node->next;
 	}
-	ft_init(coll, res_o, pnt);
-	coll->tex_o = tex_o;
+	*coll = tmp_coll;
 }
 
 static void			ft_refract(t_ray *ray)

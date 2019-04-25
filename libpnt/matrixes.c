@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libpnt.h"
-#include "libft.h"
+#include "../libftprintf/libft/libft.h"
 
 void		ft_3_identity(t_matrix *i)
 {

@@ -12,7 +12,7 @@ int			ft_inside_type(t_list **objs, t_vector point)
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, point))
+		if (o->ft_is_inside(o, point))
 		{
 			if (o->is_neg)
 				return (-1);
@@ -68,7 +68,7 @@ t_object	*ft_inside_obj(
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, point))
+		if (o->ft_is_inside(o, point))
 		{
 			ft_lstpush(&res_objs, ft_nodenew((void *)o, sizeof(t_object)));
 			++len;

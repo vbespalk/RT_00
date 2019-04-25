@@ -1,7 +1,5 @@
 
 #include "libpnt.h"
-#include <stdio.h>
-#include "libft.h"
 
 t_vector	ft_3_vector_refract
 				(t_vector norm, t_vector direct, float refr1, float refr2)

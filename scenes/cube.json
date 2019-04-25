@@ -1,0 +1,52 @@
+{
+  "name": "CFOMPOSED BOX",
+  "bg_color": "0xbbbbbb",
+          "skybox": {
+      "min": { "x": -10000000000000, "y": -10000000000000, "z": -10000000000000},
+      "max": { "x": 10000000000000, "y": 10000000000000, "z": 10000000000000},
+      "negz": "./texture/skybox/thunder/negz.tga", 
+      "negy": "./texture/skybox/thunder/negy.tga", 
+      "negx":"./texture/skybox/thunder/negx.tga", 
+      "posz": "./texture/skybox/thunder/posz.tga", 
+      "posy": "./texture/skybox/thunder/posy.tga",
+      "posx": "./texture/skybox/thunder/posx.tga"
+  },
+  "camera": {
+    "origin": { "x": -1700 }
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 1 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "box",
+      "color": "0xff0000",
+      "length": 200,
+      "width": 200,
+      "height": 200,
+      "phong": 1,
+      "ambnt": 0.2,
+       "spclr": 1,
+       "transparent": 1,
+       "refract": 1.5,
+       "diff": 0,
+      "translate": { "x": 0, "y": 0, "z": 0 },
+
+      "rotate": {"z": 30}
+    }
+    ,
+        {
+            "name": "cylinder",
+            "translate": { "y": -50 },
+            "rotate":{"z": 30, "y": 15},
+            "radius": 50,
+            "height": 800,
+            "color": "0x00ffff",
+            "procedural": {"name": "sandstone"},
+            "ambnt": 0.3
+        }
+  ]
+}

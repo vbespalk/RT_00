@@ -48,8 +48,8 @@ void	ft_rotate_cam(Uint32 key, t_vector *angles)
 void	ft_scale_cam(Uint32 key, float *sc_factor)
 {
 	if (key == SDLK_z)
-		*sc_factor = ((*sc_factor - SCALE_F) < DEG_TO_RAD(0)) ? \
-	DEG_TO_RAD(0) : *sc_factor - SCALE_F;
+		*sc_factor = ((*sc_factor - SCALE_F) < DEG_TO_RAD(10.f)) ? \
+	DEG_TO_RAD(10.f) : *sc_factor - SCALE_F;
 	else if (key == SDLK_x)
 		*sc_factor = ((*sc_factor + SCALE_F) < DEG_TO_RAD(160)) ? *sc_factor + \
 	SCALE_F : DEG_TO_RAD(160);

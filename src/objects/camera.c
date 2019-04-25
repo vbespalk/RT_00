@@ -103,7 +103,7 @@ void				ft_get_start_stack(t_scene *scn)
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, scn->cam->origin))
+		if (o->ft_is_inside(o, scn->cam->origin))
 		{
 			ft_lstpush(&objs, ft_nodenew((void *)o, sizeof(o)));
 			++len;

@@ -4,26 +4,30 @@
     "bg_color": "0xaaaaaa",
 
     "camera": {
-        "origin": { "x": -500, "y": 0 }
+        "origin": { "x": -5000, "y": 0 }
     },
     "lights": [
         {
             "type": "direct",
-            "direct": { "x": -1, "y": -1, "z": 1 }
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        },
+                {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
         }
     ],
     "objects": [
         {
             "name": "cylinder",
-            "base": { "x": 0, "y": -100, "z": 0 },
-            "radius": 100,
-            "direction": {"x": 1, "y": 1, "z": 1},
-            "height": 200,
-            "color": "0xEEEEEE",
+            "translate": { "x": -500, "y": 0, "z": 0 },
+            "rotate": { "z": 90 },
+            "radius": 1000,
+            "height": 500,
+            "color": "0xFF0000",
+            "texture": "./texture/solar/earth.jpg",
             "spclr": 0,
             "phong": 0,
-            "texture": "./texture/solar/earth.jpg",
-            "ambnt": 0.8
+            "ambnt": 0.2
         },
         {
             "name": "sphere",

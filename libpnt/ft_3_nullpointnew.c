@@ -16,3 +16,8 @@ t_vector	ft_3_nullpointnew(void)
 {
 	return ((t_vector) { -FLT_MAX, -FLT_MAX, -FLT_MAX });
 }
+
+t_vector	ft_3_zeropointnew(void)
+{
+	return ((t_vector) { FLT_MIN, FLT_MIN, FLT_MIN });
+}

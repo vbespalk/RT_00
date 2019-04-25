@@ -1,32 +1,24 @@
 {
   "name": "TEST",
-  "bg_color": "0x0",
+  "bg_color": "0xEEEEEE",
   "camera": {
-    "origin": { "x": -1500 }
+    "origin": { "x": -300000, "y": 0 },
+    "gamma": 0
   },
   "lights": [
     {
       "type": "direct",
-      "direct": { "x": 1, "y": -1, "z": 1 }
+      "direct": { "x": 1, "y": 0, "z": 0 }
     }
   ],
   "objects": [
     {
-      "name": "plane",
-      "origin": { "x": -500, "y": 0, "z": 0 },
-      "width": {"x": -500, "y": 0, "z": 300},
-      "height": {"x": -500, "y": 200, "z": 0},
-      "normal": {"x": 1},
-      "color": "0xff0000",
-      "spclr": 0.1,
-      "phong": 1
-    },
-    {
-      "name": "plane",
-      "origin": { "x": -500, "y": -20, "z": 0 },
-      "norm": {"z": -1},
-      "color": "0x00ff00",
-      "spclr": 0.1,
+      "name": "disk",
+      "inner_radius": 5000,
+      "rotate": {"z": 90},
+      "checker": {"color2": "lattice", "color1": "blue_marble", "size": 10},
+      "color": "0xff00ff",
+      "spclr": 0,
       "phong": 1
     }
   ]

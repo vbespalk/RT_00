@@ -21,20 +21,19 @@
 // 	SDL_RenderPresent(ptr->sdl->renderer);
 // }
 
-unsigned int	get_rgb(t_sdl *sdl, unsigned int red, unsigned int green, unsigned int blue)
+Uint32			get_rgb(t_sdl *sdl, Uint8 red, Uint8 green, Uint8 blue)
 {
-	unsigned int color;
 	Uint32 col;
 
 	col = SDL_MapRGB(sdl->format, red, green, blue);
-	return ((unsigned int)col);
+	return (col);
 }
 
 void			img_pixel_put(t_env *e, int x, int y, unsigned int color)
 {
 	Uint32 *data;
 
-	if (!(x >= 0 && x < e->sdl->scr_wid && y >= 0 && y < e->sdl->scr_hei))
+	if (!(x >= 0 && x < e->sdl->rt_wid && y >= 0 && y < e->sdl->scr_hei))
 		return ;
 	data = e->sdl->pixels;
 	data += y * (e->sdl->pitch) + x;

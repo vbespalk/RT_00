@@ -10,7 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_limit(int min, int max, int num)
+int				ft_limit(int min, int max, int num)
+{
+	if (num < min)
+		return (min);
+	if (num > max)
+		return (max);
+	return (num);
+}
+
+unsigned int	ft_limit_uint(unsigned int min, unsigned int max, unsigned int num)
 {
 	if (num < min)
 		return (min);

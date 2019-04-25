@@ -39,8 +39,8 @@ void		translate(t_env *e, const uint32_t id)
 		SDLK_d, SDLK_a, SDLK_s, SDLK_w, SDLK_e, SDLK_q,
 	};
 	if (e->selected)
-		e->selected->ft_translate(s_buttons_codes[id - 9], e->selected->fig,
-			&e->selected->translate);
+		e->selected->ft_translate(s_buttons_codes[id - 9], e->selected,
+				&(e->selected->transform), &(e->selected->inverse));
 	else
 		ft_translate_cam(s_buttons_codes[id - 9], &(e->scn->cam->origin));
 }
@@ -54,7 +54,7 @@ void		rotate(t_env *e, const uint32_t id)
 	};
 	if (e->selected)
 		e->selected->ft_rotate(s_buttons_codes[id - 15],
-			e->selected->fig, &e->selected->rotate);
+			e->selected, &(e->selected->transform), &(e->selected->inverse));
 	else
 		ft_rotate_cam(s_buttons_codes[id - 15], &(e->scn->cam->angles));
 }

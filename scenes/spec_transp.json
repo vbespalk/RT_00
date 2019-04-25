@@ -1,0 +1,43 @@
+{
+    "name": "Solar System",
+    "skybox": {
+      "min": { "x": -1000000000, "y": -1000000000, "z": -1000000000},
+      "max": { "x": 1000000000, "y": 1000000000, "z": 1000000000},
+      "negz": "./texture/skybox/thunder/negz.tga", 
+      "negy": "./texture/skybox/thunder/negy.tga", 
+      "negx":"./texture/skybox/thunder/negx.tga", 
+      "posz": "./texture/skybox/thunder/posz.tga", 
+      "posy": "./texture/skybox/thunder/posy.tga",
+      "posx": "./texture/skybox/thunder/posx.tga"
+  },
+    "//": "universe",
+    "camera": {
+        "origin": { "x": -1000, "y": 0 }
+    },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        },
+        {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        }
+    ],
+    "objects": [
+        {
+            "//": "sun",
+
+            "name": "sphere",
+            "translate": { "y": 0 },
+            "radius": 500,
+
+            "//": "yellow",
+            "color": "0xffff00",
+            "texture": "./texture/earthspec.jpg",
+            "procedural": {"name": "marble", "color": "0x00ddab"},
+            "diff": 1,
+            "ambnt": 0.1
+        }
+]
+}

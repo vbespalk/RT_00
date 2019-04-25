@@ -18,7 +18,11 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 		(t_vector) { 1.0f, 0.0f, 0.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_vec = ft_3_vector_rotate(
+<<<<<<< HEAD
 		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, (sdl->scr_wid - GUI_WIDTH) / -2.0f },
+=======
+		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, sdl->rt_wid / -2.0f },
+>>>>>>> origin/master
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_x_step_vec = ft_3_vector_scale(
 		ft_3_vector_rotate(
@@ -32,8 +36,13 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 		1.0f / (float)(cam->smooth + 1));
 	cam->vs_start_point =
 		cam->vs_start_vec + cam->origin + ft_3_vector_rotate(
+<<<<<<< HEAD
 			(t_vector) {
 				((sdl->scr_wid - GUI_WIDTH) / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
+=======
+			(t_vector){
+				(sdl->rt_wid / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
+>>>>>>> origin/master
 			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
@@ -68,23 +77,55 @@ static t_color	ft_get_pixel_color(t_thrarg	*thrarg, int x, int y, int smth)
 	return (color);
 }
 
+<<<<<<< HEAD
+=======
+/*
+**	x/y[0] - start point, iterator;
+**	x/y[1] - end point;
+*/
+static void	ft_update_obj_lst(t_camera *cam, t_list *objs)
+{
+	t_object *o;
+
+	while (objs)
+	{
+		o = ((t_object *)objs->content);
+		o->dist = ft_3_vector_len(o->translate - cam->origin);
+		objs = objs->next;
+	}
+}
+
+>>>>>>> origin/master
 void			*ft_section_handle(void *arg)
 {
 	t_thrarg	*thrarg;
 	int			x;
 	int			y;
 	int			smth;
+    t_color     col;
 
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
 	smth = thrarg->e->scn->cam->smooth + 1;
+<<<<<<< HEAD
 	while (x < thrarg->e->sdl->scr_wid - GUI_WIDTH)
+=======
+	while (x < thrarg->e->sdl->rt_wid)
+>>>>>>> origin/master
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
-			img_pixel_put(
-				thrarg->e, x, y,
-				(unsigned int)(ft_get_pixel_color(thrarg, x, y, smth).val));
+		{
+			col = thrarg->e->color_mode[MD_COLOR] ? ft_get_pixel_color(thrarg, x, y, smth) :
+            		ft_px_mode(ft_get_pixel_color(thrarg, x, y, smth),
+            				thrarg->e->color_mode);
+		    img_pixel_put(
+                    thrarg->e, x, y,
+                    (unsigned int) col.val);
+//			img_pixel_put(
+//					thrarg->e, x, y,
+//					(unsigned int) get_rgb(thrarg->e->sdl, col.argb[0], col.argb[1], col.argb[2]));
+        }
 		x += THREADS;
 	}
 	return (NULL);
@@ -98,6 +139,7 @@ void			ft_render(t_env *e)
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
 	ft_get_start_stack(e->scn);
+	ft_update_obj_lst(e->scn->cam, e->scn->objs);
 	i = -1;
 	while (++i < THREADS)
 	{

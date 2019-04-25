@@ -27,18 +27,18 @@ void		ft_parse_skybox(char **content, t_skybox **sky)
 			ft_memdel((void **) (sky));
 			return;
 		}
-	bounds[0] = ft_3_nullpointnew();
-	bounds[1] = ft_3_nullpointnew();
+	bounds[0] = ft_3_zeropointnew();
+	bounds[1] = ft_3_zeropointnew();
 	ft_get_attr(content, "min", (void *)(&(bounds[0])), DT_POINT);
 	ft_get_attr(content, "max", (void *)(&(bounds[1])), DT_POINT);
-//	(*sky)->bbx = ft_init_aabb(bounds[0], bounds[1]);
+	(*sky)->bbx = ft_init_aabb(bounds[0], bounds[1]);
 }
 
 static t_vector	ft_get_rst(t_vector vec, t_vector norm)
 {
 	t_vector rst;
 
-	rst = ft_3_nullpointnew();
+	rst = ft_3_zeropointnew();
 	if (fabsf(norm[0]) >= 0.7)
 	{
 		rst[0] = norm[0] > 0 ? 3 : 0;
@@ -57,8 +57,6 @@ static t_vector	ft_get_rst(t_vector vec, t_vector norm)
 		rst[1] = norm[2] > 0 ? 1 - ((vec[0]) + 1) * 0.5f : ((vec[0]) + 1) * 0.5f;
 		rst[2] = 1 - ((vec[1]) + 1) * 0.5f;
 	}
-//	else
-//		printf("WOOOOP norm %f,%f,%f, vec %f,%f,%f\n", norm[0], norm[1], norm[2], vec[0], vec[1], vec[2]);
 	return (rst);
 }
 
@@ -76,7 +74,8 @@ Uint32		ft_map_skybox(t_aabb *bbx, t_texture *tex[6], t_vector hit)
 	vec = (hit - bbx->cntr) / ft_3_fabsf_vector(ft_3_vector_scale(bbx->dgnl, 0.5f));
 	norm = ft_3_tounitvector((t_vector){(int)(vec[0] * bias),
 									 (int)(vec[1] * bias), (int)(vec[2] * bias)});
-	rst = ft_get_rst(vec, norm);
+
+    rst = ft_get_rst(vec, norm);
 	xy[0] = (int) ((tex[(int) rst[0]]->surface->w - 1) * fabsf(rst[1]));
 	xy[1] = (int) ((tex[(int) rst[0]]->surface->h - 1) * fabsf(rst[2]));
 	if (!(IN_RANGE(xy[0], 0, tex[(int) rst[0]]->surface->w) &&

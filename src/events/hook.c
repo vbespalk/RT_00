@@ -18,19 +18,19 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		|| sum == SDLK_s || sum == SDLK_d \
 		|| sum == SDLK_q || sum == SDLK_e)
 	{
-		e->selected ? e->selected->ft_translate(sum, e->selected->fig, &e->selected->translate) : \
+		e->selected ? e->selected->ft_translate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_translate_cam(sum, &(e->scn->cam->origin)); //<-----------------------------CAMERA TRANSLATION??????
 	}
 	if (sum == SDLK_UP || sum == SDLK_DOWN || \
 		sum == SDLK_LEFT || sum == SDLK_RIGHT || \
 		sum == SDLK_PAGEDOWN|| sum == SDLK_PAGEUP)
 	{
-		e->selected ? e->selected->ft_rotate(sum, e->selected->fig, &e->selected->rotate) : \
+		e->selected ? e->selected->ft_rotate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_rotate_cam(sum, &(e->scn->cam->angles));
 	}
 	if (sum == SDLK_z || sum == SDLK_x)
 	{
-		e->selected ? e->selected->ft_scale(sum, e->selected->fig, &e->selected->scale) : \
+		e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	}
 	if (sum == SDLK_DELETE && e->selected)
@@ -38,6 +38,8 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		delete_obj(&(e->scn->objs), e->selected->id);
 		e->selected = NULL;
 	}
+	if ((sum == SDLK_g || sum == SDLK_j || sum == SDLK_n || sum == SDLK_i))
+        return (ft_switch_col_mode(e, sum));
 	if (sum == SDLK_r)
 		reset(e);
 	if (sum == SDLK_c)
@@ -56,7 +58,7 @@ int		on_mouse_wheel(Sint32 y, Uint32 dir, t_env *e)
 		sum = (y > 0) ? SDLK_z : SDLK_x;
 	else
 		sum = (y < 0) ? SDLK_z : SDLK_x;
-	e->selected ? e->selected->ft_scale(sum, e->selected->fig, &e->selected->scale) : \
+	e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	return (1);
 }
@@ -117,12 +119,13 @@ int		on_lbutton_up(int x, int y, t_env *e)
 int		on_resize(Sint32 w, Sint32 h, t_env *e)
 {
 	e->sdl->scr_wid = w;
+    e->sdl->rt_wid = e->sdl->scr_wid - GUI_WIDTH;
 	e->sdl->scr_hei = h;
 	ft_memdel((void **)&(e->sdl->format));
 	get_format_data(e->sdl);
 	SDL_DestroyTexture(e->sdl->screen);
 	//Init texture
-	e->sdl->screen = SDL_CreateTexture(e->sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, e->sdl->scr_wid, e->sdl->scr_hei);
+	e->sdl->screen = SDL_CreateTexture(e->sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, e->sdl->scr_wid - GUI_WIDTH, e->sdl->scr_hei);
 	if(e->sdl->screen == NULL)
 	{
 		sdl_close(e->sdl);
@@ -130,12 +133,12 @@ int		on_resize(Sint32 w, Sint32 h, t_env *e)
 		// return (sdl_error("Surface could not be created! "));
 	}
 	ft_memdel((void **)&(e->sdl->pixels));
-	if (!(e->sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * e->sdl->scr_hei * e->sdl->scr_wid)))
+	if (!(e->sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * e->sdl->scr_hei * e->sdl->rt_wid)))
 		sdl_close(e->sdl);
-	ft_memset(e->sdl->pixels, 0, e->sdl->scr_hei * e->sdl->scr_wid * sizeof(Uint32));
+	ft_memset(e->sdl->pixels, 0, e->sdl->scr_hei * e->sdl->rt_wid * sizeof(Uint32));
 	ft_memdel((void **)&(e->pix_obj));
-	e->pix_obj = (t_object **)malloc(sizeof(t_object) * e->sdl->scr_wid * e->sdl->scr_hei);
-	ft_memset(e->pix_obj, 0, e->sdl->scr_hei * e->sdl->scr_wid * sizeof(Uint32));
+	e->pix_obj = (t_object **)malloc(sizeof(t_object) * e->sdl->rt_wid * e->sdl->scr_hei);
+	ft_memset(e->pix_obj, 0, e->sdl->scr_hei * e->sdl->rt_wid * sizeof(Uint32));
 	return (1);
 }
 

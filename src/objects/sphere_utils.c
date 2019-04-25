@@ -90,35 +90,6 @@ void		ft_collide_sphere(
 	coll->o = (obj->is_neg)
 		? ft_inside_obj(objs, hit, ft_get_inner_object)
 		: obj;
-
-//	float		phi;
-//	if (t1t2[0] > FLT_MIN)
-//	{
-//		hit = origin + direct * (t_vector){t1t2[0], t1t2[0], t1t2[0]} - sph->origin;
-//		phi = atan2f(hit[0], hit[2]);
-//		if (phi < 0.0)
-//			phi += 2.0f * M_PI;
-//		if ((phi >= sph->min_phi && phi <= sph->max_phi) &&
-//			hit[1] <= sph->min_thcos * sph->radius &&
-//			hit[1] >= sph->max_thcos * sph->radius) {
-//			coll_pnt = origin + ft_3_vector_scale(direct, t1t2[0]);
-//			return (coll_pnt);
-//		}
-//	}
-//	if (t1t2[1] > FLT_MIN)
-//	{
-//		hit = origin + direct * (t_vector){t1t2[1], t1t2[1], t1t2[1]}  - sph->origin;
-//		phi = atan2f(hit[0], hit[2]);
-//		if (phi < 0.0)
-//			phi += 2.0f * M_PI;
-//		if ((phi >= sph->min_phi && phi <= sph->max_phi) &&
-//			hit[1] <= sph->min_thcos * sph->radius &&
-//			hit[1] >= sph->max_thcos * sph->radius) {
-//			coll_pnt = origin + ft_3_vector_scale(direct, t1t2[1]);
-//			return (coll_pnt);
-//		}
-//	}
-
 }
 
 int			ft_is_inside_sphere(void *fig, t_vector point)

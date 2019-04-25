@@ -12,23 +12,25 @@ int			ft_is_reachable_box(void *fig, t_vector origin, t_vector direct)
 t_vector	ft_collide_box(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2])
 {
 	t_box		*bx;
-	t_vector	coll_pnt;
 	float		t_min;
 	float 		t_cur;
 	int 		i;
+	t_object	pln_o;
 
 	bx = (t_box *)(obj->fig);
 	i = -1;
+	ft_bzero(&pln_o, sizeof(t_object));
+	pln_o = *obj;
 
 	t_min = FLT_MAX;
 	while (++i < BOX_FACES)
 	{
+		pln_o.fig = bx->face[i];
+		ft_collide_plane(objs, &pln_o, coll, od);
 
-		coll_pnt = ft_3_nullpointnew(); //ft_collide_plane(objs, bx->face[i], od); <--
-
-		if (ft_3_isnullpoint(coll_pnt))
+		if (ft_3_isnullpoint(coll->coll_pnt))
 			continue ;
-		t_cur = ft_3_vector_len(coll_pnt - od[0]);
+		t_cur = ft_3_vector_len(coll->coll_pnt - od[0]);
 		if (t_cur < t_min)
 		{
 			t_min = t_cur;

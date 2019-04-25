@@ -12,11 +12,6 @@
 
 #include "rt.h"
 
-/*
-**	by now, the searching ray would stop if any object will be found
-**	(specularity and transparency will be taken into account latter)
-*/
-
 float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 {
 	float		res;
@@ -26,18 +21,18 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 	t_coll		coll;
 
 	res = 1.0f;
-	o = o + ft_3_vector_scale(d, 0.1f);
+	o = o + ft_3_vector_scale(d, 0.2f);
 	od[0] = o;
 	od[1] = d;
 	o_node = scn->objs;
 	while (o_node)
 	{
 		obj = (t_object *)(o_node->content);
-		if (obj->is_neg)
-		{
-			o_node = o_node->next;
-			continue ;
-		}
+//		if (obj->is_neg)
+//		{
+//			o_node = o_node->next;
+//			continue ;
+//		}
 		coll.o = NULL;
 		obj->ft_collide(&(scn->objs), obj, &coll, od);
 		if (coll.o

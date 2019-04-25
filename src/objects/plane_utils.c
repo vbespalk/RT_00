@@ -24,11 +24,11 @@ int			ft_is_reachable_plane(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-void			ft_collide_plane(
-					t_list **objs,
-					t_object *obj,
-					t_coll *coll,
-					t_vector od[2])
+void		ft_collide_plane(
+				t_list **objs,
+				t_object *obj,
+				t_coll *coll,
+				t_vector od[2])
 {
 	t_plane		*pln;
 

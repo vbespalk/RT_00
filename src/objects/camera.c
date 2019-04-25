@@ -62,33 +62,33 @@ void				ft_parse_camera(char **content, t_camera *cam)
 	cam->angles[2] = ft_torad(cam->angles[2]);
 }
 
-static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
-{
-	t_dlist		*node;
-	t_list		*o_node;
-	t_object	*o;
-
-	node = NULL;
-	o_node = objs;
-	if (!o_node)
-		return (NULL);
-
-	while (o_node)
-	{
-		o = (t_object *)(o_node->content);
-		if (o->ft_is_inside(o->fig, scn->cam->origin))
-		{
-			if (!node)
-				ft_dlstpush(&node, objs->content);
-			else
-			{
-
-			}
-		}
-		o_node = o_node->next;
-	}
-	return (node);
-}
+//static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
+//{
+//	t_dlist		*node;
+//	t_list		*o_node;
+//	t_object	*o;
+//
+//	node = NULL;
+//	o_node = objs;
+//	if (!o_node)
+//		return (NULL);
+//
+//	while (o_node)
+//	{
+//		o = (t_object *)(o_node->content);
+//		if (o->ft_is_inside(o->fig, scn->cam->origin))
+//		{
+//			if (!node)
+//				ft_dlstpush(&node, objs->content);
+//			else
+//			{
+//
+//			}
+//		}
+//		o_node = o_node->next;
+//	}
+//	return (node);
+//}
 
 void				ft_get_start_stack(t_scene *scn)
 {

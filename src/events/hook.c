@@ -119,12 +119,13 @@ int		on_lbutton_up(int x, int y, t_env *e)
 int		on_resize(Sint32 w, Sint32 h, t_env *e)
 {
 	e->sdl->scr_wid = w;
+    e->sdl->rt_wid = e->sdl->scr_wid - GUI_WIDTH;
 	e->sdl->scr_hei = h;
 	ft_memdel((void **)&(e->sdl->format));
 	get_format_data(e->sdl);
 	SDL_DestroyTexture(e->sdl->screen);
 	//Init texture
-	e->sdl->screen = SDL_CreateTexture(e->sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, e->sdl->scr_wid, e->sdl->scr_hei);
+	e->sdl->screen = SDL_CreateTexture(e->sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, e->sdl->scr_wid - GUI_WIDTH, e->sdl->scr_hei);
 	if(e->sdl->screen == NULL)
 	{
 		sdl_close(e->sdl);
@@ -132,12 +133,12 @@ int		on_resize(Sint32 w, Sint32 h, t_env *e)
 		// return (sdl_error("Surface could not be created! "));
 	}
 	ft_memdel((void **)&(e->sdl->pixels));
-	if (!(e->sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * e->sdl->scr_hei * e->sdl->scr_wid)))
+	if (!(e->sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * e->sdl->scr_hei * e->sdl->rt_wid)))
 		sdl_close(e->sdl);
-	ft_memset(e->sdl->pixels, 0, e->sdl->scr_hei * e->sdl->scr_wid * sizeof(Uint32));
+	ft_memset(e->sdl->pixels, 0, e->sdl->scr_hei * e->sdl->rt_wid * sizeof(Uint32));
 	ft_memdel((void **)&(e->pix_obj));
-	e->pix_obj = (t_object **)malloc(sizeof(t_object) * e->sdl->scr_wid * e->sdl->scr_hei);
-	ft_memset(e->pix_obj, 0, e->sdl->scr_hei * e->sdl->scr_wid * sizeof(Uint32));
+	e->pix_obj = (t_object **)malloc(sizeof(t_object) * e->sdl->rt_wid * e->sdl->scr_hei);
+	ft_memset(e->pix_obj, 0, e->sdl->scr_hei * e->sdl->rt_wid * sizeof(Uint32));
 	return (1);
 }
 

@@ -33,7 +33,7 @@ void			img_pixel_put(t_env *e, int x, int y, unsigned int color)
 {
 	Uint32 *data;
 
-	if (!(x >= 0 && x < e->sdl->scr_wid && y >= 0 && y < e->sdl->scr_hei))
+	if (!(x >= 0 && x < e->sdl->rt_wid && y >= 0 && y < e->sdl->scr_hei))
 		return ;
 	data = e->sdl->pixels;
 	data += y * (e->sdl->pitch) + x;

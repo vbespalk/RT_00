@@ -18,7 +18,7 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 		(t_vector) { 1.0f, 0.0f, 0.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_start_vec = ft_3_vector_rotate(
-		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, sdl->scr_wid / -2.0f },
+		(t_vector) { 0.0f, sdl->scr_hei / 2.0f, sdl->rt_wid / -2.0f },
 		cam->angles[0], cam->angles[1], cam->angles[2]);
 	cam->vs_x_step_vec = ft_3_vector_scale(
 		ft_3_vector_rotate(
@@ -33,7 +33,7 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 	cam->vs_start_point =
 		cam->vs_start_vec + cam->origin + ft_3_vector_rotate(
 			(t_vector){
-				(sdl->scr_wid / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
+				(sdl->rt_wid / 2.0f) / tanf(cam->fov / 2.0f), 0.0f, 0.0f },
 			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
@@ -95,7 +95,7 @@ void			*ft_section_handle(void *arg)
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
 	smth = thrarg->e->scn->cam->smooth + 1;
-	while (x < thrarg->e->sdl->scr_wid)
+	while (x < thrarg->e->sdl->rt_wid)
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)

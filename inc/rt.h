@@ -530,6 +530,7 @@ typedef struct		s_scene
 typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 {
 	int				scr_wid;
+	int				rt_wid;
 	int				scr_hei;
 	SDL_Window		*window;
 	SDL_Texture		*screen;

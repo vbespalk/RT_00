@@ -20,7 +20,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	int 		i;
 
 	e->scn = scene;
-	e->asp_rat = (float)sdl->scr_wid / (float)sdl->scr_hei;
+	e->asp_rat = (float)sdl->rt_wid / (float)sdl->scr_hei;
 	e->pix_obj = obj_pix;
 	e->sdl = sdl;
 	textures = NULL;
@@ -77,13 +77,12 @@ static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
 	SDL_Rect	rt_container;
 
 	ft_render(e);
-//	rt_container =  (SDL_Rect){0, 0,
-//					e->sdl->scr_wid - GUI_WIDTH, e->sdl->scr_hei};
+	rt_container =  (SDL_Rect){0, 0,
+					e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
-		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
+		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
-//	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &rt_container);
-	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
+	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &rt_container);
 	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
 }
@@ -101,8 +100,8 @@ static void	ft_rt_loop(t_env *e)
 //		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
 			sdl_draw_screen(e, e->sdl, btn_id);
-		if (!btn_id)
-			sdl_draw_screen(e, e->sdl, 0);
+//		if (!btn_id)
+//			sdl_draw_screen(e, e->sdl, 0);
 //		int y = SDL_GetTicks() - x;
 //		if (y != 0)
 //			printf("%f\n", 1000 / (float)y);
@@ -119,6 +118,7 @@ int			main(int argc, char **argv)
 	if (argc != 2)
 		ft_usage("RT scn\n");
 	sdl.scr_wid = SCR_WID;
+	sdl.rt_wid = sdl.scr_wid - GUI_WIDTH;
 	sdl.scr_hei = SCR_HEI;
 	if (sdl_init(&sdl) < 0)
 		exit(-1);
@@ -132,7 +132,7 @@ int			main(int argc, char **argv)
 	if (!(scene = ft_parse_json(argv[1])))
 		ft_error("Scene is incomplete or incorrect\n");
 	obj_pix = (t_object **)ft_smemalloc(
-		sizeof(t_object) * sdl.scr_wid * sdl.scr_hei, "main");
+		sizeof(t_object) * sdl.rt_wid * sdl.scr_hei, "main");
 	if (init_env(&e, scene, &obj_pix[0], &sdl))
 	{
 		// struct_del(scene);

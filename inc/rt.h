@@ -41,8 +41,8 @@
 
 # endif
 
-# define SCR_WID		640
-# define SCR_HEI		480
+# define SCR_WID		950
+# define SCR_HEI		548
 # define GUI_WIDTH		220
 # define FOV			1.570796
 # define EQN_EPS		1e-30
@@ -155,6 +155,8 @@ static const unsigned char
 # define GUI_HEIGHT 250 * 1250 / 570
 # define BUTTONS_AMOUNT 40
 # define BTN_ID_SHIFT 100
+
+typedef enum { false, true } bool;
 
 /*
 ** buttons ids enum
@@ -551,7 +553,7 @@ typedef struct 		s_environment
 //	t_object		*pointed;
 	t_object		*selected;
 	t_sdl			*sdl;
-	unsigned int    color_mode;
+	bool		    color_mode[5];
 
 	unsigned int	nb_obj;
 	unsigned int	nb_light;
@@ -996,6 +998,7 @@ int						ft_key_hook(int key, void *p);
 */
 
 int						ft_close_hook(int x, int y, void *a);
+void					ft_switch_col_mode(t_env *e, Sint32 sum);
 
 /*
 **  textures.c
@@ -1110,10 +1113,13 @@ void                    ft_parse_checker(char **content, t_checkbrd **tex);
 /*
 ** color_modes.c
 */
-void                    mode_grey(t_sdl *sdl, int x, int y);
-void                    mode_sepia(t_sdl *sdl, int x, int y);
-void                    mode_negative(t_sdl *sdl, int x, int y);
-void                    mode_inverted(t_sdl *sdl, int x, int y);
+t_color  				ft_grayscale_px(t_color in_col);
+t_color  				ft_sepia_px(t_color in_col);
+t_color  				ft_negative_px(t_color in_col);
+t_color  				ft_invert_px(t_color in_col);
+void					ft_col_mode(t_sdl *sdl, int mode);
+//t_color					ft_px_mode(t_color col, int mode);
+t_color					ft_px_mode(t_color col, bool *mode);
 
 /*
 ** color_man.c

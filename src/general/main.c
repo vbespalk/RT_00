@@ -25,6 +25,8 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	e->sdl = sdl;
 	textures = NULL;
 	e->scn->textures = textures;
+	ft_bzero(e->color_mode, sizeof(bool) * 5);
+	e->color_mode[0] = true;
 	objs = e->scn->objs;
 	while (objs)
 	{
@@ -72,10 +74,15 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 
 static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
 {
+	SDL_Rect	rt_container;
+
 	ft_render(e);
+//	rt_container =  (SDL_Rect){0, 0,
+//					e->sdl->scr_wid - GUI_WIDTH, e->sdl->scr_hei};
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->scr_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
+//	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &rt_container);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, NULL);
 	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
@@ -91,14 +98,14 @@ static void	ft_rt_loop(t_env *e)
 	sdl_draw_screen(e, e->sdl, 0);
 	while (sdl->event_loop)
 	{
-		int x = SDL_GetTicks();
+//		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
 			sdl_draw_screen(e, e->sdl, btn_id);
 		if (!btn_id)
 			sdl_draw_screen(e, e->sdl, 0);
-		int y = SDL_GetTicks() - x;
-		if (y != 0)
-			printf("%f\n", 1000 / (float)y);
+//		int y = SDL_GetTicks() - x;
+//		if (y != 0)
+//			printf("%f\n", 1000 / (float)y);
 	}
 }
 

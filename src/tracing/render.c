@@ -90,7 +90,7 @@ void			*ft_section_handle(void *arg)
 	int			x;
 	int			y;
 	int			smth;
-    t_color     color;
+    t_color     col;
 
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
@@ -100,10 +100,15 @@ void			*ft_section_handle(void *arg)
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
 		{
-            color = ft_get_pixel_color(thrarg, x, y, smth);
+			col = thrarg->e->color_mode[MD_COLOR] ? ft_get_pixel_color(thrarg, x, y, smth) :
+            		ft_px_mode(ft_get_pixel_color(thrarg, x, y, smth),
+            				thrarg->e->color_mode);
 		    img_pixel_put(
                     thrarg->e, x, y,
-                    (unsigned int) color.val);
+                    (unsigned int) col.val);
+//			img_pixel_put(
+//					thrarg->e, x, y,
+//					(unsigned int) get_rgb(thrarg->e->sdl, col.argb[0], col.argb[1], col.argb[2]));
         }
 		x += THREADS;
 	}

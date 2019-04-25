@@ -69,3 +69,20 @@ void	delete_obj(t_list **obj_lst, Uint32 id)
 		}
 	}
 }
+
+void					ft_switch_col_mode(t_env *e, Sint32 sum)
+{
+	if (sum == SDLK_g)
+		e->color_mode[MD_GRAYSCALE] = !(e->color_mode[MD_GRAYSCALE]);
+	if (sum == SDLK_j)
+		e->color_mode[MD_SEPIA] = !(e->color_mode[MD_SEPIA]);
+	if (sum == SDLK_n)
+		e->color_mode[MD_NEGATIVE] = !(e->color_mode[MD_NEGATIVE]);
+	if (sum == SDLK_i)
+		e->color_mode[MD_INVERTED] = !(e->color_mode[MD_INVERTED]);
+	e->color_mode[MD_COLOR] = (e->color_mode[MD_GRAYSCALE]
+				|| e->color_mode[MD_SEPIA]
+				|| e->color_mode[MD_NEGATIVE]
+				|| e->color_mode[MD_INVERTED]) ? false : true;
+
+}

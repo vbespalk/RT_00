@@ -68,6 +68,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
 					e->scn->skybox->textur_id[i])))
 				return (-1);
+	e->scn->skybox_on = (e->scn->skybox != NULL) ? true : false;
 	e->selected = NULL;
 	return (0);
 }
@@ -77,7 +78,7 @@ static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
 	SDL_Rect	rt_container;
 
 	ft_render(e);
-	rt_container =  (SDL_Rect){0, 0,
+	rt_container = (SDL_Rect){0, 0,
 					e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));

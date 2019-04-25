@@ -117,6 +117,16 @@
 # define RAMP_WM_MRBL		"./texture/procedural/sandstone_ramp1.jpg"
 # define RAMP_SANDSTN		"./texture/procedural/sandstone_ramp1.jpg"
 
+/*
+** DEFAULT SKYBOX PATH
+*/
+# define SKBX_NEGX			"./texture/skybox/thunder/negx.tg"
+# define SKBX_NEGY          "./texture/skybox/thunder/negy.tga"
+# define SKBX_NEGZ          "./texture/skybox/thunder/negz.tga"
+# define SKBX_POSX          "./texture/skybox/thunder/posx.tga"
+# define SKBX_POSY          "./texture/skybox/thunder/posy.tga"
+# define SKBX_POSZ          "./texture/skybox/thunder/posz.tga"
+
 static const unsigned char
 		permutation_table[LTABLE_SIZE] =
 		{
@@ -416,20 +426,6 @@ typedef struct		s_disc
 	float			sq_out_r;
 }					t_disk;
 
-typedef struct		s_triangle
-{
-	t_vector		v0_ini;
-	t_vector		v1_ini;
-	t_vector		v2_ini;
-	t_vector		v0;
-	t_vector		v1;
-	t_vector		v2;
-	t_vector		unorm; //unnormilised normal
-	t_vector		norm;
-	float			u; // baricentric coordinates
-	float			v; // baricentric coordinates
-}					t_triangle;
-
 typedef struct		s_bounding_box
 {
 	t_vector		bounds[2];
@@ -523,6 +519,7 @@ typedef struct		s_scene
 	t_list			*lights;
 	t_list			*objs;
 	t_list			*textures;
+	bool			skybox_on;
 	t_skybox		*skybox;
 	t_camera		*cam;
 }					t_scene;
@@ -625,7 +622,7 @@ typedef struct		s_thrarg
 ** GRAPH_TRANSFORMATION LIBRARY
 */
 
-void				img_pixel_put(t_env *env, int x, int y, unsigned int color);
+void				img_pixel_put(t_sdl *sdl, int x, int y, unsigned int color);
 Uint32				get_rgb(t_sdl *sdl, Uint8 red, Uint8 green, Uint8 blue);
 void				reset(t_env *e);
 void				delete_obj(t_list **obj_lst, Uint32 id);
@@ -765,29 +762,6 @@ float					ft_collide_disk
 							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_disk(struct s_object *o, t_vector pnt);
 t_vector				ft_get_norm_disk(void *fig, t_vector coll);
-
-/*
-**--------------------------------------------------TRIANGLE------------------------------------------------------------------
-*/
-/*
-**	triangle.c
-*/
-
-char					*ft_parse_triangle(char *attr, t_scene *scn, unsigned int id);
-void					ft_translate_triangle(Uint32 key, void *fig, t_vector *transl);
-void					ft_rotate_triangle(Uint32 key, void *fig, t_vector *rot);
-void					ft_scale_triangle(Uint32 key, void *fig, float *scale);
-
-/*
-**	triangle_utils.c
-*/
-
-int						ft_is_reachable_triangle
-							(void *fig, t_vector origin, t_vector direct);
-float					ft_collide_triangle
-							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
-int						ft_is_inside_triangle(struct s_object *o, t_vector pnt);
-t_vector				ft_get_norm_triangle(void *fig, t_vector coll);
 
 /*
 **--------------------------------------------------BOX------------------------------------------------------------------
@@ -999,7 +973,13 @@ int						ft_key_hook(int key, void *p);
 */
 
 int						ft_close_hook(int x, int y, void *a);
+
+/*
+** key.c
+*/
+
 int					    ft_switch_col_mode(t_env *e, Sint32 sum);
+void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn);
 
 /*
 **  textures.c

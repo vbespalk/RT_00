@@ -89,3 +89,56 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 	ft_col_mode(e->sdl, e->color_mode);
     return (1);
 }
+
+//void    ft_skybox_del(t_skybox **sk)
+//{
+//    int i;
+//
+//    if (!sk || !*sk)
+//        return ;
+//    ft_memdel((void **)&(*sk)->bbx);
+//    i = -1;
+//    while (++i < BOX_FACES)
+//    {
+//        ft_memdel((void **)&(*sk)->textur_id[i]);
+//        SDL_FreeSurface((*sk)->textur[i]->surface);
+//        ft_memdel((void **)&(*sk)->textur[i]->path);
+//        ft_memdel((void **)&(*sk)->textur[i]);
+//        printf("freed surf side %d at %p %p\n", i, &(*sk)->textur_id[i], &(*sk)->textur[i]);
+//    }
+//    ft_memdel((void **)sk);
+//    printf("freed surf at %p : %p\n", sk, *sk);
+//}
+
+void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
+{
+    int i;
+
+    if (!scn->skybox)
+    {
+        printf("SKYBOX LOADING>>>\n");
+        scn->skybox = (t_skybox *) ft_smemalloc(sizeof(t_skybox), "ft_switch_skybox");
+        scn->skybox->textur_id[0] = ft_strdup(SKBX_NEGZ);
+        scn->skybox->textur_id[1] = ft_strdup(SKBX_NEGY);
+        scn->skybox->textur_id[2] = ft_strdup(SKBX_NEGX);
+        scn->skybox->textur_id[3] = ft_strdup(SKBX_POSZ);
+        scn->skybox->textur_id[4] = ft_strdup(SKBX_POSY);
+        scn->skybox->textur_id[5] = ft_strdup(SKBX_POSX);
+        scn->skybox->bbx = ft_init_aabb(ft_3_zeropointnew(), ft_3_zeropointnew());
+        i = -1;
+        while (++i < BOX_FACES)
+        {
+			if (!(scn->skybox->textur[i] = init_texture(&scn->textures, sdl,
+														scn->skybox->textur_id[i])))
+			{
+				printf("WARNING: CANT LOAD SKYBOX FILE \"%s\" IS MISSING\n",
+					   scn->skybox->textur_id[i]);
+				// DELETE SKYBOX STRUCTURE;
+//				ft_skybox_del(&scn->skybox);
+				return;
+			}
+		}
+		scn->skybox_on = false;
+    }
+    scn->skybox_on = !scn->skybox_on;
+}

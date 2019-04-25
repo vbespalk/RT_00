@@ -999,7 +999,7 @@ int						ft_key_hook(int key, void *p);
 */
 
 int						ft_close_hook(int x, int y, void *a);
-void					ft_switch_col_mode(t_env *e, Sint32 sum);
+int					    ft_switch_col_mode(t_env *e, Sint32 sum);
 
 /*
 **  textures.c
@@ -1118,7 +1118,8 @@ t_color  				ft_grayscale_px(t_color in_col);
 t_color  				ft_sepia_px(t_color in_col);
 t_color  				ft_negative_px(t_color in_col);
 t_color  				ft_invert_px(t_color in_col);
-void					ft_col_mode(t_sdl *sdl, int mode);
+//void					ft_col_mode(t_sdl *sdl, int mode);
+void                    ft_col_mode(t_sdl *sdl, bool *mode);
 //t_color					ft_px_mode(t_color col, int mode);
 t_color					ft_px_mode(t_color col, bool *mode);
 

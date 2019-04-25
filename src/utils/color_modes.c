@@ -65,7 +65,7 @@ t_color  ft_invert_px(t_color in_col)
     return (col);
 }
 
-void	ft_col_mode(t_sdl *sdl, int mode)
+void	ft_col_mode(t_sdl *sdl, bool *mode)
 {
 	t_color col;
 	int 	x;
@@ -74,18 +74,18 @@ void	ft_col_mode(t_sdl *sdl, int mode)
 	y = -1;
 	while (++y < sdl->scr_hei && (x = -1))
 	{
-		while (++x < sdl->scr_wid)
+		while (++x < sdl->rt_wid)
 		{
-			col.val = sdl->pixels[y * sdl->scr_wid + x];
-			if (mode == MD_GRAYSCALE)
+			col.val = sdl->pixels[y * sdl->rt_wid + x];
+            if (mode[MD_GRAYSCALE])
 				col = ft_grayscale_px(col);
-			else if (mode == MD_SEPIA)
+            if (mode[MD_SEPIA])
 				col = ft_sepia_px(col);
-			else if (mode == MD_NEGATIVE)
+            if (mode[MD_NEGATIVE])
 				col = ft_negative_px(col);
-			else if (mode == MD_INVERTED)
+            if (mode[MD_INVERTED])
 				col = ft_invert_px(col);
-			sdl->pixels[y * sdl->scr_wid + x] = get_rgb(sdl, col.argb[0], col.argb[1], col.argb[2]);
+			sdl->pixels[y * sdl->rt_wid + x] = col.val;
 		}
 	}
 }

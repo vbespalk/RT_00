@@ -39,7 +39,7 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		e->selected = NULL;
 	}
 	if ((sum == SDLK_g || sum == SDLK_j || sum == SDLK_n || sum == SDLK_i))
-		ft_switch_col_mode(e, sum);
+        return (ft_switch_col_mode(e, sum));
 	if (sum == SDLK_r)
 		reset(e);
 	if (sum == SDLK_c)

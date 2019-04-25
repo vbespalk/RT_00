@@ -70,7 +70,7 @@ void	delete_obj(t_list **obj_lst, Uint32 id)
 	}
 }
 
-void					ft_switch_col_mode(t_env *e, Sint32 sum)
+int					ft_switch_col_mode(t_env *e, Sint32 sum)
 {
 	if (sum == SDLK_g)
 		e->color_mode[MD_GRAYSCALE] = !(e->color_mode[MD_GRAYSCALE]);
@@ -84,5 +84,8 @@ void					ft_switch_col_mode(t_env *e, Sint32 sum)
 				|| e->color_mode[MD_SEPIA]
 				|| e->color_mode[MD_NEGATIVE]
 				|| e->color_mode[MD_INVERTED]) ? false : true;
-
+	if (e->color_mode[MD_COLOR])
+        return (1);
+	ft_col_mode(e->sdl, e->color_mode);
+    return (1);
 }

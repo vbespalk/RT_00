@@ -14,6 +14,11 @@ t_aabb		*ft_init_aabb(t_vector min, t_vector max)
         bbx->bounds[0] = (t_vector) {-10000000, -10000000, -10000000};
         bbx->bounds[1] = (t_vector) {10000000, 10000000, 10000000};
     }
+    else
+    {
+        bbx->bounds[0] = min;
+        bbx->bounds[1] = max;
+    }
     bbx->dgnl = bbx->bounds[1] - bbx->bounds[0];
     bbx->cntr = ft_3_vector_scale(bbx->bounds[0] + bbx->bounds[1], 0.5f);
 //    printf("BOUNDS %f,%f,%f, %f,%f,%f")

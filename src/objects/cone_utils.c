@@ -224,10 +224,10 @@ int					ft_is_reachable_cone(void *fig, t_vector origin, t_vector direct)
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
 	sq_tan = 1 + con->tan * con->tan;
-	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - sq_tan * od[1][1] * od[1][1],
+	if (!ft_solve_quadratic(ft_3_vector_dot(od[1], od[1]) - sq_tan * od[1][1] * od[1][1],
 					   2.0f * (ft_3_vector_dot(od[0], od[1]) - sq_tan * od[1][1] * od[0][1]),
 					   ft_3_vector_dot(od[0], od[0]) - sq_tan * od[0][1] * od[0][1],
-					   &res) && fabsf(od[1][1]) < 1e-6)
+					   res) && IS_ZERO(od[1][1]))
 		return (-FLT_MAX);
 	res[0] = (res[0] < FLT_MIN && res[1] < FLT_MIN) ? -FLT_MAX : get_cides_coll(od, res, &hit[0], con);
 	// res[0] = get_cides_coll(objs, obj, od, res);

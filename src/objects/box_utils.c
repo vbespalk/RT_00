@@ -54,10 +54,10 @@ int			ft_is_inside_box(t_object *o, t_vector point)
 		!IN_RANGE(proj[1], 0, bx->whl[1]) ||
 		!IN_RANGE(proj[2], 0, bx->whl[2]))
 	{
-		printf("OUT BOX\n");
+//		printf("OUT BOX\n");
 		return (0);
 	}
-	printf("IN BOX\n");
+//	printf("IN BOX\n");
 	return (1);
 }
 

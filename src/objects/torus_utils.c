@@ -77,7 +77,7 @@ int			ft_is_inside_torus(t_object *o, t_vector point)
 	k = point[1];
 	if (fabs(k) > trs->r_inner)
 	{
-		printf("OUT HEI\n");
+//		printf("OUT HEI\n");
 		return (0);
 	}
 //	a = point - ft_3_vector_scale(trs->v, (float)k);
@@ -88,11 +88,11 @@ int			ft_is_inside_torus(t_object *o, t_vector point)
 	if (r_outer > (trs->r_outer + trs->r_inner) * (trs->r_outer + trs->r_inner) ||
 		r_inner > trs->r_inner * trs->r_inner)
 	{
-		printf("OUT r_outer %f inn %f or %f, %f\n", r_outer, r_inner, (trs->r_outer + trs->r_inner) *
-		(trs->r_outer + trs->r_inner), trs->r_inner * trs->r_inner);
+//		printf("OUT r_outer %f inn %f or %f, %f\n", r_outer, r_inner, (trs->r_outer + trs->r_inner) *
+//		(trs->r_outer + trs->r_inner), trs->r_inner * trs->r_inner);
 		return (0);
 	}
-	printf("IN\n");
+//	printf("IN\n");
 	return (1);
 }
 

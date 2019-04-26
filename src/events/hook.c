@@ -90,7 +90,9 @@ int		on_mouse_move(int x, int y, int rel_x, int rel_y, t_env *e, int left, int r
 
 int		on_lbutton_down(int x, int y, t_env *e)
 {
-	if (e->pix_obj[y * e->sdl->scr_wid + x])
+	if (x >= e->sdl->rt_wid || y >= e->sdl->scr_hei)
+		return (0);
+	if (e->pix_obj[y * e->sdl->rt_wid + x])
 	{
 		// printf("selected pix %d\n", x * y);
 		e->selected = (e->pix_obj)[y * e->sdl->scr_wid + x];

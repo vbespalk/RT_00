@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:14:15 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/27 15:28:24 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 16:14:54 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,17 @@ const SDL_Rect g_btn_containers[] = (const SDL_Rect[]){
 	(SDL_Rect){38, 434, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT}, // diffuse +
 	(SDL_Rect){75, 451, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT}, // ambient -
 	(SDL_Rect){38, 451, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT}, // ambient +
-	// TODO Texturing
+	// Texturing
+	(SDL_Rect){212, 493, TEXTURE_EDIT_BTN_W, TEXTURE_EDIT_BTN_H}, // color
+	(SDL_Rect){160, 493, TEXTURE_EDIT_BTN_W, TEXTURE_EDIT_BTN_H}, // texture
+	(SDL_Rect){109, 493, TEXTURE_EDIT_BTN_W, TEXTURE_EDIT_BTN_H}, // checker
+	(SDL_Rect){57, 493, TEXTURE_EDIT_BTN_W, TEXTURE_EDIT_BTN_H}, // noise
+	(SDL_Rect){211, 516, 28, 18}, // tex 1
+	(SDL_Rect){176, 516, 28, 18}, // tex 2
+	(SDL_Rect){141, 516, 28, 18}, // tex 3
+	(SDL_Rect){107, 516, 28, 18}, // tex 4
+	(SDL_Rect){72, 516, 28, 18}, // tex 5
+	(SDL_Rect){37, 516, 28, 18} // tex 6
 };
 
 int			gui_init(t_sdl *sdl)

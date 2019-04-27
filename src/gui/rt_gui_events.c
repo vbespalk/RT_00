@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/27 14:09:07 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 16:05:44 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ static void	object_mode_events_handle_2(t_env *e, const uint32_t id)
 		inc_val_in_range(&(e->selected->diff), id == DIFFUSE_DOWN, 0, 1);
 	else if (id == AMBIENT_DOWN || id == AMBIENT_UP)
 		inc_val_in_range(&(e->selected->ambnt), id == AMBIENT_DOWN, 0, 1);
+	else if (id >= COLOR && id <= TEX_6)
+		texture_editing(e, id);
 }
 
 static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
@@ -67,7 +69,7 @@ static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
 
 uint32_t	handle_button(t_env *e, const uint32_t id)
 {
-	// printf("clicked btn with id %d\n", id); // remove this test stuff
+	printf("clicked btn with id %d\n", id); // remove this test stuff
 	if (id == SCREENSHOT || id == CAMERA_MODE ||
 		id == SKYBOX || id == DELETE_OBJ)
 		other_buttons(e, id);
@@ -79,7 +81,7 @@ uint32_t	handle_button(t_env *e, const uint32_t id)
 		translate(e, id);
 	else if (id >= ROT_OX_DOWN && id <= ROT_OZ_UP)
 		rotate(e, id);
-	else if (id > ROT_OZ_UP && id <= AMBIENT_UP && e->selected)
+	else if (id >= RADIUS_DOWN && id <= TEX_6 && e->selected)
 		object_mode_events_handle_1(e, id);
 	return (id);
 }

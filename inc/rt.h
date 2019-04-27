@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/27 15:29:21 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 16:12:03 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,9 +193,11 @@ static const unsigned char
 # define DEFAULT_BUTTTON_HEIGHT 20
 # define ARROW_BUTTON_WIDTH 30
 # define ARROW_BUTTON_HEIGHT 20
+# define TEXTURE_EDIT_BTN_W 50
+# define TEXTURE_EDIT_BTN_H 17
 # define GUI_WIDTH 220
 # define GUI_HEIGHT 250 * 1290 / 570
-# define BUTTONS_AMOUNT 40
+# define BUTTONS_AMOUNT 50
 # define BTN_ID_SHIFT 100
 
 # define DEFAULT_GUI_TEX_NAME "./media/rect23.png"
@@ -206,7 +208,7 @@ typedef enum { false, true } bool;
 /*
 ** buttons ids enum
 */
-
+// 774 808 843 878 911
 extern const SDL_Rect g_btn_containers[];
 
 typedef enum	e_btn_code
@@ -234,7 +236,10 @@ typedef enum	e_btn_code
 	TRANSP_DOWN, TRANSP_UP,
 	REFR_DOWN, REFR_UP,
 	DIFFUSE_DOWN, DIFFUSE_UP,
-	AMBIENT_DOWN, AMBIENT_UP
+	AMBIENT_DOWN, AMBIENT_UP,
+	COLOR, TEXTURE, CHECKER, NOISE,
+	TEX_1, TEX_2, TEX_3,
+	TEX_4, TEX_5, TEX_6
 }				t_btn_code;
 
 typedef struct s_environment	t_env;
@@ -275,6 +280,7 @@ void		other_buttons(t_env *e, const uint32_t id);
 void		color_filter(t_env *e, const uint32_t id);
 void		translate(t_env *e, const uint32_t id);
 void		rotate(t_env *e, const uint32_t id);
+void		texture_editing(t_env *e, uint32_t id);
 
 /*
 ** Gui stuff end

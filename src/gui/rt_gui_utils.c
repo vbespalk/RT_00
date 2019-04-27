@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:17:04 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/27 16:35:49 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 16:55:30 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,5 @@ void		rotate(t_env *e, const uint32_t id)
 void		texture_editing(t_env *e, uint32_t id)
 {
 	const int id_shift = 41;
-	printf("%d %d\n", id - id_shift, SDLK_0);
 	ft_set_exposure(id - id_shift + SDLK_0, e->selected, e);
 }

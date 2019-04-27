@@ -38,10 +38,14 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		delete_obj(&(e->scn->objs), e->selected->id);
 		e->selected = NULL;
 	}
-	if (sum == SDLK_g || sum == SDLK_j || sum == SDLK_n || sum == SDLK_i)
+	if (sum == SDLK_g || sum == SDLK_u || sum == SDLK_h || sum == SDLK_i)
         return (ft_switch_col_mode(e, sum));
-	if (sum == SDLK_k)
+	if (sum == SDLK_b)
 	    ft_switch_skybox(e->sdl, e->scn);
+	if (e->selected && (sum == SDLK_0 || sum == SDLK_1 || sum == SDLK_2 || sum == SDLK_3 ||
+		sum == SDLK_4 || sum == SDLK_5 || sum == SDLK_6 || sum == SDLK_7 ||
+		sum == SDLK_8 || sum == SDLK_9))
+		ft_set_exposure(sum, e->selected, e);
 	if (sum == SDLK_r)
 		reset(e);
 	if (sum == SDLK_c)

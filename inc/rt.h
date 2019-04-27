@@ -98,6 +98,10 @@
 # define SCANG_F		0.05f
 // # define SCALE_F_CAM	0.1
 # define BOX_FACES		6
+# define EXP_COLOR		0
+# define EXP_TEXTR		1
+# define EXP_CHCKR		2
+# define EXP_NOISE		3
 
 /*
 ** LATTICE NOISE
@@ -111,21 +115,33 @@
 # define TEX_GR_MRBL    	"gray_marble"
 # define TEX_BL_MRBL    	"blue_marble"
 # define TEX_WM_MRBL    	"warm_marble"
+# define TEX_GN_MRBL    	"green_marble"
+# define TEX_RD_MRBL    	"red_marble"
 # define TEX_SANDSTN		"sandstone"
 # define RAMP_GR_MRBL		"./texture/procedural/GrayMarbleRamp.jpg"
+# define RAMP_GN_MRBL		"./texture/procedural/GreenMarbleRamp.png"
 # define RAMP_BL_MRBL		"./texture/procedural/BlueMarbleRamp.jpg"
-# define RAMP_WM_MRBL		"./texture/procedural/sandstone_ramp1.jpg"
+# define RAMP_WM_MRBL		"./texture/procedural/turquoise_ramp2.jpg"
+# define RAMP_RD_MRBL		"./texture/procedural/RedMarbleRamp.png"
 # define RAMP_SANDSTN		"./texture/procedural/sandstone_ramp1.jpg"
+
+# define EV_TEX_LATTICE		SDLK_3
+# define EV_TEX_BL_MRBL    	SDLK_4
+# define EV_TEX_GN_MRBL    	SDLK_5
+# define EV_TEX_SANDSTN		SDLK_6
+# define EV_TEX_RD_MRBL    	SDLK_7
+# define EV_TEX_GR_MRBL    	SDLK_8
+# define EV_TEX_WM_MRBL    	SDLK_9
 
 /*
 ** DEFAULT SKYBOX PATH
 */
-# define SKBX_NEGX			"./texture/skybox/thunder/negx.tg"
-# define SKBX_NEGY          "./texture/skybox/thunder/negy.tga"
-# define SKBX_NEGZ          "./texture/skybox/thunder/negz.tga"
-# define SKBX_POSX          "./texture/skybox/thunder/posx.tga"
-# define SKBX_POSY          "./texture/skybox/thunder/posy.tga"
-# define SKBX_POSZ          "./texture/skybox/thunder/posz.tga"
+# define SKBX_NEGX			"./texture/skybox/bloodvalley/negx.tga"
+# define SKBX_NEGY          "./texture/skybox/bloodvalley/negy.tga"
+# define SKBX_NEGZ          "./texture/skybox/bloodvalley/negz.tga"
+# define SKBX_POSX          "./texture/skybox/bloodvalley/posx.tga"
+# define SKBX_POSY          "./texture/skybox/bloodvalley/posy.tga"
+# define SKBX_POSZ          "./texture/skybox/bloodvalley/posz.tga"
 
 static const unsigned char
 		permutation_table[LTABLE_SIZE] =
@@ -205,6 +221,8 @@ typedef enum	e_btn_code
 typedef struct s_environment	t_env;
 typedef struct s_sdl			t_sdl;
 
+typedef 		Uint32	(*fun_tab[3])(void *o, void *t, t_vector pnt);
+
 typedef struct	s_vec2
 {
     int32_t x;
@@ -266,8 +284,6 @@ typedef struct		s_texture
 {
 	char			*path;
 	SDL_Surface		*surface;
-	Uint32 			*pixels;
-	SDL_PixelFormat	*format;
 }					t_texture;
 
 typedef enum		e_smooth
@@ -349,12 +365,13 @@ typedef struct		s_object
 
 	t_color			color;
 	char 			*texture_id;
-	t_texture		*texture;
+	void			**tex_type[3];
+	SDL_Surface		*texture;
 	t_procedural	*noise;
 	t_checkbrd		*checker;
 	t_matrix		transform;
 	t_matrix		inverse;
-	int 			material;
+	int 			exposure;
 /*
 ** functions for intersection / search etc.
 */
@@ -379,11 +396,11 @@ typedef struct		s_object
 ** functions for texturing obj.
 */
 	Uint32			(*ft_mapping)
-						(struct s_object *o, t_texture *tex, t_vector coll);
+						(void *o, void *tex, t_vector coll);
     Uint32			(*ft_checker)
-            (struct s_object *o, t_checkbrd *tex, t_vector coll);
+            (void *o, void *tex, t_vector coll);
 	Uint32			(*ft_procedural)
-			(struct s_object *o, t_procedural *tex, t_vector coll);
+			(void *o, void *tex, t_vector coll);
 }					t_object;
 
 typedef struct		s_plane
@@ -457,7 +474,7 @@ typedef struct		s_skybox
 {
 	t_aabb			*bbx;
 	char 			*textur_id[BOX_FACES];
-	t_texture		*textur[BOX_FACES];
+	SDL_Surface		*textur[BOX_FACES];
 }					t_skybox;
 
 typedef struct		s_box
@@ -980,26 +997,27 @@ int						ft_close_hook(int x, int y, void *a);
 
 int					    ft_switch_col_mode(t_env *e, Sint32 sum);
 void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn);
+void					ft_set_exposure(Sint32 sum, t_object *o, t_env *e);
 
 /*
 **  textures.c
 */
 
-t_texture				*init_texture(t_list **textures, t_sdl *sdl, char *id);
+SDL_Surface				*init_texture(t_list **textures, t_sdl *sdl, char *id);
 t_texture				*load_texture(t_sdl *sdl, char *path);
 
 /*
 ** sphere_mapping.c
 */
 
-Uint32					ft_map_sphere(struct s_object *o, t_texture *tex, t_vector coll);
+Uint32					ft_map_sphere(struct s_object *o, SDL_Surface *tex, t_vector coll);
 Uint32		            ft_checker_sph(struct s_object *o, t_checkbrd *tex, t_vector coll);
 Uint32					ft_procedural_sph(struct s_object *o, t_procedural *tex, t_vector coll);
 /*
 ** cylinder_mapping.c
 */
 
-Uint32					ft_map_clndr(struct s_object *o, t_texture *tex, t_vector coll);
+Uint32					ft_map_clndr(struct s_object *o, SDL_Surface *tex, t_vector coll);
 Uint32		            ft_checker_cyl(struct s_object *o, t_checkbrd *tex, t_vector coll);
 Uint32					ft_procedural_cyl(struct s_object *o, t_procedural *tex, t_vector coll);
 
@@ -1008,21 +1026,21 @@ Uint32					ft_procedural_cyl(struct s_object *o, t_procedural *tex, t_vector col
 */
 Uint32					ft_procedural_prbld(struct s_object *o, t_procedural *tex, t_vector coll);
 Uint32					ft_checker_prbld(struct s_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_map_prbld(struct s_object *o, t_texture *tex, t_vector hit);
+Uint32					ft_map_prbld(struct s_object *o, SDL_Surface *tex, t_vector hit);
 
 /*
 ** cone_mapping.c
 */
 
-Uint32					ft_map_cone(struct s_object *o, t_texture *tex, t_vector coll);
+Uint32					ft_map_cone(struct s_object *o, SDL_Surface *tex, t_vector coll);
 Uint32		            ft_checker_cone(struct s_object *o, t_checkbrd *tex, t_vector coll);
 Uint32					ft_procedural_cone(struct s_object *o, t_procedural *tex, t_vector coll);
 /*
 ** plane_mapping.c
 */
 
-Uint32					ft_map_plane(struct s_object *o, t_texture *tex, t_vector coll);
-Uint32					ft_map_box(struct s_object *o, t_texture *tex, t_vector hit, t_vector tr_hit);
+Uint32					ft_map_plane(struct s_object *o, SDL_Surface *tex, t_vector coll);
+Uint32					ft_map_box(struct s_object *o, SDL_Surface *tex, t_vector hit, t_vector tr_hit);
 Uint32		            ft_checker_pln(struct s_object *o, t_checkbrd *tex, t_vector coll);
 Uint32		            ft_checker_box(struct s_object *o, t_checkbrd *tex, t_vector coll);
 
@@ -1035,14 +1053,15 @@ Uint32					ft_procedural_dsk(struct s_object *o, t_procedural *tex, t_vector col
 */
 Uint32					ft_procedural_tor(struct s_object *o, t_procedural *tex, t_vector coll);
 Uint32					ft_checker_tor(struct s_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_map_torus(struct s_object *o, t_texture *tex, t_vector hit);
+Uint32					ft_map_torus(struct s_object *o, SDL_Surface *tex, t_vector hit);
 /*
 ** skybox.c
 */
 
 void					ft_parse_skybox(char **content, t_skybox **sky);
-Uint32					ft_map_skybox(t_aabb *bbx, t_texture *tex[6], t_vector hit);
+Uint32					ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
+void    				ft_skybox_del(t_skybox **sk);
 
 /*
 ** checker.c
@@ -1058,11 +1077,10 @@ Uint32					ft_checker_mapping(t_vector hit_p, t_vector o);
 //int 					ft_solve_cubic(const float coef[4],  float res[3]);
 int 					ft_solve_quartic(const double coef[5],  double res[4]);
 int 					ft_solve_cubic(const double coef[4],  double res[3]);
-
+int						ft_solve_quadratic(float a, float b, float c, float res[2]);
 /*
 ** lattice_noise.c
 */
-
 void 					ft_init_value_table(float **vtable, unsigned int seed);
 float 					ft_linear_noise(t_vector point, const float *value_table);
 float					ft_cubic_noise(t_vector point, const float *value_table);
@@ -1085,11 +1103,15 @@ Uint32 					ft_ramp_noise_col(t_procedural *tex, t_object *o, t_vector hit);
 
 void                    ft_parse_procedural(char **content, t_procedural **tex);
 void           			ft_init_lattice(t_procedural **tex, char *function, unsigned int seed);
+void					ft_set_noise(t_procedural **noise, t_env *e, Uint32 col, Sint32 sum);
+void					ft_update_noise(t_procedural *noise, t_env *e, Uint32 col, Sint32 type);
+void					ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl);
 /*
 ** init_checker.c
 */
 
 void                    ft_parse_checker(char **content, t_checkbrd **tex);
+void					ft_set_checker(t_checkbrd **chkr, Uint32 col);
 
 /*
 ** color_modes.c

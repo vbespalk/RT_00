@@ -36,12 +36,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 		if (obj->noise != NULL && obj->noise->ramp_id != NULL)
         {
 		    printf("RUMP %s to init\n", obj->noise->ramp_id);
-		    obj->noise->ramp = init_texture(&textures, sdl, obj->noise->ramp_id)->surface;
-		    if (obj->noise->ramp != NULL)
-            {
-		        printf("RUMP INITIALISED\n");
-		        obj->noise->ft_get_color = ft_ramp_noise_col;
-            }
+			ft_load_noise_ramp(obj->noise, &(e->scn->textures), e->sdl);
         }
 		if (obj->checker != NULL)
 		{
@@ -51,7 +46,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
         		if (obj->checker->noise[i]->ramp_id != NULL)
 				{
 					obj->checker->noise[i]->ramp = init_texture(&textures, sdl,
-							obj->checker->noise[i]->ramp_id)->surface;
+							obj->checker->noise[i]->ramp_id);
 					if (obj->checker->noise[i]->ramp != NULL)
 					{
 						printf("RUMP INITIALISED\n");
@@ -60,6 +55,21 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 				}
 			}
 		}
+		if (obj->texture != NULL)
+		{
+			printf("SET TEXTURE\n");
+			obj->exposure = EXP_TEXTR;
+		}
+		else if (obj->noise != NULL)
+		{
+			printf("SET NOISE\n");
+			obj->exposure = EXP_NOISE;
+		}
+		else if (obj->checker != NULL)
+		{
+			printf("SET CHCKR\n");
+			obj->exposure = EXP_CHCKR;
+		}
 		objs = objs->next;
 	}
 	i = -1;
@@ -67,7 +77,11 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 		while (++i < BOX_FACES)
 			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
 					e->scn->skybox->textur_id[i])))
-				return (-1);
+			{
+				ft_skybox_del(&(e->scn->skybox));
+				break ;
+			}
+	printf("HERE\n");
 	e->scn->skybox_on = (e->scn->skybox != NULL) ? true : false;
 	e->selected = NULL;
 	return (0);

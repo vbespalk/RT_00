@@ -23,9 +23,10 @@ t_object	*ft_objectnew(Uint32 id)
 	o->diff = 1.0f;
 	o->phong = 0;
 	o->refr = 1.0f;
-//	o->translate = ft_3_nullpointnew();
-//	o->rotate = ft_3_nullpointnew();
+	o->translate = ft_3_zeropointnew();
+	o->rotate = ft_3_zeropointnew();
 	o->texture_id = NULL;
+	o->exposure = 0;
 	ft_bzero(&(o->texture_id), sizeof(char**) * BOX_FACES);
 	return (o);
 }
@@ -117,5 +118,8 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->rotate[2] = ft_torad(o->rotate[2]);
 	o->scale = 1.0f;
 	o->fig = ft_parse_figure(content, o);
+	o->tex_type[0] = (void *)&o->texture;
+	o->tex_type[1] = (void *)&o->checker;
+	o->tex_type[2] = (void *)&o->noise;
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

@@ -74,9 +74,9 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 {
 	if (sum == SDLK_g)
 		e->color_mode[MD_GRAYSCALE] = !(e->color_mode[MD_GRAYSCALE]);
-	if (sum == SDLK_j)
+	if (sum == SDLK_u)
 		e->color_mode[MD_SEPIA] = !(e->color_mode[MD_SEPIA]);
-	if (sum == SDLK_n)
+	if (sum == SDLK_h)
 		e->color_mode[MD_NEGATIVE] = !(e->color_mode[MD_NEGATIVE]);
 	if (sum == SDLK_i)
 		e->color_mode[MD_INVERTED] = !(e->color_mode[MD_INVERTED]);
@@ -90,25 +90,6 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
     return (1);
 }
 
-//void    ft_skybox_del(t_skybox **sk)
-//{
-//    int i;
-//
-//    if (!sk || !*sk)
-//        return ;
-//    ft_memdel((void **)&(*sk)->bbx);
-//    i = -1;
-//    while (++i < BOX_FACES)
-//    {
-//        ft_memdel((void **)&(*sk)->textur_id[i]);
-//        SDL_FreeSurface((*sk)->textur[i]->surface);
-//        ft_memdel((void **)&(*sk)->textur[i]->path);
-//        ft_memdel((void **)&(*sk)->textur[i]);
-//        printf("freed surf side %d at %p %p\n", i, &(*sk)->textur_id[i], &(*sk)->textur[i]);
-//    }
-//    ft_memdel((void **)sk);
-//    printf("freed surf at %p : %p\n", sk, *sk);
-//}
 
 void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
 {
@@ -116,7 +97,6 @@ void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
 
     if (!scn->skybox)
     {
-        printf("SKYBOX LOADING>>>\n");
         scn->skybox = (t_skybox *) ft_smemalloc(sizeof(t_skybox), "ft_switch_skybox");
         scn->skybox->textur_id[0] = ft_strdup(SKBX_NEGZ);
         scn->skybox->textur_id[1] = ft_strdup(SKBX_NEGY);
@@ -124,21 +104,51 @@ void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
         scn->skybox->textur_id[3] = ft_strdup(SKBX_POSZ);
         scn->skybox->textur_id[4] = ft_strdup(SKBX_POSY);
         scn->skybox->textur_id[5] = ft_strdup(SKBX_POSX);
-        scn->skybox->bbx = ft_init_aabb(ft_3_zeropointnew(), ft_3_zeropointnew());
+		scn->skybox->bbx = ft_init_aabb(ft_3_zeropointnew(), ft_3_zeropointnew());
         i = -1;
-        while (++i < BOX_FACES)
+		while (++i < BOX_FACES)
         {
+        	printf("INIT TEX %i, addr %p\n", i, scn->skybox->textur[i]);
 			if (!(scn->skybox->textur[i] = init_texture(&scn->textures, sdl,
 														scn->skybox->textur_id[i])))
 			{
 				printf("WARNING: CANT LOAD SKYBOX FILE \"%s\" IS MISSING\n",
 					   scn->skybox->textur_id[i]);
-				// DELETE SKYBOX STRUCTURE;
-//				ft_skybox_del(&scn->skybox);
+//				 DELETE SKYBOX STRUCTURE;
+				ft_skybox_del(&scn->skybox);
 				return;
 			}
 		}
 		scn->skybox_on = false;
     }
     scn->skybox_on = !scn->skybox_on;
+}
+
+void	ft_set_exposure(Sint32 sum, t_object *o, t_env *e)
+{
+	if (sum == SDLK_0)
+			o->exposure = EXP_COLOR;
+	else if (sum == SDLK_1 && o->texture != NULL)
+			o->exposure = EXP_TEXTR;
+	else if (sum == SDLK_2)
+	{
+		if (o->checker == NULL)
+			ft_set_checker(&o->checker, o->color.val);
+		o->exposure = EXP_CHCKR;
+	}
+//	else if (sum == SDLK_3)
+//	{
+//		if (o->noise == NULL)
+//			ft_set_noise(&o->noise, e, o->color.val, sum);
+//		o->exposure = EXP_NOISE;
+//	}
+	else if (sum == SDLK_3 || sum == SDLK_4 || sum == SDLK_5 || sum == SDLK_6
+			|| sum == SDLK_7 || sum == SDLK_8 || sum == SDLK_9)
+	{
+		if (o->noise == NULL)
+			ft_set_noise(&o->noise, e, o->color.val, sum);
+		else if (sum != SDLK_3)
+			ft_update_noise(o->noise, e, o->color.val, sum);
+		o->exposure = EXP_NOISE;
+	}
 }

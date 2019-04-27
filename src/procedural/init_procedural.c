@@ -6,31 +6,35 @@
 
 static void     ft_init_mrbl(t_procedural *tex, char *ramp)
 {
-    if (tex->ramp_id == NULL)
+	if (tex->ramp_id == NULL && ramp)
         tex->ramp_id = ft_strdup(ramp);
 	tex->ramp = NULL;
-	tex->octaves = 7.f;
-	tex->scale = 2.5f;
+	tex->octaves = 7.0f;
+	tex->scale = 8.0f;
 	tex->gain = 0.5f;
     tex->lacunarity = 2;
+	tex->min_max[0] = 0;
+	tex->min_max[1] = 1;
     tex->pertubation = 10;
 }
 
 static void     ft_init_sandstn(t_procedural *tex, char *ramp)
 {
-    if (tex->ramp_id == NULL)
+	if (tex->ramp_id == NULL)
         tex->ramp_id = ft_strdup(ramp);
 	tex->ramp = NULL;
 	tex->octaves = 5;
 	tex->scale = 1.f;
 	tex->gain = 0.5f;
 	tex->lacunarity = 2.0f;
+	tex->min_max[0] = 0;
+	tex->min_max[1] = 1;
     tex->pertubation = 0.05f;
 }
 
 static void             ft_null_lattice(t_procedural *tex)
 {
-	tex->ramp_id = NULL;
+	printf("LATTICE\n");
 	tex->ramp = NULL;
 	tex->octaves = 5;
 	tex->gain = 0.5f;
@@ -50,6 +54,10 @@ static void		ft_init_type(t_procedural *tex, char *name)
 		ft_init_mrbl(tex, RAMP_BL_MRBL);
 	else if (ft_strcmp(name, TEX_WM_MRBL) == 0)
 		ft_init_mrbl(tex, RAMP_WM_MRBL);
+	else if (ft_strcmp(name, TEX_RD_MRBL) == 0)
+		ft_init_mrbl(tex, RAMP_RD_MRBL);
+	else if (ft_strcmp(name, TEX_GN_MRBL) == 0)
+		ft_init_mrbl(tex, RAMP_GN_MRBL);
 	else if (ft_strcmp(name, TEX_SANDSTN) == 0)
 		ft_init_sandstn(tex, RAMP_SANDSTN);
 	else if (ft_strcmp(name, TEX_LATTICE) == 0)
@@ -66,7 +74,9 @@ void            ft_init_lattice(t_procedural **tex, char *function, unsigned int
 	if (*tex == NULL)
 	{
 		printf("LATTICE TEX IS ZERO\n");
+		printf("FUNC %s\n", function);
 		*tex = (t_procedural *)ft_smemalloc(sizeof(t_procedural), "ft_init_lattice");
+		ft_bzero(*tex, sizeof(t_procedural));
 		(*tex)->ramp = NULL;
 		if (function != NULL)
 			ft_init_type(*tex, function);
@@ -113,4 +123,60 @@ void                    ft_parse_procedural(char **content, t_procedural **tex)
     ft_init_lattice(tex, function, (unsigned int) seed);
     ft_memdel((void **)&name);
     ft_memdel((void **)&function);
+}
+
+void				ft_set_noise(t_procedural **noise, t_env *e, Uint32 col, Sint32 type)
+{
+	if (type == EV_TEX_LATTICE)
+		ft_init_lattice(noise, TEX_LATTICE, (unsigned int)time(NULL));
+	else if (type == EV_TEX_BL_MRBL)
+		ft_init_lattice(noise, TEX_BL_MRBL, (unsigned int)time(NULL));
+	else if (type == EV_TEX_GN_MRBL)
+		ft_init_lattice(noise, TEX_GN_MRBL, (unsigned int)time(NULL));
+	else if (type == EV_TEX_SANDSTN)
+		ft_init_lattice(noise, TEX_SANDSTN, (unsigned int)time(NULL));
+	else if (type == EV_TEX_RD_MRBL)
+		ft_init_lattice(noise, TEX_RD_MRBL, (unsigned int)time(NULL));
+	else if (type == EV_TEX_GR_MRBL)
+		ft_init_lattice(noise, TEX_GR_MRBL, (unsigned int)time(NULL));
+	else if (type == EV_TEX_WM_MRBL)
+		ft_init_lattice(noise, TEX_WM_MRBL, (unsigned int)time(NULL));
+	if ((*noise)->ramp_id != NULL)
+		ft_load_noise_ramp(*noise, &(e->scn->textures), e->sdl);
+	(*noise)->color.val = col;
+}
+
+void			ft_update_noise(t_procedural *noise, t_env *e, Uint32 col, Sint32 type)
+{
+	if (noise->ramp_id != NULL)
+		ft_memdel((void **)&(noise->ramp_id));
+	if (type == EV_TEX_LATTICE)
+		ft_null_lattice(noise);
+	else if (type == EV_TEX_BL_MRBL)
+		ft_init_mrbl(noise, RAMP_BL_MRBL);
+	else if (type == EV_TEX_GN_MRBL)
+		ft_init_mrbl(noise, RAMP_GN_MRBL);
+	else if (type == EV_TEX_SANDSTN)
+		ft_init_sandstn(noise, RAMP_SANDSTN);
+	else if (type == EV_TEX_RD_MRBL)
+		ft_init_mrbl(noise, RAMP_RD_MRBL);
+	else if (type == EV_TEX_GR_MRBL)
+		ft_init_mrbl(noise, RAMP_GR_MRBL);
+	else if (type == EV_TEX_WM_MRBL)
+		ft_init_mrbl(noise, RAMP_WM_MRBL);
+	if (noise->ramp_id != NULL)
+		ft_load_noise_ramp(noise, &(e->scn->textures), e->sdl);
+	noise->color.val = col;
+}
+
+void	ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl)
+{
+	n->ramp = init_texture(textures, sdl, n->ramp_id);
+	if (n->ramp != NULL)
+		n->ft_get_color = ft_ramp_noise_col;
+	else
+	{
+		ft_memdel((void **)&(n->ramp_id));
+		n->ft_get_color = ft_wrapped_noise_col;
+	}
 }

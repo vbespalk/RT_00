@@ -53,7 +53,6 @@ Uint32 	ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit)
 	float   noise_val;
 	t_color color;
 
-//	color.val = 0xffffff;
 	noise_val = tex->ft_noise_value(tex, hit);
 	if (tex->pertubation != 1.0f)
 	{

@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/27 17:20:28 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 17:31:26 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ static void	object_mode_events_handle_2(t_env *e, const uint32_t id)
 	else if (id == TRANSP_DOWN || id == TRANSP_UP)
 		inc_val_in_range(&(e->selected->trans), id == TRANSP_DOWN, 0, 1);
 	else if (id == DIFFUSE_DOWN || id == DIFFUSE_UP)
+	{
 		inc_val_in_range(&(e->selected->diff), id == DIFFUSE_DOWN, 0, 1);
+		e->selected->spclr = 1.0f - e->selected->diff;
+	}
 	else if (id == AMBIENT_DOWN || id == AMBIENT_UP)
 		inc_val_in_range(&(e->selected->ambnt), id == AMBIENT_DOWN, 0, 1);
 	else if (id >= COLOR && id <= TEX_6)
@@ -62,7 +65,10 @@ static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
 		e->selected->ft_scale_height(id == HEIGHT_DOWN ? SDLK_t : SDLK_r,
 		e->selected, &(e->selected->transform), &(e->selected->inverse));
 	else if (id == REFL_DOWN || id == REFL_UP)
+	{
 		inc_val_in_range(&(e->selected->spclr), id == REFL_DOWN, 0, 1);
+		e->selected->diff = 1.0f - e->selected->spclr;
+	}
 	else if (id == REFR_DOWN || id == REFR_UP)
 		inc_val_in_range(&(e->selected->refr), id == REFR_DOWN, 1, 2.4);
 	else

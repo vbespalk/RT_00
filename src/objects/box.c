@@ -30,6 +30,7 @@ void		ft_init_box(t_box *bx, t_vector transl, t_vector rot)
 		bx->face[i]->ft_translate = ft_translate_plane;
 		bx->face[i]->ft_rotate = ft_rotate_plane;
 		bx->face[i]->ft_scale = ft_scale_plane;
+		bx->face[i]->ft_scale_height = ft_scale_hei_null;
 		bx->face[i]->ft_mapping = ft_map_plane;
 		bx->face[i]->ft_checker = ft_checker_pln;
 		bx->face[i]->ft_procedural = ft_procedural_pln;
@@ -171,4 +172,12 @@ void		ft_scale_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		bx->scale *= (1.f - SCALE_F);
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, bx->scale);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / bx->scale);
+}
+
+void		ft_scale_hei_null(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+{
+	(void)key;
+	(void)o;
+	(void)tr_m;
+	(void)inv_m;
 }

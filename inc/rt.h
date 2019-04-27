@@ -392,6 +392,8 @@ typedef struct		s_object
 						(Uint32 key, struct s_object *o, t_matrix *tr_m, t_matrix *inv_m);
 	void			(*ft_scale)
 						(Uint32 key, struct s_object *o, t_matrix *tr_m, t_matrix *inv_m);
+	void			(*ft_scale_height)
+					(Uint32 key, struct s_object *o, t_matrix *tr_m, t_matrix *inv_m);
 /*
 ** functions for texturing obj.
 */
@@ -744,6 +746,7 @@ void					*ft_parse_plane(char **content, t_object *o);
 void					ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_hei_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	plane_utils.c
@@ -768,6 +771,7 @@ char					*ft_parse_disk(char **content, t_object *o);
 void					ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_hei_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	disk_utils.c
@@ -791,7 +795,7 @@ char					*ft_parse_box(char **content, t_object *o);
 void					ft_translate_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_rotate_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_scale_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-
+void					ft_scale_hei_null(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 /*
 **	box_utils.c
 */
@@ -849,6 +853,7 @@ void					*ft_parse_cone(char **content, t_object *o);
 void					ft_translate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_rotate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_hei_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	cone_utils.c
@@ -872,6 +877,7 @@ void					ft_rotate_cylinder
 							(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_scale_cylinder
 							(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	cone_utils.c
@@ -894,6 +900,7 @@ char					*ft_parse_prbld(char **content, t_object *o);
 void					ft_translate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 void					ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
+void					ft_scale_hei_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
 **	paraboloid_utils.c

@@ -53,6 +53,7 @@ void		*ft_parse_cone(char **content, t_object *o)
 	o->ft_translate = ft_translate_cone;
 	o->ft_rotate = ft_rotate_cone;
 	o->ft_scale = ft_scale_cone;
+	o->ft_scale_height = ft_scale_hei_cone;
 	o->ft_mapping = ft_map_cone;
 	o->ft_checker = ft_checker_cone;
 	o->ft_procedural = ft_procedural_cone;
@@ -135,4 +136,38 @@ void		ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
 //	ft_3_transform_mat(tr_m, cone->o, cone->v, FLT_MIN);
 //	ft_3_inv_trans_mat(inv_m, -cone->o, -cone->v, FLT_MIN);
+}
+
+void		ft_scale_hei_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+{
+	t_cone 	*cone;
+	float 	h;
+
+	if (!o)
+		return ;
+	cone = (t_cone *)o->fig;
+	if (cone->maxh == FLT_MAX && cone->minh == -FLT_MAX)
+		return ;
+	if (cone->maxh == FLT_MAX || cone->minh == -FLT_MAX)
+		h = cone->maxh == FLT_MAX ? fabsf(cone->minh) : fabsf(cone->maxh);
+	else
+		h = fabsf(cone->maxh - cone->minh);
+	float scale = 1;
+	if (key == SDLK_r)
+		scale += (SCALE_F * 0.5f);
+	else if (key == SDLK_t && scale - SCALE_F != FLT_MIN)
+		scale -= SCALE_F * 0.5f;
+	if (cone->maxh == FLT_MAX || cone->minh == -FLT_MAX)
+		cone->maxh = cone->maxh == FLT_MAX ? cone->minh * scale : cone->maxh * scale;
+	else
+	{
+		cone->maxh *= scale;
+		cone->minh *= scale;
+	}
+	o->translate += (t_vector){FLT_MIN, h * scale - h, FLT_MIN};
+	cone->r[0] = cone->minh != -FLT_MAX ? fabsf(cone->minh * cone->tan) : FLT_MIN;
+	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+	printf("HEI %f RAD %f\n", cone->maxh, cone->minh);
 }

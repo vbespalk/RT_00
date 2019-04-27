@@ -34,6 +34,7 @@ char		*ft_parse_disk(char **content, t_object *o)
 	o->ft_translate = ft_translate_disk;
 	o->ft_rotate = ft_rotate_disk;
 	o->ft_scale = ft_scale_disk;
+	o->ft_scale_height = ft_scale_hei_null;
 	o->ft_mapping = NULL;
 	o->ft_checker = ft_checker_dsk;
 	o->ft_procedural = ft_procedural_dsk;

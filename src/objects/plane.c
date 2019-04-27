@@ -33,6 +33,7 @@ void		*ft_parse_plane(char **content, t_object *o)
 	o->ft_translate = ft_translate_plane;
 	o->ft_rotate = ft_rotate_plane;
 	o->ft_scale = ft_scale_plane;
+	o->ft_scale_height = ft_scale_hei_null;
 	o->ft_mapping = ft_map_plane;
 	o->ft_checker = ft_checker_pln;
 	o->ft_procedural = ft_procedural_pln;

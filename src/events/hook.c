@@ -33,6 +33,8 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	}
+	if (e->selected && (sum == SDLK_r || sum == SDLK_t))
+		e->selected->ft_scale_height(sum, e->selected, &(e->selected->transform), &(e->selected->inverse));
 	if (sum == SDLK_DELETE && e->selected)
 	{
 		delete_obj(&(e->scn->objs), e->selected->id);
@@ -46,8 +48,8 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		sum == SDLK_4 || sum == SDLK_5 || sum == SDLK_6 || sum == SDLK_7 ||
 		sum == SDLK_8 || sum == SDLK_9))
 		ft_set_exposure(sum, e->selected, e);
-	if (sum == SDLK_r)
-		reset(e);
+//	if (sum == SDLK_r)
+//		reset(e);
 	if (sum == SDLK_c)
 	{
 		e->selected = NULL;

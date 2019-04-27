@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 16:38:40 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 13:49:10 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,12 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	return (0);
 }
 
-static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
+static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id, bool redraw)
 {
 	SDL_Rect	rt_container;
 
-	ft_render(e);
+	if (redraw)
+		ft_render(e);
 	rt_container = (SDL_Rect){0, 0,
 					e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
@@ -109,14 +110,14 @@ static void	ft_rt_loop(t_env *e)
 
 	sdl = e->sdl;
 	sdl->event_loop = 1;
-	sdl_draw_screen(e, e->sdl, 0);
+	sdl_draw_screen(e, e->sdl, 0, true);
 	while (sdl->event_loop)
 	{
 //		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
-			sdl_draw_screen(e, e->sdl, btn_id);
-//		if (!btn_id)
-//			sdl_draw_screen(e, e->sdl, 0);
+			sdl_draw_screen(e, e->sdl, btn_id, true);
+		if (!btn_id)
+			sdl_draw_screen(e, e->sdl, 0, false);
 //		int y = SDL_GetTicks() - x;
 //		if (y != 0)
 //			printf("%f\n", 1000 / (float)y);

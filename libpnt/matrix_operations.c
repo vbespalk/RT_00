@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   operations.c                                       :+:      :+:    :+:   */
+/*   matrix_operations.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 23:03:35 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/09/24 23:03:41 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/04/27 13:40:53 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libpnt.h"
 #include <stdlib.h>
-#include "libft.h"
+#include "../libftprintf/libft/libft.h"
 #include <stdio.h>
 
 t_vector	ft_3_pnt_transform(const t_matrix *m, t_vector p)
@@ -92,7 +92,7 @@ void		ft_3_matrix_mult(t_matrix *left, t_matrix *right, int inv)
 
 void		ft_3_transform_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 {
-	t_matrix lm;
+	// t_matrix lm;
 
 	if (!rm)
 		return ;
@@ -119,7 +119,7 @@ void		ft_3_transform_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 
 void		ft_3_inv_trans_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 {
-	t_matrix lm;
+	// t_matrix lm;
 
 	if (!rm)
 		return ;

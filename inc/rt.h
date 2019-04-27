@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 17:39:23 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 14:21:18 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,22 @@ static const unsigned char
 # define PERM(x)		(permutation_table[x & LTABLE_MASK])
 # define INDEX(x, y, z)	(PERM(x + PERM(y + PERM(z))))
 
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+
+# define RMASK 0x00ff0000U
+# define GMASK 0x0000ff00U
+# define BMASK 0x000000ffU
+# define AMASK 0xff000000U
+
+#else
+
+# define RMASK 0x000000ffU
+# define GMASK 0x0000ff00U
+# define BMASK 0x00ff0000U
+# define AMASK 0xff000000U
+
+ #endif
+
 /*
 ** GUI STUFF - includes, structures, defines etc. 
 */
@@ -182,6 +198,8 @@ static const unsigned char
 # define BUTTONS_AMOUNT 40
 # define BTN_ID_SHIFT 100
 
+# define DEFAULT_SCRSHT_NAME "screenshots/RT ScreenShot "
+
 typedef enum { false, true } bool;
 
 /*
@@ -192,11 +210,11 @@ extern const SDL_Rect g_btn_containers[];
 
 typedef enum	e_btn_code
 {
-	SAVE_IMG = 1,
+	SCREENSHOT = 1,
 	GRAYSCALE,
-	INVERTED_COLOR,
 	SEPIA,
-	COLOR_FILTER_TMP_NAME,
+	NEGATIVE,
+	INVERTED,
 	CAMERA_MODE,
 	FOV_DOWN, FOV_UP,
 	TRANS_OX_DOWN, TRANS_OX_UP,

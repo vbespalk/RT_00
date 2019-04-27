@@ -32,7 +32,7 @@ int	get_format_data(t_sdl *sdl)
 		rmask = 0x00ff0000;
 		gmask = 0x0000ff00;
 		bmask = 0x000000ff;
-		amask = 0xff000000;
+		amask = 0xff000000; // test commit
 	}
 	surface = SDL_CreateRGBSurface(0, sdl->rt_wid, sdl->scr_hei, 32, rmask, gmask, bmask, amask);
 	if (!(surface))

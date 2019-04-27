@@ -14,27 +14,9 @@
 
 int	get_format_data(t_sdl *sdl)
 {
-	Uint32		rmask;
-	Uint32		gmask;
-	Uint32		bmask;
-	Uint32		amask;
 	SDL_Surface	*surface;
 
-	if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-	{
-		rmask = 0x00ff0000;
-		gmask = 0x0000ff00;
-		bmask = 0x000000ff;
-		amask = 0xff000000;
-	}
-	else
-	{
-		rmask = 0x00ff0000;
-		gmask = 0x0000ff00;
-		bmask = 0x000000ff;
-		amask = 0xff000000; // test commit
-	}
-	surface = SDL_CreateRGBSurface(0, sdl->rt_wid, sdl->scr_hei, 32, rmask, gmask, bmask, amask);
+	surface = SDL_CreateRGBSurface(0, sdl->rt_wid, sdl->scr_hei, 32, RMASK, GMASK, BMASK, AMASK);
 	if (!(surface))
 		return(sdl_error("SDL could not createRGBSurface! "));
 	sdl->pitch = surface->pitch / sizeof(unsigned int);

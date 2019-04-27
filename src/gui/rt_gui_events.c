@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 15:14:11 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 14:09:07 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
 uint32_t	handle_button(t_env *e, const uint32_t id)
 {
 	// printf("clicked btn with id %d\n", id); // remove this test stuff
-	if (id == SAVE_IMG || id == CAMERA_MODE ||
+	if (id == SCREENSHOT || id == CAMERA_MODE ||
 		id == SKYBOX || id == DELETE_OBJ)
 		other_buttons(e, id);
-	else if (id >= SAVE_IMG && id <= COLOR_FILTER_TMP_NAME)
+	else if (id >= GRAYSCALE && id <= INVERTED)
 		color_filter(e, id);
 	else if (id == FOV_DOWN || id == FOV_UP)
 		ft_scale_cam((id == FOV_DOWN ? SDLK_z : SDLK_x), &(e->scn->cam->fov));

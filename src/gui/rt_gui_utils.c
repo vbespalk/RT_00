@@ -6,11 +6,35 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:17:04 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 12:17:22 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 14:29:39 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+#include <time.h>
+
+void		make_screenshot(t_env *e)
+{
+	SDL_Surface			*sshot;
+	static time_t		now = 0;
+	char				*str_time;
+	char				*name;
+	char				*tmp;
+
+	if (now == time(0))
+		return ;
+	now = time(0);
+	str_time = ctime(&now);
+	str_time[ft_strlen(str_time) - 1] = '\0';
+ 	sshot = SDL_CreateRGBSurface(0, e->sdl->rt_wid, e->sdl->scr_hei, 32, RMASK, GMASK, BMASK, AMASK);
+	tmp = ft_strjoin(DEFAULT_SCRSHT_NAME, str_time);
+	name = ft_strjoin(tmp, ".png");
+	free(tmp);
+	SDL_RenderReadPixels(e->sdl->renderer, NULL, SDL_PIXELFORMAT_RGBA32, sshot->pixels, sshot->pitch);
+	ft_printf("ScreenShot \"%s\" saved with code: %d\n", name, IMG_SavePNG(sshot, name));
+	free(name);
+	SDL_FreeSurface(sshot);
+}
 
 float		clamp(float lo, float hi, float v)
 {
@@ -26,11 +50,18 @@ void		other_buttons(t_env *e, const uint32_t id)
 		delete_obj(&(e->scn->objs), e->selected->id);
 		e->selected = NULL;
 	}
+	else if (id == SKYBOX && e->scn->skybox)
+		ft_switch_skybox(e->sdl, e->scn);
+	else if (id == SCREENSHOT)
+		make_screenshot(e);
 }
 
 void		color_filter(t_env *e, const uint32_t id)
 {
-	printf("color filter\n");
+	static const int32_t s_buttons_codes[] = {
+		SDLK_g, SDLK_i, SDLK_u, SDLK_h
+	};
+	ft_switch_col_mode(e, s_buttons_codes[id - 2]);
 }
 
 void		translate(t_env *e, const uint32_t id)

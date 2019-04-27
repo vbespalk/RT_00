@@ -6,11 +6,17 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 15:20:35 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 14:26:58 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sdl_event.h"
+
+bool	check_if_holdable(const uint32_t btn_id)
+{
+	return ((btn_id >= GRAYSCALE && btn_id <= INVERTED) ||
+			btn_id == SKYBOX);
+}
 
 int		event_handler(t_env *e)
 {
@@ -42,7 +48,10 @@ int		event_handler(t_env *e)
 				v = (t_vector){event.button.x, event.button.y, 0, 0};
 			mouse_pressed = SDL_TRUE;
 			if ((btn_id = mouse_on_btn((const int32_t)v[0], (const int32_t)v[1], e)))
+			{
+				mouse_pressed = (check_if_holdable(btn_id) ? SDL_FALSE : SDL_TRUE);
 				return (handle_button(e, btn_id) + BTN_ID_SHIFT);
+			}
 			if (event.button.button == SDL_BUTTON_LEFT)
 				return (on_lbutton_down(event.button.x, event.button.y, e));
 			if (event.button.button == SDL_BUTTON_RIGHT)

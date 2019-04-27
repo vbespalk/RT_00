@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/27 14:21:18 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 15:29:21 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,10 +194,11 @@ static const unsigned char
 # define ARROW_BUTTON_WIDTH 30
 # define ARROW_BUTTON_HEIGHT 20
 # define GUI_WIDTH 220
-# define GUI_HEIGHT 250 * 1250 / 570
+# define GUI_HEIGHT 250 * 1290 / 570
 # define BUTTONS_AMOUNT 40
 # define BTN_ID_SHIFT 100
 
+# define DEFAULT_GUI_TEX_NAME "./media/rect23.png"
 # define DEFAULT_SCRSHT_NAME "screenshots/RT ScreenShot "
 
 typedef enum { false, true } bool;

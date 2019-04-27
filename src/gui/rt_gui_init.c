@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:14:15 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/27 13:48:53 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 15:28:24 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int			gui_init(t_sdl *sdl)
 	if (IMG_Init(IMG_INIT_PNG) < 0)
 		return -1;
 	MLC_TEST((sdl->gui = (t_gui*)malloc(sizeof(t_gui))), "gui alloc failed!");
-	MLC_TEST((image = IMG_Load("./media/gui_texture.png")),
+	MLC_TEST((image = IMG_Load(DEFAULT_GUI_TEX_NAME)),
 	"gui texture could not loaded");
 	MLC_TEST((sdl->gui->gui_texture =
 	SDL_CreateTextureFromSurface(sdl->renderer, image)), "Texture could not created")

@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:14:15 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/24 17:40:24 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 13:48:53 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,5 @@ int			gui_init(t_sdl *sdl)
 	SDL_CreateTextureFromSurface(sdl->renderer, image)), "Texture could not created")
 	SDL_FreeSurface(image);
 	SDL_QueryTexture(sdl->gui->gui_texture, NULL, NULL, &(sdl->gui->w), &(sdl->gui->h));
-	printf("%d %d\n", sdl->gui->w ,sdl->gui->h);
 	return 1;
 }

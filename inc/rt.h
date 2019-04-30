@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/27 16:12:03 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/30 13:50:45 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ static const unsigned char
 # define BUTTONS_AMOUNT 50
 # define BTN_ID_SHIFT 100
 
-# define DEFAULT_GUI_TEX_NAME "./media/rect23.png"
+# define DEFAULT_GUI_TEX_NAME "./texture/gui_texture/gui_texture.png"
 # define DEFAULT_SCRSHT_NAME "screenshots/RT ScreenShot "
 
 typedef enum { false, true } bool;
@@ -208,7 +208,7 @@ typedef enum { false, true } bool;
 /*
 ** buttons ids enum
 */
-// 774 808 843 878 911
+
 extern const SDL_Rect g_btn_containers[];
 
 typedef enum	e_btn_code
@@ -275,7 +275,7 @@ uint32_t	handle_button(t_env *e, uint32_t btn_id);
 ** gui utils
 */
 
-float		clamp(float lo, float hi, float v);
+void		make_screenshot(t_env *e);
 void		other_buttons(t_env *e, const uint32_t id);
 void		color_filter(t_env *e, const uint32_t id);
 void		translate(t_env *e, const uint32_t id);

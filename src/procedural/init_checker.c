@@ -41,7 +41,7 @@ void                    ft_parse_checker(char **content, t_checkbrd **tex)
 		|| !ft_strcmp(color[i], TEX_WM_MRBL) || !ft_strcmp(color[i], TEX_SANDSTN) ||
 		!ft_strcmp(color[i], TEX_RD_MRBL) || !ft_strcmp(color[i], TEX_GN_MRBL) ||
 		!ft_strcmp(color[i], TEX_LATTICE))
-			ft_init_lattice(&((*tex)->noise[i]), color[i], (unsigned int)time(NULL));
+			ft_set_procedural(&((*tex)->noise[i]), color[i], 0xFFFFFF);
 		else
 			printf("WARNING: WRONG COLOR / TEXTURE VALUE, SET TO DEFAULT\n");
 	}

@@ -60,10 +60,10 @@
 */
 
 # define MD_COLOR		0
-# define MD_GRAYSCALE	1
-# define MD_SEPIA		2
-# define MD_NEGATIVE	3
-# define MD_INVERTED	4
+# define MD_GRAYSCALE	SDLK_g
+# define MD_SEPIA		SDLK_u
+# define MD_NEGATIVE	SDLK_h
+# define MD_INVERTED	SDLK_i
 
 
 /*
@@ -121,9 +121,11 @@
 # define RAMP_GR_MRBL		"./texture/procedural/GrayMarbleRamp.jpg"
 # define RAMP_GN_MRBL		"./texture/procedural/GreenMarbleRamp.png"
 # define RAMP_BL_MRBL		"./texture/procedural/BlueMarbleRamp.jpg"
-# define RAMP_WM_MRBL		"./texture/procedural/turquoise_ramp2.jpg"
+# define RAMP_WM_MRBL		"./texture/procedural/sandstone_ramp2.jpg"
 # define RAMP_RD_MRBL		"./texture/procedural/RedMarbleRamp.png"
 # define RAMP_SANDSTN		"./texture/procedural/sandstone_ramp1.jpg"
+
+# define SMPL_NMB			6
 
 # define EV_TEX_LATTICE		SDLK_3
 # define EV_TEX_BL_MRBL    	SDLK_4
@@ -390,7 +392,7 @@ typedef struct		s_object
 
 	t_color			color;
 	char 			*texture_id;
-	void			**tex_type[3];
+	void			*tex_pnt;
 	SDL_Surface		*texture;
 	t_procedural	*noise;
 	t_checkbrd		*checker;
@@ -585,6 +587,13 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	t_gui			*gui;
 }					t_sdl;
 
+typedef struct 		s_mode
+{
+	int				id;
+	struct s_mode	*next;
+}					t_mode;
+
+
 typedef struct 		s_environment
 {
 	t_scene			*scn;
@@ -596,6 +605,9 @@ typedef struct 		s_environment
 	t_object		*selected;
 	t_sdl			*sdl;
 	bool		    color_mode[5];
+	t_mode			*col_mode;
+
+	t_procedural	*smpl[6];
 
 	unsigned int	nb_obj;
 	unsigned int	nb_light;
@@ -1135,8 +1147,9 @@ Uint32 					ft_ramp_noise_col(t_procedural *tex, t_object *o, t_vector hit);
 
 void                    ft_parse_procedural(char **content, t_procedural **tex);
 void           			ft_init_lattice(t_procedural **tex, char *function, unsigned int seed);
-void					ft_set_noise(t_procedural **noise, t_env *e, Uint32 col, Sint32 sum);
-void					ft_update_noise(t_procedural *noise, t_env *e, Uint32 col, Sint32 type);
+void					ft_set_procedural(t_procedural **tex, char *function, Uint32 col);
+//void					ft_set_noise(t_procedural **noise, t_env *e, Uint32 col, Sint32 sum);
+//void					ft_update_noise(t_procedural *noise, t_env *e, Uint32 col, Sint32 type);
 void					ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl);
 /*
 ** init_checker.c
@@ -1152,10 +1165,11 @@ t_color  				ft_grayscale_px(t_color in_col);
 t_color  				ft_sepia_px(t_color in_col);
 t_color  				ft_negative_px(t_color in_col);
 t_color  				ft_invert_px(t_color in_col);
-//void					ft_col_mode(t_sdl *sdl, int mode);
-void                    ft_col_mode(t_sdl *sdl, bool *mode);
+void					ft_col_mode(t_sdl *sdl, t_mode *modes);
+//void                    ft_col_mode(t_sdl *sdl, bool *mode);
 //t_color					ft_px_mode(t_color col, int mode);
-t_color					ft_px_mode(t_color col, bool *mode);
+t_color					ft_px_mode(t_color col, t_mode *mode);
+
 
 /*
 ** color_man.c

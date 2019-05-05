@@ -121,7 +121,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	func[2] = coll.tex_o->ft_procedural;
 	coll.px_color.val = (coll.o->exposure == 0) ? coll.o->color.val :
 		func[coll.o->exposure - 1](coll.tex_o,
-		*(coll.o->tex_type[coll.o->exposure - 1]), coll.ucoll_pnt);
+		coll.o->tex_pnt, coll.ucoll_pnt);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

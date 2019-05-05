@@ -65,31 +65,61 @@ t_color  ft_invert_px(t_color in_col)
     return (col);
 }
 
-void	ft_col_mode(t_sdl *sdl, bool *mode)
+void	ft_col_mode(t_sdl *sdl, t_mode *mode)
 {
 	t_color col;
 	int 	x;
 	int 	y;
 
+	if (mode == NULL)
+		return ;
 	y = -1;
 	while (++y < sdl->scr_hei && (x = -1))
 	{
 		while (++x < sdl->rt_wid)
 		{
 			col.val = sdl->pixels[y * sdl->rt_wid + x];
-            if (mode[MD_GRAYSCALE])
-				col = ft_grayscale_px(col);
-            if (mode[MD_SEPIA])
-				col = ft_sepia_px(col);
-            if (mode[MD_NEGATIVE])
-				col = ft_negative_px(col);
-            if (mode[MD_INVERTED])
-				col = ft_invert_px(col);
-			sdl->pixels[y * sdl->rt_wid + x] = col.val;
+			while (mode)
+			{
+				if (mode->id == MD_GRAYSCALE)
+					col = ft_grayscale_px(col);
+				if (mode->id == MD_SEPIA)
+					col = ft_sepia_px(col);
+				if (mode->id == MD_NEGATIVE)
+					col = ft_negative_px(col);
+				if (mode->id == MD_INVERTED)
+					col = ft_invert_px(col);
+				sdl->pixels[y * sdl->rt_wid + x] = col.val;
+				mode = mode->next;
+			}
 		}
 	}
 }
 
+//void	ft_col_mode(t_sdl *sdl, bool *mode)
+//{
+//	t_color col;
+//	int 	x;
+//	int 	y;
+//
+//	y = -1;
+//	while (++y < sdl->scr_hei && (x = -1))
+//	{
+//		while (++x < sdl->rt_wid)
+//		{
+//			col.val = sdl->pixels[y * sdl->rt_wid + x];
+//			if (mode[MD_GRAYSCALE])
+//				col = ft_grayscale_px(col);
+//			if (mode[MD_SEPIA])
+//				col = ft_sepia_px(col);
+//			if (mode[MD_NEGATIVE])
+//				col = ft_negative_px(col);
+//			if (mode[MD_INVERTED])
+//				col = ft_invert_px(col);
+//			sdl->pixels[y * sdl->rt_wid + x] = col.val;
+//		}
+//	}
+//}
 //t_color		ft_px_mode(t_color col, int mode)
 //{
 //			if (mode == MD_GRAYSCALE)
@@ -102,18 +132,38 @@ void	ft_col_mode(t_sdl *sdl, bool *mode)
 //				return (ft_invert_px(col));
 //}
 
-t_color		ft_px_mode(t_color col, bool *mode)
+t_color		ft_px_mode(t_color col, t_mode *mode)
 {
 	t_color	out_col;
 
 	out_col = col;
-	if (mode[MD_GRAYSCALE])
-		out_col = (ft_grayscale_px(out_col));
-	if (mode[MD_SEPIA])
-		out_col = (ft_sepia_px(out_col));
-	if (mode[MD_NEGATIVE])
-		out_col = (ft_negative_px(out_col));
-	if (mode[MD_INVERTED])
-		out_col = (ft_invert_px(out_col));
+	while (mode)
+	{
+		if (mode->id == MD_GRAYSCALE)
+			out_col = (ft_grayscale_px(out_col));
+		if (mode->id == MD_SEPIA)
+			out_col = (ft_sepia_px(out_col));
+		if (mode->id == MD_NEGATIVE)
+			out_col = (ft_negative_px(out_col));
+		if (mode->id == MD_INVERTED)
+			out_col = (ft_invert_px(out_col));
+		mode = mode->next;
+	}
 	return (out_col);
 }
+
+//t_color		ft_px_mode(t_color col, bool *mode)
+//{
+//	t_color	out_col;
+//
+//	out_col = col;
+//	if (mode[MD_GRAYSCALE])
+//		out_col = (ft_grayscale_px(out_col));
+//	if (mode[MD_SEPIA])
+//		out_col = (ft_sepia_px(out_col));
+//	if (mode[MD_NEGATIVE])
+//		out_col = (ft_negative_px(out_col));
+//	if (mode[MD_INVERTED])
+//		out_col = (ft_invert_px(out_col));
+//	return (out_col);
+//}

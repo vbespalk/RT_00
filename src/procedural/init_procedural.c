@@ -71,16 +71,7 @@ static void		ft_init_type(t_procedural *tex, char *name)
 
 void            ft_init_lattice(t_procedural **tex, char *function, unsigned int seed)
 {
-	if (*tex == NULL)
-	{
-		printf("LATTICE TEX IS ZERO\n");
-		printf("FUNC %s\n", function);
-		*tex = (t_procedural *)ft_smemalloc(sizeof(t_procedural), "ft_init_lattice");
-		ft_bzero(*tex, sizeof(t_procedural));
-		(*tex)->ramp = NULL;
-		if (function != NULL)
-			ft_init_type(*tex, function);
-	}
+	printf("TEX %p\n", *tex);
 	(*tex)->noise_ptr = (t_lattice *)ft_smemalloc(sizeof(t_lattice), "ft_init_lattice");
     ft_init_value_table(&((*tex)->noise_ptr->value_table), seed);
 	(*tex)->noise_ptr->ft_generate_noise = ft_cubic_noise;
@@ -125,48 +116,17 @@ void                    ft_parse_procedural(char **content, t_procedural **tex)
     ft_memdel((void **)&function);
 }
 
-void				ft_set_noise(t_procedural **noise, t_env *e, Uint32 col, Sint32 type)
+void				ft_set_procedural(t_procedural **tex, char *smpl, Uint32 col)
 {
-	if (type == EV_TEX_LATTICE)
-		ft_init_lattice(noise, TEX_LATTICE, (unsigned int)time(NULL));
-	else if (type == EV_TEX_BL_MRBL)
-		ft_init_lattice(noise, TEX_BL_MRBL, (unsigned int)time(NULL));
-	else if (type == EV_TEX_GN_MRBL)
-		ft_init_lattice(noise, TEX_GN_MRBL, (unsigned int)time(NULL));
-	else if (type == EV_TEX_SANDSTN)
-		ft_init_lattice(noise, TEX_SANDSTN, (unsigned int)time(NULL));
-	else if (type == EV_TEX_RD_MRBL)
-		ft_init_lattice(noise, TEX_RD_MRBL, (unsigned int)time(NULL));
-	else if (type == EV_TEX_GR_MRBL)
-		ft_init_lattice(noise, TEX_GR_MRBL, (unsigned int)time(NULL));
-	else if (type == EV_TEX_WM_MRBL)
-		ft_init_lattice(noise, TEX_WM_MRBL, (unsigned int)time(NULL));
-	if ((*noise)->ramp_id != NULL)
-		ft_load_noise_ramp(*noise, &(e->scn->textures), e->sdl);
-	(*noise)->color.val = col;
-}
-
-void			ft_update_noise(t_procedural *noise, t_env *e, Uint32 col, Sint32 type)
-{
-	if (noise->ramp_id != NULL)
-		ft_memdel((void **)&(noise->ramp_id));
-	if (type == EV_TEX_LATTICE)
-		ft_null_lattice(noise);
-	else if (type == EV_TEX_BL_MRBL)
-		ft_init_mrbl(noise, RAMP_BL_MRBL);
-	else if (type == EV_TEX_GN_MRBL)
-		ft_init_mrbl(noise, RAMP_GN_MRBL);
-	else if (type == EV_TEX_SANDSTN)
-		ft_init_sandstn(noise, RAMP_SANDSTN);
-	else if (type == EV_TEX_RD_MRBL)
-		ft_init_mrbl(noise, RAMP_RD_MRBL);
-	else if (type == EV_TEX_GR_MRBL)
-		ft_init_mrbl(noise, RAMP_GR_MRBL);
-	else if (type == EV_TEX_WM_MRBL)
-		ft_init_mrbl(noise, RAMP_WM_MRBL);
-	if (noise->ramp_id != NULL)
-		ft_load_noise_ramp(noise, &(e->scn->textures), e->sdl);
-	noise->color.val = col;
+	if (*tex == NULL)
+	{
+		*tex = (t_procedural *)ft_smemalloc(sizeof(t_procedural), "ft_set_procedural");
+		ft_bzero(*tex, sizeof(t_procedural));
+		if (smpl != NULL)
+			ft_init_type(*tex, smpl);
+		(*tex)->color.val = col;
+		ft_init_lattice(tex, FRACTAL_SUM, (unsigned int) time(NULL));
+	}
 }
 
 void	ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl)

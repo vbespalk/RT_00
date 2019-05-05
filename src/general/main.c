@@ -12,6 +12,25 @@
 
 #include "rt.h"
 
+static int ft_init_smpl(t_sdl *sdl, t_list **tex, t_procedural *dst[6])
+{
+	int i;
+
+	ft_bzero(dst, sizeof(t_procedural *) * 6);
+	ft_set_procedural(&(dst[0]), TEX_BL_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[1]), TEX_GN_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[2]), TEX_SANDSTN, 0xFFFFFF);
+	ft_set_procedural(&(dst[3]), TEX_RD_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[4]), TEX_GR_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[5]), TEX_WM_MRBL, 0xFFFFFF);
+	i = -1;
+	while (++i < SMPL_NMB)
+	{
+		if ((dst[i])->ramp_id != NULL)
+			ft_load_noise_ramp(dst[i], tex, sdl);
+	}
+}
+
 static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
 	t_list		*textures;
@@ -26,7 +45,9 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	textures = NULL;
 	e->scn->textures = textures;
 	ft_bzero(e->color_mode, sizeof(bool) * 5);
-	e->color_mode[0] = true;
+//	e->color_mode[0] = true;
+	e->col_mode = NULL;
+	ft_init_smpl(sdl, &(e->scn->textures), e->smpl);
 	objs = e->scn->objs;
 	while (objs)
 	{
@@ -55,19 +76,23 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 				}
 			}
 		}
+		obj->tex_pnt = NULL;
 		if (obj->texture != NULL)
 		{
 			printf("SET TEXTURE\n");
+			obj->tex_pnt = obj->texture;
 			obj->exposure = EXP_TEXTR;
 		}
 		else if (obj->noise != NULL)
 		{
 			printf("SET NOISE\n");
+			obj->tex_pnt = obj->noise;
 			obj->exposure = EXP_NOISE;
 		}
 		else if (obj->checker != NULL)
 		{
 			printf("SET CHCKR\n");
+			obj->tex_pnt = obj->checker;
 			obj->exposure = EXP_CHCKR;
 		}
 		objs = objs->next;

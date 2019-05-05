@@ -75,8 +75,9 @@ int		sdl_init(t_sdl *sdl)
 		sdl_close(sdl);
 		return (ft_perr_retu(NULL));
 	}
-	ft_memset(sdl->pixels, 100, sdl->scr_hei * sdl->rt_wid * sizeof(Uint32));
-
+	ft_memset(sdl->pixels, 0, sdl->scr_hei * sdl->rt_wid * sizeof(Uint32));
+	sdl->rt_cont = (SDL_Rect){0, 0,
+					sdl->rt_wid, sdl->scr_hei};
 	return (0);
 }
 

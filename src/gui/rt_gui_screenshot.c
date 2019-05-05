@@ -30,11 +30,11 @@ void		make_screenshot(t_env *e)
 		RMASK, GMASK, BMASK, AMASK);
 	tmp = ft_strjoin(DEFAULT_SCRSHT_NAME, str_time);
 	name = ft_strjoin(tmp, ".png");
-	free(tmp);
-	SDL_RenderReadPixels(e->sdl->renderer, NULL, SDL_PIXELFORMAT_RGBA32,
+	ft_memdel((void **)&tmp);
+	SDL_RenderReadPixels(e->sdl->renderer, &(e->sdl->rt_cont), SDL_PIXELFORMAT_RGBA32,
 		sshot->pixels, sshot->pitch);
 	ft_printf("ScreenShot \"%s\" saved with code: %d\n",
 		name, IMG_SavePNG(sshot, name));
-	free(name);
+	ft_memdel((void **)&name);
 	SDL_FreeSurface(sshot);
 }

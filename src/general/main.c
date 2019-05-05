@@ -114,16 +114,17 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 
 static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id, bool redraw)
 {
-	SDL_Rect	rt_container;
-
 	if (redraw)
+	{
+		printf("NEW RENDER\n");
 		ft_render(e);
-	rt_container = (SDL_Rect){0, 0,
-					e->sdl->rt_wid, e->sdl->scr_hei};
+	}
+	sdl->rt_cont = (SDL_Rect){0, 0,
+							  e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
-	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &rt_container);
+	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
 	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
 }

@@ -583,6 +583,7 @@ typedef struct 		s_sdl //FREE IN CASE OF ERROR / ON EXIT
 	SDL_PixelFormat	*format; //from SDL_Surface
 	int				pitch; //from SDL_Surface
 	int				event_loop;
+	SDL_Rect		rt_cont;
 	// SDL_Event 		event;
 	t_gui			*gui;
 }					t_sdl;
@@ -606,7 +607,6 @@ typedef struct 		s_environment
 	t_sdl			*sdl;
 	bool		    color_mode[5];
 	t_mode			*col_mode;
-
 	t_procedural	*smpl[6];
 
 	unsigned int	nb_obj;

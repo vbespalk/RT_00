@@ -73,7 +73,15 @@ static void			ft_refract(t_ray *ray)
     ft_get_refrs(ray, &refr);
     ray->coll->trans_vec =
             ft_3_vector_refract(ray->coll->norm, ray->d, refr[0], refr[1]);
-    if (ft_3_isnullpoint(ray->coll->trans_vec))
+
+//	printf("refrs: %f -> %f\n", refr[0], refr[1]);
+//	printf("norm: (%8.3f, %8.3f, %8.3f)\n",
+//		   ray->coll->norm[0], ray->coll->norm[1], ray->coll->norm[2]);
+//	printf("direction: (%8.3f, %8.3f, %8.3f) -> (%8.3f, %8.3f, %8.3f)\n",
+//		   ray->d[0], ray->d[1], ray->d[2],
+//		   ray->coll->trans_vec[0], ray->coll->trans_vec[1], ray->coll->trans_vec[2]);
+
+	if (ft_3_isnullpoint(ray->coll->trans_vec))
     {
         ray->coll->fresnel = 1.0f;
         return ;
@@ -109,10 +117,10 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 
 	if (!(coll.o))
 		return (coll);
-	if (coll.o->trans)
-		ft_refract(ray);
 	if (ft_3_vector_cos(coll.norm, ray->d) > 0)
 		coll.norm = ft_3_vector_invert(coll.norm);
+	if (coll.o->trans)
+		ft_refract(ray);
 //	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.1f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);

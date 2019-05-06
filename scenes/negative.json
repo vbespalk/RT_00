@@ -31,7 +31,7 @@
       "phong": 0
     },
     {
-      "name": "sphere",
+      "name": "//sphere",
       "negative": true,
       "translate": { "x": 1000, "y": 0, "z": 150 },
       "radius": 300
@@ -39,7 +39,7 @@
     {
       "name": "sphere",
       "negative": true,
-      "translate": { "x": 1000, "y": 0, "z": -150 },
+      "translate": { "x": 1000, "y": 0, "z": 0 },
       "radius": 300
     },
     {
@@ -48,8 +48,8 @@
       "radius": 300,
       "color": "0xffff00",
       "ambnt": 0.2,
-      "//spclr": 1,
-      "transparent": 1,
+      "spclr": 1,
+      "//transparent": 1,
       "refr": 1.3
     },
     {

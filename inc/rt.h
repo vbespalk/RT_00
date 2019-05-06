@@ -14,6 +14,10 @@
 
 # define RT_H
 
+/*
+**	includes
+*/
+
 # include <stdio.h>
 # include <pthread.h>
 # include <stdint.h>
@@ -41,11 +45,21 @@
 
 # endif
 
+/*
+**	window and camera
+*/
+
 # define SCR_WID		950
 # define SCR_HEI		548
 # define GUI_WIDTH		220
 # define FOV			1.570796
+# define FOV_MIN		60.0f
+# define FOV_MAX		120.0f
 # define EQN_EPS		1e-30
+
+/*
+**	macro functions
+*/
 
 # define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a > _b ? _b : _a;})
 # define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a < _b ? _b : _a;})
@@ -65,20 +79,13 @@
 # define MD_NEGATIVE	3
 # define MD_INVERTED	4
 
-
-/*
-**	camera
-*/
-
-# define FOV_MIN		60.0f
-# define FOV_MAX		120.0f
-
 /*
 **	tracing
 */
 
 # define BRIGHT_UNIT	20000.0f
 # define DEFAULT_REFR	1.0f
+# define SHIFT			0.1f
 
 /*
 **	system
@@ -87,10 +94,6 @@
 # define DEPTH			5
 # define STACK_SIZE		DEPTH
 # define THREADS		8
-
-/*
-**	includes
-*/
 
 # define ROTAT_F		DEG_TO_RAD(10)
 # define TRANS_F		150.0f

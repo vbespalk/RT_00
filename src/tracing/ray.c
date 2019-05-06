@@ -50,7 +50,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)
 	{
-		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, 1e-1);
+		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, SHIFT);
 		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.spclr_vec));
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
@@ -59,7 +59,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	}
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
-		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, 1e-1);
+		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, SHIFT);
 		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.trans_vec));
 		ft_handle_hit(&next_ray, coll.o);
 		num[0] = coll.o->t_blur;

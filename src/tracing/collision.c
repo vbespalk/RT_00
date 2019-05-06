@@ -55,7 +55,10 @@ static void			ft_init_collision(t_coll *coll, t_list **objs, t_vector *od)
 		{
 			dist[1] = o->ft_collide(objs, o, coll, od);
 			if (dist[1] < dist[0])
+			{
+				dist[0] = dist[1];
 				tmp_coll = *coll;
+			}
 		}
 		node = node->next;
 	}
@@ -100,6 +103,10 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	od[1] = ray->d;
 	ray->coll = &coll;
 	ft_init_collision(&coll, &(arg->e->scn->objs), od);
+
+//	printf("norm after coll: (%8.3f, %8.3f, %8.3f)\n",
+//		   coll.norm[0], coll.norm[1], coll.norm[2]);
+
 	if (!(coll.o))
 		return (coll);
 	if (coll.o->trans)
@@ -109,17 +116,20 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 //	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.1f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
-	tex_col = coll.tex_o->ft_mapping && coll.o->texture ? coll.tex_o->ft_mapping(coll.tex_o,
-			coll.o->texture, coll.ucoll_pnt) : UINT32_MAX;
+	tex_col = (coll.tex_o->ft_mapping && coll.o->texture)
+		? coll.tex_o->ft_mapping(coll.tex_o, coll.o->texture, coll.ucoll_pnt)
+		: UINT32_MAX;
 	if (tex_col != UINT32_MAX)
 		coll.px_color.val = tex_col;
 	else if (coll.o->checker != NULL)
 	{
-		coll.px_color.val = coll.tex_o->ft_checker(coll.tex_o, coll.tex_o->checker, coll.ucoll_pnt);
+		coll.px_color.val = coll.tex_o->ft_checker(
+			coll.tex_o, coll.tex_o->checker, coll.ucoll_pnt);
 	}
 	else if (coll.o->noise != NULL)
 	{
-		coll.px_color.val = coll.tex_o->ft_procedural(coll.tex_o, coll.o->noise, coll.ucoll_pnt);
+		coll.px_color.val = coll.tex_o->ft_procedural(
+			coll.tex_o, coll.o->noise, coll.ucoll_pnt);
 	}
 	else
         coll.px_color.val = coll.o->color.val;

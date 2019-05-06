@@ -91,6 +91,10 @@ void			*ft_section_handle(void *arg)
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
 	smth = thrarg->e->scn->cam->smooth + 1;
+
+//	x = thrarg->e->sdl->rt_wid / 2;
+//	y = thrarg->e->sdl->scr_hei / 2;
+
 	while (x < thrarg->e->sdl->rt_wid)
 	{
 		y = -1;
@@ -113,6 +117,7 @@ void			*ft_section_handle(void *arg)
 
 void			ft_render(t_env *e)
 {
+//	printf(" *** RENDER ***\n");
 	pthread_t	threads[THREADS];
 	t_thrarg	thrargs[THREADS];
 	int			i = 0;

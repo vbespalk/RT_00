@@ -118,7 +118,7 @@ float		ft_collide_sphere (t_list **objs, struct s_object *obj, t_coll *coll, t_v
 				ft_3_norm_transform(&(obj->inverse),
 				obj->ft_get_norm(obj->fig, uhit[i[0]])));
 			if (obj->is_neg)
-				hit[i[0]] += ft_3_vector_scale(norm[i[0]], 0.1f);
+				hit[i[0]] += ft_3_vector_scale(norm[i[0]], SHIFT);
 			i[1] = ft_inside_type(objs, hit[i[0]]);
 //			printf("norm: (%8.3f, %8.3f, %8.3f) -> (%8.3f, %8.3f, %8.3f)\n",
 //				hit[i[0]][0], hit[i[0]][1], hit[i[0]][2],
@@ -135,11 +135,22 @@ float		ft_collide_sphere (t_list **objs, struct s_object *obj, t_coll *coll, t_v
 	coll->coll_pnt = hit[i[0]];
 	coll->ucoll_pnt = uhit[i[0]];
 	coll->norm = norm[i[0]];
-	if (obj->is_neg)
+
+//	printf("t: %f", t1t2[i[0]]);
+//	printf("norm before invert: (%8.3f, %8.3f, %8.3f)\n",
+//		   coll->norm[0], coll->norm[1], coll->norm[2]);
+	if (obj->is_neg && i[1] != 1)
 		coll->norm = ft_3_vector_invert(coll->norm);
-	coll->o = (obj->is_neg)
-		? ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object)
-		: obj;
+//	printf("norm after invert: (%8.3f, %8.3f, %8.3f)\n",
+//		   coll->norm[0], coll->norm[1], coll->norm[2]);
+
+	if (obj->is_neg)
+	{
+		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
+		coll->coll_pnt -= ft_3_vector_scale(norm[i[0]], SHIFT);
+	}
+	else
+		coll->o = obj;
 
 //	if (obj->is_neg)
 //		printf("%s\n", (coll->o->is_neg) ? "in neg" : "in norm");

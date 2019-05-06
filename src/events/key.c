@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/02 17:26:37 by vbespalk          #+#    #+#             */
-/*   Updated: 2018/08/02 17:26:39 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/05/06 17:38:37 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 		ft_iter_lst(&(e->col_mode), sum);
 	if (e->col_mode == NULL)
 		return (1);
-	ft_col_mode(e->sdl, e->col_mode);
+	// ft_col_mode(e->sdl, e->col_mode);
     return (1);
 }
 

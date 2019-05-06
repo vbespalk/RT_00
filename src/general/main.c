@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/06 17:38:01 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/06 18:56:00 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ static void	ft_rt_loop(t_env *e)
 	{
 //		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
-			sdl_draw_screen(e, e->sdl, btn_id, btn_id != (SCREENSHOT + BTN_ID_SHIFT));
+			sdl_draw_screen(e, e->sdl, btn_id, btn_id > (INVERTED + BTN_ID_SHIFT));
 		if (!btn_id)
 			sdl_draw_screen(e, e->sdl, 0, false);
 //		int y = SDL_GetTicks() - x;

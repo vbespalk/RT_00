@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/02 17:26:37 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/06 17:38:37 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/06 18:54:59 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_mode			*ft_new_node(int id)
 	return (node);
 }
 
-void			ft_iter_lst(t_mode **nods, int id)
+bool			ft_iter_lst(t_mode **nods, int id)
 {
 	t_mode *ptr;
 	t_mode *prev;
@@ -94,30 +94,34 @@ void			ft_iter_lst(t_mode **nods, int id)
 			if ((*nods)->next == NULL)
 			{
 				ft_memdel((void **)nods);
-				return ;
+				return true;
 			}
 			else if ((*nods)->id == ptr->id)
 				(*nods) = ptr->next;
 			else
 				prev->next = ptr->next;
 			ft_memdel((void **)&ptr);
-			return ;
+			return true;
 		}
 		prev = ptr;
 		ptr = ptr->next;
 	}
 	prev->next = ft_new_node(id);
+	return false;
 }
 
 int					ft_switch_col_mode(t_env *e, Sint32 sum)
 {
+	bool deleted;
+
 	if (e->col_mode == NULL)
+	{
 		e->col_mode = ft_new_node(sum);
+		deleted = false;
+	}
 	else
-		ft_iter_lst(&(e->col_mode), sum);
-	if (e->col_mode == NULL)
-		return (1);
-	// ft_col_mode(e->sdl, e->col_mode);
+		deleted = ft_iter_lst(&(e->col_mode), sum);
+	deleted ? ft_render(e) : ft_col_mode(e->sdl, e->col_mode);
     return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 12:17:16 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/06 17:29:32 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/06 17:43:19 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,6 @@ void		button_pressed(t_env *e, int id)
 	SDL_SetTextureColorMod(e->sdl->gui->gui_texture, 255, 255, 255);
 }
 
-void		update_w_color_mode(t_env *e)
-{
-	t_sdl *sdl;
-
-	sdl = e->sdl;
-	SDL_UpdateTexture(
-		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
-	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
-}
-
 void		ft_gui(t_env *e, uint32_t id)
 {
 	SDL_Rect	gui_container;
@@ -67,8 +57,6 @@ void		ft_gui(t_env *e, uint32_t id)
 	}
 	SDL_RenderCopy(e->sdl->renderer, e->sdl->gui->gui_texture,
 	NULL, &gui_container);
-	if (id >= GRAYSCALE + BTN_ID_SHIFT && id <= INVERTED)
-		update_w_color_mode(e);
 	if (id > BTN_ID_SHIFT)
 		button_pressed(e, id);
 }

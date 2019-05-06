@@ -171,22 +171,27 @@ static const unsigned char
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 
-# define RMASK 0x00ff0000U
-# define GMASK 0x0000ff00U
-# define BMASK 0x000000ffU
-# define AMASK 0xff000000U
+# define RMASK 		0xff000000U
+# define GMASK 		0x00ff0000U
+# define BMASK 		0x0000ff00U
+# define AMASK 		0x000000ffU
+
+# define SWAP32(X)	(X)
 
 #else
 
-# define RMASK 0x000000ffU
-# define GMASK 0x0000ff00U
-# define BMASK 0x00ff0000U
-# define AMASK 0xff000000U
+# define RMASK		0x000000ffU
+# define GMASK		0x0000ff00U
+# define BMASK		0x00ff0000U
+# define AMASK		0xff000000U
 
- #endif
+# define SWAP32(X)	SDL_Swap32(X)
+
+#endif
+
 
 /*
-** GUI STUFF - includes, structures, defines etc. 
+** GUI STUFF - includes, structures, defines etc.
 */
 
 # define MLC_TEST(t, msg) if (!(t)) {ft_putendl(msg);exit(-1);}

@@ -65,13 +65,15 @@ t_color  ft_invert_px(t_color in_col)
     return (col);
 }
 
-void	ft_col_mode(t_sdl *sdl, t_mode *mode)
+
+void	ft_col_mode(t_sdl *sdl, t_mode *head)
 {
 	t_color col;
 	int 	x;
 	int 	y;
+	t_mode	*mode;
 
-	if (mode == NULL)
+	if (head == NULL)
 		return ;
 	y = -1;
 	while (++y < sdl->scr_hei && (x = -1))
@@ -79,6 +81,7 @@ void	ft_col_mode(t_sdl *sdl, t_mode *mode)
 		while (++x < sdl->rt_wid)
 		{
 			col.val = sdl->pixels[y * sdl->rt_wid + x];
+			mode = head;
 			while (mode)
 			{
 				if (mode->id == MD_GRAYSCALE)

@@ -55,49 +55,6 @@ float		ft_collide_sphere (t_list **objs, struct s_object *obj, t_coll *coll, t_v
 	t_vector	uhit[2];
 	t_vector	norm[2];
 
-//
-// ----------------------- v working example v ---------------------------------
-//
-
-//	sph = (t_sphere *)(obj->fig);
-//	pos = od[0] - sph->origin;
-//	if (!ft_solve_sqr_(
-//		ft_3_vector_dot(od[1], od[1]),
-//		2.0f * ft_3_vector_dot(od[1], pos),
-//		ft_3_vector_dot(pos, pos) - sph->radius * sph->radius,
-//		&t1t2)
-//		|| (t1t2[0] < 0 && t1t2[1] < 0))
-//		return ;
-//	i[0] = -1;
-//	while (++i[0] < 2)
-//	{
-//		if (t1t2[i[0]] > 0)
-//		{
-//			hit = od[0] + ft_3_vector_scale(od[1], t1t2[i[0]]);
-//			if (obj->is_neg)
-//				hit += ft_3_vector_scale(obj->ft_get_norm(obj->fig, hit), 0.1f);
-//			i[1] = ft_inside_type(objs, hit);
-//			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
-//				t1t2[i[0]] = 0;
-//		}
-//	}
-//	if (t1t2[0] <= 0 && t1t2[1] <= 0)
-//		return ;
-//	hit = (t1t2[0] > 0)
-//		? od[0] + ft_3_vector_scale(od[1], t1t2[0])
-//		: od[0] + ft_3_vector_scale(od[1], t1t2[1]);
-//	if (obj->is_neg)
-//		hit += ft_3_vector_scale(obj->ft_get_norm(obj->fig, hit), 0.1f);
-//	coll->coll_pnt = hit;
-//	coll->norm = (obj->is_neg)
-//		? ft_3_vector_invert(obj->ft_get_norm(obj->fig, hit))
-//		: obj->ft_get_norm(obj->fig, hit);
-//	coll->o = (obj->is_neg)
-//		? ft_inside_obj(objs, hit, ft_get_inner_object)
-//		: obj;
-
-// -----------------------------------------------------------------------------
-
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
 	if (!ft_solve_sqr_(

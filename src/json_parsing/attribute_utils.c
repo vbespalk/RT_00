@@ -25,8 +25,11 @@ void			ft_parse_str
 		*((char **)dst) = ft_strsub(
 			*data, 0, ft_strchr(*data, '\"') - *data);
 	else if (datatype == DT_COLOR)
-		(*((Uint32 *)dst)) = ft_limit_uint(
-			0, 0xffffff, (unsigned int)ft_atoi_base(*data, 16));
+	{
+		(*((Uint32 *) dst)) = SDL_Swap32(ft_limit_uint(
+				0, 0xffffff, (unsigned int) ft_atoi_base(*data, 16)) << 8);
+//		(*((Uint32 *) dst)) = SDL_Swap32((*((Uint32 *) dst)) << 8);
+	}
 	else
 		ft_parse_warning_datatype(content[0], *data, datatype);
 }

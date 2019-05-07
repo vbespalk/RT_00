@@ -3,7 +3,7 @@
 //
 #include "rt.h"
 
-Uint32		ft_map_plane(struct s_object *o, t_texture *tex, t_vector hit)
+Uint32		ft_map_plane(struct s_object *o, SDL_Surface *tex, t_vector hit)
 {
 	t_plane		*pln;
 	Uint32		col;
@@ -19,17 +19,17 @@ Uint32		ft_map_plane(struct s_object *o, t_texture *tex, t_vector hit)
 	t = 1 - (ft_3_vector_dot(hit - (t_vector){-pln->ratio, 0, -1}, Z_AXIS)) /
 			(pln->ratio * 2);
 //	printf("LEN %f, s %f, WID %f, t %f\n", pln->len_wh[0], s, pln->len_wh[1], t);
-	xy[0] = (int)((tex->surface->w - 1) * s);
-	xy[1] = (int)((tex->surface->h - 1) * t);
-	if (!(IN_RANGE(xy[0], 0, tex->surface->w) &&
-		  IN_RANGE(xy[1], 0, tex->surface->h)))
+	xy[0] = (int)((tex->w - 1) * s);
+	xy[1] = (int)((tex->h - 1) * t);
+	if (!(IN_RANGE(xy[0], 0, tex->w) &&
+		  IN_RANGE(xy[1], 0, tex->h)))
 		return (0xff);
-	ft_memcpy(&col, (Uint32 *)tex->surface->pixels + xy[1] * tex->surface->w
+	ft_memcpy(&col, (Uint32 *)tex->pixels + xy[1] * tex->w
 					+ xy[0], sizeof(Uint32));
 	return (col);
 }
 
-Uint32		ft_map_box(struct s_object *o, t_texture *tex, t_vector hit, t_vector tr_hit)
+Uint32		ft_map_box(struct s_object *o, SDL_Surface *tex, t_vector hit, t_vector tr_hit)
 {
 	return (UINT32_MAX);
 }

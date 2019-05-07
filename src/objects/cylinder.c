@@ -33,6 +33,7 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	o->ft_translate = ft_translate_cylinder;
 	o->ft_rotate = ft_rotate_cylinder;
 	o->ft_scale = ft_scale_cylinder;
+	o->ft_scale_height = ft_scale_hei_cylinder;
 	o->ft_mapping = ft_map_clndr;
 	o->ft_checker = ft_checker_cyl;
     o->ft_procedural = ft_procedural_cyl;
@@ -113,4 +114,27 @@ void		ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 	printf("RAD %f maxh %f\n", clnd->r, clnd->maxh);
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.0f / clnd->r);
+}
+
+void		ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+{
+	t_cylinder *clnd;
+
+	if (!o)
+		return ;
+	clnd = (t_cylinder *)o->fig;
+	float scale = 1;
+	if (key == SDLK_r)
+	{
+		scale += SCALE_F;
+		clnd->maxh = clnd->maxh == FLT_MAX ? FLT_MAX :  clnd->maxh * scale;
+	}
+	else if (key == SDLK_t)
+	{
+		scale -= SCALE_F;
+		clnd->maxh = clnd->maxh == FLT_MAX ? FLT_MAX :  clnd->maxh * scale;
+	}
+	else
+		scale = 0;
+	printf("HEI %f RAD %f\n", clnd->maxh, clnd->r);
 }

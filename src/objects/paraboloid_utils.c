@@ -12,26 +12,26 @@
 
 #include "rt.h"
 
-static int			ft_solve_sqr_(double a, double b, double c, double (*res)[2])
+static int			ft_solve_sqr_(double a, double b, double c, double res[2])
 {
 	double d;
 
-	(*res)[0] = -FLT_MAX;
-	(*res)[1] = -FLT_MAX;
+	res[0] = -FLT_MAX;
+	res[1] = -FLT_MAX;
 	if (IS_ZERO(a))
 	{
-		(*res)[0] = -c / b;
-		(*res)[1] = (*res)[0];
+		res[0] = -c / b;
+		res[1] = res[0];
 		return (1);
 	}
 	d = pow(b, 2) - 4.0f * a * c;
 	if (d < 0)
 		return (0);
 	d = sqrt(d);
-	(*res)[0] = (float)((-b + d) / (2.0f * a));
-	(*res)[1] = (float)((-b - d) / (2.0f * a));
-	if (((*res)[0] > (*res)[1] && (*res)[1] > FLT_MIN) || (*res)[0] < FLT_MIN)
-		ft_swap(&(*res)[0], &(*res)[1], sizeof(double));
+	res[0] = (float)((-b + d) / (2.0f * a));
+	res[1] = (float)((-b - d) / (2.0f * a));
+	if ((res[0] > res[1] && res[1] > FLT_MIN) || res[0] < FLT_MIN)
+		ft_swap(&res[0], &res[1], sizeof(double));
 	return (1);
 }
 
@@ -123,7 +123,7 @@ float	ft_collide_prbld(t_list **objs, struct s_object *obj, t_coll *coll, t_vect
 	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - od[1][1] * od[1][1],
 					   2.0f * (ft_3_vector_dot(od[1], od[0]) - od[1][1] * (od[0][1] + 2.f)),
 					   ft_3_vector_dot(od[0], od[0]) - od[0][1] * (od[0][1] + 4.f),
-					   &res) || (res[0] < FLT_MIN && res[1] < FLT_MIN))
+					   res) || (res[0] < FLT_MIN && res[1] < FLT_MIN))
 		if (IS_ZERO(od[1][1]) || par->maxh == FLT_MAX)
 			return (-FLT_MAX);
 	res[0] = res[0] < FLT_MIN && res[1] < FLT_MIN ? -FLT_MAX : get_cides_coll(od, res, &hit[0], par);
@@ -140,17 +140,16 @@ int			ft_is_inside_prbld(t_object *o, t_vector point)
 	point = ft_3_pnt_transform(&(o->inverse), point);
 	if (!IN_RANGE(point[1], -(1e-2), par->maxh) && par->maxh != FLT_MAX)
 	{
-		printf("OUTSIDE HEI\n");
+//		printf("OUTSIDE HEI\n");
 		return (0);
 	}
 //	r = point - Y_AXIS;
 	r = (t_vector){point[0], point[1] - 1, point[2]};
-	if (ft_3_vector_dot(r, r) <= (point[1] + 1) * (point[1] + 1))
-		printf("INSIDE\n");
-	else
-		printf("OUTSIDE\n");
-	return (ft_3_vector_dot((t_vector){point[0], 0, point[2]}, (t_vector){point[0], 0, point[2]})
-			<= (par->r * point[1]) / par->maxh ? 1 : 0);
+//	if (ft_3_vector_dot(r, r) <= (point[1] + 1) * (point[1] + 1))
+//		printf("INSIDE\n");
+//	else
+//		printf("OUTSIDE\n");
+	return (ft_3_vector_dot(r, r) <= (point[1] + 1) * (point[1] + 1) ? 1 : 0);
 }
 
 t_vector	ft_get_norm_prbld(void *fig, t_vector coll)

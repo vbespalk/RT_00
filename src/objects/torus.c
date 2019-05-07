@@ -26,6 +26,7 @@ char		*ft_parse_torus(char **content, t_object *o)
 	o->ft_translate = ft_translate_torus;
 	o->ft_rotate = ft_rotate_torus;
 	o->ft_scale = ft_scale_torus;
+	o->ft_scale_height = ft_scale_hei_null;
 	o->ft_mapping = ft_map_torus;
 	o->ft_checker =  ft_checker_tor;
 	o->ft_procedural = ft_procedural_tor;
@@ -106,12 +107,8 @@ void		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	{
 		scale += SCALE_F;
 	}
-	else if (key == SDLK_x && scale >= 0.0f)
-	{
+	else if (key == SDLK_x && scale - SCALE_F >= FLT_MIN)
 		scale -= SCALE_F;
-	}
-	else
-		scale = 0;
 	trs->r_inner = trs->r_inner * scale;
 	trs->r_outer = trs->r_outer * scale;
 }

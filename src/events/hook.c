@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 17:35:53 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/23 13:25:29 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/04/27 16:29:19 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,21 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
 	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	}
+	if (e->selected && (sum == SDLK_r || sum == SDLK_t))
+		e->selected->ft_scale_height(sum, e->selected, &(e->selected->transform), &(e->selected->inverse));
 	if (sum == SDLK_DELETE && e->selected)
 	{
 		delete_obj(&(e->scn->objs), e->selected->id);
 		e->selected = NULL;
 	}
-	if ((sum == SDLK_g || sum == SDLK_j || sum == SDLK_n || sum == SDLK_i))
+	if (sum == SDLK_g || sum == SDLK_u || sum == SDLK_h || sum == SDLK_i)
         return (ft_switch_col_mode(e, sum));
-	if (sum == SDLK_r)
-		reset(e);
+	if (sum == SDLK_b)
+	    ft_switch_skybox(e->sdl, e->scn);
+	if (e->selected && (sum >= SDLK_0 && sum <= SDLK_9))
+		ft_set_exposure(sum, e->selected, e);
+//	if (sum == SDLK_r)
+//		reset(e);
 	if (sum == SDLK_c)
 	{
 		e->selected = NULL;
@@ -88,6 +94,8 @@ int		on_mouse_move(int x, int y, int rel_x, int rel_y, t_env *e, int left, int r
 
 int		on_lbutton_down(int x, int y, t_env *e)
 {
+	if (x >= e->sdl->rt_wid || y >= e->sdl->scr_hei)
+		return (0);
 	if (e->pix_obj[y * e->sdl->scr_wid + x])
 	{
 		// printf("selected pix %d\n", x * y);

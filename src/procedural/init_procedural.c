@@ -6,31 +6,35 @@
 
 static void     ft_init_mrbl(t_procedural *tex, char *ramp)
 {
-    if (tex->ramp_id == NULL)
+	if (tex->ramp_id == NULL && ramp)
         tex->ramp_id = ft_strdup(ramp);
 	tex->ramp = NULL;
-	tex->octaves = 7.f;
-	tex->scale = 2.5f;
+	tex->octaves = 7.0f;
+	tex->scale = 8.0f;
 	tex->gain = 0.5f;
     tex->lacunarity = 2;
+	tex->min_max[0] = 0;
+	tex->min_max[1] = 1;
     tex->pertubation = 10;
 }
 
 static void     ft_init_sandstn(t_procedural *tex, char *ramp)
 {
-    if (tex->ramp_id == NULL)
+	if (tex->ramp_id == NULL)
         tex->ramp_id = ft_strdup(ramp);
 	tex->ramp = NULL;
 	tex->octaves = 5;
 	tex->scale = 1.f;
 	tex->gain = 0.5f;
 	tex->lacunarity = 2.0f;
+	tex->min_max[0] = 0;
+	tex->min_max[1] = 1;
     tex->pertubation = 0.05f;
 }
 
 static void             ft_null_lattice(t_procedural *tex)
 {
-	tex->ramp_id = NULL;
+	printf("LATTICE\n");
 	tex->ramp = NULL;
 	tex->octaves = 5;
 	tex->gain = 0.5f;
@@ -50,6 +54,10 @@ static void		ft_init_type(t_procedural *tex, char *name)
 		ft_init_mrbl(tex, RAMP_BL_MRBL);
 	else if (ft_strcmp(name, TEX_WM_MRBL) == 0)
 		ft_init_mrbl(tex, RAMP_WM_MRBL);
+	else if (ft_strcmp(name, TEX_RD_MRBL) == 0)
+		ft_init_mrbl(tex, RAMP_RD_MRBL);
+	else if (ft_strcmp(name, TEX_GN_MRBL) == 0)
+		ft_init_mrbl(tex, RAMP_GN_MRBL);
 	else if (ft_strcmp(name, TEX_SANDSTN) == 0)
 		ft_init_sandstn(tex, RAMP_SANDSTN);
 	else if (ft_strcmp(name, TEX_LATTICE) == 0)
@@ -63,14 +71,7 @@ static void		ft_init_type(t_procedural *tex, char *name)
 
 void            ft_init_lattice(t_procedural **tex, char *function, unsigned int seed)
 {
-	if (*tex == NULL)
-	{
-		printf("LATTICE TEX IS ZERO\n");
-		*tex = (t_procedural *)ft_smemalloc(sizeof(t_procedural), "ft_init_lattice");
-		(*tex)->ramp = NULL;
-		if (function != NULL)
-			ft_init_type(*tex, function);
-	}
+	printf("TEX %p\n", *tex);
 	(*tex)->noise_ptr = (t_lattice *)ft_smemalloc(sizeof(t_lattice), "ft_init_lattice");
     ft_init_value_table(&((*tex)->noise_ptr->value_table), seed);
 	(*tex)->noise_ptr->ft_generate_noise = ft_cubic_noise;
@@ -113,4 +114,29 @@ void                    ft_parse_procedural(char **content, t_procedural **tex)
     ft_init_lattice(tex, function, (unsigned int) seed);
     ft_memdel((void **)&name);
     ft_memdel((void **)&function);
+}
+
+void				ft_set_procedural(t_procedural **tex, char *smpl, Uint32 col)
+{
+	if (*tex == NULL)
+	{
+		*tex = (t_procedural *)ft_smemalloc(sizeof(t_procedural), "ft_set_procedural");
+		ft_bzero(*tex, sizeof(t_procedural));
+		if (smpl != NULL)
+			ft_init_type(*tex, smpl);
+		(*tex)->color.val = col;
+		ft_init_lattice(tex, FRACTAL_SUM, (unsigned int) time(NULL));
+	}
+}
+
+void	ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl)
+{
+	n->ramp = init_texture(textures, sdl, n->ramp_id);
+	if (n->ramp != NULL)
+		n->ft_get_color = ft_ramp_noise_col;
+	else
+	{
+		ft_memdel((void **)&(n->ramp_id));
+		n->ft_get_color = ft_wrapped_noise_col;
+	}
 }

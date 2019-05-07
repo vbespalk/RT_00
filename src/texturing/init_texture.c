@@ -10,11 +10,15 @@ t_texture				*load_texture(t_sdl *sdl, char *path)
 	t_texture	*texture;
 
 	texture = ft_smemalloc(sizeof(t_texture), "load_texture");
+	ft_bzero(texture, sizeof(t_texture));
 	texture->path = ft_strdup(path);
 	src = IMG_Load(path);
 	if(!src)
 	{
 		sdl_img_error("Error at load_texture(). Texture value set to color.\n");
+		ft_memdel((void **)&texture->path);
+		ft_memdel((void **)&texture);
+		printf("LOAD TEXTURE\n");
 		return (NULL);
 	}
 	texture->surface = SDL_ConvertSurface(src, sdl->format, 0);
@@ -29,7 +33,7 @@ t_texture				*load_texture(t_sdl *sdl, char *path)
 	printf("TEXTURE %s loading SUCCESSFULLY\n", path);
 	return (texture);
 }
-t_texture			*init_texture(t_list **textures, t_sdl *sdl, char *id)
+SDL_Surface		*init_texture(t_list **textures, t_sdl *sdl, char *id)
 {
 	t_list		*lst;
 	t_texture	*t;
@@ -42,7 +46,7 @@ t_texture			*init_texture(t_list **textures, t_sdl *sdl, char *id)
 		while (lst)
 		{
 			if (ft_strcmp(id, ((t_texture *) lst->content)->path) == 0)
-				return (((t_texture *) lst->content));
+				return (((t_texture *) lst->content)->surface);
 			lst = lst->next;
 		}
 	}
@@ -50,5 +54,5 @@ t_texture			*init_texture(t_list **textures, t_sdl *sdl, char *id)
 	if (!t)
 		return (NULL);
 	ft_lstpush(textures, ft_nodenew((void *)t, sizeof(t_texture)));
-	return (t);
+	return (t->surface);
 }

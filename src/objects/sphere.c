@@ -34,6 +34,7 @@ void		*ft_parse_sphere(char **content, t_object *o)
 	o->ft_translate = ft_translate_sphere;
 	o->ft_rotate = ft_rotate_sphere;
 	o->ft_scale = ft_scale_sphere;
+	o->ft_scale_height = ft_scale_hei_null;
 	o->ft_mapping = ft_map_sphere;
 	o->ft_checker = ft_checker_sph;
 	o->ft_procedural = ft_procedural_sph;

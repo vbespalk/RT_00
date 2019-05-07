@@ -113,10 +113,10 @@ float			ft_collide_cylinder(t_list **objs, struct s_object *obj, t_coll *coll, t
 	clnd = (t_cylinder *)obj->fig;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	if (!ft_solve_sqr_(od[1][0] * od[1][0] + od[1][2] * od[1][2],
+	if (!ft_solve_quadratic(od[1][0] * od[1][0] + od[1][2] * od[1][2],
 		2.0f * (od[0][0] * od[1][0] + od[0][2] * od[1][2]),
 		od[0][0] * od[0][0] + od[0][2] * od[0][2] - 1,
-		&res))
+		res))
 		return (-FLT_MAX);
 	res[0] = get_cides_coll(od, res, &hit[0], clnd);
 	res[1] = (clnd->maxh == FLT_MAX || fabsf(od[1][1]) < 1e-6) ?
@@ -134,14 +134,14 @@ int			ft_is_inside_cylinder(t_object *o, t_vector point)
 	point = ft_3_pnt_transform(&(o->inverse), point);
 	if (!IN_RANGE(point[1], -maxh, maxh) && maxh != FLT_MAX)
 	{
-		printf("OUTSIDE HEI\n");
+//		printf("OUTSIDE HEI\n");
 		return (0);
 	}
-	if (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
-			(t_vector){point[0], 0, point[2]}) <= 1)
-		printf("INSIDE\n");
-	else
-		printf("OUTSIDE\n");
+//	if (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
+//			(t_vector){point[0], 0, point[2]}) <= 1)
+//		printf("INSIDE\n");
+//	else
+//		printf("OUTSIDE\n");
 	return (ft_3_vector_dot((t_vector){point[0], 0, point[2]},
 			(t_vector){point[0], 0, point[2]}) <= 1 ? 1 : 0);
 }

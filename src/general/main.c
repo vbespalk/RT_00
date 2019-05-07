@@ -6,11 +6,30 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/24 16:38:40 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/06 18:56:00 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
+
+static int ft_init_smpl(t_sdl *sdl, t_list **tex, t_procedural *dst[6])
+{
+	int i;
+
+	ft_bzero(dst, sizeof(t_procedural *) * 6);
+	ft_set_procedural(&(dst[0]), TEX_BL_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[1]), TEX_GN_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[2]), TEX_SANDSTN, 0xFFFFFF);
+	ft_set_procedural(&(dst[3]), TEX_RD_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[4]), TEX_GR_MRBL, 0xFFFFFF);
+	ft_set_procedural(&(dst[5]), TEX_WM_MRBL, 0xFFFFFF);
+	i = -1;
+	while (++i < SMPL_NMB)
+	{
+		if ((dst[i])->ramp_id != NULL)
+			ft_load_noise_ramp(dst[i], tex, sdl);
+	}
+}
 
 static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
@@ -26,7 +45,9 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	textures = NULL;
 	e->scn->textures = textures;
 	ft_bzero(e->color_mode, sizeof(bool) * 5);
-	e->color_mode[0] = true;
+//	e->color_mode[0] = true;
+	e->col_mode = NULL;
+	ft_init_smpl(sdl, &(e->scn->textures), e->smpl);
 	objs = e->scn->objs;
 	while (objs)
 	{
@@ -36,12 +57,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 		if (obj->noise != NULL && obj->noise->ramp_id != NULL)
         {
 		    printf("RUMP %s to init\n", obj->noise->ramp_id);
-		    obj->noise->ramp = init_texture(&textures, sdl, obj->noise->ramp_id)->surface;
-		    if (obj->noise->ramp != NULL)
-            {
-		        printf("RUMP INITIALISED\n");
-		        obj->noise->ft_get_color = ft_ramp_noise_col;
-            }
+			ft_load_noise_ramp(obj->noise, &(e->scn->textures), e->sdl);
         }
 		if (obj->checker != NULL)
 		{
@@ -51,7 +67,7 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
         		if (obj->checker->noise[i]->ramp_id != NULL)
 				{
 					obj->checker->noise[i]->ramp = init_texture(&textures, sdl,
-							obj->checker->noise[i]->ramp_id)->surface;
+							obj->checker->noise[i]->ramp_id);
 					if (obj->checker->noise[i]->ramp != NULL)
 					{
 						printf("RUMP INITIALISED\n");
@@ -60,6 +76,25 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 				}
 			}
 		}
+		obj->tex_pnt = NULL;
+		if (obj->texture != NULL)
+		{
+			printf("SET TEXTURE\n");
+			obj->tex_pnt = obj->texture;
+			obj->exposure = EXP_TEXTR;
+		}
+		else if (obj->noise != NULL)
+		{
+			printf("SET NOISE\n");
+			obj->tex_pnt = obj->noise;
+			obj->exposure = EXP_NOISE;
+		}
+		else if (obj->checker != NULL)
+		{
+			printf("SET CHCKR\n");
+			obj->tex_pnt = obj->checker;
+			obj->exposure = EXP_CHCKR;
+		}
 		objs = objs->next;
 	}
 	i = -1;
@@ -67,22 +102,29 @@ static int	init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 		while (++i < BOX_FACES)
 			if (!(e->scn->skybox->textur[i] = init_texture(&textures, sdl,
 					e->scn->skybox->textur_id[i])))
-				return (-1);
+			{
+				ft_skybox_del(&(e->scn->skybox));
+				break ;
+			}
+	printf("HERE\n");
+	e->scn->skybox_on = (e->scn->skybox != NULL) ? true : false;
 	e->selected = NULL;
 	return (0);
 }
 
-static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id)
+static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id, bool redraw)
 {
-	SDL_Rect	rt_container;
-
-	ft_render(e);
-	rt_container =  (SDL_Rect){0, 0,
-					e->sdl->rt_wid, e->sdl->scr_hei};
+	if (redraw)
+	{
+		printf("NEW RENDER\n");
+		ft_render(e);
+	}
+	sdl->rt_cont = (SDL_Rect){0, 0,
+							  e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
-	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &rt_container);
+	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
 	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
 }
@@ -94,14 +136,14 @@ static void	ft_rt_loop(t_env *e)
 
 	sdl = e->sdl;
 	sdl->event_loop = 1;
-	sdl_draw_screen(e, e->sdl, 0);
+	sdl_draw_screen(e, e->sdl, 0, true);
 	while (sdl->event_loop)
 	{
 //		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
-			sdl_draw_screen(e, e->sdl, btn_id);
-//		if (!btn_id)
-//			sdl_draw_screen(e, e->sdl, 0);
+			sdl_draw_screen(e, e->sdl, btn_id, btn_id > (INVERTED + BTN_ID_SHIFT));
+		if (!btn_id)
+			sdl_draw_screen(e, e->sdl, 0, false);
 //		int y = SDL_GetTicks() - x;
 //		if (y != 0)
 //			printf("%f\n", 1000 / (float)y);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 13:25:05 by domelche          #+#    #+#             */
-/*   Updated: 2018/08/23 13:25:05 by domelche         ###   ########.fr       */
+/*   Updated: 2019/05/06 18:55:45 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ void			*ft_section_handle(void *arg)
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
 		{
-			col = thrarg->e->color_mode[MD_COLOR] ? ft_get_pixel_color(thrarg, x, y, smth) :
+			col = thrarg->e->col_mode == NULL ? ft_get_pixel_color(thrarg, x, y, smth) :
             		ft_px_mode(ft_get_pixel_color(thrarg, x, y, smth),
-            				thrarg->e->color_mode);
+            				thrarg->e->col_mode);
 		    img_pixel_put(
-                    thrarg->e, x, y,
+                    thrarg->e->sdl, x, y,
                     (unsigned int) col.val);
 //			img_pixel_put(
 //					thrarg->e, x, y,

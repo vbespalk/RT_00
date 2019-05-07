@@ -104,7 +104,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 {
 	t_coll		coll;
 	t_vector	od[2];
-	Uint32		tex_col;
+	fun_tab		func;
 
 //	od[0] = ray->o + ft_3_vector_scale(ray->d, 0.1f);
 	od[0] = ray->o;
@@ -124,23 +124,12 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 //	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.1f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
-	tex_col = (coll.tex_o->ft_mapping && coll.o->texture)
-		? coll.tex_o->ft_mapping(coll.tex_o, coll.o->texture, coll.ucoll_pnt)
-		: UINT32_MAX;
-	if (tex_col != UINT32_MAX)
-		coll.px_color.val = tex_col;
-	else if (coll.o->checker != NULL)
-	{
-		coll.px_color.val = coll.tex_o->ft_checker(
-			coll.tex_o, coll.tex_o->checker, coll.ucoll_pnt);
-	}
-	else if (coll.o->noise != NULL)
-	{
-		coll.px_color.val = coll.tex_o->ft_procedural(
-			coll.tex_o, coll.o->noise, coll.ucoll_pnt);
-	}
-	else
-        coll.px_color.val = coll.o->color.val;
+	func[0] = coll.tex_o->ft_mapping;
+	func[1] = coll.tex_o->ft_checker;
+	func[2] = coll.tex_o->ft_procedural;
+	coll.px_color.val = (coll.o->exposure == 0) ? coll.o->color.val :
+		func[coll.o->exposure - 1](coll.tex_o,
+		coll.o->tex_pnt, coll.ucoll_pnt);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

@@ -32,7 +32,7 @@
        "spclr": 1,
        "transparent": 1,
        "refract": 1.5,
-       "diff": 0,
+       "diff": 0.3,
       "translate": { "x": 0, "y": 0, "z": 0 },
 
       "rotate": {"z": 30}

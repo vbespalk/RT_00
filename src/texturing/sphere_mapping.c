@@ -3,7 +3,7 @@
 //
 #include "rt.h"
 
-Uint32		ft_map_sphere(struct s_object *o, t_texture *tex, t_vector hit)
+Uint32		ft_map_sphere(struct s_object *o, SDL_Surface *tex, t_vector hit)
 {
 	Uint32		col;
 	float		theta;
@@ -20,12 +20,12 @@ Uint32		ft_map_sphere(struct s_object *o, t_texture *tex, t_vector hit)
 	theta = acosf(CLAMP(hit[1], -1.0f, 1.0f));
 	if (!(IN_RANGE(theta, 0.0f, M_PI)))
 		theta = theta < 0.0f ? theta + (float) M_PI : theta - (float) M_PI;
-	xy[0] = (int)((tex->surface->w - 1) * phi / 2.0f * (float)M_1_PI);
-	xy[1] = (int)((tex->surface->h - 1) * theta * (float)M_1_PI);
-	if (!(IN_RANGE(xy[0], 0, tex->surface->w) &&
-		IN_RANGE(xy[1], 0, tex->surface->h)))
+	xy[0] = (int)((tex->w - 1) * phi / 2.0f * (float)M_1_PI);
+	xy[1] = (int)((tex->h - 1) * theta * (float)M_1_PI);
+	if (!(IN_RANGE(xy[0], 0, tex->w) &&
+		IN_RANGE(xy[1], 0, tex->h)))
 		return (0xff);
-	ft_memcpy(&col, (Uint32 *)tex->surface->pixels + xy[1] * tex->surface->w
+	ft_memcpy(&col, (Uint32 *)tex->pixels + xy[1] * tex->w
 			+ xy[0], sizeof(Uint32));
 	return (col);
 }

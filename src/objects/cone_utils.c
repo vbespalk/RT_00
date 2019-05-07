@@ -35,8 +35,8 @@ static float	get_closer_pnt(const float *t, const t_vector *hit, t_coll *coll, t
 	{
 		coll->ucoll_pnt = hit[0];
 		coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), coll->ucoll_pnt -
-			ft_3_vector_scale((t_vector){0, coll->ucoll_pnt[1], 0},
-			(((t_cone *)obj->fig)->tan) * (((t_cone *)obj->fig)->tan) + 1)));
+																			ft_3_vector_scale((t_vector){0, coll->ucoll_pnt[1], 0},
+																							  (((t_cone *)obj->fig)->tan) * (((t_cone *)obj->fig)->tan) + 1)));
 		return (t[0]);
 	}
 	else if (t[1] > 0)
@@ -183,8 +183,8 @@ static float	get_caps_coll(const t_vector *od, t_vector *coll, t_cone *cone)
 	if (t[0] < FLT_MIN && t[1] < FLT_MIN)
 		return (-FLT_MAX);
 	(t[0] > t[1] && t[1] > FLT_MIN) || t[0] < FLT_MIN ? ft_swap_float(&t[0], &t[1]),
-			ft_swap(&ori[0], &ori[1], sizeof(t_vector)),
-			ft_swap_float(&sq_r[0], &sq_r[1]): 1;
+		ft_swap(&ori[0], &ori[1], sizeof(t_vector)),
+		ft_swap_float(&sq_r[0], &sq_r[1]): 1;
 	hit[0] = ori[0] + ft_3_vector_scale(od[1], t[0]);
 	hit[1] = ori[1] + ft_3_vector_scale(od[1], t[1]);
 //	printf("1. T %f, r %f, sq_r %f, 2. T %f, r %f, sq_r %f\n",
@@ -210,8 +210,8 @@ int					ft_is_reachable_cone(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-	float			ft_collide_cone(t_list **objs, struct s_object *obj,
-			t_coll *coll, t_vector untr_od[2])
+float			ft_collide_cone(t_list **objs, struct s_object *obj,
+								 t_coll *coll, t_vector untr_od[2])
 {
 	t_cone		*con;
 	t_vector	hit[2];
@@ -224,10 +224,11 @@ int					ft_is_reachable_cone(void *fig, t_vector origin, t_vector direct)
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
 	sq_tan = 1 + con->tan * con->tan;
-	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - sq_tan * od[1][1] * od[1][1],
-					   2.0f * (ft_3_vector_dot(od[0], od[1]) - sq_tan * od[1][1] * od[0][1]),
-					   ft_3_vector_dot(od[0], od[0]) - sq_tan * od[0][1] * od[0][1],
-					   &res) && fabsf(od[1][1]) < 1e-6)
+	if (!ft_solve_quadratic(
+		ft_3_vector_dot(od[1], od[1]) - sq_tan * od[1][1] * od[1][1],
+		2.0f * (ft_3_vector_dot(od[0], od[1]) - sq_tan * od[1][1] * od[0][1]),
+		ft_3_vector_dot(od[0], od[0]) - sq_tan * od[0][1] * od[0][1],
+		res) && IS_ZERO(od[1][1]))
 		return (-FLT_MAX);
 	res[0] = (res[0] < FLT_MIN && res[1] < FLT_MIN) ? -FLT_MAX : get_cides_coll(od, res, &hit[0], con);
 	// res[0] = get_cides_coll(objs, obj, od, res);

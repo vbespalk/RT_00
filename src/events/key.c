@@ -122,7 +122,7 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 	else
 		deleted = ft_iter_lst(&(e->col_mode), sum);
 	deleted ? ft_render(e) : ft_col_mode(e->sdl, e->col_mode);
-    return (1);
+    return (0);
 }
 
 
@@ -151,10 +151,11 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 
 void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
 {
-    int i;
 
-    if (!scn->skybox)
-    {
+    if (scn->skybox != NULL)
+		scn->skybox_on = !scn->skybox_on;
+	else
+	{
         scn->skybox = (t_skybox *) ft_smemalloc(sizeof(t_skybox), "ft_switch_skybox");
         scn->skybox->textur_id[0] = ft_strdup(SKBX_NEGZ);
         scn->skybox->textur_id[1] = ft_strdup(SKBX_NEGY);
@@ -163,22 +164,8 @@ void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
         scn->skybox->textur_id[4] = ft_strdup(SKBX_POSY);
         scn->skybox->textur_id[5] = ft_strdup(SKBX_POSX);
 		scn->skybox->bbx = ft_init_aabb(ft_3_zeropointnew(), ft_3_zeropointnew());
-        i = -1;
-		while (++i < BOX_FACES)
-        {
-			if (!(scn->skybox->textur[i] = init_texture(&scn->textures, sdl,
-														scn->skybox->textur_id[i])))
-			{
-				printf("WARNING: CANT LOAD SKYBOX FILE \"%s\" IS MISSING\n",
-					   scn->skybox->textur_id[i]);
-//				 DELETE SKYBOX STRUCTURE;
-				ft_skybox_del(&scn->skybox);
-				return;
-			}
-		}
-		scn->skybox_on = false;
+		ft_load_sky_tex(scn->skybox, &(scn->skybox_on), &scn->textures, sdl);
     }
-    scn->skybox_on = !scn->skybox_on;
 }
 
 void	ft_set_exposure(Sint32 sum, t_object *o, t_env *e)

@@ -21,17 +21,15 @@ t_object	*ft_objectnew(Uint32 id)
 	o->color.val = 0xffff00;
 	o->ambnt = 0.1f;
 	o->diff = 1.0f;
-	o->phong = 0;
+	o->phong = FLT_MIN;
 	o->refr = 1.0f;
-	o->translate = ft_3_zeropointnew();
-	o->rotate = ft_3_zeropointnew();
-	o->texture_id = NULL;
+	o->translate = ZERO_PNT;
+	o->rotate = ZERO_PNT;
 	o->exposure = 0;
-	ft_bzero(&(o->texture_id), sizeof(char**) * BOX_FACES);
 	return (o);
 }
 
-static void	ft_balance_koefs(t_object *o)
+void	ft_balance_koefs(t_object *o)
 {
 	float	sum;
 

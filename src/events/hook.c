@@ -131,21 +131,26 @@ int		on_resize(Sint32 w, Sint32 h, t_env *e)
 	e->sdl->scr_hei = h;
 	ft_memdel((void **)&(e->sdl->format));
 	get_format_data(e->sdl);
-	SDL_DestroyTexture(e->sdl->screen);
-	//Init texture
+//	SDL_DestroyTexture(e->sdl->screen);
+	cleanup(&e->sdl->screen);
 	e->sdl->screen = SDL_CreateTexture(e->sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, e->sdl->scr_wid - GUI_WIDTH, e->sdl->scr_hei);
 	if(e->sdl->screen == NULL)
 	{
-		sdl_close(e->sdl);
+//		sdl_close(e->sdl);
+		on_sdl_close("wr", &e->sdl->window, &e->sdl->renderer);
 		sdl_error("Surface could not be created! ");
 		// return (sdl_error("Surface could not be created! "));
 	}
 	ft_memdel((void **)&(e->sdl->pixels));
 	if (!(e->sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * e->sdl->scr_hei * e->sdl->rt_wid)))
-		sdl_close(e->sdl);
+//		sdl_close(e->sdl);
+	{
+		on_sdl_close("wrt", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen);
+		exit (-1);
+	}
 	ft_memset(e->sdl->pixels, 0, e->sdl->scr_hei * e->sdl->rt_wid * sizeof(Uint32));
 	ft_memdel((void **)&(e->pix_obj));
-	e->pix_obj = (t_object **)malloc(sizeof(t_object) * e->sdl->rt_wid * e->sdl->scr_hei);
+	e->pix_obj = (t_object **)ft_smemalloc(sizeof(t_object) * e->sdl->rt_wid * e->sdl->scr_hei, "on_resize");
 	ft_memset(e->pix_obj, 0, e->sdl->scr_hei * e->sdl->rt_wid * sizeof(Uint32));
 	return (1);
 }
@@ -153,7 +158,9 @@ int		on_resize(Sint32 w, Sint32 h, t_env *e)
 int		ft_on_exit(t_env *e)
 {
 	e->sdl->event_loop = 0; //on_quit(): destroy_all_data, exit;
-	sdl_close(e->sdl);
+//	sdl_close(e->sdl);
+	on_sdl_close("wrttvv", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen,
+			&e->sdl->gui->gui_texture, &e->sdl->pixels, &e->sdl->format);
 	// system("leaks RT");
 	return (0);
 }

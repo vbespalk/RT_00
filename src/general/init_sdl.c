@@ -12,14 +12,14 @@
 
 #include "rt.h"
 
-int	get_format_data(t_sdl *sdl)
+int		get_format_data(t_sdl *sdl)
 {
 	SDL_Surface	*surface;
 
-	surface = SDL_CreateRGBSurface(0, sdl->rt_wid, sdl->scr_hei, 32, RMASK, GMASK, BMASK, AMASK);
-	if (!(surface))
-		return(sdl_error("SDL could not createRGBSurface! "));
-	sdl->pitch = surface->pitch / sizeof(unsigned int);
+	if (!(surface = SDL_CreateRGBSurface(0, sdl->rt_wid, sdl->scr_hei, 32,
+			RMASK, GMASK, BMASK, AMASK)))
+		sdl_error("get_format_data");
+	sdl->pitch = surface->pitch / sizeof(Uint32);
 	sdl->format = (SDL_PixelFormat *)malloc(sizeof(SDL_PixelFormat));
 	ft_memcpy(sdl->format, surface->format, sizeof(SDL_PixelFormat));
 	SDL_FreeSurface(surface);
@@ -28,91 +28,61 @@ int	get_format_data(t_sdl *sdl)
 
 int		sdl_init(t_sdl *sdl)
 {
-	SDL_RendererInfo	info;
-	Uint32				flags;
-	int					img_flags;
-	int 				img_init;
+	Uint32				flags[3];
 
-	//The window we'll be rendering to
-	flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
-	img_flags = IMG_INIT_JPG | IMG_INIT_PNG ;
+	flags[0] = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+	flags[1] = SDL_RENDERER_ACCELERATED;
+	flags[2] = IMG_INIT_JPG | IMG_INIT_PNG ;
 	sdl->window = NULL;
 	sdl->scr_wid = SCR_WID;
+	sdl->rt_wid = sdl->scr_wid - GUI_WIDTH;
 	sdl->scr_hei = SCR_HEI;
-	//The surface contained by the window
-	get_format_data(sdl);
-	//Initialize SDL
 	if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
-		return (sdl_error("SDL could not initialize! "));
-	if (!IMG_Init(img_flags))
-		return (sdl_img_error("SDL_IMG_Init: Failed to init required jpg and png support!\n"));
-	//Create window
-	sdl->window = SDL_CreateWindow( "RayTracer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCR_WID, SCR_HEI, flags);
-	if(sdl->window == NULL)
-	{
-		SDL_Quit();
-		return (sdl_error("Window could not be created! "));
-	}
-	sdl->renderer = SDL_CreateRenderer(sdl->window, -1, SDL_RENDERER_ACCELERATED);
-	if(sdl->renderer == NULL)
-	{
-		sdl_close(sdl);
-		return (sdl_error("Renderer could not be created! "));
-	}
-	//HOW IT WORKS??
-	SDL_GetRendererInfo(sdl->renderer, &info);
-	SDL_Log("RENDERER: %s", info.name);
-	printf("CURRENT VIDEO DRIVER %s\n", SDL_GetCurrentVideoDriver());
-	//Init texture
-	sdl->screen = SDL_CreateTexture(sdl->renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, sdl->rt_wid, sdl->scr_hei);
-	if(sdl->screen == NULL)
-	{
-		sdl_close(sdl);
-		return (sdl_error("Surface could not be created! "));
-	}
-	if (!(sdl->pixels = (Uint32 *)malloc(sizeof(Uint32) * sdl->scr_hei * sdl->rt_wid)))
-	{
-		sdl_close(sdl);
-		return (ft_perr_retu(NULL));
-	}
-	ft_memset(sdl->pixels, 0, sdl->scr_hei * sdl->rt_wid * sizeof(Uint32));
-	sdl->rt_cont = (SDL_Rect){0, 0,
-					sdl->rt_wid, sdl->scr_hei};
+		sdl_error("sdl_init");
+	if (!IMG_Init(flags[2]))
+		sdl_img_error("sdl_init");
+	if (!(sdl->window = SDL_CreateWindow( "RayTracer", SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED, SCR_WID, SCR_HEI, flags[0])))
+		sdl_error("sdl_init.");
+	if (!(sdl->renderer = SDL_CreateRenderer(sdl->window, -1, flags[1])))
+		sdl_error("sdl_init");
+	if (!(sdl->screen = SDL_CreateTexture(sdl->renderer, SDL_PIXELFORMAT_RGBA32,
+			SDL_TEXTUREACCESS_STATIC, sdl->rt_wid, sdl->scr_hei)))
+		sdl_error("sdl_init");
+	get_format_data(sdl);
+	sdl->pixels = (Uint32 *)ft_smemalloc(sizeof(Uint32) *
+			sdl->scr_hei * sdl->rt_wid, "sdl_init");
+	sdl->rt_cont = (SDL_Rect){0, 0, sdl->rt_wid, sdl->scr_hei};
 	return (0);
 }
 
-//MAKE VARIADIC clenup FUNCTION, LIKE HERE:
-//https://www.willusher.io/sdl2%20tutorials/2014/08/01/postscript-1-easy-cleanup
-
-void	sdl_close(t_sdl *sdl)
-{
-	SDL_DestroyTexture(sdl->screen);
-	//Destroy renderer
-	SDL_DestroyRenderer(sdl->renderer);
-	//Destroy window
-	SDL_DestroyWindow(sdl->window);
-	sdl->window = NULL;
-	SDL_DestroyTexture(sdl->gui->gui_texture);
-	//Quit SDL subsystems
-	SDL_Quit();
-}
+//void	sdl_close(t_sdl *sdl)
+//{
+//	if (sdl->screen)
+//		SDL_DestroyTexture(sdl->screen);
+//	if (sdl->gui->gui_texture)
+//		SDL_DestroyTexture(sdl->gui->gui_texture);
+//	if (sdl->renderer)
+//		SDL_DestroyRenderer(sdl->renderer);
+//	if (sdl->window)
+//		SDL_DestroyWindow(sdl->window);
+//	SDL_Quit();
+//}
 
 int 	sdl_error(char *message)
 {
 	if (message)
-		ft_putstr_fd(message, 2);
-	ft_putstr_fd("SDL Error: ", 2);
-	ft_putstr_fd(SDL_GetError(), 2);
-	ft_putstr_fd("\n", 2);
-	return (-1);
+		ON_ERR(message);
+	ft_putstr("SDL Error: ");
+	ft_putendl(SDL_GetError());
+	exit(-1);
 }
 
 int 	sdl_img_error(char *message)
 {
 	if (message)
-		ft_putstr_fd(message, 2);
-	ft_putstr_fd("SDL_Image Error: ", 2);
-	ft_putstr_fd(IMG_GetError(), 2);
-	ft_putstr_fd("\n", 2);
-	return (-1);
+		ON_ERR(message);
+	ft_putstr("SDL_Image Error: ");
+	ft_putendl(IMG_GetError());
+	exit(-1);
 }

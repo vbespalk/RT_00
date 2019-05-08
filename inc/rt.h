@@ -18,6 +18,8 @@
 # include <pthread.h>
 # include <stdint.h>
 # include <time.h>
+# include <stdarg.h>
+
 # include "json.h"
 
 /*
@@ -195,6 +197,7 @@ static const unsigned char
 */
 
 # define MLC_TEST(t, msg) if (!(t)) {ft_putendl(msg);exit(-1);}
+# define ON_ERR(msg) {ft_putstr("Fatal error at ");ft_putendl(msg);}
 
 # define DEFAULT_BUTTTON_WIDTH 93
 # define DEFAULT_BUTTTON_HEIGHT 20
@@ -239,8 +242,8 @@ typedef enum	e_btn_code
 	HEIGHT_DOWN, HEIGHT_UP,
 	REFL_DOWN, REFL_UP,
 	S_BLUR_DOWN, S_BLUR_UP,
-	T_BLUR_DOWN, T_BLUR_UP,
 	TRANSP_DOWN, TRANSP_UP,
+	T_BLUR_DOWN, T_BLUR_UP,
 	REFR_DOWN, REFR_UP,
 	DIFFUSE_DOWN, DIFFUSE_UP,
 	AMBIENT_DOWN, AMBIENT_UP,
@@ -693,12 +696,29 @@ void				delete_obj(t_list **obj_lst, Uint32 id);
 ** init_sdl.c
 */
 int					sdl_init(t_sdl *sdl);
-void				sdl_close(t_sdl *sdl);
+//void				sdl_close(t_sdl *sdl);
 int					event_handler(t_env *env);
 int 				sdl_error(char *message);
 int					get_format_data(t_sdl *sdl);
 int 				sdl_img_error(char *message);
 
+/*
+** sdl_cleanup.c
+*/
+
+# define cleanup(a) _Generic ((a), SDL_Window** : cleanup_sdl_window, SDL_Renderer** : cleanup_sdl_render, SDL_Texture**: cleanup_sdl_texture, SDL_Surface** : cleanup_sdl_surface)(a)
+
+void				cleanup_sdl_window(SDL_Window **win);
+void				cleanup_sdl_texture(SDL_Texture **tex);
+void				cleanup_sdl_surface(SDL_Surface **surf);
+void				cleanup_sdl_render(SDL_Renderer **rend);
+void				on_sdl_close(char *fmt, ...);
+
+/*
+** init_env.c
+*/
+
+int					init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl);
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -771,6 +791,7 @@ void					ft_parse_light(char **content, t_list **lst, Uint32 id);
 **	object.c
 */
 
+void					ft_balance_koefs(t_object *o);
 t_object				*ft_objectnew(Uint32 id);
 void					ft_parse_object
 							(char **content, t_list **lst, Uint32 id);
@@ -1111,6 +1132,7 @@ void					ft_parse_skybox(char **content, t_skybox **sky);
 Uint32					ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 void    				ft_skybox_del(t_skybox **sk);
+void					ft_load_sky_tex(t_skybox *skybox, bool *on, t_list **tex, t_sdl *sdl);
 
 /*
 ** checker.c
@@ -1188,8 +1210,8 @@ t_vector                rgb_to_hsv(float r, float g, float b);
 ** FROM MY LIBFT
 */
 //void	ft_perr_exit(char *message);
-int		ft_perr_retu(char *message);
-void	ft_usage(char *message);
+int						ft_perr_retu(char *message);
+void					ft_usage(char *message);
 
 
 #endif

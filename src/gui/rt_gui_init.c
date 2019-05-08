@@ -17,7 +17,7 @@
 ** all boxes listed in the same order as in e_btn_code enum.
 */
 
-const SDL_Rect g_btn_containers[] = (const SDL_Rect[]){
+const SDL_Rect g_btn_containers[] = {
 
 	(SDL_Rect){212, 51, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
 	(SDL_Rect){212, 88, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
@@ -75,8 +75,8 @@ int			gui_init(t_sdl *sdl)
 {
 	SDL_Surface *image;
 
-	if (IMG_Init(IMG_INIT_PNG) < 0)
-		return (-1);
+//	if (IMG_Init(IMG_INIT_PNG) < 0)
+//		return (-1);
 	MLC_TEST((sdl->gui = (t_gui*)malloc(sizeof(t_gui))), "gui alloc failed!");
 	MLC_TEST((image = IMG_Load(DEFAULT_GUI_TEX_NAME)),
 		"gui texture could not loaded");

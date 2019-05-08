@@ -12,27 +12,27 @@
 
 #include "rt.h"
 
-void	reset(t_env *e)
-{
-	t_list		*obj_lst;
-	t_scene		*scene;
-	t_object	*obj;
-
-	scene = e->scn;
-	scene->cam->cam_transl = scene->cam->origin;
-	scene->cam->angles = (t_vector){0.0f, 0.0f, 0.0f};
-	scene->cam->fov = FOV;
-	e->selected = NULL;
-	obj_lst = e->scn->objs;
-	while (obj_lst)
-	{
-		obj = (t_object *)(obj_lst->content);
-		obj->translate = obj->pos;
-		obj->rotate = obj->rot;
-		obj->scale = obj->size;
-		obj_lst = obj_lst->next;
-	}
-}
+//void	reset(t_env *e)
+//{
+//	t_list		*obj_lst;
+//	t_scene		*scene;
+//	t_object	*obj;
+//
+//	scene = e->scn;
+//	scene->cam->cam_transl = scene->cam->origin;
+//	scene->cam->angles = (t_vector){0.0f, 0.0f, 0.0f};
+//	scene->cam->fov = FOV;
+//	e->selected = NULL;
+//	obj_lst = e->scn->objs;
+//	while (obj_lst)
+//	{
+//		obj = (t_object *)(obj_lst->content);
+//		obj->translate = obj->pos;
+//		obj->rotate = obj->rot;
+//		obj->scale = obj->size;
+//		obj_lst = obj_lst->next;
+//	}
+//}
 
 static void	delnod_obj(void	*nod, size_t size)
 {
@@ -80,7 +80,7 @@ t_mode			*ft_new_node(int id)
 	return (node);
 }
 
-bool			ft_iter_lst(t_mode **nods, int id)
+t_bool			ft_iter_lst(t_mode **nods, int id)
 {
 	t_mode *ptr;
 	t_mode *prev;
@@ -112,16 +112,16 @@ bool			ft_iter_lst(t_mode **nods, int id)
 
 int					ft_switch_col_mode(t_env *e, Sint32 sum)
 {
-	bool deleted;
+	t_bool deleted;
 
-	if (e->col_mode == NULL)
+	if (e->color_mode == NULL)
 	{
-		e->col_mode = ft_new_node(sum);
+		e->color_mode = ft_new_node(sum);
 		deleted = false;
 	}
 	else
-		deleted = ft_iter_lst(&(e->col_mode), sum);
-	deleted ? ft_render(e) : ft_col_mode(e->sdl, e->col_mode);
+		deleted = ft_iter_lst(&(e->color_mode), sum);
+	deleted ? ft_render(e) : ft_col_mode(e->sdl, e->color_mode);
     return (0);
 }
 

@@ -59,16 +59,13 @@ Uint32 	ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit)
 		noise_val *= tex->pertubation;
 		noise_val -= floorf(noise_val);
 	}
-	/*
+/*
 ** EFFECTS: SINUS PERTURBATION
+**
+**	noise_val = (sinf((noise_val * 100.0f) * 2 * (float)M_PI / 200.f) + 1) * 0.5f;
 */
-//	noise_val = (sinf((noise_val * 100.0f) * 2 * (float)M_PI / 200.f) + 1) * 0.5f;
 	noise_val = tex->min_max[0] + (tex->min_max[1] - tex->min_max[0]) * noise_val;
 	noise_val = CLAMP(noise_val, 0, 1);
-//	color.argb[0] = (t_byte)(o->color.argb[0] * noise_val);
-//	color.argb[1] = (t_byte)(o->color.argb[1] * noise_val);
-//	color.argb[2] = (t_byte)(o->color.argb[2] * noise_val);
-//	color.argb[3] = (t_byte)(o->color.argb[3] * noise_val);
     color.argb[0] = (t_byte)(tex->color.argb[0] * noise_val);
 	color.argb[1] = (t_byte)(tex->color.argb[1] * noise_val);
 	color.argb[2] = (t_byte)(tex->color.argb[2] * noise_val);

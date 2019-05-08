@@ -12,15 +12,15 @@
 
 #include "rt.h"
 
-static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id, bool redraw)
+static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
+	t_bool redraw)
 {
 	if (redraw)
 	{
 		printf("NEW RENDER\n");
 		ft_render(e);
 	}
-	sdl->rt_cont = (SDL_Rect){0, 0,
-							  e->sdl->rt_wid, e->sdl->scr_hei};
+	sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
@@ -41,7 +41,8 @@ static void	ft_rt_loop(t_env *e)
 	{
 //		int x = SDL_GetTicks();
 		if ((btn_id = event_handler(e)))
-			sdl_draw_screen(e, e->sdl, btn_id, btn_id > (INVERTED + BTN_ID_SHIFT));
+			sdl_draw_screen(e, e->sdl, btn_id,
+				btn_id > (INVERTED + BTN_ID_SHIFT));
 		if (!btn_id)
 			sdl_draw_screen(e, e->sdl, 0, false);
 //		int y = SDL_GetTicks() - x;

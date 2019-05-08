@@ -1,6 +1,14 @@
-//
-// Created by ivoriik on 08.05.19.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_env.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/08 18:07:18 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/08 18:07:21 by vbespalk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
@@ -21,6 +29,10 @@ static int	ft_init_smpl(t_sdl *sdl, t_list **tex, t_procedural *dst[6])
 		if ((dst[i])->ramp_id != NULL)
 			ft_load_noise_ramp(dst[i], tex, sdl);
 	}
+	system("leaks vaporeon");
+	//Leak: 0x7fee32d19880  size=16  zone: DefaultMallocZone_0x10017c000  length: 11  "blue_marble"
+    //Leak: 0x7fee32d33fd0  size=16  zone: DefaultMallocZone_0x10017c000  length: 11  "gray_marble"
+	return (1);
 }
 
 static void	ft_obj_exposure(t_object *obj)
@@ -51,7 +63,7 @@ static void	ft_obj_exposure(t_object *obj)
 static void	ft_load_textures(t_list *objs, t_list **textures, t_sdl *sdl)
 {
 	t_object	*obj;
-	int 		i;
+	int			i;
 
 	while (objs)
 	{
@@ -85,8 +97,6 @@ int			init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	e->sdl = sdl;
 	textures = NULL;
 	e->scn->textures = textures;
-	ft_bzero(e->color_mode, sizeof(bool) * 5);
-	e->col_mode = NULL;
 	ft_init_smpl(sdl, &(e->scn->textures), e->smpl);
 	ft_load_textures(e->scn->objs, &textures, sdl);
 	if (e->scn->skybox != NULL)

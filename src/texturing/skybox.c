@@ -95,7 +95,7 @@ t_color		ft_apply_sky(t_skybox *sky, t_vector o, t_vector d)
 	return (col);
 }
 
-void		ft_load_sky_tex(t_skybox *skybox, bool *on, t_list **tex, t_sdl *sdl)
+void		ft_load_sky_tex(t_skybox *skybox, t_bool *on, t_list **tex, t_sdl *sdl)
 {
 	int 		i;
 

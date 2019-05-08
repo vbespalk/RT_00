@@ -12,7 +12,7 @@
 
 #include "sdl_event.h"
 
-bool	check_if_holdable(const uint32_t btn_id)
+t_bool	check_if_holdable(const uint32_t btn_id)
 {
 	return ((btn_id >= GRAYSCALE && btn_id <= INVERTED) ||
 			btn_id == SKYBOX);

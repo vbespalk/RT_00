@@ -1,32 +1,39 @@
-//
-// Created by ivoriik on 08.05.19.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sdl_cleanup.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/08 18:07:58 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/08 18:08:00 by vbespalk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "rt.h"
+#include "rt.h"
 
-
-void					cleanup_sdl_window(SDL_Window **win)
+void	cleanup_sdl_window(SDL_Window **win)
 {
 	if (*win)
 		SDL_DestroyWindow(*win);
 	*win = NULL;
 }
 
-void					cleanup_sdl_texture(SDL_Texture **tex)
+void	cleanup_sdl_texture(SDL_Texture **tex)
 {
 	if (*tex)
 		SDL_DestroyTexture(*tex);
 	*tex = NULL;
 }
 
-void					cleanup_sdl_surface(SDL_Surface **surf)
+void	cleanup_sdl_surface(SDL_Surface **surf)
 {
 	if (*surf)
 		SDL_FreeSurface(*surf);
 	*surf = NULL;
 }
 
-void					cleanup_sdl_render(SDL_Renderer **rend)
+void	cleanup_sdl_render(SDL_Renderer **rend)
 {
 	if (*rend)
 		SDL_DestroyRenderer(*rend);

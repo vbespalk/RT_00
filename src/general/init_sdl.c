@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   init_sdl.c										 :+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: vbespalk <marvin@42.fr>					+#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2018/11/07 17:47:37 by vbespalk		  #+#	#+#			 */
-/*   Updated: 2018/11/07 17:47:39 by vbespalk		 ###   ########.fr	   */
-/*																			*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_sdl.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/08 18:10:01 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/08 18:10:04 by vbespalk         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
@@ -32,16 +32,15 @@ int		sdl_init(t_sdl *sdl)
 
 	flags[0] = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
 	flags[1] = SDL_RENDERER_ACCELERATED;
-	flags[2] = IMG_INIT_JPG | IMG_INIT_PNG ;
-	sdl->window = NULL;
+	flags[2] = IMG_INIT_JPG | IMG_INIT_PNG;
 	sdl->scr_wid = SCR_WID;
 	sdl->rt_wid = sdl->scr_wid - GUI_WIDTH;
 	sdl->scr_hei = SCR_HEI;
-	if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 		sdl_error("sdl_init");
 	if (!IMG_Init(flags[2]))
 		sdl_img_error("sdl_init");
-	if (!(sdl->window = SDL_CreateWindow( "RayTracer", SDL_WINDOWPOS_UNDEFINED,
+	if (!(sdl->window = SDL_CreateWindow("RayTracer", SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED, SCR_WID, SCR_HEI, flags[0])))
 		sdl_error("sdl_init.");
 	if (!(sdl->renderer = SDL_CreateRenderer(sdl->window, -1, flags[1])))
@@ -69,7 +68,7 @@ int		sdl_init(t_sdl *sdl)
 //	SDL_Quit();
 //}
 
-int 	sdl_error(char *message)
+int		sdl_error(char *message)
 {
 	if (message)
 		ON_ERR(message);
@@ -78,7 +77,7 @@ int 	sdl_error(char *message)
 	exit(-1);
 }
 
-int 	sdl_img_error(char *message)
+int		sdl_img_error(char *message)
 {
 	if (message)
 		ON_ERR(message);

@@ -44,11 +44,17 @@ static void	object_mode_events_handle_2(t_env *e, const uint32_t id)
 	else if (id == S_BLUR_DOWN || id == S_BLUR_UP)
 		inc_val_in_range(&(e->selected->s_blur), id == S_BLUR_DOWN, 0, 1);
 	else if (id == TRANSP_DOWN || id == TRANSP_UP)
+	{
 		inc_val_in_range(&(e->selected->trans), id == TRANSP_DOWN, 0, 1);
+		printf("BEF BAL TRANSP %f\n", e->selected->trans);
+		ft_balance_koefs(e->selected);
+		printf("TRANSP %f\n", e->selected->trans);
+	}
 	else if (id == DIFFUSE_DOWN || id == DIFFUSE_UP)
 	{
 		inc_val_in_range(&(e->selected->diff), id == DIFFUSE_DOWN, 0, 1);
-		e->selected->spclr = 1.0f - e->selected->diff;
+		ft_balance_koefs(e->selected);
+//		e->selected->spclr = 1.0f - e->selected->diff;
 	}
 	else if (id == AMBIENT_DOWN || id == AMBIENT_UP)
 		inc_val_in_range(&(e->selected->ambnt), id == AMBIENT_DOWN, 0, 1);
@@ -67,7 +73,8 @@ static void	object_mode_events_handle_1(t_env *e, const uint32_t id)
 	else if (id == REFL_DOWN || id == REFL_UP)
 	{
 		inc_val_in_range(&(e->selected->spclr), id == REFL_DOWN, 0, 1);
-		e->selected->diff = 1.0f - e->selected->spclr;
+		ft_balance_koefs(e->selected);
+//		e->selected->diff = 1.0f - e->selected->spclr;
 	}
 	else if (id == REFR_DOWN || id == REFR_UP)
 		inc_val_in_range(&(e->selected->refr), id == REFR_DOWN, 1, 2.4);

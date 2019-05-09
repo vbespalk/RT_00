@@ -73,12 +73,12 @@ void		*ft_parse_cone(char **content, t_object *o)
 	return ((void *)cone);
 }
 
-void		ft_translate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_translate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone *cone;
 
 	if (!o)
-		return ;
+		return (0);
 	cone = (t_cone *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
@@ -94,14 +94,15 @@ void		ft_translate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_rotate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_rotate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone *cone;
 
 	if (!o)
-		return ;
+		return (0);
 	cone = (t_cone *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
@@ -117,14 +118,15 @@ void		ft_rotate_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		o->rotate[0] -= ROTAT_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone 	*cone;
 
 	if (!o)
-		return ;
+		return (0);
 	(void)tr_m;
 	(void)inv_m;
 	cone = (t_cone *)o->fig;
@@ -136,18 +138,19 @@ void		ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
 //	ft_3_transform_mat(tr_m, cone->o, cone->v, FLT_MIN);
 //	ft_3_inv_trans_mat(inv_m, -cone->o, -cone->v, FLT_MIN);
+    return (1);
 }
 
-void		ft_scale_hei_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_scale_hei_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cone 	*cone;
 	float 	h;
 
 	if (!o)
-		return ;
+		return (0);
 	cone = (t_cone *)o->fig;
 	if (cone->maxh == FLT_MAX && cone->minh == -FLT_MAX)
-		return ;
+		return (0);
 	if (cone->maxh == FLT_MAX || cone->minh == -FLT_MAX)
 		h = cone->maxh == FLT_MAX ? fabsf(cone->minh) : fabsf(cone->maxh);
 	else
@@ -165,9 +168,12 @@ void		ft_scale_hei_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 		cone->minh *= scale;
 	}
 	o->translate += (t_vector){FLT_MIN, h * scale - h, FLT_MIN};
-	cone->r[0] = cone->minh != -FLT_MAX ? fabsf(cone->minh * cone->tan) : FLT_MIN;
-	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
+    cone->tan = cone->minh != -FLT_MAX ? fabsf(cone->r[0] / cone->minh) : cone->tan;
+    cone->tan = cone->maxh != FLT_MAX ? fabsf(cone->r[1] / cone->maxh) : cone->tan;
+//	cone->r[0] = cone->minh != -FLT_MAX ? fabsf(cone->minh * cone->tan) : FLT_MIN;
+//	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
 	printf("HEI %f RAD %f\n", cone->maxh, cone->minh);
+    return (1);
 }

@@ -109,6 +109,7 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->checker = NULL;
 	o->texture_id = NULL;
 	o->texture = NULL;
+	o->composed = false;
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);
 	o->rotate[0] = ft_torad(o->rotate[0]);

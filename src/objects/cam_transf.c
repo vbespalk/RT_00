@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-void	ft_translate_cam(Uint32 key, t_vector *transl)
+int 	ft_translate_cam(Uint32 key, t_vector *transl)
 {
 
 	if (key == SDLK_w)
@@ -27,9 +27,10 @@ void	ft_translate_cam(Uint32 key, t_vector *transl)
 		(*transl)[0] += TRANS_F;
 	if (key == SDLK_e)
 		(*transl)[0] -= TRANS_F;
+    return (1);
 }
 
-void	ft_rotate_cam(Uint32 key, t_vector *angles)
+int 	ft_rotate_cam(Uint32 key, t_vector *angles)
 {
 	if (key == SDLK_UP)
 		(*angles)[0] += ROTAT_F;
@@ -43,9 +44,10 @@ void	ft_rotate_cam(Uint32 key, t_vector *angles)
 		(*angles)[2] -= ROTAT_F;
 	if (key == SDLK_PAGEDOWN)
 		(*angles)[2] += ROTAT_F;
+    return (1);
 }
 
-void	ft_scale_cam(Uint32 key, float *sc_factor)
+int 	ft_scale_cam(Uint32 key, float *sc_factor)
 {
 	if (key == SDLK_z)
 		*sc_factor = ((*sc_factor - SCALE_F) < DEG_TO_RAD(10.f)) ? \
@@ -53,5 +55,6 @@ void	ft_scale_cam(Uint32 key, float *sc_factor)
 	else if (key == SDLK_x)
 		*sc_factor = ((*sc_factor + SCALE_F) < DEG_TO_RAD(160)) ? *sc_factor + \
 	SCALE_F : DEG_TO_RAD(160);
+    return (1);
 }
 

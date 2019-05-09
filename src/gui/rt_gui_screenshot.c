@@ -33,6 +33,8 @@ void		make_screenshot(t_env *e)
 	ft_memdel((void **)&tmp);
 	SDL_RenderReadPixels(e->sdl->renderer, &(e->sdl->rt_cont), SDL_PIXELFORMAT_RGBA32,
 		sshot->pixels, sshot->pitch);
+//    SDL_RenderReadPixels(e->sdl->renderer, NULL, SDL_PIXELFORMAT_RGBA32,
+//		sshot->pixels, sshot->pitch);
 	ft_printf("ScreenShot \"%s\" saved with code: %d\n",
 		name, IMG_SavePNG(sshot, name));
 	ft_memdel((void **)&name);

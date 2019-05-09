@@ -364,6 +364,7 @@ struct				s_object
 {
 	Uint32			id;
 	float			dist;
+	t_bool          composed;
 
 	t_vector		translate;
 	t_vector		rotate;
@@ -399,13 +400,13 @@ struct				s_object
 	int				(*ft_is_inside)(t_object *o, t_vector pnt);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
 
-	void			(*ft_translate)
+	int	    		(*ft_translate)
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-	void			(*ft_rotate)
+	int	    		(*ft_rotate)
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-	void			(*ft_scale)
+	int	    		(*ft_scale)
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-	void			(*ft_scale_height)
+	int	    		(*ft_scale_height)
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 	Uint32			(*ft_mapping)
@@ -616,7 +617,7 @@ typedef struct		s_ray
 
 void				img_pixel_put(t_sdl *sdl, int x, int y, unsigned int color);
 Uint32				get_rgb(t_sdl *sdl, Uint8 red, Uint8 green, Uint8 blue);
-void				delete_obj(t_list **obj_lst, Uint32 id);
+int	    			delete_obj(t_list **obj_lst, Uint32 id);
 
 /*
 ** init_sdl.c
@@ -674,9 +675,9 @@ void					ft_get_start_stack(t_scene *scn);
 ** cam_transform
 */
 
-void					ft_translate_cam(Uint32 key, t_vector *rot);
-void					ft_rotate_cam(Uint32 key, t_vector *angles);
-void					ft_scale_cam(Uint32 key, float *sc_factor);
+int	    				ft_translate_cam(Uint32 key, t_vector *rot);
+int	    				ft_rotate_cam(Uint32 key, t_vector *angles);
+int	    				ft_scale_cam(Uint32 key, float *sc_factor);
 
 /*
 **	render.c
@@ -706,13 +707,13 @@ void					ft_parse_object
 /*
 **	plane.c
 */
-
+t_plane		            *ft_planenew(t_object *o);
 void					*ft_parse_plane(char **content, t_object *o);
-void					ft_translate_plane
+int	    				ft_translate_plane
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_plane
+int	    				ft_rotate_plane
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_plane
+int	    				ft_scale_plane
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -734,11 +735,11 @@ t_vector				ft_get_norm_plane(void *fig, t_vector coll);
 */
 
 char					*ft_parse_disk(char **content, t_object *o);
-void					ft_translate_disk
+int	    				ft_translate_disk
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_disk
+int	    				ft_rotate_disk
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_disk
+int	    				ft_scale_disk
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -760,13 +761,13 @@ t_vector				ft_get_norm_disk(void *fig, t_vector coll);
 */
 
 char					*ft_parse_box(char **content, t_object *o);
-void					ft_translate_box
+int	    				ft_translate_box
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_box
+int	    				ft_rotate_box
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_box
+int	    				ft_scale_box
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_hei_null
+int	    				ft_scale_hei_null
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 /*
 **	box_utils.c
@@ -804,11 +805,11 @@ void					ft_scale_aabb
 
 void					*ft_parse_sphere
 			(char **content, t_object *o);
-void					ft_translate_sphere
+int	    				ft_translate_sphere
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_sphere
+int	    				ft_rotate_sphere
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_sphere
+int	    				ft_scale_sphere
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -832,13 +833,13 @@ t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
 void					*ft_parse_cone
 			(char **content, t_object *o);
-void					ft_translate_cone
+int	    				ft_translate_cone
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_cone
+int	    				ft_rotate_cone
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_cone
+int	    				ft_scale_cone
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_hei_cone
+int	    				ft_scale_hei_cone
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -862,13 +863,13 @@ void					ft_get_coll_pnts
 
 void					*ft_parse_cylinder
 			(char **content, t_object *o);
-void					ft_translate_cylinder
+int	    				ft_translate_cylinder
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_cylinder
+int	    				ft_rotate_cylinder
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_cylinder
+int	    				ft_scale_cylinder
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_hei_cylinder
+int	    				ft_scale_hei_cylinder
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -891,13 +892,13 @@ t_vector				ft_get_norm_cylinder(void *fig, t_vector coll);
 
 char					*ft_parse_prbld
 			(char **content, t_object *o);
-void					ft_translate_prbld
+int	    				ft_translate_prbld
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_prbld
+int	    				ft_rotate_prbld
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_prbld
+int	    				ft_scale_prbld
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_hei_prbld
+int	    				ft_scale_hei_prbld
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -921,11 +922,11 @@ t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
 
 char					*ft_parse_torus
 			(char **content, t_object *o);
-void					ft_translate_torus
+int	    				ft_translate_torus
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_rotate_torus
+int	    				ft_rotate_torus
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
-void					ft_scale_torus
+int	    				ft_scale_torus
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 /*
@@ -995,8 +996,8 @@ t_color					ft_add_colors(t_color c1, t_color c2);
 */
 
 int						ft_switch_col_mode(t_env *e, Sint32 sum);
-void					ft_switch_skybox(t_sdl *sdl, t_scene *scn);
-void					ft_set_exposure(Sint32 sum, t_object *o, t_env *e);
+int	    				ft_switch_skybox(t_sdl *sdl, t_scene *scn);
+int	    				ft_set_exposure(Sint32 sum, t_object *o, t_env *e);
 
 /*
 **  textures.c
@@ -1061,7 +1062,7 @@ void					ft_parse_skybox(char **content, t_skybox **sky);
 Uint32					ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 void					ft_skybox_del(t_skybox **sk);
-void					ft_load_sky_tex(t_skybox *skybox, t_bool *on, t_list **tex, t_sdl *sdl);
+int	    				ft_load_sky_tex(t_skybox **skybox, t_list **tex, t_sdl *sdl);
 
 
 /*
@@ -1096,12 +1097,16 @@ void					ft_parse_procedural(char **content, t_procedural **tex);
 void		   			ft_init_lattice(t_procedural **tex, char *function, unsigned int seed);
 void					ft_set_procedural(t_procedural **tex, char *function, Uint32 col);
 void					ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl);
+void                    ft_noise_del(t_procedural **noise);
+
 /*
 ** init_checker.c
 */
 
 void					ft_parse_checker(char **content, t_checkbrd **tex);
 void					ft_set_checker(t_checkbrd **chkr, Uint32 col);
+void                    ft_checker_del(t_checkbrd ** checker);
+
 
 /*
 ** color_modes.c

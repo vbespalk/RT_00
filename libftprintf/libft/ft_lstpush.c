@@ -30,7 +30,5 @@ void	ft_lstpush(t_list **alst, t_list *new)
 			else
 				*alst = new;
 		}
-		else
-			alst = &new;
 	}
 }

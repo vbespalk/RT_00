@@ -51,12 +51,12 @@ char		*ft_parse_prbld(char **content, t_object *o)
 	return ((void *)prbl);
 }
 
-void		ft_translate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_translate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_prbld	*prbl;
 
 	if (!o)
-		return ;
+		return (1);
 	prbl = (t_prbld *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
@@ -74,14 +74,15 @@ void		ft_translate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
 //	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 //	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_prbld *prbl;
 
 	if (!o)
-		return ;
+		return (1);
 	prbl = (t_prbld *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
@@ -99,14 +100,15 @@ void		ft_rotate_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
 //	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 //	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_prbld *prbl;
 
 	if (!o)
-		return ;
+		return (1);
 	prbl = (t_prbld *)o->fig;
 	float scale = 1;
 	if (key == SDLK_z && prbl->r * scale < 800000.f)
@@ -128,14 +130,15 @@ void		ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
 ////	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 ////	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void					ft_scale_hei_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int				ft_scale_hei_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_prbld *prbl;
 
 	if (!o)
-		return ;
+		return (1);
 	prbl = (t_prbld *)o->fig;
 	float scale = 1;
 	if (key == SDLK_r)
@@ -151,4 +154,5 @@ void					ft_scale_hei_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *i
 	else
 		scale = 0;
 	printf("HEI %f RAD %f\n", prbl->maxh, prbl->r);
+    return (1);
 }

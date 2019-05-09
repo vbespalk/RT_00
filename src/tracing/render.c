@@ -122,10 +122,10 @@ void			ft_render(t_env *e)
 	int			i = 0;
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
-	ft_get_start_stack(e->scn);
-	ft_update_obj_lst(e->scn->cam, e->scn->objs);
+    ft_get_start_stack(e->scn);
+    ft_update_obj_lst(e->scn->cam, e->scn->objs);
 	i = -1;
-	while (++i < THREADS)
+    while (++i < THREADS)
 	{
 		thrargs[i].i = i;
 		thrargs[i].e = e;

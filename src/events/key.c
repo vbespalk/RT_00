@@ -12,50 +12,44 @@
 
 #include "rt.h"
 
-//void	reset(t_env *e)
-//{
-//	t_list		*obj_lst;
-//	t_scene		*scene;
-//	t_object	*obj;
-//
-//	scene = e->scn;
-//	scene->cam->cam_transl = scene->cam->origin;
-//	scene->cam->angles = (t_vector){0.0f, 0.0f, 0.0f};
-//	scene->cam->fov = FOV;
-//	e->selected = NULL;
-//	obj_lst = e->scn->objs;
-//	while (obj_lst)
-//	{
-//		obj = (t_object *)(obj_lst->content);
-//		obj->translate = obj->pos;
-//		obj->rotate = obj->rot;
-//		obj->scale = obj->size;
-//		obj_lst = obj_lst->next;
-//	}
-//}
-
 static void	delnod_obj(void	*nod, size_t size)
 {
-	t_object *obj;
+	t_object    *obj;
+	int         i;
 
 	obj = (t_object *)nod;
+	printf("DELNOD OBJ\n");
+	if (obj->composed && (i = -1))
+        while (++i < BOX_FACES)
+            delnod_obj(((t_box *) obj->fig)->face[i], sizeof(t_object));
 	ft_memdel((void **)&obj->fig);
+	ft_memdel((void **)&obj->texture_id);
+	if (obj->noise)
+    {
+	    printf("DEL NOISE\n");
+	    ft_noise_del(&obj->noise);
+    }
+	if (obj->checker)
+    {
+	    ft_checker_del(&obj->checker);
+        printf("DEL CHECKER\n");
+    }
 	ft_memdel(&nod);
 }
 
-void	delete_obj(t_list **obj_lst, Uint32 id)
+int	    delete_obj(t_list **obj_lst, Uint32 id)
 {
 	t_list 		*temp;
 	t_list 		*prev;
 
 	if (!obj_lst || !(*obj_lst))
-		return ;
+		return (0);
 	temp = *obj_lst;
 	if (temp && ((t_object *)(temp->content))->id == id)
 	{
 		*obj_lst = temp->next;
 		ft_lstdelone(&temp, delnod_obj);
-		return ;
+		return (1);
 	}
 	while (temp)
 	{
@@ -65,7 +59,7 @@ void	delete_obj(t_list **obj_lst, Uint32 id)
 		{
 			prev->next = temp->next;
 			ft_lstdelone(&temp, delnod_obj);
-			return ;
+			return (1);
 		}
 	}
 }
@@ -122,38 +116,17 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 	else
 		deleted = ft_iter_lst(&(e->color_mode), sum);
 	deleted ? ft_render(e) : ft_col_mode(e->sdl, sum);
-    return (0);
+    return (2);
 }
 
-
-//int					ft_switch_col_mode(t_env *e, Sint32 sum)
-//{
-//	unsigned int id;
-//
-//	if (sum == SDLK_g)
-//		e->color_mode[MD_GRAYSCALE] = !(e->color_mode[MD_GRAYSCALE]);
-//	if (sum == SDLK_u)
-//		e->color_mode[MD_SEPIA] = !(e->color_mode[MD_SEPIA]);
-//	if (sum == SDLK_h)
-//		e->color_mode[MD_NEGATIVE] = !(e->color_mode[MD_NEGATIVE]);
-//	if (sum == SDLK_i)
-//		e->color_mode[MD_INVERTED] = !(e->color_mode[MD_INVERTED]);
-//	e->color_mode[MD_COLOR] = (e->color_mode[MD_GRAYSCALE]
-//							   || e->color_mode[MD_SEPIA]
-//							   || e->color_mode[MD_NEGATIVE]
-//							   || e->color_mode[MD_INVERTED]) ? false : true;
-//	if (e->color_mode[MD_COLOR])
-//		return (1);
-//	ft_col_mode(e->sdl, e->color_mode);
-//	return (1);
-//}
-
-
-void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
+int                ft_switch_skybox(t_sdl *sdl, t_scene *scn)
 {
 
     if (scn->skybox != NULL)
-		scn->skybox_on = !scn->skybox_on;
+    {
+        printf("NOT NULL SKY\n");
+        scn->skybox_on = !scn->skybox_on;
+    }
 	else
 	{
         scn->skybox = (t_skybox *) ft_smemalloc(sizeof(t_skybox), "ft_switch_skybox");
@@ -164,11 +137,15 @@ void                    ft_switch_skybox(t_sdl *sdl, t_scene *scn)
         scn->skybox->textur_id[4] = ft_strdup(SKBX_POSY);
         scn->skybox->textur_id[5] = ft_strdup(SKBX_POSX);
 		scn->skybox->bbx = ft_init_aabb(ft_3_zeropointnew(), ft_3_zeropointnew());
-		ft_load_sky_tex(scn->skybox, &(scn->skybox_on), &scn->textures, sdl);
+		if (ft_load_sky_tex(&scn->skybox, &scn->textures, sdl) == 0)
+            return (0);
+		scn->skybox_on = true;
+		printf("AFT LOAD SKY %p\n", scn->skybox);
     }
+    return (1);
 }
 
-void	ft_set_exposure(Sint32 sum, t_object *o, t_env *e)
+int	    ft_set_exposure(Sint32 sum, t_object *o, t_env *e)
 {
 	if (sum == SDLK_0)
 	{
@@ -195,4 +172,5 @@ void	ft_set_exposure(Sint32 sum, t_object *o, t_env *e)
 		o->tex_pnt = sum == SDLK_3 ? o->noise : e->smpl[sum - SDLK_4];
 		o->exposure = EXP_NOISE;
 	}
+    return (1);
 }

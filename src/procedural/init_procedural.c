@@ -21,8 +21,8 @@ static void     ft_init_mrbl(t_procedural *tex, char *ramp)
 static void     ft_init_sandstn(t_procedural *tex, char *ramp)
 {
 	if (tex->ramp_id == NULL)
-        tex->ramp_id = ft_strdup(ramp);
-	tex->ramp = NULL;
+	    tex->ramp_id = ft_strdup(ramp);
+    tex->ramp = NULL;
 	tex->octaves = 5;
 	tex->scale = 1.f;
 	tex->gain = 0.5f;
@@ -139,4 +139,19 @@ void	ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl)
 		ft_memdel((void **)&(n->ramp_id));
 		n->ft_get_color = ft_wrapped_noise_col;
 	}
+}
+
+void    ft_noise_del(t_procedural **noise)
+{
+    if (!noise || !(*noise))
+    {
+        printf("NULL NOISE\n");
+        return ;
+    }
+    if ((*noise)->noise_ptr)
+        ft_memdel((void **)&((*noise)->noise_ptr->value_table));
+    ft_memdel((void **)&(*noise)->noise_ptr);
+    ft_memdel((void **)&(*noise)->ramp_id);
+    ft_memdel((void **)noise);
+    printf("DEL NOISE AT FT_NOISE_DEL\n");
 }

@@ -89,9 +89,18 @@ static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
 	return (node);
 }
 
+//        LEAKS
+//          |
+//          |
+//          |
+//       \      /
+//        \    /
+//         \  /
+//          \/
+
 void				ft_get_start_stack(t_scene *scn)
 {
-	t_list		*objs;
+    t_list		*objs;
 	t_list		*node;
 	t_object	*o;
 	int 		len;
@@ -109,7 +118,7 @@ void				ft_get_start_stack(t_scene *scn)
 		}
 		node = node->next;
 	}
-	if (len == 0)
+    if (len == 0)
 		scn->cam->inner_o = NULL;
 	else if (len == 1)
 		scn->cam->inner_o = (t_object *)(objs->content);

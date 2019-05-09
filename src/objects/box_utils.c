@@ -66,3 +66,8 @@ t_vector	ft_get_norm_box(void *fig, t_vector coll)
 	(void)coll;
 	return (ft_3_nullpointnew());
 }
+
+//void        ft_del_composed(t_box **box)
+//{
+//
+//}

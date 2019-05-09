@@ -48,12 +48,12 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	return ((void *)clnd);
 }
 
-void		ft_translate_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_translate_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cylinder *clnd;
 
 	if (!o)
-		return ;
+		return (0);
 	clnd = (t_cylinder *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
@@ -69,14 +69,15 @@ void		ft_translate_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *i
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.0f / clnd->r);
+    return (1);
 }
 
-void		ft_rotate_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_rotate_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cylinder *clnd;
 
 	if (!o)
-		return ;
+		return (0);
 	clnd = (t_cylinder *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
@@ -92,14 +93,15 @@ void		ft_rotate_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_
 		o->rotate[0] -= ROTAT_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.0f / clnd->r);
+    return (1);
 }
 
-void		ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cylinder *clnd;
 
 	if (!o)
-		return ;
+		return (0);
 	clnd = (t_cylinder *)o->fig;
 	float scale = 1.0f;
 	if (key == SDLK_z)
@@ -114,14 +116,15 @@ void		ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 	printf("RAD %f maxh %f\n", clnd->r, clnd->maxh);
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.0f / clnd->r);
+    return (1);
 }
 
-void		ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_cylinder *clnd;
 
 	if (!o)
-		return ;
+		return (0);
 	clnd = (t_cylinder *)o->fig;
 	float scale = 1;
 	if (key == SDLK_r)
@@ -137,4 +140,5 @@ void		ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *i
 	else
 		scale = 0;
 	printf("HEI %f RAD %f\n", clnd->maxh, clnd->r);
+    return (1);
 }

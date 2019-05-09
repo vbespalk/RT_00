@@ -95,19 +95,22 @@ t_color		ft_apply_sky(t_skybox *sky, t_vector o, t_vector d)
 	return (col);
 }
 
-void		ft_load_sky_tex(t_skybox *skybox, t_bool *on, t_list **tex, t_sdl *sdl)
+int		    ft_load_sky_tex(t_skybox **skybox, t_list **tex, t_sdl *sdl)
 {
 	int 		i;
 
 	i = -1;
 	while (++i < BOX_FACES)
-		if (!(skybox->textur[i] = init_texture(tex, sdl,
-											   skybox->textur_id[i])))
+		if (!((*skybox)->textur[i] = init_texture(tex, sdl,
+                                                  (*skybox)->textur_id[i])))
 		{
-			ft_skybox_del(&(skybox));
-			break ;
+            printf("DEL SKY %p\n", *skybox);
+            ft_skybox_del(skybox);
+            printf("DELETED at %p\n", *skybox);
+            return (0);
 		}
-	*on = (skybox != NULL) ? true : false;
+	printf("SKY %p\n", *skybox);
+    return (1);
 }
 
 void    ft_skybox_del(t_skybox **sk)

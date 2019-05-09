@@ -18,34 +18,35 @@ int		on_key_down(SDL_Keycode sum, Uint16 mod, t_env *e)
 		|| sum == SDLK_s || sum == SDLK_d \
 		|| sum == SDLK_q || sum == SDLK_e)
 	{
-		e->selected ? e->selected->ft_translate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
-	ft_translate_cam(sum, &(e->scn->cam->origin)); //<-----------------------------CAMERA TRANSLATION??????
+        return (e->selected ? e->selected->ft_translate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
+	ft_translate_cam(sum, &(e->scn->cam->origin))); //<-----------------------------CAMERA TRANSLATION??????
 	}
 	if (sum == SDLK_UP || sum == SDLK_DOWN || \
 		sum == SDLK_LEFT || sum == SDLK_RIGHT || \
 		sum == SDLK_PAGEDOWN|| sum == SDLK_PAGEUP)
 	{
-		e->selected ? e->selected->ft_rotate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
-	ft_rotate_cam(sum, &(e->scn->cam->angles));
+        return (e->selected ? e->selected->ft_rotate(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
+	ft_rotate_cam(sum, &(e->scn->cam->angles)));
 	}
 	if (sum == SDLK_z || sum == SDLK_x)
 	{
-		e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
-	ft_scale_cam(sum, &(e->scn->cam->fov)); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
+        return (e->selected ? e->selected->ft_scale(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)) : \
+	ft_scale_cam(sum, &(e->scn->cam->fov))); //<------------------SCALING!!! DO SMTH WITH THIS!!!!!!
 	}
 	if (e->selected && (sum == SDLK_r || sum == SDLK_t))
-		e->selected->ft_scale_height(sum, e->selected, &(e->selected->transform), &(e->selected->inverse));
+        return (e->selected->ft_scale_height(sum, e->selected, &(e->selected->transform), &(e->selected->inverse)));
 	if (sum == SDLK_DELETE && e->selected)
 	{
 		delete_obj(&(e->scn->objs), e->selected->id);
 		e->selected = NULL;
+        return (1);
 	}
 	if (sum == SDLK_g || sum == SDLK_u || sum == SDLK_h || sum == SDLK_i)
         return (ft_switch_col_mode(e, sum));
 	if (sum == SDLK_b)
-	    ft_switch_skybox(e->sdl, e->scn);
+        return (ft_switch_skybox(e->sdl, e->scn));
 	if (e->selected && (sum >= SDLK_0 && sum <= SDLK_9))
-		ft_set_exposure(sum, e->selected, e);
+        return (ft_set_exposure(sum, e->selected, e));
 //	if (sum == SDLK_r)
 //		reset(e);
 	if (sum == SDLK_c)
@@ -115,7 +116,6 @@ int		on_rbutton_down(int x, int y, t_env *e)
 {
 	e->selected = NULL;
 	return (0);
-	// printf("right but_down %d,%d\n", x, y);
 }
 
 int		on_lbutton_up(int x, int y, t_env *e)
@@ -159,7 +159,8 @@ int		ft_on_exit(t_env *e)
 {
 	e->sdl->event_loop = 0; //on_quit(): destroy_all_data, exit;
 //	sdl_close(e->sdl);
-	on_sdl_close("wrttvv", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen,
+    system("leaks RT");
+    on_sdl_close("wrttvv", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen,
 			&e->sdl->gui->gui_texture, &e->sdl->pixels, &e->sdl->format);
 	// system("leaks RT");
 	return (0);

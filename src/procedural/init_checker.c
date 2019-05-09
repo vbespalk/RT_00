@@ -33,14 +33,15 @@ void                    ft_parse_checker(char **content, t_checkbrd **tex)
 			continue ;
 		if (ft_isdigit(color[i][0]))
 			(*tex)->color[i] = SDL_Swap32(ft_limit_uint(
-					0, 0xffffff, (unsigned int)ft_atoi_base(color[i], 16)) << 8);
+					0, 0xffffff, ft_atoi_base(color[i], 16)) << 8);
 		else if (!ft_strcmp(color[i], TEX_GR_MRBL) || !ft_strcmp(color[i], TEX_BL_MRBL)
 		|| !ft_strcmp(color[i], TEX_WM_MRBL) || !ft_strcmp(color[i], TEX_SANDSTN) ||
 		!ft_strcmp(color[i], TEX_RD_MRBL) || !ft_strcmp(color[i], TEX_GN_MRBL) ||
 		!ft_strcmp(color[i], TEX_LATTICE))
 			ft_set_procedural(&((*tex)->noise[i]), color[i], 0xFFFFFF);
 		else
-			printf("WARNING: WRONG COLOR / TEXTURE VALUE, SET TO DEFAULT\n");
+			ft_putendl(ON_WARN "ft_parse checker: color vlue set to default\n");
+        ft_memdel((void **)&color[i]);
 	}
 	(*tex)->size = CLAMP((unsigned int)size, 1, 15);
 	ft_init_checker(*tex);
@@ -53,4 +54,15 @@ void	ft_set_checker(t_checkbrd **chkr, Uint32 col)
 	(*chkr)->color[0] = col;
 	(*chkr)->color[1] = 0xFFFFFF;
 	(*chkr)->size = 2;
+}
+
+void    ft_checker_del(t_checkbrd ** checker)
+{
+    if (!checker || !(*checker))
+        return ;
+    if ((*checker)->noise[0])
+        ft_noise_del(&(*checker)->noise[0]);
+    if ((*checker)->noise[1])
+        ft_noise_del(&(*checker)->noise[1]);
+    ft_memdel((void **)checker);
 }

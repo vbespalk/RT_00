@@ -51,12 +51,12 @@ void		*ft_parse_sphere(char **content, t_object *o)
 	return ((void *)sph);
 }
 
-void		ft_translate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_translate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_sphere	*sph;
 
 	if (!o)
-		return ;
+		return (0);
 	sph = (t_sphere *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
@@ -72,14 +72,15 @@ void		ft_translate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, ft_3_nullpointnew(), sph->radius);
 	ft_3_inv_trans_mat(inv_m, -o->translate, ft_3_nullpointnew(), 1.0f / sph->radius);
+    return (1);
 }
 
-void		ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_sphere *sph;
 
 	if (!o)
-		return ;
+		return (0);
 	sph = (t_sphere *)o->fig;
 	if (key == SDLK_DOWN)
 		sph->theta -= ROTAT_F;
@@ -104,14 +105,15 @@ void		ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	if (!IN_RANGE(sph->theta, 0, 2 * M_PI))
 		sph->theta = sph->theta < 0 ? sph->theta + 2 * (float)M_PI : sph->theta - 2 * (float)M_PI;
 	printf("ANGLES THETA %f, PHI %f\n", sph->theta, sph->phi);
+    return (1);
 }
 
-void		ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_sphere *sph;
 
 	if (!o)
-		return ;
+		return (0);
 	sph = (t_sphere *)o->fig;
 	float scale = 1;
 	if (key == SDLK_z)
@@ -123,4 +125,5 @@ void		ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	sph->radius *= scale;
 	ft_3_transform_mat(tr_m, o->translate, ft_3_nullpointnew(), sph->radius);
 	ft_3_inv_trans_mat(inv_m, -o->translate, ft_3_nullpointnew(), 1.0f / sph->radius);
+    return (1);
 }

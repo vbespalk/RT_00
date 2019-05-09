@@ -47,12 +47,12 @@ char		*ft_parse_torus(char **content, t_object *o)
 	return ((void *)trs);
 }
 
-void		ft_translate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_translate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_torus	*trs;
 
 	if (!o)
-		return ;
+		return (0);
 	trs = (t_torus *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
@@ -68,14 +68,15 @@ void		ft_translate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_rotate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_rotate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_torus *trs;
 
 	if (!o)
-		return ;
+		return (0);
 	trs = (t_torus *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
@@ -91,14 +92,15 @@ void		ft_rotate_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		o->rotate[0] -= ROTAT_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_torus *trs;
 
 	if (!o)
-		return ;
+		return (0);
 	(void)tr_m;
 	(void)inv_m;
 	trs = (t_torus *)o->fig;
@@ -111,4 +113,5 @@ void		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		scale -= SCALE_F;
 	trs->r_inner = trs->r_inner * scale;
 	trs->r_outer = trs->r_outer * scale;
+    return (1);
 }

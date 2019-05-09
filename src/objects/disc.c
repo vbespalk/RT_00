@@ -56,12 +56,12 @@ char		*ft_parse_disk(char **content, t_object *o)
 	return ((void *)dsk);
 }
 
-void		ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_disk *dsk;
 
 	if (!o)
-		return ;
+		return (0);
 	dsk = (t_disk *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
@@ -77,14 +77,15 @@ void		ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_disk *dsk;
 
 	if (!o)
-		return ;
+		return (0);
 	dsk = (t_disk *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
@@ -101,14 +102,15 @@ void		ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	printf("ROT %f,%f,%f\n", RAD_TO_DEG(o->rotate[0]), RAD_TO_DEG(o->rotate[1]), RAD_TO_DEG(o->rotate[2]));
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }
 
-void		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int	    	ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_disk *dsk;
 
 	if (!o)
-		return ;
+		return (0);
 	dsk = (t_disk *)o->fig;
 	float scale = 1;
 	if (key == SDLK_z)
@@ -123,4 +125,5 @@ void		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
+    return (1);
 }

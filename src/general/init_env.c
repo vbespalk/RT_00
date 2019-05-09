@@ -29,9 +29,6 @@ static int	ft_init_smpl(t_sdl *sdl, t_list **tex, t_procedural *dst[6])
 		if ((dst[i])->ramp_id != NULL)
 			ft_load_noise_ramp(dst[i], tex, sdl);
 	}
-	system("leaks rt");
-	//Leak: 0x7fee32d19880  size=16  zone: DefaultMallocZone_0x10017c000  length: 11  "blue_marble"
-    //Leak: 0x7fee32d33fd0  size=16  zone: DefaultMallocZone_0x10017c000  length: 11  "gray_marble"
 	return (1);
 }
 
@@ -89,19 +86,14 @@ static void	ft_load_textures(t_list *objs, t_list **textures, t_sdl *sdl)
 
 int			init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 {
-	t_list		*textures;
-
 	e->scn = scene;
 	e->asp_rat = (float)sdl->rt_wid / (float)sdl->scr_hei;
 	e->pix_obj = obj_pix;
 	e->sdl = sdl;
-	textures = NULL;
-	e->scn->textures = textures;
 	ft_init_smpl(sdl, &(e->scn->textures), e->smpl);
-	ft_load_textures(e->scn->objs, &textures, sdl);
+	ft_load_textures(e->scn->objs, &e->scn->textures, sdl);
 	if (e->scn->skybox != NULL)
-		ft_load_sky_tex(e->scn->skybox, &(e->scn->skybox_on), &textures, sdl);
+		e->scn->skybox_on = ft_load_sky_tex(&e->scn->skybox, &e->scn->textures, sdl);
 	e->selected = NULL;
-	system("leaks rt");
 	return (0);
 }

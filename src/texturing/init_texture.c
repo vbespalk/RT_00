@@ -42,7 +42,7 @@ SDL_Surface		*init_texture(t_list **textures, t_sdl *sdl, char *id)
 			lst = lst->next;
 		}
 	}
-	t = load_texture(sdl, id);
+    t = load_texture(sdl, id);
 	if (!t)
 		return (NULL);
 	ft_lstpush(textures, ft_nodenew((void *)t, sizeof(t_texture)));

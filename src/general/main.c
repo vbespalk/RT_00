@@ -116,7 +116,7 @@ static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id, bool redraw)
 {
 	if (redraw)
 	{
-		printf("NEW RENDER\n");
+//		printf("NEW RENDER\n");
 		ft_render(e);
 	}
 	sdl->rt_cont = (SDL_Rect){0, 0,

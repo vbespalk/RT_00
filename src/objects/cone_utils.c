@@ -75,12 +75,15 @@ static float	get_cides_coll(
 			*norm = ft_3_tounitvector(
 				ft_3_norm_transform(
 					&(obj->inverse),
-					*coll - ft_3_vector_scale(
-						(t_vector){ 0, (*coll)[1], 0 },
+					hit[i[0]] - ft_3_vector_scale(
+						(t_vector){ 0, hit[i[0]][1], 0 },
 						powf(cone->tan, 2.0f) + 1)));
 			if (obj->is_neg)
 				uhit[i[0]] += ft_3_vector_scale(*norm, SHIFT);
 			i[1] = ft_inside_type(objs, uhit[i[0]]);
+			(*norm)[3] = i[1];
+			if (obj->is_neg && i[1] != 1)
+				*norm = ft_3_vector_invert(*norm);
 			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
 				t[i[0]] = 0;
 			*coll = hit[i[0]];
@@ -116,9 +119,6 @@ static float	get_caps_coll(
 		: 1;
 	pnts[2] = pnts[0] + ft_3_vector_scale(od[1], t[0]);
 	pnts[3] = pnts[1] + ft_3_vector_scale(od[1], t[1]);
-//	printf("1. T %f, r %f, sq_r %f, 2. T %f, r %f, sq_r %f\n",
-//			t[0], ft_3_vector_dot(hit[0], hit[0]), sq_r[0],
-//			t[1], ft_3_vector_dot(hit[1], hit[1]), sq_r[1]);
 	i[0] = -1;
 	while (++i[0] < 2)
 	{
@@ -131,6 +131,9 @@ static float	get_caps_coll(
 			if (obj->is_neg)
 				pnts[i[0] + 4] += ft_3_vector_scale(*norm, SHIFT);
 			i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
+			(*norm)[3] = i[1];
+			if (obj->is_neg && i[1] != 1)
+				*norm = ft_3_vector_invert(*norm);
 			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
 				t[i[0]] = 0;
 			*coll_pnt = pnts[i[0] + 2];
@@ -172,32 +175,38 @@ float			ft_collide_cone(t_list **objs, t_object *obj,
 		return (FLT_MAX);
 	t = get_closer_pnt(res, hit, norms, coll, obj);
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
-	coll->norm = (obj->is_neg)
-		? ft_3_vector_invert(obj->ft_get_norm(obj->fig, coll->coll_pnt))
-		: obj->ft_get_norm(obj->fig, coll->coll_pnt);
-	coll->o = (obj->is_neg)
-		? ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object)
-		: obj;
+	if (obj->is_neg)
+	{
+		coll->coll_pnt += ft_3_vector_scale(
+			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
+		coll->coll_pnt -= ft_3_vector_scale(
+			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+	}
+	else
+		coll->o = obj;
 	return (t);
 }
 
 int			ft_is_inside_cone(t_object *o, t_vector point)
 {
 	t_cone		*cone;
+	t_vector	upoint;
 
 	cone = (t_cone *)o->fig;
-	point = ft_3_pnt_transform(&(o->inverse), point);
-	if (!IN_RANGE(point[1], cone->minh, cone->maxh))
+	upoint = ft_3_pnt_transform(&(o->inverse), point);
+	if (!IN_RANGE(upoint[1], cone->minh, cone->maxh))
 	{
 //		printf("OUTSIDE HEI\n");
 		return (0);
 	}
-//	if ((ft_3_vector_dot(point, point) < point[1] * point[1] + powf(point[1] * cone->tan, 2)))
-//		printf("INSIDE\n");
+	if ((ft_3_vector_dot(upoint, upoint) < upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2)))
+		printf("INSIDE: (%8.3f, %8.3f, %8.3f)\n",
+			point[0], point[1], point[2]);
 //	else
 //		printf("OUTSIDE\n");
-	return ((ft_3_vector_dot(point, point)
-			< point[1] * point[1] + powf(point[1] * cone->tan, 2)) ? 1 : 0);
+	return ((ft_3_vector_dot(upoint, upoint)
+			< upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2.0f)) ? 1 : 0);
 }
 
 t_vector	ft_get_norm_cone(void *fig, t_vector coll)

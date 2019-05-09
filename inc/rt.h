@@ -906,7 +906,7 @@ void					ft_scale_hei_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *in
 
 float					ft_collide_cone
 							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
-int						ft_is_inside_cone(struct s_object *o, t_vector pnt);
+int						ft_is_inside_cone(struct s_object *o, t_vector upoint);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
 							(t_cone *cone, t_vector (*pnt)[4], int is_cyl);

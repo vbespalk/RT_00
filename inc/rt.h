@@ -109,7 +109,7 @@
 
 # define LTABLE_SIZE		256
 # define LTABLE_MASK		LTABLE_SIZE - 1
-# define TURBULANCE		 "turbulance"
+# define TURBULANCE		 	"turbulance"
 # define FRACTAL_SUM		"fractal"
 # define TEX_LATTICE		"lattice"
 # define TEX_GR_MRBL		"gray_marble"
@@ -183,7 +183,8 @@ static const unsigned char	g_permutation_table[LTABLE_SIZE] =
 */
 
 # define MLC_TEST(t, msg) if (!(t)) {ft_putendl(msg);exit(-1);}
-# define ON_ERR(msg) {ft_putstr("Fatal error at ");ft_putendl(msg);}
+# define ON_ERR "Fatal error at "
+# define ON_WARN "Warning at "
 
 # define DEFAULT_BUTTTON_WIDTH 93
 # define DEFAULT_BUTTTON_HEIGHT 20
@@ -1109,7 +1110,7 @@ t_color  				ft_grayscale_px(t_color in_col);
 t_color  				ft_sepia_px(t_color in_col);
 t_color  				ft_negative_px(t_color in_col);
 t_color  				ft_invert_px(t_color in_col);
-void					ft_col_mode(t_sdl *sdl, t_mode *modes);
+void					ft_col_mode(t_sdl *sdl, Sint32 mode);
 t_color					ft_px_mode(t_color col, t_mode *mode);
 
 /*

@@ -121,7 +121,7 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 	}
 	else
 		deleted = ft_iter_lst(&(e->color_mode), sum);
-	deleted ? ft_render(e) : ft_col_mode(e->sdl, e->color_mode);
+	deleted ? ft_render(e) : ft_col_mode(e->sdl, sum);
     return (0);
 }
 

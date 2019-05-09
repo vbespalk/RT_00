@@ -62,7 +62,8 @@ int			main(int argc, char **argv)
 		ft_usage("RT scn\n");
 	ft_bzero(&e, sizeof(t_env));
 	ft_bzero(&sdl, sizeof(t_sdl));
-	sdl_init(&sdl);
+	if (sdl_init(&sdl) < 0)
+		exit(-1);
 	if (gui_init(&sdl) < 0)
 		exit(-1);
 	if (!(scene = ft_parse_json(argv[1])))

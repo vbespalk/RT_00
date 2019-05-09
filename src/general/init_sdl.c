@@ -18,7 +18,10 @@ int		get_format_data(t_sdl *sdl)
 
 	if (!(surface = SDL_CreateRGBSurface(0, sdl->rt_wid, sdl->scr_hei, 32,
 			RMASK, GMASK, BMASK, AMASK)))
-		sdl_error("get_format_data");
+	{
+		sdl_error(ON_ERR "get_format_data");
+		exit(-1);
+	}
 	sdl->pitch = surface->pitch / sizeof(Uint32);
 	sdl->format = (SDL_PixelFormat *)malloc(sizeof(SDL_PixelFormat));
 	ft_memcpy(sdl->format, surface->format, sizeof(SDL_PixelFormat));
@@ -37,17 +40,17 @@ int		sdl_init(t_sdl *sdl)
 	sdl->rt_wid = sdl->scr_wid - GUI_WIDTH;
 	sdl->scr_hei = SCR_HEI;
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
-		sdl_error("sdl_init");
+		return (sdl_error(ON_ERR "sdl_init"));
 	if (!IMG_Init(flags[2]))
-		sdl_img_error("sdl_init");
+		return (sdl_img_error(ON_ERR "sdl_init"));
 	if (!(sdl->window = SDL_CreateWindow("RayTracer", SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED, SCR_WID, SCR_HEI, flags[0])))
-		sdl_error("sdl_init.");
+		return (sdl_error(ON_ERR "sdl_init"));
 	if (!(sdl->renderer = SDL_CreateRenderer(sdl->window, -1, flags[1])))
-		sdl_error("sdl_init");
+		return (sdl_error(ON_ERR "sdl_init"));
 	if (!(sdl->screen = SDL_CreateTexture(sdl->renderer, SDL_PIXELFORMAT_RGBA32,
 			SDL_TEXTUREACCESS_STATIC, sdl->rt_wid, sdl->scr_hei)))
-		sdl_error("sdl_init");
+		return (sdl_error(ON_ERR "sdl_init"));
 	get_format_data(sdl);
 	sdl->pixels = (Uint32 *)ft_smemalloc(sizeof(Uint32) *
 			sdl->scr_hei * sdl->rt_wid, "sdl_init");
@@ -71,17 +74,17 @@ int		sdl_init(t_sdl *sdl)
 int		sdl_error(char *message)
 {
 	if (message)
-		ON_ERR(message);
+		ft_putendl(message);
 	ft_putstr("SDL Error: ");
 	ft_putendl(SDL_GetError());
-	exit(-1);
+	return (-1);
 }
 
 int		sdl_img_error(char *message)
 {
 	if (message)
-		ON_ERR(message);
+		ft_putendl(message);
 	ft_putstr("SDL_Image Error: ");
 	ft_putendl(IMG_GetError());
-	exit(-1);
+	return (-1);
 }

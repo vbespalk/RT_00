@@ -15,20 +15,12 @@ t_texture				*load_texture(t_sdl *sdl, char *path)
 	src = IMG_Load(path);
 	if(!src)
 	{
-		sdl_img_error("Error at load_texture(). Texture value set to color.\n");
+		sdl_img_error(ON_WARN "load texture");
 		ft_memdel((void **)&texture->path);
 		ft_memdel((void **)&texture);
-		printf("LOAD TEXTURE\n");
 		return (NULL);
 	}
 	texture->surface = SDL_ConvertSurface(src, sdl->format, 0);
-//	texture->pixels = (Uint32 *)ft_memcpy(&texture->pixels, &texture->texture->pixels, sizeof());
-	// tex = SDL_CreateTextureFromSurface(sdl->renderer, surf);
-	// if (!tex)
-	// {
-	// 	fprintf(stderr, "CreateTextureFromSurface failed: %s\n", SDL_GetError());
-	// 	return (-1);
-	// }
 	SDL_FreeSurface(src);
 	printf("TEXTURE %s loading SUCCESSFULLY\n", path);
 	return (texture);

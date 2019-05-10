@@ -85,7 +85,10 @@ static float	get_cides_coll(
 			if (obj->is_neg && i[1] != 1)
 				*norm = ft_3_vector_invert(*norm);
 			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			{
 				t[i[0]] = 0;
+				continue ;
+			}
 			*coll = hit[i[0]];
 			return (t[i[0]]);
 		}
@@ -135,7 +138,10 @@ static float	get_caps_coll(
 			if (obj->is_neg && i[1] != 1)
 				*norm = ft_3_vector_invert(*norm);
 			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			{
 				t[i[0]] = 0;
+				continue ;
+			}
 			*coll_pnt = pnts[i[0] + 2];
 			return (t[i[0]]);
 		}
@@ -200,9 +206,9 @@ int			ft_is_inside_cone(t_object *o, t_vector point)
 //		printf("OUTSIDE HEI\n");
 		return (0);
 	}
-	if ((ft_3_vector_dot(upoint, upoint) < upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2)))
-		printf("INSIDE: (%8.3f, %8.3f, %8.3f)\n",
-			point[0], point[1], point[2]);
+//	if ((ft_3_vector_dot(upoint, upoint) < upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2)))
+//		printf("INSIDE: (%8.3f, %8.3f, %8.3f)\n",
+//			point[0], point[1], point[2]);
 //	else
 //		printf("OUTSIDE\n");
 	return ((ft_3_vector_dot(upoint, upoint)

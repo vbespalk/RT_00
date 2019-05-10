@@ -100,9 +100,11 @@ void			*ft_section_handle(void *arg)
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
 		{
-			col = thrarg->e->col_mode == NULL ? ft_get_pixel_color(thrarg, x, y, smth) :
-            		ft_px_mode(ft_get_pixel_color(thrarg, x, y, smth),
-            				thrarg->e->col_mode);
+			col = thrarg->e->col_mode == NULL
+				? ft_get_pixel_color(thrarg, x, y, smth)
+				: ft_px_mode(
+					ft_get_pixel_color(thrarg, x, y, smth),
+					thrarg->e->col_mode);
 		    img_pixel_put(
                     thrarg->e->sdl, x, y,
                     (unsigned int) col.val);

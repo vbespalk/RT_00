@@ -29,24 +29,20 @@ static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
 
 static float	get_closer_pnt(
 					const float *t, const t_vector *hit,
-					t_coll *coll, t_object *obj)
+					t_coll *coll, t_vector norms[2], t_object *obj)
 {
 	coll->o = obj;
 	coll->tex_o = obj;
 	if ((t[0] < t[1] || t[1] < 0) && t[0] > 0)
 	{
 		coll->ucoll_pnt = hit[0];
-		coll->norm = ft_3_tounitvector(
-			ft_3_norm_transform(
-				&(obj->inverse),
-				(coll->ucoll_pnt - (t_vector){0, coll->ucoll_pnt[1], 0})));
+		coll->norm = norms[0];
 		return (t[0]);
 	}
 	else
 	{
 		coll->ucoll_pnt = hit[1];
-		coll->norm = ft_3_tounitvector(
-			ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));
+		coll->norm = norms[1];
 		return (t[1]);
 	}
 }
@@ -75,8 +71,8 @@ static float	get_closer_pnt(
 //}
 
 static float	get_cides_coll(
-	t_list **objs, t_vector od[2], t_vector uod[2],
-	t_vector *coll, t_vector *norm, float t[2], t_object *obj)
+					t_list **objs, t_vector od[2], t_vector uod[2],
+					t_vector *coll, t_vector *norm, float t[2], t_object *obj)
 {
 	int			i[2];
 	t_vector	hit[2];
@@ -96,7 +92,7 @@ static float	get_cides_coll(
 			*norm = ft_3_tounitvector(
 				ft_3_norm_transform(
 					&(obj->inverse),
-					(coll->ucoll_pnt - (t_vector){0, coll->ucoll_pnt[1], 0})));
+					(hit[i[0]] - (t_vector){0, hit[i[0]][1], 0})));
 			if (obj->is_neg)
 				uhit[i[0]] += ft_3_vector_scale(*norm, SHIFT);
 			i[1] = ft_inside_type(objs, uhit[i[0]]);
@@ -104,7 +100,10 @@ static float	get_cides_coll(
 			if (obj->is_neg && i[1] != 1)
 				*norm = ft_3_vector_invert(*norm);
 			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			{
 				t[i[0]] = 0;
+				continue ;
+			}
 			*coll = hit[i[0]];
 			return (t[i[0]]);
 		}
@@ -112,41 +111,106 @@ static float	get_cides_coll(
 	return (FLT_MAX);
 }
 
-static float	get_caps_coll(const t_vector *od, t_vector *coll, t_cylinder *clnd)
-{
-	float 		t[2];
-	t_vector	ori[2];
-	t_vector	hit[2];
+//static float	get_caps_coll(const t_vector *od, t_vector *coll, t_cylinder *clnd)
+//{
+//	float 		t[2];
+//	t_vector	ori[2];
+//	t_vector	hit[2];
+//
+//	ori[0] = od[0] + (t_vector){FLT_MIN, clnd->maxh, FLT_MIN};
+//	ori[1] = od[0] - (t_vector){FLT_MIN, clnd->maxh, FLT_MIN};
+//	t[0] = -(ori[0][1]) / od[1][1];
+//	t[1] = -(ori[1][1]) / od[1][1];
+//	if (t[0] < FLT_MIN && t[1] < FLT_MIN)
+//		return (-FLT_MAX);
+//	t[0] > t[1] || t[0] < 0 ? ft_swap_float(&t[0], &t[1]),
+//			ft_swap(&ori[0], &ori[1], sizeof(t_vector)) : 1;
+//	hit[0] = ori[0] + ft_3_vector_scale(od[1], t[0]);
+//	hit[1] = ori[1] + ft_3_vector_scale(od[1], t[1]);
+//	if (t[0] > FLT_MIN && ft_3_vector_dot(hit[0], hit[0]) < 1)
+//	{
+//		*coll = (t_vector){hit[0][0], hit[0][1] + clnd->maxh, hit[0][2]};
+//		return (t[0]);
+//	}
+//	else if (t[1] > FLT_MIN && ft_3_vector_dot(hit[1], hit[1]) < 1)
+//	{
+//		*coll = (t_vector){hit[1][0], hit[1][1] - clnd->maxh, hit[1][2]};
+//		return (t[1]);
+//	}
+//	return (-FLT_MAX);
+//}
 
-	ori[0] = od[0] + (t_vector){FLT_MIN, clnd->maxh, FLT_MIN};
-	ori[1] = od[0] - (t_vector){FLT_MIN, clnd->maxh, FLT_MIN};
-	t[0] = -(ori[0][1]) / od[1][1];
-	t[1] = -(ori[1][1]) / od[1][1];
-	if (t[0] < FLT_MIN && t[1] < FLT_MIN)
-		return (-FLT_MAX);
-	t[0] > t[1] || t[0] < 0 ? ft_swap_float(&t[0], &t[1]),
-			ft_swap(&ori[0], &ori[1], sizeof(t_vector)) : 1;
-	hit[0] = ori[0] + ft_3_vector_scale(od[1], t[0]);
-	hit[1] = ori[1] + ft_3_vector_scale(od[1], t[1]);
-	if (t[0] > FLT_MIN && ft_3_vector_dot(hit[0], hit[0]) < 1)
+static float	get_caps_coll(
+					t_list **objs, t_vector od[2], t_vector uod[2],
+					t_vector *coll_pnt, t_vector *norm, t_object *obj)
+{
+	int			i[2];
+	t_cylinder	*clnd;
+	t_vector	pnts[6];
+	float 		t[2];
+
+	clnd = (t_cylinder *)(obj->fig);
+	pnts[0] = od[0] + (t_vector){0, clnd->maxh, 0};
+	pnts[1] = od[0] - (t_vector){0, clnd->maxh, 0};
+	t[0] = -(pnts[0][1]) / od[1][1];
+	t[1] = -(pnts[1][1]) / od[1][1];
+	if (t[0] <= 0 && t[1] <= 0)
+		return (FLT_MAX);
+	(t[0] > t[1] || t[0] < 0)
+	? ft_swap_float(&t[0], &t[1]),
+		ft_swap(&pnts[0], &pnts[1], sizeof(t_vector))
+	: 1;
+	pnts[2] = pnts[0] + ft_3_vector_scale(od[1], t[0]);
+	pnts[3] = pnts[1] + ft_3_vector_scale(od[1], t[1]);
+	i[0] = -1;
+	while (++i[0] < 2)
 	{
-		*coll = (t_vector){hit[0][0], hit[0][1] + clnd->maxh, hit[0][2]};
-		return (t[0]);
+		if (t[i[0]] >= 0 && ft_3_vector_dot(pnts[i[0] + 2], pnts[i[0] + 2]) < 1)
+		{
+			pnts[i[0] + 2] += (i[0] == 0)
+				? (t_vector){ 0, clnd->maxh, 0 }
+				: (t_vector){ 0, -clnd->maxh, 0 };
+			//pnts[i[0] + 4] = ft_3_pnt_transform(&(obj->transform), pnts[i[0] + 2]);
+			pnts[i[0] + 4] = uod[0] + ft_3_vector_scale(uod[1], t[i[0]]);
+
+//			ft_3_vector_print("point #1: ", pnts[2]);
+//			ft_3_vector_print("point #2: ", pnts[3]);
+//			ft_3_vector_print("real point: ", pnts[i[0] + 4]);
+
+			*norm = ft_3_tounitvector(
+				ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));
+			if (obj->is_neg)
+				pnts[i[0] + 4] += ft_3_vector_scale(*norm, SHIFT);
+			i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
+
+//			ft_3_vector_print("For ", pnts[i[0] + 4]);
+//			printf("inside type: %d\n", i[1]);
+
+			(*norm)[3] = i[1];
+			if (obj->is_neg && i[1] != 1)
+				*norm = ft_3_vector_invert(*norm);
+			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			{
+				t[i[0]] = 0;
+				continue ;
+			}
+			*coll_pnt = pnts[i[0] + 2];
+			return (t[i[0]]);
+		}
 	}
-	else if (t[1] > FLT_MIN && ft_3_vector_dot(hit[1], hit[1]) < 1)
-	{
-		*coll = (t_vector){hit[1][0], hit[1][1] - clnd->maxh, hit[1][2]};
-		return (t[1]);
-	}
-	return (-FLT_MAX);
+	return (FLT_MAX);
 }
 
-float			ft_collide_cylinder(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+float			ft_collide_cylinder(
+					t_list **objs, struct s_object *obj,
+					t_coll *coll, t_vector untr_od[2])
 {
 	t_cylinder	*clnd;
 	t_vector	hit[2];
 	float		res[2];
+	float		t;
 	t_vector	od[2];
+	t_vector	norms[2];
 
 	clnd = (t_cylinder *)obj->fig;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
@@ -157,13 +221,26 @@ float			ft_collide_cylinder(t_list **objs, struct s_object *obj, t_coll *coll, t
 		od[0][0] * od[0][0] + od[0][2] * od[0][2] - 1,
 		res))
 		return (FLT_MAX);
-	res[0] = get_cides_coll(od, res, &hit[0], clnd);
+	res[0] = get_cides_coll(objs, od, untr_od, &hit[0], &norms[0], res, obj);
 	res[1] = (clnd->maxh == FLT_MAX || fabsf(od[1][1]) < 1e-6)
 		? FLT_MAX
-		: get_caps_coll(od, &hit[1], clnd);
+		: get_caps_coll(objs, od, untr_od, &hit[1], &norms[1], obj);
 	if (res[0] == FLT_MAX && res[1] == FLT_MAX)
 		return (FLT_MAX);
-	return (get_closer_pnt(res, hit, coll, obj));
+	t = get_closer_pnt(res, hit, coll, norms, obj);
+	//coll->coll_pnt = ft_3_pnt_transform(&(obj->transform), coll->ucoll_pnt);
+	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
+	if (obj->is_neg)
+	{
+		coll->coll_pnt += ft_3_vector_scale(
+			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
+		coll->coll_pnt -= ft_3_vector_scale(
+			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+	}
+	else
+		coll->o = obj;
+	return (t);
 }
 
 int			ft_is_inside_cylinder(t_object *o, t_vector point)

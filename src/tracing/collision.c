@@ -116,12 +116,11 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 //	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.1f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);
-	func[0] = coll.tex_o->ft_mapping;
-	func[1] = coll.tex_o->ft_checker;
-	func[2] = coll.tex_o->ft_procedural;
+	func[1] = coll.tex_o->ft_mapping;
+	func[2] = coll.tex_o->ft_checker;
+	func[3] = coll.tex_o->ft_procedural;
 	coll.px_color.val = (coll.o->exposure == 0) ? coll.o->color.val :
-		func[coll.o->exposure - 1](coll.tex_o,
-		coll.o->tex_pnt, coll.ucoll_pnt);
+		func[coll.o->exposure](coll.tex_o, coll.o->tex_pnt, coll.ucoll_pnt);
 	ft_illuminate(arg, &coll);
 	return (coll);
 }

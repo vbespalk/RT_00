@@ -13,7 +13,7 @@
 #include "rt.h"
 #include <time.h>
 
-void		make_screenshot(t_env *e)
+int		    make_screenshot(t_env *e)
 {
 	SDL_Surface			*sshot;
 	static time_t		now = 0;
@@ -22,21 +22,23 @@ void		make_screenshot(t_env *e)
 	char				*tmp;
 
 	if (now == time(0))
-		return ;
+		return (0);
 	now = time(0);
 	str_time = ctime(&now);
 	str_time[ft_strlen(str_time) - 1] = '\0';
-	sshot = SDL_CreateRGBSurface(0, e->sdl->rt_wid, e->sdl->scr_hei, 32,
-		RMASK, GMASK, BMASK, AMASK);
+    if (!(sshot = SDL_CreateRGBSurfaceFrom(e->sdl->pixels, e->sdl->rt_wid,
+            e->sdl->scr_hei, e->sdl->format->BitsPerPixel,
+            e->sdl->pitch * sizeof(Uint32), RMASK, GMASK, BMASK, AMASK)))
+    {
+        sdl_img_error(ON_WARN "make_screenshot");
+        return (0);
+    }
 	tmp = ft_strjoin(DEFAULT_SCRSHT_NAME, str_time);
 	name = ft_strjoin(tmp, ".png");
 	ft_memdel((void **)&tmp);
-	SDL_RenderReadPixels(e->sdl->renderer, &(e->sdl->rt_cont), SDL_PIXELFORMAT_RGBA32,
-		sshot->pixels, sshot->pitch);
-//    SDL_RenderReadPixels(e->sdl->renderer, NULL, SDL_PIXELFORMAT_RGBA32,
-//		sshot->pixels, sshot->pitch);
 	ft_printf("ScreenShot \"%s\" saved with code: %d\n",
 		name, IMG_SavePNG(sshot, name));
 	ft_memdel((void **)&name);
 	SDL_FreeSurface(sshot);
+    return (0);
 }

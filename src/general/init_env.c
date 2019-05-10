@@ -39,19 +39,16 @@ static void	ft_obj_exposure(t_object *obj)
 	obj->exposure = EXP_COLOR;
 	if (obj->texture != NULL)
 	{
-		printf("SET TEXTURE\n");
 		obj->tex_pnt = obj->texture;
 		obj->exposure = EXP_TEXTR;
 	}
 	else if (obj->noise != NULL)
 	{
-		printf("SET NOISE\n");
 		obj->tex_pnt = obj->noise;
 		obj->exposure = EXP_NOISE;
 	}
 	else if (obj->checker != NULL)
 	{
-		printf("SET CHCKR\n");
 		obj->tex_pnt = obj->checker;
 		obj->exposure = EXP_CHCKR;
 	}
@@ -68,10 +65,7 @@ static void	ft_load_textures(t_list *objs, t_list **textures, t_sdl *sdl)
 		if (obj->texture_id != NULL)
 			obj->texture = init_texture(textures, sdl, obj->texture_id);
 		if (obj->noise != NULL && obj->noise->ramp_id != NULL)
-		{
-			printf("RUMP %s to init\n", obj->noise->ramp_id);
 			ft_load_noise_ramp(obj->noise, textures, sdl);
-		}
 		if (obj->checker != NULL)
 		{
 			i = -1;
@@ -93,7 +87,8 @@ int			init_env(t_env *e, t_scene *scene, t_object **obj_pix, t_sdl *sdl)
 	ft_init_smpl(sdl, &(e->scn->textures), e->smpl);
 	ft_load_textures(e->scn->objs, &e->scn->textures, sdl);
 	if (e->scn->skybox != NULL)
-		e->scn->skybox_on = ft_load_sky_tex(&e->scn->skybox, &e->scn->textures, sdl);
+		e->scn->skybox_on = ft_load_sky_tex(&e->scn->skybox,
+			&e->scn->textures, sdl);
 	e->selected = NULL;
 	return (0);
 }

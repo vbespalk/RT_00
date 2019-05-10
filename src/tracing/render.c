@@ -107,8 +107,8 @@ void			*ft_section_handle(void *arg)
 //                    thrarg->e->sdl, x, y,
 //                    (unsigned int) col.val);
 			img_pixel_put(
-					thrarg->e->sdl, x, y,
-					(unsigned int) get_rgb(thrarg->e->sdl, col.argb[0], col.argb[1], col.argb[2]));
+				thrarg->e->sdl, x, y, (unsigned int)SDL_MapRGB(thrarg->e->sdl->format,
+				        col.argb[0], col.argb[1], col.argb[2]));
         }
 		x += THREADS;
 	}

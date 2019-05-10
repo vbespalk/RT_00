@@ -248,7 +248,7 @@ typedef struct s_procedural		t_procedural;
 typedef struct s_object			t_object;
 typedef struct s_collision		t_coll;
 
-typedef Uint32	(*fun_tab[3])(void *o, void *t, t_vector pnt);
+typedef Uint32	(*fun_tab[4])(void *o, void *t, t_vector pnt);
 
 typedef struct	s_vec2
 {
@@ -278,7 +278,7 @@ uint32_t	handle_button(t_env *e, uint32_t btn_id);
 ** gui utils
 */
 
-void		make_screenshot(t_env *e);
+int		    make_screenshot(t_env *e);
 void		other_buttons(t_env *e, const uint32_t id);
 void		color_filter(t_env *e, const uint32_t id);
 void		translate(t_env *e, const uint32_t id);
@@ -1040,7 +1040,7 @@ Uint32					ft_procedural_cone(t_object *o, t_procedural *tex, t_vector coll);
 */
 
 Uint32					ft_map_plane(t_object *o, SDL_Surface *tex, t_vector coll);
-Uint32					ft_map_box(t_object *o, SDL_Surface *tex, t_vector hit, t_vector tr_hit);
+Uint32					ft_map_box(t_object *o, SDL_Surface *tex, t_vector hit);
 Uint32					ft_checker_pln(t_object *o, t_checkbrd *tex, t_vector coll);
 Uint32					ft_checker_box(t_object *o, t_checkbrd *tex, t_vector coll);
 

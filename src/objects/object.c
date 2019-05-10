@@ -29,7 +29,7 @@ t_object	*ft_objectnew(Uint32 id)
 	return (o);
 }
 
-void	ft_balance_koefs(t_object *o)
+void		ft_balance_koefs(t_object *o)
 {
 	float	sum;
 
@@ -83,7 +83,6 @@ static void	ft_get_object_attrs(char **content, t_object *o)
 	ft_get_attr(content, "phong", (void *)(&(o->phong)), DT_COEF);
 	ft_get_attr(content, "translate", (void *)(&(o->translate)), DT_POINT);
 	ft_get_attr(content, "rotate", (void *)(&(o->rotate)), DT_POINT);
-
 	ft_get_attr(content, "texture", (void *)(&(o->texture_id)), DT_STRING);
 	ft_get_attr(content, "procedural", (void *)(&(o->noise)), DT_PROCEDURAL);
 	ft_get_attr(content, "checker", (void *)(&(o->checker)), DT_CHECKER);
@@ -97,24 +96,21 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 
 	name = NULL;
 	ft_get_attr(content, "name", (void *)(&(name)), DT_STRING);
-	if (!(ft_parse_figure = ft_get_figure_parser(name)))
-	{
-		free(name);
-		return ;
-	}
+	ft_parse_figure = ft_get_figure_parser(name);
 	free(name);
+	if (!ft_parse_figure)
+		return ;
 	o = ft_objectnew(id);
 	o->color.val = UINT32_MAX;
 	o->noise = NULL;
 	o->checker = NULL;
-	o->texture_id = NULL;
 	o->texture = NULL;
+	o->texture_id = NULL;
 	o->composed = false;
 	ft_get_object_attrs(content, o);
 	ft_balance_koefs(o);
-	o->rotate[0] = ft_torad(o->rotate[0]);
-	o->rotate[1] = ft_torad(o->rotate[1]);
-	o->rotate[2] = ft_torad(o->rotate[2]);
+	o->rotate = (t_vector){ft_torad(o->rotate[0]), ft_torad(o->rotate[1]),
+				ft_torad(o->rotate[2])};
 	o->fig = ft_parse_figure(content, o);
 	ft_lstpush(lst, ft_nodenew((void *)o, sizeof(t_object)));
 }

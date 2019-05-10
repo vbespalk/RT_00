@@ -6,13 +6,13 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:17:04 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/10 14:43:46 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/10 15:35:54 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-uint32_t		other_buttons(t_env *e, const uint32_t id)
+uint32_t	other_buttons(t_env *e, const uint32_t id)
 {
 	if (id == CAMERA_MODE)
 	{
@@ -53,8 +53,10 @@ uint32_t	translate(t_env *e, const uint32_t id)
 	const int					id_shift = 9;
 
 	if (e->selected)
+	{
 		return (e->selected->ft_translate(s_buttons_codes[id - id_shift],
 			e->selected, &(e->selected->transform), &(e->selected->inverse)));
+	}
 	return (ft_translate_cam(s_buttons_codes[id - id_shift],
 			&(e->scn->cam->origin)));
 }
@@ -69,10 +71,12 @@ uint32_t	rotate(t_env *e, const uint32_t id)
 	const int					id_shift = 15;
 
 	if (e->selected)
+	{
 		return (e->selected->ft_rotate(s_buttons_codes[id - id_shift],
 			e->selected, &(e->selected->transform), &(e->selected->inverse)));
+	}
 	return (ft_rotate_cam(s_buttons_codes[id - id_shift],
-			&(e->scn->cam->angles)));
+		&(e->scn->cam->angles)));
 }
 
 uint32_t	texture_editing(t_env *e, uint32_t id)

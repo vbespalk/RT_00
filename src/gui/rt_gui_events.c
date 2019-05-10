@@ -6,13 +6,13 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/10 14:33:04 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/10 15:37:17 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-uint32_t	mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
+uint32_t		mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
 {
 	uint32_t		i;
 	const uint32_t	w = e->sdl->scr_wid;
@@ -29,7 +29,7 @@ uint32_t	mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
 	return (0);
 }
 
-static void	inc_val_in_range(float *val, uint8_t cond, float lo, float hi)
+static void		inc_val_in_range(float *val, uint8_t cond, float lo, float hi)
 {
 	const float inc = 0.1f;
 
@@ -68,8 +68,8 @@ static uint32_t	object_mode_events_handle_1(t_env *e, const uint32_t id)
 		return (e->selected->ft_scale(id == RADIUS_DOWN ? SDLK_x : SDLK_z,
 		e->selected, &(e->selected->transform), &(e->selected->inverse)));
 	else if ((id == HEIGHT_DOWN || id == HEIGHT_UP) && e->selected)
-		return (e->selected->ft_scale_height(id == HEIGHT_DOWN ? SDLK_t : SDLK_r,
-		e->selected, &(e->selected->transform), &(e->selected->inverse)));
+		return (e->selected->ft_scale_height(id == HEIGHT_DOWN ? SDLK_t :
+	SDLK_r, e->selected, &(e->selected->transform), &(e->selected->inverse)));
 	else if (id == REFL_DOWN || id == REFL_UP)
 	{
 		inc_val_in_range(&(e->selected->spclr), id == REFL_DOWN, 0, 1);

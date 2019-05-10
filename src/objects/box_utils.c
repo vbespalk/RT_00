@@ -9,33 +9,52 @@ int			ft_is_reachable_box(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-float		ft_collide_box(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+float		ft_collide_box(
+				t_list **objs, struct s_object *obj,
+				t_coll *coll, t_vector untr_od[2])
 {
 	t_box		*bx;
 	t_coll		pln_coll;
-	float		t_min;
-	float 		t_cur;
+	float		t[2];
 	int 		i;
-	t_vector	od[2];
+	t_vector	odh[3];
 
 	bx = (t_box *)obj->fig;
 	i = -1;
-	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
-	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	t_min = FLT_MAX;
+	odh[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
+	odh[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
+	t[0] = FLT_MAX;
 	while (++i < BOX_FACES)
 	{
-		t_cur = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
-		if (IN_RANGE(t_cur, FLT_MIN, t_min))
+		t[1] = ft_collide_plane(objs, bx->face[i], &pln_coll, odh);
+		if (IN_RANGE(t[1], 0, t[0]) && t[1] != FLT_MAX)
 		{
-			t_min = t_cur;
+			odh[2] = untr_od[0] + ft_3_vector_scale(untr_od[1], t[1]);
+			if (pln_coll.inside_type < 0
+			|| (obj->is_neg && pln_coll.inside_type == 0))
+				continue ;
+			coll->norm = ft_3_tounitvector(
+				ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
+			if (obj->is_neg)
+				odh[2] += ft_3_vector_scale(coll->norm, SHIFT);
+			if (obj->is_neg && pln_coll.inside_type != 1)
+				coll->norm = ft_3_vector_invert(coll->norm);
+			coll->coll_pnt = odh[2];
 			coll->ucoll_pnt = pln_coll.ucoll_pnt;
-			coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
 			coll->tex_o = pln_coll.o;
 			coll->o = obj;
+			t[0] = t[1];
 		}
 	}
-	return (t_min == FLT_MAX ? -FLT_MAX: t_min);
+	if (obj->is_neg)
+	{
+		coll->coll_pnt += ft_3_vector_scale(
+			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
+		coll->coll_pnt -= ft_3_vector_scale(
+			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+	}
+	return (t[0]);
 }
 
 int			ft_is_inside_box(t_object *o, t_vector point)

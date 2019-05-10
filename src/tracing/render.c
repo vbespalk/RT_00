@@ -106,8 +106,7 @@ void			*ft_section_handle(void *arg)
 					ft_get_pixel_color(thrarg, x, y, smth),
 					thrarg->e->col_mode);
 		    img_pixel_put(
-                    thrarg->e->sdl, x, y,
-                    (unsigned int) col.val);
+				thrarg->e->sdl, x, y, (unsigned int)col.val);
 //			img_pixel_put(
 //					thrarg->e, x, y,
 //					(unsigned int) get_rgb(thrarg->e->sdl, col.argb[0], col.argb[1], col.argb[2]));

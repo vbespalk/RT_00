@@ -170,22 +170,12 @@ static float	get_caps_coll(
 			pnts[i[0] + 2] += (i[0] == 0)
 				? (t_vector){ 0, clnd->maxh, 0 }
 				: (t_vector){ 0, -clnd->maxh, 0 };
-			//pnts[i[0] + 4] = ft_3_pnt_transform(&(obj->transform), pnts[i[0] + 2]);
 			pnts[i[0] + 4] = uod[0] + ft_3_vector_scale(uod[1], t[i[0]]);
-
-//			ft_3_vector_print("point #1: ", pnts[2]);
-//			ft_3_vector_print("point #2: ", pnts[3]);
-//			ft_3_vector_print("real point: ", pnts[i[0] + 4]);
-
 			*norm = ft_3_tounitvector(
 				ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));
 			if (obj->is_neg)
 				pnts[i[0] + 4] += ft_3_vector_scale(*norm, SHIFT);
 			i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
-
-//			ft_3_vector_print("For ", pnts[i[0] + 4]);
-//			printf("inside type: %d\n", i[1]);
-
 			(*norm)[3] = i[1];
 			if (obj->is_neg && i[1] != 1)
 				*norm = ft_3_vector_invert(*norm);

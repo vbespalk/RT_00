@@ -623,6 +623,7 @@ typedef struct 		s_environment
 
 typedef struct			s_collision
 {
+	int					inside_type;
 	t_color				px_color;
 	t_color				illum_color;
 	t_color				phong_color;

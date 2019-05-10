@@ -36,18 +36,20 @@ float		ft_collide_plane(t_list **objs, struct s_object *obj,
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
 	if (!od[1][1])
-		return (-FLT_MAX);
+		return (FLT_MAX);
 	t =  -od[0][1] / od[1][1];
 	if (fabsf(t) < 1e-6)
-		return (-FLT_MAX);
-//	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
-//	if (ft_inside_type(objs, coll->coll_pnt) < 0)
-//		return (-FLT_MAX);
+		return (FLT_MAX);
+	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
+	coll->inside_type = ft_inside_type(objs, coll->coll_pnt);
+	if (coll->inside_type < 0)
+		return (FLT_MAX);
 	coll->ucoll_pnt = od[0] + ft_3_vector_scale(od[1], t);
-	if (!(pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN) &&
+	if (!(pln->len_wh[0] == 0 || pln->len_wh[1] == 0) &&
 		!ft_inside_quad(pln, coll->ucoll_pnt))
-		return (-FLT_MAX);
-	coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), (t_vector){0, 1, 0}));
+		return (FLT_MAX);
+	coll->norm = ft_3_tounitvector(
+		ft_3_norm_transform(&(obj->inverse), (t_vector){0, 1, 0}));
 	coll->o = obj;
 	coll->tex_o = obj;
 	return (t);

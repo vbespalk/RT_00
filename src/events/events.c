@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/04/27 17:55:36 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/10 15:16:52 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,11 @@ t_bool	check_if_holdable(const uint32_t btn_id)
 			btn_id == SKYBOX);
 }
 
-int		event_handler(t_env *e)
+int		event_handler(t_env *e, uint32_t *btn_id)
 {
 	SDL_Event			event;
 	static SDL_bool		mouse_pressed = SDL_FALSE;
 	static t_vector		v = {0, 0, 0, 0};
-	uint32_t			btn_id;
 
 	if (SDL_PollEvent(&event) || mouse_pressed)
 	{
@@ -47,10 +46,10 @@ int		event_handler(t_env *e)
 			if (!mouse_pressed)
 				v = (t_vector){event.button.x, event.button.y, 0, 0};
 			mouse_pressed = SDL_TRUE;
-			if ((btn_id = mouse_on_btn((const int32_t)v[0], (const int32_t)v[1], e)))
+			if ((*btn_id = mouse_on_btn((const int32_t)v[0], (const int32_t)v[1], e)))
 			{
-				mouse_pressed = (check_if_holdable(btn_id) ? SDL_FALSE : SDL_TRUE);
-				return (handle_button(e, btn_id) + BTN_ID_SHIFT);
+				mouse_pressed = (check_if_holdable(*btn_id) ? SDL_FALSE : SDL_TRUE);
+				return (handle_button(e, *btn_id));
 			}
 			if (event.button.button == SDL_BUTTON_LEFT)
 				return (on_lbutton_down(event.button.x, event.button.y, e));
@@ -67,6 +66,7 @@ int		event_handler(t_env *e)
 		else
 			return (0);
 	}
+	*btn_id = 0;
 	return (0);
 }
 

@@ -6,18 +6,22 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:49:13 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/06 18:56:00 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/10 15:24:28 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
-	t_bool redraw)
+static uint32_t	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
+	uint32_t status)
 {
-	if (redraw)
+	static uint32_t btn_pressed = 0;
+	static uint32_t render_count = 1;
+
+	btn_pressed = btn_id > 0 ? 1 : 0;
+	if (status == 1)
 	{
-		printf("NEW RENDER\n");
+		printf("NEW RENDER #%d\n", render_count++);
 		ft_render(e);
 	}
 	sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
@@ -27,28 +31,29 @@ static void	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
 	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
+	return (btn_pressed);
 }
 
 static void	ft_rt_loop(t_env *e)
 {
 	t_sdl		*sdl;
 	uint32_t	btn_id;
+	uint32_t	status;
+	int32_t		btn_status;
 
 	sdl = e->sdl;
 	sdl->event_loop = 1;
-    sdl_draw_screen(e, e->sdl, 0, true);
+    sdl_draw_screen(e, e->sdl, 0, 1);
 //    system("leaks RT");
     while (sdl->event_loop)
 	{
-//		int x = SDL_GetTicks();
-		if ((btn_id = event_handler(e)))
-			sdl_draw_screen(e, e->sdl, btn_id,
-				btn_id > (INVERTED + BTN_ID_SHIFT));
-		if (!btn_id)
-		    sdl_draw_screen(e, e->sdl, 0, false);
-//		int y = SDL_GetTicks() - x;
-//		if (y != 0)
-//			printf("%f\n", 1000 / (float)y);
+		if ((status = event_handler(e, &btn_id)))
+			btn_status = sdl_draw_screen(e, e->sdl, btn_id, status);
+		if (btn_status != -1 && btn_id == 0)
+		{
+			sdl_draw_screen(e, e->sdl, 0, 2);
+			btn_status = -1;
+		}
 	}
 }
 

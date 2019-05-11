@@ -12,7 +12,7 @@
 
 #include "rt.h"
 
-static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
+static int	ft_solve_sqr_(float a, float b, float c, float (*res)[2])
 {
 	float	d;
 
@@ -29,91 +29,61 @@ static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
 	return (1);
 }
 
-
-int			ft_is_reachable_sphere(void *fig, t_vector origin, t_vector direct)
+static float	ft_collide_sphere_half(
+					t_list **objs, t_object *obj,
+					t_coll *coll, t_vector pnts[4])
 {
-	t_sphere	*sph;
-	float		cos;
+	float	t;
+	float	i;
 
-//	sph = (t_sphere *)fig;
-//	if (ft_3_point_point_dist(origin, sph->origin) < sph->radius)
-//		return (1);
-//	if (ft_3_line_point_dist(origin, direct, sph->origin) > sph->radius)
-//		return (0);
-//	cos = ft_3_vector_dot(direct, sph->origin - origin);
-//	return ((cos > 0) ? 1 : 0);
-	return (1);
+	t = (pnts[0][3] == FLT_MAX) ? pnts[1][3] : pnts[0][3];
+	pnts[0][3] = FLT_MAX;
+	if (t > 0)
+	{
+		coll->ucoll_pnt = pnts[2] + ft_3_vector_scale(pnts[3], t);
+		coll->norm = ft_3_tounitvector(
+			ft_3_norm_transform(
+				&(obj->inverse),
+				obj->ft_get_norm(obj->fig, coll->ucoll_pnt)));
+		coll->coll_pnt = pnts[0] + ft_3_vector_scale(pnts[1], t);
+		if (obj->is_neg)
+			coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
+		i = ft_inside_type(objs, coll->coll_pnt);
+		if (i < 0 || (obj->is_neg && i == 0))
+			return (0);
+		return (t);
+	}
+	return (0);
 }
 
-
-float		ft_collide_sphere (t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+float			ft_collide_sphere(
+					t_list **objs, t_object *obj, t_coll *coll, t_vector uod[2])
 {
-	float		t1t2[2];
-	int			i[2];
-	t_vector	od[2];
-	t_vector	hit[2];
-	t_vector	uhit[2];
-	t_vector	norm[2];
+	float		t[2];
+	int			i;
+	t_vector	pnts[4];
 
-	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
-	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	if (!ft_solve_sqr_(
-			ft_3_vector_dot(od[1], od[1]),
-			2.0f * ft_3_vector_dot(od[1], od[0]),
-			ft_3_vector_dot(od[0], od[0]) - 1,
-			&t1t2)
-		|| (t1t2[0] <= 0 && t1t2[1] <= 0))
+	pnts[0] = uod[0];
+	pnts[1] = uod[1];
+	pnts[2] = ft_3_pnt_transform(&(obj->inverse), uod[0]);
+	pnts[3] = ft_3_vec_transform(&(obj->inverse), uod[1]);
+	if (!ft_solve_sqr_(ft_3_vector_dot(pnts[3], pnts[3]),
+		2.0f * ft_3_vector_dot(pnts[3], pnts[2]),
+		ft_3_vector_dot(pnts[2], pnts[2]) - 1, &t) || (t[0] <= 0 && t[1] <= 0))
 		return (FLT_MAX);
-	i[0] = -1;
-	while (++i[0] < 2)
-	{
-		if (t1t2[i[0]] > 0)
-		{
-			hit[i[0]] = untr_od[0] + ft_3_vector_scale(untr_od[1], t1t2[i[0]]);
-			uhit[i[0]] = od[0] + ft_3_vector_scale(od[1], t1t2[i[0]]);
-			norm[i[0]] = ft_3_tounitvector(
-				ft_3_norm_transform(&(obj->inverse),
-				obj->ft_get_norm(obj->fig, uhit[i[0]])));
-			if (obj->is_neg)
-				hit[i[0]] += ft_3_vector_scale(norm[i[0]], SHIFT);
-			i[1] = ft_inside_type(objs, hit[i[0]]);
-//			printf("norm: (%8.3f, %8.3f, %8.3f) -> (%8.3f, %8.3f, %8.3f)\n",
-//				hit[i[0]][0], hit[i[0]][1], hit[i[0]][2],
-//				norm[i[0]][0], norm[i[0]][1], norm[i[0]][2]);
-//			if (obj->is_neg)
-//				printf("inside type: %2d\n", i[1]);
-			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
-				t1t2[i[0]] = 0;
-		}
-	}
-	if (t1t2[0] <= 0 && t1t2[1] <= 0)
+	i = -1;
+	pnts[0][3] = t[0];
+	pnts[1][3] = t[1];
+	while (++i < 2)
+		if ((t[i] = ft_collide_sphere_half(objs, obj, coll, pnts)) > 0)
+			break ;
+	if (t[0] <= 0 && t[1] <= 0)
 		return (FLT_MAX);
-	i[0] = (t1t2[0] > 0) ? 0 : 1;
-	coll->coll_pnt = hit[i[0]];
-	coll->ucoll_pnt = uhit[i[0]];
-	coll->norm = norm[i[0]];
-
-//	printf("t: %f", t1t2[i[0]]);
-//	printf("norm before invert: (%8.3f, %8.3f, %8.3f)\n",
-//		   coll->norm[0], coll->norm[1], coll->norm[2]);
-	if (obj->is_neg && i[1] != 1)
-		coll->norm = ft_3_vector_invert(coll->norm);
-//	printf("norm after invert: (%8.3f, %8.3f, %8.3f)\n",
-//		   coll->norm[0], coll->norm[1], coll->norm[2]);
-
+	ft_choose_object(objs, obj, coll);
 	if (obj->is_neg)
-	{
-		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
-		coll->coll_pnt -= ft_3_vector_scale(norm[i[0]], SHIFT);
-	}
-	else
-		coll->o = obj;
-
-//	if (obj->is_neg)
-//		printf("%s\n", (coll->o->is_neg) ? "in neg" : "in norm");
-
+		coll->norm = ft_3_vector_invert(coll->norm);
 	coll->tex_o = coll->o;
-	return (t1t2[i[0]]);
+	return ((t[i] > 0) ? t[i] : FLT_MAX);
 }
 
 int			ft_is_inside_sphere(t_object *o, t_vector point)
@@ -124,7 +94,5 @@ int			ft_is_inside_sphere(t_object *o, t_vector point)
 
 t_vector	ft_get_norm_sphere(void *fig, t_vector coll)
 {
-//	return (ft_3_tounitvector(coll - ((t_sphere *)fig)->origin));
 	return (ft_3_tounitvector(coll));
-
 }

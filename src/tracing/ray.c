@@ -86,7 +86,6 @@ t_color			ft_throw_rays
 	int			rays;
 	int			j;
 	int			i;
-	t_ray		next_ray;
 	t_vector	rand;
 	t_color		color;
 	float		color_sum[3];
@@ -95,8 +94,8 @@ t_color			ft_throw_rays
 	color_sum[1] = 0.0f;
 	color_sum[2] = 0.0f;
 	max_angle = ft_torad(num[0] * 45.0f);
-	rays = ft_limit(1, (int)(100.0f * sinf(ft_torad(45.0f))),
-		(int)(sinf(max_angle) * 100.0f));
+	rays = ft_limit(1, (int)(50.0f * sinf(ft_torad(45.0f))),
+		(int)(sinf(max_angle) * 50.0f));
 	if (ft_3_vector_cos(*vec, ray->coll->norm) < 0)
 		ray->coll->norm = ft_3_vector_scale(ray->coll->norm, -1.0f);
 	*vec = ft_change_blur_vec(ray->coll->norm, *vec, max_angle);
@@ -104,8 +103,8 @@ t_color			ft_throw_rays
 	while (++i < rays)
 	{
 		rand = ft_3_vector_random_cone(*vec, max_angle);
-		ft_init_ray(ray, &next_ray, &(ray->coll->coll_pnt), &rand);
-		color = ft_throw_ray(parg, &next_ray, (int)(num[1] + 1));
+		ray->d = rand;
+		color = ft_throw_ray(parg, ray, (int)(num[1] + 1));
 		j = -1;
 		while (++j < 3)
 			color_sum[j] += (float)(color.argb[j]) / (float)(rays);

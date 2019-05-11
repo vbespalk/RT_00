@@ -1,59 +1,60 @@
 
 #include "rt.h"
 
-int			ft_is_reachable_box(void *fig, t_vector origin, t_vector direct)
-{
-	(void)fig;
-	(void)origin;
-	(void)direct;
-	return (1);
-}
-
-float		ft_collide_box(
-				t_list **objs, struct s_object *obj,
-				t_coll *coll, t_vector untr_od[2])
+static float	ft_collide_box_face(
+					t_list **objs, t_object *obj,
+					t_coll *coll, t_vector odhu[5])
 {
 	t_box		*bx;
 	t_coll		pln_coll;
-	float		t[2];
-	int 		i;
-	t_vector	odh[3];
+	float		t;
 
 	bx = (t_box *)obj->fig;
+	t = ft_collide_plane(objs, bx->face[(int)odhu[0][3]], &pln_coll, odhu);
+	if (IN_RANGE(t, 0, odhu[1][3]) && t != FLT_MAX)
+	{
+		odhu[2] = odhu[3] + ft_3_vector_scale(odhu[4], t);
+		if (obj->is_neg)
+			odhu[2] += ft_3_vector_scale(coll->norm, SHIFT);
+		if (pln_coll.inside_type < 0
+			|| (obj->is_neg && pln_coll.inside_type == 0))
+			return (FLT_MAX);
+		coll->norm = ft_3_tounitvector(
+			ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
+		if (obj->is_neg && pln_coll.inside_type != 1)
+			coll->norm = ft_3_vector_invert(coll->norm);
+		coll->coll_pnt = odhu[2];
+		coll->ucoll_pnt = pln_coll.ucoll_pnt;
+		coll->tex_o = pln_coll.o;
+		coll->o = obj;
+		return (t);
+	}
+	return (FLT_MAX);
+}
+
+float			ft_collide_box(
+					t_list **objs, t_object *obj,
+					t_coll *coll, t_vector untr_od[2])
+{
+	int 		i;
+	float		t[2];
+	t_vector	odhu[5];
+
 	i = -1;
-	odh[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
-	odh[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
+	odhu[3] = untr_od[0];
+	odhu[4] = untr_od[1];
+	odhu[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
+	odhu[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
 	t[0] = FLT_MAX;
 	while (++i < BOX_FACES)
 	{
-		t[1] = ft_collide_plane(objs, bx->face[i], &pln_coll, odh);
-		if (IN_RANGE(t[1], 0, t[0]) && t[1] != FLT_MAX)
-		{
-			odh[2] = untr_od[0] + ft_3_vector_scale(untr_od[1], t[1]);
-			if (pln_coll.inside_type < 0
-			|| (obj->is_neg && pln_coll.inside_type == 0))
-				continue ;
-			coll->norm = ft_3_tounitvector(
-				ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
-			if (obj->is_neg)
-				odh[2] += ft_3_vector_scale(coll->norm, SHIFT);
-			if (obj->is_neg && pln_coll.inside_type != 1)
-				coll->norm = ft_3_vector_invert(coll->norm);
-			coll->coll_pnt = odh[2];
-			coll->ucoll_pnt = pln_coll.ucoll_pnt;
-			coll->tex_o = pln_coll.o;
-			coll->o = obj;
+		odhu[0][3] = i;
+		odhu[1][3] = t[0];
+		t[1] = ft_collide_box_face(objs, obj, coll, odhu);
+		if (t[1] < t[0])
 			t[0] = t[1];
-		}
 	}
-	if (obj->is_neg)
-	{
-		coll->coll_pnt += ft_3_vector_scale(
-			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
-		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
-		coll->coll_pnt -= ft_3_vector_scale(
-			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
-	}
+	ft_choose_object(objs, obj, coll);
 	return (t[0]);
 }
 
@@ -72,16 +73,6 @@ int			ft_is_inside_box(t_object *o, t_vector point)
 	if (!IN_RANGE(proj[0], 0, bx->whl[0]) ||
 		!IN_RANGE(proj[1], 0, bx->whl[1]) ||
 		!IN_RANGE(proj[2], 0, bx->whl[2]))
-	{
-//		printf("OUT BOX\n");
 		return (0);
-	}
-//	printf("IN BOX\n");
 	return (1);
-}
-
-t_vector	ft_get_norm_box(void *fig, t_vector coll)
-{
-	(void)coll;
-	return (ft_3_nullpointnew());
 }

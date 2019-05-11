@@ -38,6 +38,7 @@ static t_smooth		ft_get_smooth_type(char *smooth_str)
 		res = SMOOTH_4X;
 	else if (!ft_strcmp(smooth_str, "9x"))
 		res = SMOOTH_9X;
+	free(smooth_str);
 	return (res);
 }
 
@@ -116,4 +117,11 @@ void				ft_get_start_stack(t_scene *scn)
 		scn->cam->inner_o = (t_object *)(objs->content);
 	else
 		scn->cam->inner_o = ft_get_inner_object(&objs, scn->cam->origin);
+	node = objs;
+	while (node)
+	{
+		objs = node;
+		node = node->next;
+		free(objs);
+	}
 }

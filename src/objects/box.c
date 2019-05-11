@@ -91,9 +91,9 @@ char		*ft_parse_box(char **content, t_object *o)
 	t_box		*bx;
 
 	o->ft_collide = ft_collide_box;
-	o->ft_is_reachable = ft_is_reachable_box;
+//	o->ft_is_reachable = ft_is_reachable_box;
 	o->ft_is_inside = ft_is_inside_box;
-	o->ft_get_norm = ft_get_norm_box;
+//	o->ft_get_norm = ft_get_norm_box;
 	o->ft_translate = ft_translate_box;
 	o->ft_rotate = ft_rotate_box;
 	o->ft_scale = ft_scale_box;

@@ -883,7 +883,7 @@ void					ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_
 int						ft_is_reachable_sphere
 							(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_sphere
-							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector od[2]);
+							(t_list **objs, struct s_object *obj, t_coll *coll, t_vector uod[2]);
 int						ft_is_inside_sphere(struct s_object *o, t_vector pnt);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -1022,6 +1022,8 @@ t_object				*ft_get_inner_object(t_list **objs, t_vector point);
 t_object				*ft_inside_obj(
 							t_list **objs, t_vector point,
 							t_object *(*ft_choose)(t_list **, t_vector));
+void					ft_choose_object(
+							t_list **objs, t_object *obj, t_coll *coll);
 
 /*
 **	utils.c

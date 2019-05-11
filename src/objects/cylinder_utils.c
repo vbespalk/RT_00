@@ -192,7 +192,7 @@ static float	get_caps_coll(
 }
 
 float			ft_collide_cylinder(
-					t_list **objs, struct s_object *obj,
+					t_list **objs, t_object *obj,
 					t_coll *coll, t_vector untr_od[2])
 {
 	t_cylinder	*clnd;

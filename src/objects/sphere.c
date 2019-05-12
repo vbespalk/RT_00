@@ -102,8 +102,8 @@ int		ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	}
 	if (!IN_RANGE(sph->phi, 0, 2 * M_PI))
 		sph->phi = sph->phi < 0 ? sph->phi + 2 * (float)M_PI : sph->phi - 2 * (float)M_PI;
-	if (!IN_RANGE(sph->theta, 0, 2 * M_PI))
-		sph->theta = sph->theta < 0 ? sph->theta + 2 * (float)M_PI : sph->theta - 2 * (float)M_PI;
+	if (!IN_RANGE(sph->theta, 0, M_PI))
+		sph->theta = sph->theta < 0 ? sph->theta + (float)M_PI : sph->theta - (float)M_PI;
 	printf("ANGLES THETA %f, PHI %f\n", sph->theta, sph->phi);
     return (1);
 }

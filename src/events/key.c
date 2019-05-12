@@ -122,7 +122,7 @@ int					ft_switch_col_mode(t_env *e, Sint32 sum)
 int                ft_switch_skybox(t_sdl *sdl, t_scene *scn)
 {
 
-    if (scn->skybox != NULL)
+	if (scn->skybox != NULL)
     {
         printf("NOT NULL SKY\n");
         scn->skybox_on = !scn->skybox_on;

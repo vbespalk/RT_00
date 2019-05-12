@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 12:17:16 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/06 17:43:19 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/10 15:09:52 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void		button_pressed(t_env *e, int id)
 	SDL_Rect	src;
 	SDL_Rect	dst;
 
-	dst = g_btn_containers[id - BTN_ID_SHIFT - 1];
+	dst = g_btn_containers[id - 1];
 	dst.x = e->sdl->scr_wid - dst.x;
 	x_m = (float)(e->sdl->gui->w) / (float)GUI_WIDTH;
 	y_m = (float)(e->sdl->gui->h) / ((float)GUI_HEIGHT);
-	src = g_btn_containers[id - BTN_ID_SHIFT - 1];
+	src = g_btn_containers[id - 1];
 	src.x = GUI_WIDTH - src.x;
 	src.x *= x_m;
 	src.y *= y_m;
@@ -57,6 +57,7 @@ void		ft_gui(t_env *e, uint32_t id)
 	}
 	SDL_RenderCopy(e->sdl->renderer, e->sdl->gui->gui_texture,
 	NULL, &gui_container);
-	if (id > BTN_ID_SHIFT)
+	printf("id: %d\n", id);
+	if (id > 0)
 		button_pressed(e, id);
 }

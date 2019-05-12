@@ -55,12 +55,9 @@ t_color  ft_invert_px(t_color in_col)
     t_color 	col;
 
     hsv = rgb_to_hsv(in_col.argb[0] / 255.0f, in_col.argb[1] / 255.0f, in_col.argb[2] / 255.0f);
-    col.argb[0] = (Uint8)(0xFF - in_col.argb[0]);
-    col.argb[1] = (Uint8)(0xFF - in_col.argb[1]);
-    col.argb[2] = (Uint8)(0xFF - in_col.argb[2]);
-    col.argb[3] = (Uint8)0xFF;
-    // hsv[0] -= 30;
-    hsv[0] = (int)(hsv[0] + 180.0f + .5) % 360;
+//     hsv[0] -= 30;
+//	printf("hsv[0] %f \n", hsv[0]);
+    hsv[0] = (float)((int)(hsv[0] + 180.0f + .5) % 360);
     col = hsv_to_rgb(hsv[0], hsv[1], hsv[2]);
     return (col);
 }

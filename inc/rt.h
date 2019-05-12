@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/08 18:04:06 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/10 14:32:53 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,11 +279,11 @@ uint32_t	handle_button(t_env *e, uint32_t btn_id);
 */
 
 int		    make_screenshot(t_env *e);
-void		other_buttons(t_env *e, const uint32_t id);
-void		color_filter(t_env *e, const uint32_t id);
-void		translate(t_env *e, const uint32_t id);
-void		rotate(t_env *e, const uint32_t id);
-void		texture_editing(t_env *e, uint32_t id);
+uint32_t	other_buttons(t_env *e, const uint32_t id);
+uint32_t	color_filter(t_env *e, const uint32_t id);
+uint32_t	translate(t_env *e, const uint32_t id);
+uint32_t	rotate(t_env *e, const uint32_t id);
+uint32_t	texture_editing(t_env *e, uint32_t id);
 
 /*
 ** Gui stuff end
@@ -625,7 +625,7 @@ int	    			delete_obj(t_list **obj_lst, Uint32 id);
 
 int					sdl_init(t_sdl *sdl);
 // void				sdl_close(t_sdl *sdl);
-int					event_handler(t_env *env);
+int					event_handler(t_env *env, uint32_t *btn_id);
 int					sdl_error(char *message);
 int					get_format_data(t_sdl *sdl);
 int					sdl_img_error(char *message);

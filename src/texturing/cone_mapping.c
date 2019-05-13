@@ -18,9 +18,10 @@ static Uint32	ft_map_caps(t_cone *cone, SDL_Surface *tex,
 	return (UINT32_MAX);
 }
 
-Uint32			ft_map_cone(t_object *o, SDL_Surface *tex, t_vector hit)
+Uint32			ft_map_cone(t_object *o, void *tex, t_vector hit)
 {
 	t_cone		*cone;
+	SDL_Surface *t;
 	Uint32		col;
 	float		hei;
 	float		phi;
@@ -29,30 +30,33 @@ Uint32			ft_map_cone(t_object *o, SDL_Surface *tex, t_vector hit)
 	cone = ((t_cone *)o->fig);
 	if (((t_cone *)o->fig)->maxh == FLT_MAX)
 		return (o->color.val);
+	t = (SDL_Surface *)tex;
 	hei = fabsf(cone->maxh) > fabsf(cone->minh) ?
 		fabsf((hit[1]) / cone->maxh) : fabsf((hit[1]) / cone->minh);
 	if (IN_RANGE(hit[1], -1e-1, 1e-1))
-		return (ft_map_caps(((t_cone *)o->fig), tex, hit, hei));
+		return (ft_map_caps(((t_cone *)o->fig), t, hit, hei));
 	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;
-	xy[0] = (int)((tex->w - 1) * phi * 0.5f * (float)M_1_PI);
-	xy[1] = (int)((tex->h - 1) * hei);
-	if (!(IN_RANGE(xy[0], 0, tex->w) && IN_RANGE(xy[1], 0, tex->h)))
+	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
+	xy[1] = (int)((t->h - 1) * hei);
+	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
 		return (0xff);
-	ft_memcpy(&col, (Uint32 *)tex->pixels + xy[1] * tex->w
+	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 					+ xy[0], sizeof(Uint32));
 	return (col);
 }
 
-Uint32			ft_checker_cone(t_object *o, t_checkbrd *t, t_vector coll)
+Uint32			ft_checker_cone(t_object *o, void *tex, t_vector coll)
 {
 	t_cone		*con;
+	t_checkbrd	*t;
 	float		uv[2];
 	float		phi;
 	float		r;
 
 	con = (t_cone *)o->fig;
+	t = (t_checkbrd *)tex;
 	phi = atan2f(coll[2] / con->tan, coll[0] / con->tan);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
@@ -76,13 +80,15 @@ Uint32			ft_checker_cone(t_object *o, t_checkbrd *t, t_vector coll)
 			t->color[1]);
 }
 
-Uint32			ft_procedural_cone(t_object *o, t_procedural *t, t_vector coll)
+Uint32			ft_procedural_cone(t_object *o,void *tex, t_vector coll)
 {
-	t_cone		*cone;
-	t_vector	point;
+	t_cone			*cone;
+	t_vector		point;
+	t_procedural	*t;
 	float		r;
 
 	cone = (t_cone *)o->fig;
+	t = (t_procedural *)tex;
 	r = cone->r[0] < cone->r[1] &&
 		cone->r[1] != FLT_MIN ? cone->r[1] : cone->r[0];
 	if ((cone->minh != -FLT_MAX || cone->maxh != FLT_MAX) &&

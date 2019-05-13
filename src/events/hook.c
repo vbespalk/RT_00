@@ -126,8 +126,10 @@ int		on_lbutton_up(int x, int y, t_env *e)
 
 int		on_resize(Sint32 w, Sint32 h, t_env *e)
 {
+	if (w < GUI_WIDTH)
+		return (0);
 	e->sdl->scr_wid = w;
-    e->sdl->rt_wid = e->sdl->scr_wid - GUI_WIDTH;
+	e->sdl->rt_wid = e->sdl->scr_wid - GUI_WIDTH;
 	e->sdl->scr_hei = h;
     e->sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
 	ft_memdel((void **)&(e->sdl->format));

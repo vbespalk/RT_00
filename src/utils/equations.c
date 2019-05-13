@@ -135,7 +135,8 @@ int 				ft_solve_quartic(const double coef[5],  double res[4])
 		abcd[1] = -0.5f * pqr[0];
 		abcd[2] = -pqr[2];
 		abcd[3] = 0.5f * pqr[2] * pqr[0] - 1.f / 8 * pqr[1] * pqr[1];
-		num = ft_solve_cubic(abcd, res); /* only 1 real solution */
+		num = ft_solve_cubic(abcd, res);
+		/* only 1 real solution */
 		/* ... to build two quadric equations */
 		i = -1;
 		while (++i < num)
@@ -147,18 +148,10 @@ int 				ft_solve_quartic(const double coef[5],  double res[4])
 				break ;
 		}
 		if (uv[0] < -1e-1)
-		{
-//			printf("uv[0] %f, coef %f, %f, %f, %f, %f\n", uv[0], coef[0], coef[1], coef[2], coef[3],
-//					coef[4]);
 			return (0);
-		}
 		uv[0] = IS_ZERO(uv[0]) ? 0.f : sqrt(fabs(uv[0]));
 		if (uv[1] < -1e-1)
-		{
-//			printf("uv[1] %f, coef %f, %f, %f, %f, %f\n", uv[1], coef[0], coef[1], coef[2], coef[3],
-//					coef[4]);
 			return (0);
-		}
 		uv[1] = IS_ZERO(uv[1]) ? 0.f : sqrt(fabs(uv[1]));
 		num = ft_solve_sqr_(1, pqr[1] < 0 ? uv[1] : -uv[1], tmp + uv[0], res);
 		num += ft_solve_sqr_(1, pqr[1] < 0 ? -uv[1] : uv[1], tmp - uv[0], res + num);

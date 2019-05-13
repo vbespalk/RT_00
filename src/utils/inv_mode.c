@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color_man.c                                        :+:      :+:    :+:   */
+/*   inv_mode.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -16,7 +16,7 @@
 ** Value S,V must be in range [0,1], H must be in range [0, 360]
 */
 
-t_vector     hsv_to_rgb(float h, float s, float v)
+t_vector	hsv_to_rgb(float h, float s, float v)
 {
 	t_vector	pqt;
 	t_vector	rgb;
@@ -47,7 +47,7 @@ t_vector     hsv_to_rgb(float h, float s, float v)
 ** Value R,G,B must be in range [0,1]
 */
 
-t_vector    rgb_to_hsv(float r, float g, float b)
+t_vector	rgb_to_hsv(float r, float g, float b)
 {
     float 		delta;
     t_vector	hsv;
@@ -70,11 +70,11 @@ t_vector    rgb_to_hsv(float r, float g, float b)
     return (hsv);
 }
 
-t_color  ft_invert_px(t_color in_col)
+t_color		ft_invert_px(t_color in_col)
 {
-	t_vector 	hsv;
+	t_vector	hsv;
 	t_vector	rgb;
-	t_color 	col;
+	t_color		col;
 
 	hsv = rgb_to_hsv(in_col.argb[0] / 255.f, in_col.argb[1] / 255.f,
 			in_col.argb[2] / 255.f);

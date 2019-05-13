@@ -254,7 +254,7 @@ typedef struct s_procedural		t_procedural;
 typedef struct s_object			t_object;
 typedef struct s_collision		t_coll;
 
-typedef Uint32	(*fun_tab[4])(void *o, void *t, t_vector pnt);
+typedef Uint32	(*fun_tab[4])(t_object *o, void *t, t_vector pnt);
 
 typedef struct	s_vec2
 {
@@ -416,11 +416,11 @@ struct				s_object
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
 
 	Uint32			(*ft_mapping)
-			(void *o, void *tex, t_vector coll);
+			(t_object *o, void *tex, t_vector coll);
 	Uint32			(*ft_checker)
-			(void *o, void *tex, t_vector coll);
+			(t_object *o, void *tex, t_vector coll);
 	Uint32			(*ft_procedural)
-			(void *o, void *tex, t_vector coll);
+			(t_object *o, void *tex, t_vector coll);
 };
 
 typedef struct		s_plane
@@ -1016,50 +1016,50 @@ t_texture				*load_texture(t_sdl *sdl, char *path);
 ** sphere_mapping.c
 */
 
-Uint32					ft_map_sphere(t_object *o, SDL_Surface *tex, t_vector coll);
-Uint32					ft_checker_sph(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_procedural_sph(t_object *o, t_procedural *tex, t_vector coll);
+Uint32					ft_map_sphere(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_sph(t_object *o, void *tex, t_vector coll);
+Uint32					ft_procedural_sph(t_object *o, void *tex, t_vector coll);
 /*
 ** cylinder_mapping.c
 */
 
-Uint32					ft_map_clndr(t_object *o, SDL_Surface *tex, t_vector coll);
-Uint32					ft_checker_cyl(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_procedural_cyl(t_object *o, t_procedural *tex, t_vector coll);
+Uint32					ft_map_clndr(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_cyl(t_object *o, void *tex, t_vector coll);
+Uint32					ft_procedural_cyl(t_object *o, void *tex, t_vector coll);
 
 /*
 ** prbld_mapping.c
 */
-Uint32					ft_procedural_prbld(t_object *o, t_procedural *tex, t_vector coll);
-Uint32					ft_checker_prbld(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_map_prbld(t_object *o, SDL_Surface *tex, t_vector hit);
+Uint32					ft_procedural_prbld(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_prbld(t_object *o, void *tex, t_vector coll);
+Uint32					ft_map_prbld(t_object *o, void *tex, t_vector hit);
 
 /*
 ** cone_mapping.c
 */
 
-Uint32					ft_map_cone(t_object *o, SDL_Surface *tex, t_vector coll);
-Uint32					ft_checker_cone(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_procedural_cone(t_object *o, t_procedural *tex, t_vector coll);
+Uint32					ft_map_cone(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_cone(t_object *o, void *tex, t_vector coll);
+Uint32					ft_procedural_cone(t_object *o, void *tex, t_vector coll);
 /*
 ** plane_mapping.c
 */
 
-Uint32					ft_map_plane(t_object *o, SDL_Surface *tex, t_vector coll);
-Uint32					ft_map_box(t_object *o, SDL_Surface *tex, t_vector hit);
-Uint32					ft_checker_pln(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_checker_box(t_object *o, t_checkbrd *tex, t_vector coll);
+Uint32					ft_map_plane(t_object *o, void *tex, t_vector coll);
+Uint32					ft_map_box(t_object *o, void *tex, t_vector hit);
+Uint32					ft_checker_pln(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_box(t_object *o, void *tex, t_vector coll);
 
-Uint32					ft_procedural_pln(t_object *o, t_procedural *tex, t_vector coll);
-Uint32					ft_checker_dsk(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_procedural_dsk(t_object *o, t_procedural *tex, t_vector coll);
+Uint32					ft_procedural_pln(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_dsk(t_object *o, void *tex, t_vector coll);
+Uint32					ft_procedural_dsk(t_object *o, void *tex, t_vector coll);
 
 /*
 ** torus_mapping.c
 */
-Uint32					ft_procedural_tor(t_object *o, t_procedural *tex, t_vector coll);
-Uint32					ft_checker_tor(t_object *o, t_checkbrd *tex, t_vector coll);
-Uint32					ft_map_torus(t_object *o, SDL_Surface *tex, t_vector hit);
+Uint32					ft_procedural_tor(t_object *o, void *tex, t_vector coll);
+Uint32					ft_checker_tor(t_object *o, void *tex, t_vector coll);
+Uint32					ft_map_torus(t_object *o, void *tex, t_vector hit);
 /*
 ** skybox.c
 */
@@ -1120,16 +1120,16 @@ void                    ft_checker_del(t_checkbrd ** checker);
 t_color  				ft_grayscale_px(t_color in_col);
 t_color  				ft_sepia_px(t_color in_col);
 t_color  				ft_negative_px(t_color in_col);
-t_color  				ft_invert_px(t_color in_col);
 void					ft_col_mode(t_sdl *sdl, Sint32 mode);
 t_color					ft_px_mode(t_color col, t_mode *mode);
 
 /*
-** color_man.c
+** inv_mode.c
 */
 
 t_vector				hsv_to_rgb(float h, float s, float v);
 t_vector				rgb_to_hsv(float r, float g, float b);
+t_color  				ft_invert_px(t_color in_col);
 
 /*
 ** FROM MY LIBFT

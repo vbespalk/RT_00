@@ -12,21 +12,26 @@
 
 #include "rt.h"
 
-Uint32		ft_procedural_dsk(t_object *o, t_procedural *t, t_vector coll)
+Uint32		ft_procedural_dsk(t_object *o, void *tex, t_vector coll)
 {
+	t_procedural *t;
+
+	t = (t_procedural *)tex;
 	coll = ((t_disk *)o->fig)->out_r == FLT_MAX ?
 			ft_3_vector_scale(coll, 1.0f / o->dist) :
 			ft_3_vector_scale(coll, 1.0f / ((t_disk *)o->fig)->out_r);
 	return (t->ft_get_color(t, NULL, ft_3_vector_scale(coll, t->scale)));
 }
 
-Uint32		ft_checker_dsk(t_object *o, t_checkbrd *t, t_vector coll)
+Uint32		ft_checker_dsk(t_object *o, void *tex, t_vector coll)
 {
 	t_disk		*dsk;
+	t_checkbrd	*t;
 	float		uv[2];
 	t_vector	pnt;
 
 	dsk = (t_disk *)o->fig;
+	t = (t_checkbrd *)tex;
 	pnt = coll;
 	coll = dsk->out_r == FLT_MAX ? ft_3_vector_scale(coll, 1.0f / o->dist) :
 		ft_3_vector_scale(coll, 1.0f / (dsk->out_r));

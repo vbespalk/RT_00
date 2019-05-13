@@ -62,6 +62,7 @@ int	    delete_obj(t_list **obj_lst, Uint32 id)
 			return (1);
 		}
 	}
+	return (0);
 }
 
 t_mode			*ft_new_node(int id)

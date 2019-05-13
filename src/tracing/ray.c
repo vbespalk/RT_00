@@ -50,8 +50,8 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	num[1] = depth;
 	if (coll.o->spclr && depth < DEPTH)
 	{
-		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, 1e-1);
-        ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.spclr_vec));
+		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, SHIFT);
+		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.spclr_vec));
 		num[0] = coll.o->s_blur;
 		spclr_col = (coll.o->s_blur) ?
 			ft_throw_rays(parg, &next_ray, &(coll.spclr_vec), num) :
@@ -59,8 +59,8 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	}
 	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
 	{
-//		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, 1e-1);
-        coll_pnt = coll.coll_pnt + ft_3_vector_scale(ray->d, 1e-1);
+//        coll_pnt = coll.coll_pnt + ft_3_vector_scale(ray->d, 1e-1);
+		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, SHIFT);
 		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.trans_vec));
 		ft_handle_hit(&next_ray, coll.o);
 		num[0] = coll.o->t_blur;
@@ -87,7 +87,6 @@ t_color			ft_throw_rays
 	int			rays;
 	int			j;
 	int			i;
-	t_ray		next_ray;
 	t_vector	rand;
 	t_color		color;
 	float		color_sum[3];
@@ -96,8 +95,8 @@ t_color			ft_throw_rays
 	color_sum[1] = 0.0f;
 	color_sum[2] = 0.0f;
 	max_angle = ft_torad(num[0] * 45.0f);
-	rays = ft_limit(1, (int)(100.0f * sinf(ft_torad(45.0f))),
-		(int)(sinf(max_angle) * 100.0f));
+	rays = ft_limit(1, (int)(50.0f * sinf(ft_torad(45.0f))),
+		(int)(sinf(max_angle) * 50.0f));
 	if (ft_3_vector_cos(*vec, ray->coll->norm) < 0)
 		ray->coll->norm = ft_3_vector_scale(ray->coll->norm, -1.0f);
 	*vec = ft_change_blur_vec(ray->coll->norm, *vec, max_angle);
@@ -105,8 +104,8 @@ t_color			ft_throw_rays
 	while (++i < rays)
 	{
 		rand = ft_3_vector_random_cone(*vec, max_angle);
-		ft_init_ray(ray, &next_ray, &(ray->coll->coll_pnt), &rand);
-		color = ft_throw_ray(parg, &next_ray, (int)(num[1] + 1));
+		ray->d = rand;
+		color = ft_throw_ray(parg, ray, (int)(num[1] + 1));
 		j = -1;
 		while (++j < 3)
 			color_sum[j] += (float)(color.argb[j]) / (float)(rays);

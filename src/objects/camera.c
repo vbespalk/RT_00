@@ -38,6 +38,7 @@ static t_smooth		ft_get_smooth_type(char *smooth_str)
 		res = SMOOTH_4X;
 	else if (!ft_strcmp(smooth_str, "9x"))
 		res = SMOOTH_9X;
+	free(smooth_str);
 	return (res);
 }
 
@@ -61,33 +62,34 @@ void				ft_parse_camera(char **content, t_camera *cam)
 	cam->angles[1] = ft_torad(cam->angles[1]);
 	cam->angles[2] = ft_torad(cam->angles[2]);
 }
-static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
-{
-	t_dlist		*node;
-	t_list		*o_node;
-	t_object	*o;
 
-	node = NULL;
-	o_node = objs;
-	if (!o_node)
-		return (NULL);
-
-	while (o_node)
-	{
-		o = (t_object *)(o_node->content);
-		if (o->ft_is_inside(o->fig, scn->cam->origin))
-		{
-			if (!node)
-				ft_dlstpush(&node, objs->content);
-			else
-			{
-
-			}
-		}
-		o_node = o_node->next;
-	}
-	return (node);
-}
+//static t_dlist		*ft_sort_stack(t_scene *scn, t_list *objs)
+//{
+//	t_dlist		*node;
+//	t_list		*o_node;
+//	t_object	*o;
+//
+//	node = NULL;
+//	o_node = objs;
+//	if (!o_node)
+//		return (NULL);
+//
+//	while (o_node)
+//	{
+//		o = (t_object *)(o_node->content);
+//		if (o->ft_is_inside(o->fig, scn->cam->origin))
+//		{
+//			if (!node)
+//				ft_dlstpush(&node, objs->content);
+//			else
+//			{
+//
+//			}
+//		}
+//		o_node = o_node->next;
+//	}
+//	return (node);
+//}
 
 //        LEAKS
 //          |
@@ -124,4 +126,11 @@ void				ft_get_start_stack(t_scene *scn)
 		scn->cam->inner_o = (t_object *)(objs->content);
 	else
 		scn->cam->inner_o = ft_get_inner_object(&objs, scn->cam->origin);
+	node = objs;
+	while (node)
+	{
+		objs = node;
+		node = node->next;
+		free(objs);
+	}
 }

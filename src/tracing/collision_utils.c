@@ -12,7 +12,7 @@ int			ft_inside_type(t_list **objs, t_vector point)
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, point))
+		if (o->ft_is_inside(o, point))
 		{
 			if (o->is_neg)
 				return (-1);
@@ -68,7 +68,7 @@ t_object	*ft_inside_obj(
 	while (node)
 	{
 		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o->fig, point))
+		if (o->ft_is_inside(o, point))
 		{
 			ft_lstpush(&res_objs, ft_nodenew((void *)o, sizeof(t_object)));
 			++len;
@@ -81,4 +81,17 @@ t_object	*ft_inside_obj(
 		return ((t_object *)(res_objs->content));
 	else
 		return (ft_choose(&res_objs, point));
+}
+
+void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)
+{
+	if (obj->is_neg)
+	{
+//		coll->coll_pnt += ft_3_vector_scale(
+//			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
+		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
+		coll->coll_pnt -= ft_3_vector_scale(coll->norm, SHIFT);
+	}
+	else
+		coll->o = obj;
 }

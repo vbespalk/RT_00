@@ -24,16 +24,12 @@ t_vector	ft_3_pnt_transform(const t_matrix *m, t_vector p)
 
 	if (!m)
 		return (p);
-	x = (*m)[0][0] * p[0] + (*m)[0][1] * p[1] + (*m)[0][2] \
-	* p[2] + (*m)[0][3];
-	y = (*m)[1][0] * p[0] + (*m)[1][1] * p[1] + (*m)[1][2] \
-	* p[2] + (*m)[1][3];
-	z = (*m)[2][0] * p[0] + (*m)[2][1] * p[1] + (*m)[2][2] \
-	* p[2] + (*m)[2][3];
-	w = (*m)[3][0] * p[0] + (*m)[3][1] * p[1] + (*m)[3][2] \
-	* (p)[2] + (*m)[3][3];
-	if (w > 1)
-		printf("WARN: ft_3_pnt_transform \n");
+	x = (*m)[0][0] * p[0] + (*m)[0][1] * p[1] + (*m)[0][2] * p[2] + (*m)[0][3];
+	y = (*m)[1][0] * p[0] + (*m)[1][1] * p[1] + (*m)[1][2] * p[2] + (*m)[1][3];
+	z = (*m)[2][0] * p[0] + (*m)[2][1] * p[1] + (*m)[2][2] * p[2] + (*m)[2][3];
+	w = (*m)[3][0] * p[0] + (*m)[3][1] * p[1] + (*m)[3][2] * p[2] + (*m)[3][3];
+//	if (w > 1)
+//		printf("WARN: ft_3_pnt_transform \n");
 //	printf("TRANSF PNT %f,%f,%f\n", x, y, z);
 	return ((t_vector){x, y, z});
 }
@@ -92,24 +88,22 @@ void		ft_3_matrix_mult(t_matrix *left, t_matrix *right, int inv)
 
 void		ft_3_transform_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 {
-	// t_matrix lm;
-
 	if (!rm)
 		return ;
 	ft_3_identity(rm);
 	if (sc != FLT_MIN)
 	{
-		printf("SCALING %f\n", sc);
+//		printf("SCALING %f\n", sc);
 		ft_3_matrix_scale(rm, sc, 0);
 	}
 	if (!(ft_3_isnullpoint(rot)))
 	{
-		printf("ROT %f,%f,%f\n", rot[0], rot[1], rot[2]);
+//		printf("ROT %f,%f,%f\n", rot[0], rot[1], rot[2]);
 		ft_3_matrix_rotate(rm, rot, 0);
 	}
 	if (!(ft_3_isnullpoint(transl)))
 	{
-		printf("TRANSL %f,%f,%f\n", transl[0], transl[1], transl[2]);
+//		printf("TRANSL %f,%f,%f\n", transl[0], transl[1], transl[2]);
 		ft_3_matrix_move(rm, transl, 0);
 	}
 //	printf("MATRIX\n");
@@ -119,8 +113,6 @@ void		ft_3_transform_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 
 void		ft_3_inv_trans_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 {
-	// t_matrix lm;
-
 	if (!rm)
 		return ;
 	ft_3_identity(rm);
@@ -130,7 +122,7 @@ void		ft_3_inv_trans_mat(t_matrix *rm, t_vector transl, t_vector rot, float sc)
 		ft_3_matrix_rotate(rm, rot, 1);
 	if (!(ft_3_isnullpoint(transl)))
 		ft_3_matrix_move(rm, transl, 1);
-	printf("INVERTED\n");
-	for (int i = 0; i < 4; ++i)
-		printf("%.10f, %.10f, %.10f, %.10f\n", (*rm)[i][0], (*rm)[i][1], (*rm)[i][2], (*rm)[i][3]);
+//	printf("INVERTED\n");
+//	for (int i = 0; i < 4; ++i)
+//		printf("%.10f, %.10f, %.10f, %.10f\n", (*rm)[i][0], (*rm)[i][1], (*rm)[i][2], (*rm)[i][3]);
 }

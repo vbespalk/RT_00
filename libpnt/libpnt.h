@@ -87,6 +87,10 @@ t_vector				ft_3_vector_turn_near
 
 t_vector				ft_3_fabsf_vector(t_vector vec);
 
+// ------------------------- DELETE ME ---------------------------------------//
+void					ft_3_vector_print(const char *str, t_vector point);
+// ---------------------------------------------------------------------------//
+
 /*
 ** matrix
 */

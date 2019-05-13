@@ -14,6 +14,10 @@
 
 # define RT_H
 
+/*
+**	includes
+*/
+
 # include <stdio.h>
 # include <pthread.h>
 # include <stdint.h>
@@ -43,11 +47,21 @@
 
 # endif
 
+/*
+**	window and camera
+*/
+
 # define SCR_WID		950
 # define SCR_HEI		548
 # define GUI_WIDTH		220
 # define FOV			1.570796
+# define FOV_MIN		60.0f
+# define FOV_MAX		120.0f
 # define EQN_EPS		1e-30
+
+/*
+**	macro functions
+*/
 
 # define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a > _b ? _b : _a;})
 # define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a < _b ? _b : _a;})
@@ -86,6 +100,7 @@
 
 # define BRIGHT_UNIT	20000.0f
 # define DEFAULT_REFR	1.0f
+# define SHIFT			0.1f
 
 /*
 **	system
@@ -94,10 +109,6 @@
 # define DEPTH			5
 # define STACK_SIZE		DEPTH
 # define THREADS		8
-
-/*
-**	includes
-*/
 
 # define ROTAT_F		DEG_TO_RAD(10)
 # define TRANS_F		150.0f
@@ -401,7 +412,7 @@ struct				s_object
 			(void *fig, t_vector origin, t_vector direct);
 	float			(*ft_collide)
 			(t_list **objs, t_object *obj,
-			struct s_collision *coll, t_vector od[2]);
+			t_coll *coll, t_vector od[2]);
 
 	int				(*ft_is_inside)(t_object *o, t_vector pnt);
 	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
@@ -581,18 +592,13 @@ struct				s_environment
 	t_procedural	*smpl[6];
 };
 
-typedef struct		s_thrarg
-{
-	int				i;
-	t_env			*e;
-}					t_thrarg;
-
 /*
 ** RAY TRACING STAFF
 */
 
 struct				s_collision
 {
+	int				inside_type;
 	t_color			px_color;
 	t_color			illum_color;
 	t_color			phong_color;
@@ -616,6 +622,12 @@ typedef struct		s_ray
 	t_vector		d;
 	t_object		*(stack[STACK_SIZE]);
 }					t_ray;
+
+typedef struct		s_thrarg
+{
+	int				i;
+	t_env			*e;
+}					t_thrarg;
 
 /*
 ** GRAPH_TRANSFORMATION LIBRARY
@@ -825,7 +837,7 @@ int	    				ft_scale_sphere
 int						ft_is_reachable_sphere
 			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_sphere
-			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
+			(t_list **objs, t_object *o, t_coll *coll, t_vector uod[2]);
 int						ft_is_inside_sphere(t_object *o, t_vector pnt);
 t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
 
@@ -853,8 +865,8 @@ int	    				ft_scale_hei_cone
 */
 
 float					ft_collide_cone
-			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
-int						ft_is_inside_cone(t_object *o, t_vector pnt);
+			(t_list **objs, t_object *o, t_coll *coll, t_vector uod[2]);
+int						ft_is_inside_cone(t_object *o, t_vector upnt);
 t_vector				ft_get_norm_cone(void *fig, t_vector coll);
 void					ft_get_coll_pnts
 			(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
@@ -987,6 +999,8 @@ t_object				*ft_get_inner_object(t_list **objs, t_vector point);
 t_object				*ft_inside_obj(
 							t_list **objs, t_vector point,
 							t_object *(*ft_choose)(t_list **, t_vector));
+void					ft_choose_object(
+							t_list **objs, t_object *obj, t_coll *coll);
 
 /*
 **	utils.c
@@ -1020,7 +1034,7 @@ Uint32					ft_map_sphere(t_object *o, void *tex, t_vector coll);
 Uint32					ft_checker_sph(t_object *o, void *tex, t_vector coll);
 Uint32					ft_procedural_sph(t_object *o, void *tex, t_vector coll);
 /*
-** cylinder_mapping.c
+** cylinder_mapping.cf
 */
 
 Uint32					ft_map_clndr(t_object *o, void *tex, t_vector coll);

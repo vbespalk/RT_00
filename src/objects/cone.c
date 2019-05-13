@@ -133,7 +133,7 @@ int	    	ft_scale_cone(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	if (key == SDLK_z)
 		cone->tan = cone->tan * (1.0f + SCANG_F);
 	else if (key == SDLK_x)
-			cone->tan = cone->tan *  (1.0f - SCANG_F);
+		cone->tan = cone->tan *  (1.0f - SCANG_F);
 	cone->r[0] = cone->minh != -FLT_MAX ? fabsf(cone->minh * cone->tan) : FLT_MIN;
 	cone->r[1] = cone->maxh != FLT_MAX ? fabsf(cone->maxh * cone->tan) : FLT_MIN;
 //	ft_3_transform_mat(tr_m, cone->o, cone->v, FLT_MIN);

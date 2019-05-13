@@ -12,12 +12,12 @@
 
 #include "rt.h"
 
-static int			ft_solve_sqr_(double a, double b, double c, double res[2])
+static int		ft_solve_sqr_(double a, double b, double c, double res[2])
 {
 	double d;
 
-	res[0] = -FLT_MAX;
-	res[1] = -FLT_MAX;
+	res[0] = FLT_MAX;
+	res[1] = FLT_MAX;
 	if (IS_ZERO(a))
 	{
 		res[0] = -c / b;
@@ -30,29 +30,39 @@ static int			ft_solve_sqr_(double a, double b, double c, double res[2])
 	d = sqrt(d);
 	res[0] = (float)((-b + d) / (2.0f * a));
 	res[1] = (float)((-b - d) / (2.0f * a));
-	if ((res[0] > res[1] && res[1] > FLT_MIN) || res[0] < FLT_MIN)
+	if ((res[0] > res[1] && res[1] >= 0) || res[0] <= 0)
 		ft_swap(&res[0], &res[1], sizeof(double));
 	return (1);
 }
 
-static float	get_closer_pnt(const double *t, const t_vector *hit, t_coll *coll, t_object *obj)
+static float	get_closer_pnt(
+					const double *t, const t_vector *hit,
+					t_coll *coll, t_object *obj)
 {
 	coll->o = obj;
 	coll->tex_o = obj;
-	if ((t[0] < t[1] || t[1] < FLT_MIN) && t[0] > FLT_MIN)
+	if ((t[0] < t[1] || t[1] <= 0) && t[0] >= 0 && t[0] != FLT_MAX)
 	{
+		//printf("cides\n");
 		coll->ucoll_pnt = hit[0];
-		coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse),
-			coll->ucoll_pnt - ((t_vector){0, coll->ucoll_pnt[1] + 1, 0})));
+		coll->norm = ft_3_tounitvector(
+			ft_3_norm_transform(
+				&(obj->inverse),
+				coll->ucoll_pnt - ((t_vector){0, coll->ucoll_pnt[1] + 1, 0})));
+
+		//if (coll->norm[1] < 0) ft_3_vector_print("norm: ", coll->norm);
+
 		return ((float)t[0]);
 	}
-	if (t[1] > FLT_MIN)
+	if (t[1] >= 0 && t[0] != FLT_MAX)
 	{
+		//printf("caps\n");
 		coll->ucoll_pnt = hit[1];
-		coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), (t_vector) {0, -1, 0}));
+		coll->norm = ft_3_tounitvector(
+			ft_3_norm_transform(&(obj->inverse), (t_vector) {0, -1, 0}));
 		return ((float)t[1]);
 	}
-	return (-FLT_MAX);
+	return (FLT_MAX);
 }
 
 static float	get_caps_coll(t_vector od[2], t_vector *coll, t_prbld *par)
@@ -61,20 +71,21 @@ static float	get_caps_coll(t_vector od[2], t_vector *coll, t_prbld *par)
 	t_vector 	o;
 
 	od[0][1] -= par->maxh;
-	t = par->maxh == FLT_MAX ? -FLT_MAX : -(od[0][1]) / od[1][1];
-	if (t < FLT_MIN)
-		return (-FLT_MAX);
+	t = par->maxh == FLT_MAX ? FLT_MAX : -(od[0][1]) / od[1][1];
+	if (t < 0 || t == FLT_MAX)
+		return (FLT_MAX);
 	*coll = od[0] + ft_3_vector_scale(od[1], t);
 //	if (ft_3_vector_dot(*coll, *coll) > par->r * par->r)
 	if (ft_3_vector_dot(*coll, *coll) > 4.0f * par->maxh)
 	{
 		*coll = ft_3_nullpointnew();
-		return (-FLT_MAX);
+		return (FLT_MAX);
 	}
 	return (t);
 }
 
-int			ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct)
+int				ft_is_reachable_prbld(
+					void *fig, t_vector origin, t_vector direct)
 {
 	(void)origin;
 	(void)direct;
@@ -82,27 +93,30 @@ int			ft_is_reachable_prbld(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-static double	get_cides_coll(t_vector od[2], double *t, t_vector *coll, t_prbld *par)
+static double	get_cides_coll(
+					t_vector od[2], double *t, t_vector *coll, t_prbld *par)
 {
 	t_vector	hit[2];
 	float 		m[2];
 
-	hit[0] = od[0] + ft_3_vector_scale(od[1], (float)fabs(t[0]));
-	hit[1] = od[0] + ft_3_vector_scale(od[1], (float)fabs(t[1]));
-	if (t[0] >= FLT_MIN && IN_RANGE(hit[0][1], FLT_MIN, par->maxh))
+	hit[0] = od[0] + ft_3_vector_scale(od[1], t[0]);
+	hit[1] = od[0] + ft_3_vector_scale(od[1], t[1]);
+	if (t[0] >= 0 && IN_RANGE(hit[0][1], 0, par->maxh))
 	{
 		*coll = hit[0];
 		return (t[0]);
 	}
-	else if (t[1] >= FLT_MIN && IN_RANGE(hit[1][1], FLT_MIN, par->maxh))
+	else if (t[1] >= 0 && IN_RANGE(hit[1][1], 0, par->maxh))
 	{
 		*coll = hit[1];
 		return (t[1]);
 	}
-	return (-FLT_MAX);
+	return (FLT_MAX);
 }
 
-float	ft_collide_prbld(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+float			ft_collide_prbld(
+					t_list **objs, struct s_object *obj,
+					t_coll *coll, t_vector untr_od[2])
 {
 	t_prbld		*par;
 	t_vector	hit[2];
@@ -120,14 +134,16 @@ float	ft_collide_prbld(t_list **objs, struct s_object *obj, t_coll *coll, t_vect
 //		&res) || (res[0] < FLT_MIN && res[1] < FLT_MIN))
 //	printf(" ori %f,%f,%f, od %f,%f,%f\n", od[0][0], od[0][1], od[0][2],
 //			od[1][0], od[1][1], od[1][2]);
-	if (!ft_solve_sqr_(ft_3_vector_dot(od[1], od[1]) - od[1][1] * od[1][1],
-					   2.0f * (ft_3_vector_dot(od[1], od[0]) - od[1][1] * (od[0][1] + 2.f)),
-					   ft_3_vector_dot(od[0], od[0]) - od[0][1] * (od[0][1] + 4.f),
-					   res) || (res[0] < FLT_MIN && res[1] < FLT_MIN))
-		if (IS_ZERO(od[1][1]) || par->maxh == FLT_MAX)
-			return (-FLT_MAX);
-	res[0] = res[0] < FLT_MIN && res[1] < FLT_MIN ? -FLT_MAX : get_cides_coll(od, res, &hit[0], par);
-	res[1] = par->maxh == FLT_MAX ? -FLT_MAX : get_caps_coll(od, &hit[1], par);
+	if ((!ft_solve_sqr_(
+		ft_3_vector_dot(od[1], od[1]) - od[1][1] * od[1][1],
+		2.0f * (ft_3_vector_dot(od[1], od[0]) - od[1][1] * (od[0][1] + 2.f)),
+		ft_3_vector_dot(od[0], od[0]) - od[0][1] * (od[0][1] + 4.f),
+		res) || (res[0] <= 0 && res[1] <= 0))
+		&& (IS_ZERO(od[1][1]) || par->maxh == FLT_MAX))
+		return (FLT_MAX);
+	res[0] = get_cides_coll(od, res, &hit[0], par);
+	res[1] = get_caps_coll(od, &hit[1], par);
+
 	return (get_closer_pnt(res, hit, coll, obj));
 }
 

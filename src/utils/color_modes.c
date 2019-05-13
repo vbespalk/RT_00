@@ -45,24 +45,6 @@ t_color  ft_negative_px(t_color in_col)
     return (col);
 }
 
-/*
-** SMTH WRONG WITH YELLOW THEN MORE WHEN 1 ITERATION
-*/
-
-t_color  ft_invert_px(t_color in_col)
-{
-    t_vector 	hsv;
-    t_color 	col;
-
-    hsv = rgb_to_hsv(in_col.argb[0] / 255.0f, in_col.argb[1] / 255.0f, in_col.argb[2] / 255.0f);
-//     hsv[0] -= 30;
-//	printf("hsv[0] %f \n", hsv[0]);
-    hsv[0] = (float)((int)(hsv[0] + 180.0f + .5) % 360);
-    col = hsv_to_rgb(hsv[0], hsv[1], hsv[2]);
-    return (col);
-}
-
-
 void	ft_col_mode(t_sdl *sdl, Sint32 id)
 {
 	t_color col;
@@ -70,7 +52,6 @@ void	ft_col_mode(t_sdl *sdl, Sint32 id)
 	int 	y;
 
 	y = -1;
-	printf("REDRAV AT COL_MODE\n");
 	while (++y < sdl->scr_hei && (x = -1))
 	{
 		while (++x < sdl->rt_wid)
@@ -89,42 +70,6 @@ void	ft_col_mode(t_sdl *sdl, Sint32 id)
 	}
 }
 
-//void	ft_col_mode(t_sdl *sdl, bool *mode)
-//{
-//	t_color col;
-//	int 	x;
-//	int 	y;
-//
-//	y = -1;
-//	while (++y < sdl->scr_hei && (x = -1))
-//	{
-//		while (++x < sdl->rt_wid)
-//		{
-//			col.val = sdl->pixels[y * sdl->rt_wid + x];
-//			if (mode[MD_GRAYSCALE])
-//				col = ft_grayscale_px(col);
-//			if (mode[MD_SEPIA])
-//				col = ft_sepia_px(col);
-//			if (mode[MD_NEGATIVE])
-//				col = ft_negative_px(col);
-//			if (mode[MD_INVERTED])
-//				col = ft_invert_px(col);
-//			sdl->pixels[y * sdl->rt_wid + x] = col.val;
-//		}
-//	}
-//}
-//t_color		ft_px_mode(t_color col, int mode)
-//{
-//			if (mode == MD_GRAYSCALE)
-//				return (ft_grayscale_px(col));
-//			else if (mode == MD_SEPIA)
-//				return (ft_sepia_px(col));
-//			else if (mode == MD_NEGATIVE)
-//				return (ft_negative_px(col));
-//			else if (mode == MD_INVERTED)
-//				return (ft_invert_px(col));
-//}
-
 t_color		ft_px_mode(t_color col, t_mode *mode)
 {
 	while (mode)
@@ -141,19 +86,3 @@ t_color		ft_px_mode(t_color col, t_mode *mode)
 	}
 	return (col);
 }
-
-//t_color		ft_px_mode(t_color col, bool *mode)
-//{
-//	t_color	out_col;
-//
-//	out_col = col;
-//	if (mode[MD_GRAYSCALE])
-//		out_col = (ft_grayscale_px(out_col));
-//	if (mode[MD_SEPIA])
-//		out_col = (ft_sepia_px(out_col));
-//	if (mode[MD_NEGATIVE])
-//		out_col = (ft_negative_px(out_col));
-//	if (mode[MD_INVERTED])
-//		out_col = (ft_invert_px(out_col));
-//	return (out_col);
-//}

@@ -21,8 +21,7 @@ Uint32		ft_map_sphere(t_object *o, SDL_Surface *tex, t_vector hit)
 	t_sphere	*sph;
 
 	sph = (t_sphere *)o->fig;
-	hit = ft_3_vector_rotate(hit, 0, -sph->phi, 0);
-	hit = ft_3_tounitvector(ft_3_vector_rotate(hit, 0, 0, sph->theta));
+	hit = ft_3_vector_rotate(hit, 0, sph->phi, sph->theta);
 	phi = atan2f(hit[2], hit[0]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
@@ -45,20 +44,20 @@ Uint32		ft_checker_sph(t_object *o, t_checkbrd *tex, t_vector coll)
 	t_sphere	*sph;
 	float		theta;
 	float		phi;
-	int			patt;
+	t_vector	hit;
 
 	sph = (t_sphere *)o->fig;
-	phi = sph->phi + atan2f(coll[2], coll[0]);
+	hit = ft_3_vector_rotate(coll, 0, sph->phi, sph->theta);
+	phi = atan2f(hit[2], hit[0]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
-	theta = acosf(coll[1]) + sph->theta;
+	theta = acosf(hit[1]);
 	if (!(IN_RANGE(theta, 0.0f, M_PI)))
 		theta = theta < 0.0f ? theta + (float)M_PI : theta - (float)M_PI;
 	uv[0] = (1 + phi / (float)M_PI);
 	uv[1] = theta / (float)M_PI;
-	patt = (fmodf(uv[0] * tex->size, 1) > 0.5f) ^
-			(fmodf(uv[1] * tex->size, 1) > 0.5f);
-	if (patt == 0)
+	if ((fmodf(uv[0] * tex->size, 1) > 0.5f) ^
+		(fmodf(uv[1] * tex->size, 1) > 0.5f))
 		return (tex->noise[0] ? o->ft_procedural(o, tex->noise[0], coll) :
 			tex->color[0]);
 		return (tex->noise[1] ? o->ft_procedural(o, tex->noise[1], coll) :
@@ -68,20 +67,8 @@ Uint32		ft_checker_sph(t_object *o, t_checkbrd *tex, t_vector coll)
 Uint32		ft_procedural_sph(t_object *o, t_procedural *tex, t_vector coll)
 {
 	t_sphere	*sph;
-	float		theta;
-	float		phi;
 
 	sph = (t_sphere *)o->fig;
-	phi = sph->phi - atan2f(coll[0], coll[2]);
-	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
-		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
-	theta = sph->theta + acosf(coll[1]);
-	if (!(IN_RANGE(theta, 0.0f, M_PI)))
-		theta = theta < 0.0f ? theta + (float)M_PI : theta - (float)M_PI;
-	coll[0] = cosf(theta);
-	coll[1] = sinf(phi) * sinf(theta);
-	coll[2] = cosf(phi) * sinf(theta);
-//	coll = ft_3_vector_turn_near(coll, (t_vector){0,0,1}, theta);
-//	coll = ft_3_vector_turn_near(coll, (t_vector){0,1,0}, phi);
+	coll = ft_3_vector_rotate(coll, 0, sph->phi, sph->theta);
 	return (tex->ft_get_color(tex, NULL, ft_3_vector_scale(coll, tex->scale)));
 }

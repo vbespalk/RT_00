@@ -12,129 +12,77 @@
 
 #include "rt.h"
 
-# define V_MAX 1
-# define V_MIN 0
-
-//typedef float			t_colvec __attribute__((vector_size(sizeof(Uint8)*4)));
 /*
 ** Value S,V must be in range [0,1], H must be in range [0, 360]
 */
 
-//t_color      hsv_to_rgb(float h, float s, float v)
-//{
-//	t_vector	rgb;
-//	t_vector	val;
-//	long		i;
-//	float		hh;
-//	t_color     col;
-//
-//	if (s <= 0.0f)
-//	{
-//		col.argb[0] = (Uint8)(L_X(v * 255, 255));
-//		col.argb[1] = (Uint8)(L_X(v * 255, 255));
-//		col.argb[2] = (Uint8)(L_X(v * 255, 255));
-//		return (col);
-//	}
-//	h = h == 360.0f ? 0 : h / 60.0f;
-//	i = (long)h;
-//	hh = h - i;
-//	rgb = (t_vector){v * (1.0 - s), v * (1.0 - s * hh), v * (1.0 - s * (1.0 - hh))};
-//	if (i == 0)
-//		val = (t_vector){v * 255, rgb[2] * 255, rgb[0] * 255};
-//	else if (i == 1)
-//		val = (t_vector){rgb[1] * 255, v * 255, rgb[0] * 255};
-//	else if (i == 2)
-//		val = (t_vector){rgb[0] * 255, v * 255, rgb[2] * 255};
-//	else if (i == 3)
-//		val = (t_vector){rgb[0] * 255, rgb[1] * 255, v * 255};
-//	else if (i == 4)
-//		val = (t_vector){rgb[2] * 255, rgb[0] * 255, v * 255};
-//	else
-//		val = (t_vector){v * 255, rgb[0] * 255, rgb[1] * 255};
-//	col.argb[0] = (Uint8)(L_X(val[0], 255));
-//	col.argb[1] = (Uint8)(L_X(val[1], 255));
-//	col.argb[2] = (Uint8)(L_X(val[2], 255));
-//	return (col);
-//}
-
-t_color      hsv_to_rgb(float h, float s, float v)
+t_vector     hsv_to_rgb(float h, float s, float v)
 {
+	t_vector	pqt;
 	t_vector	rgb;
-	t_color     col;
-	float 		c;
-	float		x;
-	float 		m;
+	float		fract;
 
-//	if (s <= 0.0f)
-//	{
-//		col.argb[0] = (Uint8) (L_X(v * 255, 255));
-//		col.argb[1] = (Uint8) (L_X(v * 255, 255));
-//		col.argb[2] = (Uint8) (L_X(v * 255, 255));
-//		return (col);
-//	}
-	c = v * s;
-	x = c * (1 - abs((int)(h / 60) % 2 - 1));
-	m = v - c;
-	if (IN_RANGE(h, 0, 59))
-		rgb = (t_vector) {c, x, 0};
-	else if (IN_RANGE(h, 60, 119))
-		rgb = (t_vector) {x, c, 0};
-	else if (IN_RANGE(h, 120, 179))
-		rgb = (t_vector) {0, c, x};
-	else if (IN_RANGE(h, 180, 239))
-		rgb = (t_vector) {0, x, c};
-	else if (IN_RANGE(h, 240, 299))
-		rgb = (t_vector) {x, 0, c};
+	h = h == 360.0f ? 0 : h / 60.0f;
+	fract = h - floorf(h);
+	pqt = (t_vector){v * (1.0 - s), v * (1.0 - s * fract),
+				  v * (1.0 - s * (1.0 - fract))};
+	if (s <= 0.0f)
+		rgb = (t_vector) {v * 255, v * 255, v * 255};
+	else if ((int)h == 0)
+		rgb = (t_vector){v * 255, pqt[2] * 255, pqt[0] * 255};
+	else if ((int)h == 1)
+		rgb = (t_vector){pqt[1] * 255, v * 255, pqt[0] * 255};
+	else if ((int)h == 2)
+		rgb = (t_vector){pqt[0] * 255, v * 255, pqt[2] * 255};
+	else if ((int)h == 3)
+		rgb = (t_vector){pqt[0] * 255, pqt[1] * 255, v * 255};
+	else if ((int)h == 4)
+		rgb = (t_vector){pqt[2] * 255, pqt[0] * 255, v * 255};
 	else
-		rgb = (t_vector) {c, 0, x};
-	col.argb[0] = (Uint8)(L_X((rgb[0] + m) * 255, 255));
-	col.argb[1] = (Uint8)(L_X((rgb[1] + m) * 255, 255));
-	col.argb[2] = (Uint8)(L_X((rgb[2] + m) * 255, 255));
-	return (col);
+		rgb = (t_vector){v * 255, pqt[0] * 255, pqt[1] * 255};
+	return (rgb);
 }
 
-float       min_max(float r, float g, float b, Uint32 flag)
-{
-    float result;
-
-    if (flag == V_MIN)
-    {
-        result = r < g ? r : g;
-        result = result < b ? result : b;
-    }
-    else
-    {
-        result = r > g ? r : g;
-        result = result > b ? result : b;
-    }
-    return (result);
-}
 /*
 ** Value R,G,B must be in range [0,1]
 */
+
 t_vector    rgb_to_hsv(float r, float g, float b)
 {
-    float		max;
-    float		min;
+    float 		delta;
     t_vector	hsv;
 
-    min = min_max(r, g, b, V_MIN);
-    max = min_max(r, g, b, V_MAX);
-    hsv = ZERO_PNT;
-    if (max == min)
-        hsv[0] = 0;
-    else if (max == r)
-        hsv[0] = 60.0f * ((g - b) / (max - min));
-    else if (max == g)
-        hsv[0] = 60.0f * (2.0f + (b - r) / (max - min));
-    else if (max == b)
-        hsv[0] = 60.0f * (4.0f + (r - g) / (max - min));
+	hsv = ZERO_PNT;
+	hsv[1] = MIN_V(r, MIN_V(g, b));
+    hsv[2] = MAX_V(r, MAX_V(g, b));
+    delta = hsv[2] - hsv[1];
+    if (delta == 0)
+    	hsv[0] = 0;
+    else if (hsv[2] == r)
+        hsv[0] = 60.0f * ((g - b) / delta);
+    else if (hsv[2] == g)
+        hsv[0] = 60.0f * (2.0f + (b - r) / delta);
+    else if (hsv[2] == b)
+        hsv[0] = 60.0f * (4.0f + (r - g) / delta);
     if (hsv[0] < 0)
         hsv[0] += 360;
-    if (max == 0.0f)
-        hsv[1] = 0;
-    else
-        hsv[1] = (max - min) / max;
-    hsv[2] = max;
+    hsv[1] = (hsv[2] == 0.0f) ? 0 : delta / hsv[2];
     return (hsv);
+}
+
+t_color  ft_invert_px(t_color in_col)
+{
+	t_vector 	hsv;
+	t_vector	rgb;
+	t_color 	col;
+
+	hsv = rgb_to_hsv(in_col.argb[0] / 255.f, in_col.argb[1] / 255.f,
+			in_col.argb[2] / 255.f);
+	hsv[0] = (float)((int)(hsv[0] + 180.0f + .5) % 360);
+	rgb = hsv_to_rgb(hsv[0], hsv[1], hsv[2]);
+	col.argb[0] = (Uint8)(L_X(rgb[0], 255));
+	col.argb[1] = (Uint8)(L_X(rgb[1], 255));
+	col.argb[2] = (Uint8)(L_X(rgb[2], 255));
+	col.argb[3] = in_col.argb[3];
+	return (col);
 }

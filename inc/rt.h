@@ -67,6 +67,12 @@
 # define MD_NEGATIVE	SDLK_h
 # define MD_INVERTED	SDLK_i
 
+# define MIN_VAL(a, b, c) (a < b ? (a < c ? a : c) : (b < c ? b : c))
+# define MAX_VAL(a, b, c) (a > b ? (a > c ? a : c) : (b > c ? b : c))
+
+# define MIN_V(a, b) (a < b ? a : b)
+# define MAX_V(a, b) (a > b ? a : b)
+
 /*
 **	camera
 */
@@ -131,11 +137,11 @@
 ** DEFAULT SKYBOX PATH
 */
 # define SKBX_NEGX			"./texture/skybox/bloodvalley/negx.tga"
-# define SKBX_NEGY		  "./texture/skybox/bloodvalley/negy.tga"
-# define SKBX_NEGZ		  "./texture/skybox/bloodvalley/negz.tga"
-# define SKBX_POSX		  "./texture/skybox/bloodvalley/posx.tga"
-# define SKBX_POSY		  "./texture/skybox/bloodvalley/posy.tga"
-# define SKBX_POSZ		  "./texture/skybox/bloodvalley/posz.tga"
+# define SKBX_NEGY			"./texture/skybox/bloodvalley/negy.tga"
+# define SKBX_NEGZ			"./texture/skybox/bloodvalley/negz.tga"
+# define SKBX_POSX			"./texture/skybox/bloodvalley/posx.tga"
+# define SKBX_POSY			"./texture/skybox/bloodvalley/posy.tga"
+# define SKBX_POSZ			"./texture/skybox/bloodvalley/posz.tga"
 
 static const unsigned char	g_permutation_table[LTABLE_SIZE] =
 {
@@ -1122,8 +1128,7 @@ t_color					ft_px_mode(t_color col, t_mode *mode);
 ** color_man.c
 */
 
-t_color				 hsv_to_rgb(float h, float s, float v);
-float				   min_max(float r, float g, float b, Uint32 flag);
+t_vector				hsv_to_rgb(float h, float s, float v);
 t_vector				rgb_to_hsv(float r, float g, float b);
 
 /*

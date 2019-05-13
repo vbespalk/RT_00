@@ -17,7 +17,7 @@
 ** all boxes listed in the same order as in e_btn_code enum.
 */
 
-const SDL_Rect g_btn_containers[] = (const SDL_Rect[]){
+const SDL_Rect g_btn_containers[] = {
 
 	(SDL_Rect){212, 51, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
 	(SDL_Rect){212, 88, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},

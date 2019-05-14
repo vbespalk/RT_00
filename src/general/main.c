@@ -78,6 +78,7 @@ int			main(int argc, char **argv)
 	obj_pix = (t_object **)ft_smemalloc(
 		sizeof(t_object) * sdl.rt_wid * sdl.scr_hei, "main");
 	init_env(&e, scene, &obj_pix[0], &sdl);
-    ft_rt_loop(&e);
+//	system("leaks RT");
+	ft_rt_loop(&e);
 	return (0);
 }

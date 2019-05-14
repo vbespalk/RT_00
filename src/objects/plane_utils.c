@@ -62,7 +62,7 @@ int			ft_is_inside_plane(t_object *o, t_vector point)
 	return (0);
 }
 
-t_vector	ft_get_norm_plane(void *fig, t_vector coll)
+t_vector	ft_get_norm_plane(void *fig, t_matrix *inv_m, t_vector coll)
 {
 	(void)coll;
 	return (ft_3_nullpointnew());

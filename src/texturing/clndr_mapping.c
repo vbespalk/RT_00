@@ -33,7 +33,7 @@ Uint32			ft_map_clndr(t_object *o, void *tex, t_vector hit)
 	if (!IN_RANGE(hit[1], -clnd->maxh + 1e-4, clnd->maxh - 1e-4))
 		return (ft_map_caps(((t_cylinder *)o->fig), t, hit,
 				(hit[1] + clnd->maxh) / 2.0f));
-	phi = atan2f(hit[0], hit[2]);
+		phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;
 	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
@@ -83,5 +83,5 @@ Uint32			ft_procedural_cyl(t_object *o, void *tex, t_vector coll)
 	t = (t_procedural *)tex;
 	point = coll;
 	point[1] = cyl->maxh == FLT_MAX ? coll[1] : coll[1] / cyl->maxh;
-	return (t->ft_get_color(tex, NULL, ft_3_vector_scale(point, t->scale)));
+	return (t->ft_get_color(tex, ft_3_vector_scale(point, t->scale)));
 }

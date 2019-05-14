@@ -72,6 +72,7 @@ void		*ft_get_figure_parser(char *name)
 static void	ft_get_object_attrs(char **content, t_object *o)
 {
 	ft_get_attr(content, "negative", (void *)(&(o->is_neg)), DT_BOOL);
+	ft_get_attr(content, "react_negative", (void *)(&(o->react_neg)), DT_BOOL);
 	ft_get_attr(content, "color", (void *)(&(o->color)), DT_COLOR);
 	ft_get_attr(content, "ambnt", (void *)(&(o->ambnt)), DT_COEF);
 	ft_get_attr(content, "diff", (void *)(&(o->diff)), DT_COEF);
@@ -101,6 +102,7 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	if (!ft_parse_figure)
 		return ;
 	o = ft_objectnew(id);
+	o->react_neg = false;
 	o->color.val = UINT32_MAX;
 	o->noise = NULL;
 	o->checker = NULL;
@@ -108,6 +110,7 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	o->texture_id = NULL;
 	o->composed = false;
 	ft_get_object_attrs(content, o);
+	o->react_neg = o->is_neg ? false : o->react_neg;
 	ft_balance_koefs(o);
 	o->rotate = (t_vector){ft_torad(o->rotate[0]), ft_torad(o->rotate[1]),
 				ft_torad(o->rotate[2])};

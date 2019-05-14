@@ -64,7 +64,7 @@ Uint32			ft_procedural_prbld(t_object *o, void *tex, t_vector coll)
 		point = ft_3_vector_scale(coll, (1 / sqrtf(4.0f * prbl->maxh)));
 		point[1] = coll[1] / (prbl->maxh);
 	}
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(point, t->scale)));
+	return (t->ft_get_color(t, ft_3_vector_scale(point, t->scale)));
 }
 
 Uint32			ft_checker_prbld(t_object *o, void *tex, t_vector coll)

@@ -65,9 +65,7 @@ float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	coll->ucoll_pnt = odh[0] + ft_3_vector_scale(odh[1], (float)t);
 	coll->o = obj;
 	coll->tex_o = obj;
-	coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse),
-			coll->ucoll_pnt - ft_3_vector_scale(ft_3_tounitvector((t_vector)
-			{coll->ucoll_pnt[0], FLT_MIN, coll->ucoll_pnt[2]}), trs->r_outer)));
+	coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
 //	printf("HERE\n");
 	return ((float)t);
 }
@@ -104,28 +102,12 @@ int			ft_is_inside_torus(t_object *o, t_vector point)
 	return (1);
 }
 
-t_vector	ft_get_norm_torus(void *fig, t_vector coll)
+t_vector	ft_get_norm_torus(void *fig, t_matrix *inv_m, t_vector coll)
 {
-//	t_torus		*trs;
-//	double		k;
-////	float 		m;
-//	t_vector	a;
-//	t_vector	norm;
-//
-//	trs = (t_torus *)fig;
-//	k = ft_3_vector_dot(coll - trs->o, trs->v);
-//	if (fabs(k) > trs->r_inner)
-//		k = k > 0 ? trs->r_inner : -trs->r_inner;
-//	a = coll - ft_3_vector_scale(trs->v, (float)k);
-//	if (trs->r_inner * trs->r_inner - k * k < -0.1f)
-//	{
-////		printf("here r %f, k %f, dif %f, coll %f,%f,%f\n", trs->r_inner, k, trs->r_inner * trs->r_inner - k * k,
-////				coll[0], coll[1], coll[2]);
-		return (ft_3_nullpointnew());
-//	}
-////	m = sqrtf(fabsf(trs->r_inner * trs->r_inner - k * k));
-////	norm = ft_3_tounitvector(coll - a - ft_3_vector_scale(trs->o - a, m / trs->r_outer + m));
-//	norm = ft_3_tounitvector(coll - (trs->o + ft_3_vector_scale(ft_3_tounitvector(a - trs->o),
-//			trs->r_outer)));
-//	return(norm);
+	t_torus		*trs;
+
+	trs = (t_torus *)fig;
+	return(ft_3_tounitvector(ft_3_norm_transform(inv_m,
+			ft_3_tounitvector(coll - ft_3_vector_scale(ft_3_tounitvector((t_vector)
+		{coll[0], 0.f, coll[2]}), trs->r_outer)))));
 }

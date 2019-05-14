@@ -91,15 +91,6 @@ void				ft_parse_camera(char **content, t_camera *cam)
 //	return (node);
 //}
 
-//        LEAKS
-//          |
-//          |
-//          |
-//       \      /
-//        \    /
-//         \  /
-//          \/
-
 void				ft_get_start_stack(t_scene *scn)
 {
     t_list		*objs;
@@ -113,6 +104,7 @@ void				ft_get_start_stack(t_scene *scn)
 	while (node)
 	{
 		o = (t_object *)(node->content);
+		o->dist = ft_3_vector_len(o->translate - scn->cam->origin);
 		if (o->ft_is_inside(o, scn->cam->origin))
 		{
 			ft_lstpush(&objs, ft_nodenew((void *)o, sizeof(o)));

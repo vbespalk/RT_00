@@ -363,7 +363,7 @@ struct				s_procedural
 	float			(*ft_noise_value)
 					(t_procedural *tex, t_vector hit);
 	Uint32			(*ft_get_color)
-					(t_procedural *tex, t_object *o, t_vector hit);
+					(t_procedural *tex, t_vector hit);
 };
 
 typedef struct		s_checkbrd
@@ -391,6 +391,7 @@ struct				s_object
 	void			*fig;
 
 	int				is_neg;
+	t_bool			react_neg;
 	float			ambnt;
 	float			diff;
 	float			spclr;
@@ -415,7 +416,7 @@ struct				s_object
 			t_coll *coll, t_vector od[2]);
 
 	int				(*ft_is_inside)(t_object *o, t_vector pnt);
-	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
+	t_vector		(*ft_get_norm)(void *fig, t_matrix *inv_m, t_vector coll);
 
 	int	    		(*ft_translate)
 			(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m);
@@ -502,7 +503,7 @@ typedef struct		s_bounding_box
 	t_vector		(*ft_collide)
 			(void *fig, t_vector origin, t_vector direct);
 	int				(*ft_is_inside)(struct s_object *o, t_vector pnt);
-	t_vector		(*ft_get_norm)(void *fig, t_vector coll);
+	t_vector		(*ft_get_norm)(void *fig, t_matrix *inv_m, t_vector coll);
 
 	void			(*ft_translate)
 			(Uint32 key, void *fig, t_vector *translate);
@@ -743,7 +744,7 @@ int						ft_is_reachable_plane
 float					ft_collide_plane
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_plane(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_plane(void *fig, t_vector coll);
+t_vector				ft_get_norm_plane(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 ** DISK
@@ -769,7 +770,7 @@ int						ft_is_reachable_disk
 float					ft_collide_disk
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_disk(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_disk(void *fig, t_vector coll);
+t_vector				ft_get_norm_disk(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 ** BOX
@@ -796,7 +797,7 @@ int						ft_is_reachable_box
 float					ft_collide_box
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_box(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_box(void *fig, t_vector coll);
+t_vector				ft_get_norm_box(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 ** aabb.c
@@ -839,7 +840,7 @@ int						ft_is_reachable_sphere
 float					ft_collide_sphere
 			(t_list **objs, t_object *o, t_coll *coll, t_vector uod[2]);
 int						ft_is_inside_sphere(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_sphere(void *fig, t_vector coll);
+t_vector				ft_get_norm_sphere(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 ** CONE
@@ -867,7 +868,7 @@ int	    				ft_scale_hei_cone
 float					ft_collide_cone
 			(t_list **objs, t_object *o, t_coll *coll, t_vector uod[2]);
 int						ft_is_inside_cone(t_object *o, t_vector upnt);
-t_vector				ft_get_norm_cone(void *fig, t_vector coll);
+t_vector				ft_get_norm_cone(void *fig, t_matrix *inv_m, t_vector coll);
 void					ft_get_coll_pnts
 			(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
 
@@ -899,7 +900,7 @@ int						ft_is_reachable_cylinder
 float					ft_collide_cylinder
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cylinder(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_cylinder(void *fig, t_vector coll);
+t_vector				ft_get_norm_cylinder(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 ** PARABOLOID
@@ -928,7 +929,7 @@ int						ft_is_reachable_prbld
 float					ft_collide_prbld
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_prbld(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_prbld(void *fig, t_vector coll);
+t_vector				ft_get_norm_prbld(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 ** TORUS
@@ -956,7 +957,7 @@ int						ft_is_reachable_torus
 float					ft_collide_torus
 			(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_torus(t_object *o, t_vector pnt);
-t_vector				ft_get_norm_torus(void *fig, t_vector coll);
+t_vector				ft_get_norm_torus(void *fig, t_matrix *inv_m, t_vector coll);
 
 /*
 **	ray.c
@@ -1106,8 +1107,8 @@ void					ft_lattice_bounds(int octaves, float gain, float bounds[2]);
 
 float 					ft_fractal_noise(t_procedural *tex, t_vector hit);
 float 					ft_turbulance_noise(t_procedural *tex, t_vector hit);
-Uint32 					ft_wrapped_noise_col(t_procedural *tex, t_object *o, t_vector hit);
-Uint32 					ft_ramp_noise_col(t_procedural *tex, t_object *o, t_vector hit);
+Uint32 					ft_wrapped_noise_col(t_procedural *tex, t_vector hit);
+Uint32 					ft_ramp_noise_col(t_procedural *tex, t_vector hit);
 
 /*
 ** init_procedural.c
@@ -1115,9 +1116,16 @@ Uint32 					ft_ramp_noise_col(t_procedural *tex, t_object *o, t_vector hit);
 
 void					ft_parse_procedural(char **content, t_procedural **tex);
 void		   			ft_init_lattice(t_procedural **tex, char *function, unsigned int seed);
-void					ft_set_procedural(t_procedural **tex, char *function, Uint32 col);
+void					ft_set_procedural(t_procedural **tex, const char *smpl, Uint32 col);
 void					ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl);
 void                    ft_noise_del(t_procedural **noise);
+
+/*
+** procedural_type.c
+*/
+
+void					ft_init_type(t_procedural *tex, const char *name);
+void					ft_null_lattice(t_procedural *tex);
 
 /*
 ** init_checker.c

@@ -20,7 +20,7 @@ Uint32		ft_procedural_dsk(t_object *o, void *tex, t_vector coll)
 	coll = ((t_disk *)o->fig)->out_r == FLT_MAX ?
 			ft_3_vector_scale(coll, 1.0f / o->dist) :
 			ft_3_vector_scale(coll, 1.0f / ((t_disk *)o->fig)->out_r);
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(coll, t->scale)));
+	return (t->ft_get_color(t, ft_3_vector_scale(coll, t->scale)));
 }
 
 Uint32		ft_checker_dsk(t_object *o, void *tex, t_vector coll)

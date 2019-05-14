@@ -41,11 +41,10 @@ static float	ft_collide_sphere_half(
 	if (t > 0)
 	{
 		coll->ucoll_pnt = pnts[2] + ft_3_vector_scale(pnts[3], t);
-		coll->norm = ft_3_tounitvector(
-			ft_3_norm_transform(
-				&(obj->inverse),
-				obj->ft_get_norm(obj->fig, coll->ucoll_pnt)));
+		coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
 		coll->coll_pnt = pnts[0] + ft_3_vector_scale(pnts[1], t);
+		if (obj->is_neg == false && obj->react_neg == false)
+			return (t);
 		if (obj->is_neg)
 			coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 		i = ft_inside_type(objs, coll->coll_pnt);
@@ -92,7 +91,8 @@ int			ft_is_inside_sphere(t_object *o, t_vector point)
 	return ((ft_3_vector_len(point) < 1) ? 1 : 0);
 }
 
-t_vector	ft_get_norm_sphere(void *fig, t_vector coll)
+t_vector	ft_get_norm_sphere(void *fig, t_matrix *inv_m, t_vector coll)
 {
-	return (ft_3_tounitvector(coll));
+	return (ft_3_tounitvector(ft_3_norm_transform(
+					inv_m, ft_3_tounitvector(coll))));
 }

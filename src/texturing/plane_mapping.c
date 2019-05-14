@@ -66,7 +66,7 @@ Uint32		ft_procedural_pln(t_object *o, void *tex, t_vector coll)
 	t = (t_procedural *)tex;
 	coll[0] = pln->len_wh[0] == FLT_MIN ? coll[0] : (coll[0] * pln->len_wh[0]) /
 		pln->len_wh[1];
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(coll, t->scale)));
+	return (t->ft_get_color(t, ft_3_vector_scale(coll, t->scale)));
 }
 
 Uint32		ft_map_box(t_object *o, void *tex, t_vector hit)

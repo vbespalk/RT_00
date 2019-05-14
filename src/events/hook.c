@@ -162,7 +162,7 @@ int		ft_on_exit(t_env *e)
 {
 	e->sdl->event_loop = 0; //on_quit(): destroy_all_data, exit;
 //	sdl_close(e->sdl);
-    system("leaks RT");
+//    system("leaks RT");
     on_sdl_close("wrttvv", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen,
 			&e->sdl->gui->gui_texture, &e->sdl->pixels, &e->sdl->format);
 	// system("leaks RT");

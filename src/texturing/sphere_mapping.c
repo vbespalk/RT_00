@@ -22,7 +22,7 @@ Uint32		ft_map_sphere(t_object *o, void *tex, t_vector hit)
 
 	t = (SDL_Surface *)tex;
 	hit = ft_3_vector_rotate(hit, 0, ((t_sphere *)o->fig)->phi,
-							 ((t_sphere *)o->fig)->theta);
+			((t_sphere *)o->fig)->theta);
 	phi = atan2f(hit[2], hit[0]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
@@ -72,6 +72,6 @@ Uint32		ft_procedural_sph(t_object *o, void *tex, t_vector coll)
 
 	t = (t_procedural *)tex;
 	coll = ft_3_vector_rotate(coll, 0, ((t_sphere *)o->fig)->phi,
-							 ((t_sphere *)o->fig)->theta);
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(coll, t->scale)));
+			((t_sphere *)o->fig)->theta);
+	return (t->ft_get_color(t, ft_3_vector_scale(coll, t->scale)));
 }

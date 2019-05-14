@@ -168,7 +168,7 @@ int			ft_is_inside_prbld(t_object *o, t_vector point)
 	return (ft_3_vector_dot(r, r) <= (point[1] + 1) * (point[1] + 1) ? 1 : 0);
 }
 
-t_vector	ft_get_norm_prbld(void *fig, t_vector coll)
+t_vector	ft_get_norm_prbld(void *fig, t_matrix *inv_m, t_vector coll)
 {
 //	t_prbld		*par;
 //	float 		h;

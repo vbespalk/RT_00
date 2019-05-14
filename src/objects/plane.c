@@ -12,39 +12,30 @@
 
 #include "rt.h"
 
-//t_plane		*ft_planenew(void)
-//{
-//	t_plane	*pln;
-//
-//	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
-//	pln->len_wh[0] = FLT_MIN;
-//	pln->len_wh[1] = FLT_MIN;
-//	return (pln);
-//}
-t_plane		*ft_planenew(t_object *o)
+t_plane	*ft_planenew(t_object *o)
 {
-    t_plane	*pln;
+	t_plane	*pln;
 
-    o->ft_collide = ft_collide_plane;
-    o->ft_is_reachable = ft_is_reachable_plane;
-    o->ft_is_inside = ft_is_inside_plane;
-    o->ft_get_norm = ft_get_norm_plane;
-    o->ft_translate = ft_translate_plane;
-    o->ft_rotate = ft_rotate_plane;
-    o->ft_scale = ft_scale_plane;
-    o->ft_scale_height = ft_scale_hei_null;
-    o->ft_mapping = ft_map_plane;
-    o->ft_checker = ft_checker_pln;
-    o->ft_procedural = ft_procedural_pln;
-    pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
-    pln->len_wh[0] = FLT_MIN;
-    pln->len_wh[1] = FLT_MIN;
-    return (pln);
+	o->ft_collide = ft_collide_plane;
+	o->ft_is_reachable = ft_is_reachable_plane;
+	o->ft_is_inside = ft_is_inside_plane;
+	o->ft_get_norm = ft_get_norm_plane;
+	o->ft_translate = ft_translate_plane;
+	o->ft_rotate = ft_rotate_plane;
+	o->ft_scale = ft_scale_plane;
+	o->ft_scale_height = ft_scale_hei_null;
+	o->ft_mapping = ft_map_plane;
+	o->ft_checker = ft_checker_pln;
+	o->ft_procedural = ft_procedural_pln;
+	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
+	pln->len_wh[0] = FLT_MIN;
+	pln->len_wh[1] = FLT_MIN;
+	return (pln);
 }
 
-void		*ft_parse_plane(char **content, t_object *o)
+void	*ft_parse_plane(char **content, t_object *o)
 {
-	t_plane		*pln;
+	t_plane	*pln;
 
 	pln = ft_planenew(o);
 	ft_get_attr(content, "width", (void *)(&(pln->len_wh[0])), DT_FLOAT);
@@ -54,14 +45,17 @@ void		*ft_parse_plane(char **content, t_object *o)
 		pln->len_wh[0] = FLT_MIN;
 		pln->len_wh[1] = FLT_MIN;
 	}
-	pln->ratio = (pln->len_wh[0] != FLT_MIN) ? pln->len_wh[1] / pln->len_wh[0] : FLT_MIN;
-	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, pln->len_wh[0]);
+	pln->ratio = (pln->len_wh[0] != FLT_MIN) ?
+			pln->len_wh[1] / pln->len_wh[0] : FLT_MIN;
+	ft_3_transform_mat(&(o->transform), o->translate, o->rotate,
+			pln->len_wh[0]);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate,
 			(pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
 	return ((void *)pln);
 }
 
-int		ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m,
+													t_matrix *inv_m)
 {
 	t_plane *pln;
 
@@ -83,10 +77,11 @@ int		ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate,
 			(pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
-    return (1);
+	return (1);
 }
 
-int		ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m,
+													t_matrix *inv_m)
 {
 	t_plane		*pln;
 
@@ -107,28 +102,25 @@ int		ft_rotate_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		o->rotate[0] -= ROTAT_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate,
-					   (pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
-    return (1);
+		(pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
+	return (1);
 }
 
-int		ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m,
+													t_matrix *inv_m)
 {
-	t_plane		*pln;
+	t_plane	*pln;
+	float	scale;
 
 	if (!o)
 		return (0);
 	pln = (t_plane *)o->fig;
 	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
 		return (0);
-	float scale = 1.0f;
-	if (key == SDLK_z)
-		scale += SCALE_F;
-	else if (key == SDLK_x )
-		scale -= SCALE_F;
+	scale = key == SDLK_z ? 1.f + SCALE_F : 1.f - SCALE_F;
 	pln->len_wh[0] *= scale;
 	pln->len_wh[1] *= scale;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / pln->len_wh[0]);
-//	printf("AFTER SCALING DOT %f\n",ft_3_vector_dot(pln->dir_wh[0], pln->dir_wh[1]));
-    return (1);
+	return (1);
 }

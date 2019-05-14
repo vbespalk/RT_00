@@ -253,7 +253,7 @@ int			ft_is_inside_cylinder(t_object *o, t_vector point)
 			(t_vector){point[0], 0, point[2]}) <= 1 ? 1 : 0);
 }
 
-t_vector	ft_get_norm_cylinder(void *fig, t_vector coll)
+t_vector	ft_get_norm_cylinder(void *fig, t_matrix *inv_m, t_vector coll)
 {
 //	t_cylinder *clnd;
 //	float 		h;

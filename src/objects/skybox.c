@@ -15,7 +15,6 @@
 void		ft_parse_skybox(char **content, t_skybox **sky)
 {
 	int			i;
-	t_vector	bounds[2];
 
 	if (!content || !(*content))
 		return ;
@@ -26,16 +25,12 @@ void		ft_parse_skybox(char **content, t_skybox **sky)
 	ft_get_attr(content, "posz", (void *)(&((*sky)->textur_id[3])), DT_STRING);
 	ft_get_attr(content, "posy", (void *)(&((*sky)->textur_id[4])), DT_STRING);
 	ft_get_attr(content, "posx", (void *)(&((*sky)->textur_id[5])), DT_STRING);
-	bounds[0] = ZERO_PNT;
-	bounds[1] = ZERO_PNT;
-	ft_get_attr(content, "min", (void *)(&(bounds[0])), DT_POINT);
-	ft_get_attr(content, "max", (void *)(&(bounds[1])), DT_POINT);
-	(*sky)->bbx = ft_init_aabb(bounds[0], bounds[1]);
+	(*sky)->bbx = ft_init_aabb(ZERO_PNT, ZERO_PNT);
 	i = -1;
 	while (++i < BOX_FACES)
 		if ((*sky)->textur_id[i] == NULL)
 		{
-		    ft_putendl(ON_WARN "ft_parse_skybox: value set to default");
+			ft_putendl(ON_WARN "ft_parse_skybox: value set to default");
 			ft_skybox_del(sky);
 			return ;
 		}

@@ -80,12 +80,12 @@ Uint32			ft_checker_cone(t_object *o, void *tex, t_vector coll)
 			t->color[1]);
 }
 
-Uint32			ft_procedural_cone(t_object *o,void *tex, t_vector coll)
+Uint32			ft_procedural_cone(t_object *o, void *tex, t_vector coll)
 {
 	t_cone			*cone;
 	t_vector		point;
 	t_procedural	*t;
-	float		r;
+	float			r;
 
 	cone = (t_cone *)o->fig;
 	t = (t_procedural *)tex;
@@ -105,5 +105,5 @@ Uint32			ft_procedural_cone(t_object *o,void *tex, t_vector coll)
 		point[1] = coll[1] / (cone->minh < cone->maxh &&
 				cone->minh > -FLT_MAX ? cone->maxh : cone->minh);
 	}
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(point, t->scale)));
+	return (t->ft_get_color(t, ft_3_vector_scale(point, t->scale)));
 }

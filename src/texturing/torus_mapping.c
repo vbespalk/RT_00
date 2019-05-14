@@ -60,7 +60,7 @@ Uint32		ft_checker_tor(t_object *o, void *tex, t_vector coll)
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
 	pnt[0] = ft_3_vector_scale(coll, 1 / ((t_torus *)o->fig)->r_inner);
 	pnt[1] = pnt[0] - ft_3_tounitvector((t_vector)
-												{pnt[0][0], FLT_MIN, pnt[0][2]});
+			{pnt[0][0], FLT_MIN, pnt[0][2]});
 	theta = (pnt[1][0] * pnt[1][0] + pnt[1][2] * pnt[1][2] <= 1) ?
 			acosf(-CLAMP(pnt[0][1], -1, 1)) : acosf(CLAMP(pnt[0][1], -1, 1));
 	uv[0] = (1 + phi * (float)M_1_PI);
@@ -69,8 +69,8 @@ Uint32		ft_checker_tor(t_object *o, void *tex, t_vector coll)
 		(fmodf(uv[1] * t->size, 1) > 0.5))
 		return (t->noise[0] ? o->ft_procedural(o, t->noise[0], coll) :
 				t->color[0]);
-	return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
-			t->color[1]);
+		return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
+				t->color[1]);
 }
 
 Uint32		ft_procedural_tor(t_object *o, void *tex, t_vector coll)
@@ -80,5 +80,5 @@ Uint32		ft_procedural_tor(t_object *o, void *tex, t_vector coll)
 
 	t = (t_procedural *)tex;
 	point = ft_3_vector_scale(coll, 1 / ((t_torus *)o->fig)->r_inner);
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(point, t->scale)));
+	return (t->ft_get_color(t, ft_3_vector_scale(point, t->scale)));
 }

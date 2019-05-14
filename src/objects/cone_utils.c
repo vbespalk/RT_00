@@ -215,7 +215,7 @@ int			ft_is_inside_cone(t_object *o, t_vector point)
 			< upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2.0f)) ? 1 : 0);
 }
 
-t_vector	ft_get_norm_cone(void *fig, t_vector coll)
+t_vector	ft_get_norm_cone(void *fig, t_matrix *inv_m, t_vector coll)
 {
 	t_cone 		*con;
 

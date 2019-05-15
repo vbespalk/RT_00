@@ -461,6 +461,7 @@ typedef struct		s_cylinder
 {
 	float			r;
 	float			maxh;
+	float 			ratio;
 }					t_cylinder;
 
 typedef struct		s_disc
@@ -1061,20 +1062,28 @@ Uint32					ft_procedural_cone(t_object *o, void *tex, t_vector coll);
 */
 
 Uint32					ft_map_plane(t_object *o, void *tex, t_vector coll);
-Uint32					ft_map_box(t_object *o, void *tex, t_vector hit);
 Uint32					ft_checker_pln(t_object *o, void *tex, t_vector coll);
+Uint32					ft_procedural_pln(t_object *o, void *tex, t_vector coll);
+Uint32					ft_map_box(t_object *o, void *tex, t_vector hit);
 Uint32					ft_checker_box(t_object *o, void *tex, t_vector coll);
 
-Uint32					ft_procedural_pln(t_object *o, void *tex, t_vector coll);
+
+/*
+** disk_mapping.c
+*/
+
+Uint32					ft_map_disk(t_object *o, void *tex, t_vector hit);
 Uint32					ft_checker_dsk(t_object *o, void *tex, t_vector coll);
 Uint32					ft_procedural_dsk(t_object *o, void *tex, t_vector coll);
 
 /*
 ** torus_mapping.c
 */
+
 Uint32					ft_procedural_tor(t_object *o, void *tex, t_vector coll);
 Uint32					ft_checker_tor(t_object *o, void *tex, t_vector coll);
 Uint32					ft_map_torus(t_object *o, void *tex, t_vector hit);
+
 /*
 ** skybox.c
 */
@@ -1084,7 +1093,6 @@ Uint32					ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 void					ft_skybox_del(t_skybox **sk);
 int	    				ft_load_sky_tex(t_skybox **skybox, t_list **tex, t_sdl *sdl);
-
 
 /*
 ** equations.c
@@ -1134,7 +1142,6 @@ void					ft_null_lattice(t_procedural *tex);
 void					ft_parse_checker(char **content, t_checkbrd **tex);
 void					ft_set_checker(t_checkbrd **chkr, Uint32 col);
 void                    ft_checker_del(t_checkbrd ** checker);
-
 
 /*
 ** color_modes.c

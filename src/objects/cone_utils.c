@@ -72,12 +72,7 @@ static float	get_cides_coll(
 			&& IN_RANGE(hit[i[0]][1], cone->minh, cone->maxh))
 		{
 			uhit[i[0]] = uod[0] + ft_3_vector_scale(uod[1], t[i[0]]);
-			*norm = ft_3_tounitvector(
-				ft_3_norm_transform(
-					&(obj->inverse),
-					hit[i[0]] - ft_3_vector_scale(
-						(t_vector){ 0, hit[i[0]][1], 0 },
-						powf(cone->tan, 2.0f) + 1)));
+			*norm = obj->ft_get_norm(obj->fig, &obj->inverse, hit[i[0]]);
 			if (obj->is_neg)
 				uhit[i[0]] += ft_3_vector_scale(*norm, SHIFT);
 			i[1] = ft_inside_type(objs, uhit[i[0]]);
@@ -105,6 +100,7 @@ static float	get_caps_coll(
 	t_vector	pnts[6];
 	float 		t[2];
 	float 		sq_r[2];
+	float 		hei[2];
 
 	cone = (t_cone *)(obj->fig);
 	pnts[0] = od[0] - (t_vector){FLT_MIN, cone->minh, FLT_MIN};
@@ -113,12 +109,15 @@ static float	get_caps_coll(
 	t[1] = cone->maxh == FLT_MAX ? -FLT_MAX : -(pnts[1][1]) / od[1][1];
 	sq_r[0] = cone->r[0] * cone->r[0];
 	sq_r[1] = cone->r[1] * cone->r[1];
+	hei[0] = cone->minh;
+	hei[1] = cone->maxh;
 	if (t[0] <= 0 && t[1] <= 0)
 		return (FLT_MAX);
 	((t[0] > t[1] && t[1] > FLT_MIN) || t[0] < FLT_MIN)
 		? ft_swap_float(&t[0], &t[1]),
 			ft_swap(&pnts[0], &pnts[1], sizeof(t_vector)),
-			ft_swap_float(&sq_r[0], &sq_r[1])
+			ft_swap_float(&sq_r[0], &sq_r[1]),
+			ft_swap_float(&hei[0], &hei[1])
 		: 1;
 	pnts[2] = pnts[0] + ft_3_vector_scale(od[1], t[0]);
 	pnts[3] = pnts[1] + ft_3_vector_scale(od[1], t[1]);
@@ -142,7 +141,10 @@ static float	get_caps_coll(
 				t[i[0]] = 0;
 				continue ;
 			}
-			*coll_pnt = pnts[i[0] + 2];
+//			*coll_pnt = pnts[i[0] + 2];
+			*coll_pnt = (i[0] == 0) ?
+					pnts[i[0] + 2] - (t_vector){ 0, hei[0], 0 } :
+					pnts[i[0] + 2] - (t_vector){ 0, hei[1], 0 };
 			return (t[i[0]]);
 		}
 	}
@@ -220,12 +222,7 @@ t_vector	ft_get_norm_cone(void *fig, t_matrix *inv_m, t_vector coll)
 	t_cone 		*con;
 
 	con = (t_cone *)fig;
-//	con->h = ft_3_vector_dot(con->v, coll - con->o);
-//	if (con->maxh != FLT_MAX && con->h >= con->maxh - 1e-2)
-//		return (con->v);
-//	if (con->minh != FLT_MIN && con->h <= con->minh + 1e-2)
-//		return (-con->v);
-//	return (ft_3_tounitvector(coll - ((t_cone *)fig)->o - ft_3_vector_scale(con->v,
-//			(1.0f + con->tan * con->tan) * con->h)));
-	return (ft_3_nullpointnew());
+	return (ft_3_tounitvector(ft_3_norm_transform(inv_m,
+			coll - ft_3_vector_scale((t_vector){ 0, coll[1], 0 },
+			powf(con->tan, 2.0f) + 1))));
 }

@@ -148,17 +148,21 @@ static float	get_caps_coll(
 	t_cylinder	*clnd;
 	t_vector	pnts[6];
 	float 		t[2];
+	float 		hei[2];
 
 	clnd = (t_cylinder *)(obj->fig);
 	pnts[0] = od[0] + (t_vector){0, clnd->maxh, 0};
 	pnts[1] = od[0] - (t_vector){0, clnd->maxh, 0};
+	hei[0] = clnd->maxh;
+	hei[1] = -clnd->maxh;
 	t[0] = -(pnts[0][1]) / od[1][1];
 	t[1] = -(pnts[1][1]) / od[1][1];
 	if (t[0] <= 0 && t[1] <= 0)
 		return (FLT_MAX);
 	(t[0] > t[1] || t[0] < 0)
 	? ft_swap_float(&t[0], &t[1]),
-		ft_swap(&pnts[0], &pnts[1], sizeof(t_vector))
+		ft_swap(&pnts[0], &pnts[1], sizeof(t_vector)),
+			ft_swap_float(&hei[0], &hei[1])
 	: 1;
 	pnts[2] = pnts[0] + ft_3_vector_scale(od[1], t[0]);
 	pnts[3] = pnts[1] + ft_3_vector_scale(od[1], t[1]);
@@ -168,8 +172,8 @@ static float	get_caps_coll(
 		if (t[i[0]] >= 0 && ft_3_vector_dot(pnts[i[0] + 2], pnts[i[0] + 2]) < 1)
 		{
 			pnts[i[0] + 2] += (i[0] == 0)
-				? (t_vector){ 0, clnd->maxh, 0 }
-				: (t_vector){ 0, -clnd->maxh, 0 };
+				? (t_vector){ 0, hei[0], 0 }
+				: (t_vector){ 0, hei[1], 0 };
 			pnts[i[0] + 4] = uod[0] + ft_3_vector_scale(uod[1], t[i[0]]);
 			*norm = ft_3_tounitvector(
 				ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));

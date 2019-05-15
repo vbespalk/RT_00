@@ -45,13 +45,7 @@ static float	get_closer_pnt(
 	{
 		//printf("cides\n");
 		coll->ucoll_pnt = hit[0];
-		coll->norm = ft_3_tounitvector(
-			ft_3_norm_transform(
-				&(obj->inverse),
-				coll->ucoll_pnt - ((t_vector){0, coll->ucoll_pnt[1] + 1, 0})));
-
-		//if (coll->norm[1] < 0) ft_3_vector_print("norm: ", coll->norm);
-
+		coll->norm = coll->norm = obj->ft_get_norm(obj->fig, &obj->inverse, hit[0]);;
 		return ((float)t[0]);
 	}
 	if (t[1] >= 0 && t[0] != FLT_MAX)
@@ -170,14 +164,11 @@ int			ft_is_inside_prbld(t_object *o, t_vector point)
 
 t_vector	ft_get_norm_prbld(void *fig, t_matrix *inv_m, t_vector coll)
 {
-//	t_prbld		*par;
-//	float 		h;
+//	t_prbld *prb;
 //
-//	par = (t_prbld *)fig;
-//	h = ft_3_vector_dot(par->v, coll - par->o);
-//	if (h >= par->maxh - 1e-2)
-//		return(ft_3_tounitvector(par->v));
-//	else
-//		return (ft_3_tounitvector(coll - (par->o + ft_3_vector_scale(par->v, h + par->r))));
-	return (ft_3_nullpointnew());
+//	prb = (t_prbld *)fig;
+	(void)fig;
+	return (ft_3_tounitvector(ft_3_norm_transform(inv_m,
+		ft_3_tounitvector(coll - ((t_vector){0, coll[1] + 2, 0})))));
 }
+

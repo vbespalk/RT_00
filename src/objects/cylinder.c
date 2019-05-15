@@ -41,7 +41,8 @@ void		*ft_parse_cylinder(char **content, t_object *o)
 	ft_get_attr(content, "radius", (void *)(&(clnd->r)), DT_FLOAT);
 	ft_get_attr(content, "height", (void *)(&(clnd->maxh)), DT_FLOAT);
 	if (clnd->maxh != FLT_MAX)
-		clnd->maxh /= clnd->r * 2.0f;
+		clnd->maxh /= clnd->r * 2.f;
+	clnd->ratio = clnd->maxh / (clnd->maxh + 2.f);
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate,
 			1.0f / clnd->r);

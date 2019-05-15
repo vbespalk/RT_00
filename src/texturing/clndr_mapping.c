@@ -12,10 +12,31 @@
 
 #include "rt.h"
 
-static Uint32	ft_map_caps(t_cylinder *clnd, SDL_Surface *tex,
-		t_vector hit, float hei)
+static Uint32	ft_map_caps(t_cylinder *clnd, SDL_Surface *t,
+		t_vector hit)
 {
-	return (UINT32_MAX);
+	Uint32		col;
+	float		phi;
+	int			xy[2];
+	float		texh;
+
+	phi = atan2f(hit[0], hit[2]);
+	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
+		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
+	xy[0] = (int)((t->w - 1) * phi / 2.0f * (float)M_1_PI);
+	texh = t->h * 0.5f * (1.f - clnd->ratio);
+	if (hit[1] < 0)
+		xy[1] = (int)((texh - 1) * CLAMP(sqrtf(hit[0] * hit[0] +
+				hit[2] * hit[2]), 0, 1));
+	else
+		xy[1] = (int)((texh - 1) * (1 - CLAMP(sqrtf(hit[0] * hit[0] +
+				hit[2] * hit[2]), 0, 1))
+				+ (t->h - texh));
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
+		return (0xff);
+	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
+					+ xy[0], sizeof(Uint32));
+	return (col);
 }
 
 Uint32			ft_map_clndr(t_object *o, void *tex, t_vector hit)
@@ -31,14 +52,13 @@ Uint32			ft_map_clndr(t_object *o, void *tex, t_vector hit)
 		return (o->color.val);
 	t = (SDL_Surface *)tex;
 	if (!IN_RANGE(hit[1], -clnd->maxh + 1e-4, clnd->maxh - 1e-4))
-		return (ft_map_caps(((t_cylinder *)o->fig), t, hit,
-				(hit[1] + clnd->maxh) / 2.0f));
-		phi = atan2f(hit[0], hit[2]);
+		return (ft_map_caps(((t_cylinder *)o->fig), t, hit));
+	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;
 	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
-	xy[1] = (int)((t->h - 1) * (1.0f - ((hit[1] + clnd->maxh) * 0.5f)
-			/ ((t_cylinder *)o->fig)->maxh));
+	xy[1] = (int)(((clnd->ratio * t->h - 1)) * (1.0f - ((hit[1] + clnd->maxh)
+			* 0.5f) / clnd->maxh) + t->h * 0.5f * (1.f - clnd->ratio));
 	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w

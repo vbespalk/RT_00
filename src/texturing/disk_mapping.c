@@ -24,14 +24,14 @@ Uint32		ft_map_disk(t_object *o, void *tex, t_vector hit)
 	if (dsk->out_r == FLT_MAX)
 		return (o->color.val);
 	t = (SDL_Surface *)tex;
-	phi = atan2f(hit[2], hit[0]);
+	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
 	hit = ft_3_vector_scale(hit, 1 / dsk->out_r);
 	xy[0] = (int)((t->w - 1) * phi / 2.0f * (float)M_1_PI);
-	xy[1] = (int)((t->h - 1) * CLAMP(sqrtf(hit[0] * hit[0] + hit[2] * hit[2]), 0, 1));
-	if (!(IN_RANGE(xy[0], 0, t->w) &&
-		  IN_RANGE(xy[1], 0, t->h)))
+	xy[1] = (int)((t->h - 1) * CLAMP(sqrtf(hit[0] * hit[0] +
+			hit[2] * hit[2]), 0, 1));
+	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 					+ xy[0], sizeof(Uint32));

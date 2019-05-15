@@ -80,6 +80,7 @@ int	ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m,
 		clnd->maxh = clnd->maxh / scale;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.0f / clnd->r);
+	clnd->ratio = clnd->maxh / (clnd->maxh + 2.f);
 	return (1);
 }
 
@@ -99,5 +100,6 @@ int	ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m,
 	else
 		scale = 1 - SCALE_F;
 	clnd->maxh = clnd->maxh * scale;
+	clnd->ratio = clnd->maxh / (clnd->maxh + 2.f);
 	return (1);
 }

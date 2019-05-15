@@ -13,8 +13,14 @@
 #include "rt.h"
 
 static Uint32	ft_map_caps(t_cone *cone, SDL_Surface *tex,
-		t_vector hit, float hei)
+		t_vector hit)
 {
+//	if (IN_RANGE(-hit[1], cone->minh - 1e-1, cone->minh + 1e-1))
+//		printf("BOT at %f minh %f\n", hit[1], cone->minh);
+//	else if (IN_RANGE(-hit[1], cone->maxh - 1e-1, cone->maxh + 1e-1))
+//		printf("TOP at %f maxh %f\n", hit[1], cone->maxh);
+//	else
+//		printf("WTF %f minh %f maxh %f\n", hit[1], cone->minh, cone->maxh);
 	return (UINT32_MAX);
 }
 
@@ -33,8 +39,8 @@ Uint32			ft_map_cone(t_object *o, void *tex, t_vector hit)
 	t = (SDL_Surface *)tex;
 	hei = fabsf(cone->maxh) > fabsf(cone->minh) ?
 		fabsf((hit[1]) / cone->maxh) : fabsf((hit[1]) / cone->minh);
-	if (IN_RANGE(hit[1], -1e-1, 1e-1))
-		return (ft_map_caps(((t_cone *)o->fig), t, hit, hei));
+	if (!IN_RANGE(hit[1], cone->minh - 1e-1, cone->maxh - 1e-1))
+		return (ft_map_caps(((t_cone *)o->fig), t, hit));
 	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;

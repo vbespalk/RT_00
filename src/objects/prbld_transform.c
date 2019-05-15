@@ -90,6 +90,9 @@ int	ft_scale_hei_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		return (0);
 	prbl = (t_prbld *)o->fig;
 	scale = key == SDLK_r ? 1.f + SCALE_F : 1.f - SCALE_F;
-	prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX : prbl->maxh * scale;
+	prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX : prbl->maxh * scale * scale;
+	prbl->r = prbl->r / scale;
+	ft_3_transform_mat(tr_m, o->translate, o->rotate, prbl->r);
+	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / prbl->r);
 	return (1);
 }

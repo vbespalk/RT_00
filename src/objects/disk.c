@@ -24,7 +24,7 @@ t_disk	*ft_disknew(t_object *o)
 	o->ft_rotate = ft_rotate_disk;
 	o->ft_scale = ft_scale_disk;
 	o->ft_scale_height = ft_scale_hei_null;
-	o->ft_mapping = NULL;
+	o->ft_mapping = ft_map_disk;
 	o->ft_checker = ft_checker_dsk;
 	o->ft_procedural = ft_procedural_dsk;
 	dsk = ft_smemalloc(sizeof(t_disk), "ft_disknew");
@@ -106,8 +106,8 @@ int		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m,
 		scale = 1 + SCALE_F;
 	else
 		scale = 1 - SCALE_F;
-	dsk->in_r *= scale;
-	dsk->out_r = dsk->out_r == FLT_MAX ? FLT_MAX : scale;
+	dsk->in_r = dsk->in_r == FLT_MIN ? FLT_MIN : dsk->in_r * scale;
+	dsk->out_r = dsk->out_r == FLT_MAX ? FLT_MAX : dsk->out_r * scale;
 	dsk->sq_in_r = dsk->in_r * dsk->in_r;
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);

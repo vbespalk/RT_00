@@ -28,28 +28,41 @@ t_object	*ft_get_inner_object(t_list **objs, t_vector point)
 	t_list		*node;
 	t_vector	od[2];
 	float		dist[2];
-	t_object	*o;
-	t_object	*res;
+	t_object	*o[2];
 	t_coll		coll;
 
 	node = *objs;
 	od[0] = point;
 	od[1] = (t_vector) { 1.0f, 0.0f, 0.0f };
 	dist[0] = FLT_MAX;
-	res = NULL;
+	o[1] = NULL;
 	while (node)
 	{
-		o = (t_object *)(node->content);
-		o->ft_collide(objs, o, &coll, od);
+		o[0] = (t_object *)(node->content);
+		o[0]->ft_collide(objs, o[0], &coll, od);
 		dist[1] = ft_3_point_point_dist(point, coll.coll_pnt);
 		if (dist[1] < dist[0])
 		{
 			dist[0] = dist[1];
-			res = o;
+			o[1] = o[0];
 		}
 		node = node->next;
 	}
-	return (res);
+	return (o[1]);
+}
+
+static void	ft_free_list(t_list **head)
+{
+	t_list	*node;
+	t_list	*prev;
+
+	node = *head;
+	while (node)
+	{
+		prev = node;
+		node = node->next;
+		free(prev);
+	}
 }
 
 t_object	*ft_inside_obj(
@@ -60,6 +73,7 @@ t_object	*ft_inside_obj(
 	t_list		*res_objs;
 	t_list		*node;
 	t_object	*o;
+	t_object	*res;
 	int 		len;
 
 	res_objs = NULL;
@@ -75,12 +89,11 @@ t_object	*ft_inside_obj(
 		}
 		node = node->next;
 	}
-	if (len == 0)
-		return (NULL);
-	else if (len == 1)
-		return ((t_object *)(res_objs->content));
-	else
-		return (ft_choose(&res_objs, point));
+	res = (len == 0) ? NULL : (t_object *)(res_objs->content);
+	if (len > 1)
+		res = ft_choose(&res_objs, point);
+	ft_free_list(&res_objs);
+	return (res);
 }
 
 void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)

@@ -165,6 +165,6 @@ int		ft_on_exit(t_env *e)
 //    system("leaks RT");
     on_sdl_close("wrttvv", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen,
 			&e->sdl->gui->gui_texture, &e->sdl->pixels, &e->sdl->format);
-	// system("leaks RT");
+//	system("leaks RT");
 	return (0);
 }

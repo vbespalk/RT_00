@@ -46,19 +46,19 @@ void		*ft_parse_cone(char **content, t_object *o)
 	ft_get_attr(content, "angle", (void *)(&(cone->tan)), DT_FLOAT);
 	if (cone->minh > cone->maxh)
 		ft_swap_float(&cone->minh, &cone->maxh);
-	if (cone->minh == cone->maxh)
-	{
-		cone->minh = -FLT_MAX;
-		cone->maxh = FLT_MAX;
-	}
+	cone->minh = cone->minh == cone->maxh ? -FLT_MAX : cone->minh;
+	cone->maxh = cone->minh == cone->maxh ? FLT_MAX : cone->maxh;
 	if ((cone->tan = fabsf(cone->tan)) >= 175)
 		cone->tan = (int)cone->tan % 175;
 	cone->tan = cone->tan < 1 ? tanf(DEG_TO_RAD(1)) :
 			tanf(DEG_TO_RAD(cone->tan / 2.0f));
-	cone->r[0] = cone->minh != -FLT_MAX ?
-			fabsf(cone->minh * cone->tan) : FLT_MIN;
-	cone->r[1] = cone->maxh != FLT_MAX ?
-			fabsf(cone->maxh * cone->tan) : FLT_MIN;
+	cone->r[0] = (cone->minh == -FLT_MAX || cone->minh == 0) ?
+				 FLT_MIN : fabsf(cone->minh * cone->tan);
+	cone->r[1] = (cone->maxh == FLT_MAX || cone->maxh == 0) ?
+				 FLT_MIN : fabsf(cone->maxh * cone->tan);
+	if (!(cone->minh == -FLT_MAX || cone->maxh == FLT_MAX))
+		cone->texh = sqrtf(powf(cone->maxh - cone->minh, 2) +
+			powf(cone->r[1] - cone->r[0], 2)) + cone->r[0] + cone->r[1];
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
 	return ((void *)cone);

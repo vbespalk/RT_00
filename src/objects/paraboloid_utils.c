@@ -75,6 +75,7 @@ static float	get_caps_coll(t_vector od[2], t_vector *coll, t_prbld *par)
 		*coll = ft_3_nullpointnew();
 		return (FLT_MAX);
 	}
+	(*coll)[1] += par->maxh;
 	return (t);
 }
 

@@ -143,8 +143,8 @@ static float	get_caps_coll(
 			}
 //			*coll_pnt = pnts[i[0] + 2];
 			*coll_pnt = (i[0] == 0) ?
-					pnts[i[0] + 2] - (t_vector){ 0, hei[0], 0 } :
-					pnts[i[0] + 2] - (t_vector){ 0, hei[1], 0 };
+					pnts[i[0] + 2] + (t_vector){ 0, hei[0], 0 } :
+					pnts[i[0] + 2] + (t_vector){ 0, hei[1], 0 };
 			return (t[i[0]]);
 		}
 	}

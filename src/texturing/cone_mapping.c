@@ -12,16 +12,33 @@
 
 #include "rt.h"
 
-static Uint32	ft_map_caps(t_cone *cone, SDL_Surface *tex,
-		t_vector hit)
+static Uint32	ft_map_caps(t_cone *cone, SDL_Surface *t,
+		t_vector hit, float phi)
 {
-//	if (IN_RANGE(-hit[1], cone->minh - 1e-1, cone->minh + 1e-1))
-//		printf("BOT at %f minh %f\n", hit[1], cone->minh);
-//	else if (IN_RANGE(-hit[1], cone->maxh - 1e-1, cone->maxh + 1e-1))
-//		printf("TOP at %f maxh %f\n", hit[1], cone->maxh);
-//	else
-//		printf("WTF %f minh %f maxh %f\n", hit[1], cone->minh, cone->maxh);
-	return (UINT32_MAX);
+	Uint32		col;
+	int			xy[2];
+	float		texh[2];
+
+	xy[0] = (int)((t->w - 1) * phi / 2.0f * (float)M_1_PI);
+	texh[0] = t->h * cone->r[0] / cone->texh;
+	texh[1] = t->h * cone->r[1] / cone->texh;
+	if (IN_RANGE(hit[1], cone->minh - 1e-1, cone->minh + 1e-1))
+	{
+		hit = (t_vector){hit[0] / cone->r[0], hit[1], hit[2] / cone->r[0]};
+		xy[1] = (int)((texh[0] - 1) * (1 - CLAMP(sqrtf(hit[0] * hit[0] +
+				hit[2] * hit[2]), 0, 1)) + t->h - texh[0]);
+	}
+	else if (IN_RANGE(hit[1], cone->maxh - 1e-1, cone->maxh + 1e-1))
+	{
+		hit = (t_vector){hit[0] / cone->r[1], hit[1], hit[2] / cone->r[1]};
+		xy[1] = (int)((texh[1] - 1) * CLAMP(sqrtf(hit[0] * hit[0] +
+				hit[2] * hit[2]), 0, 1));
+	}
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
+		return (0xff);
+	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
+					+ xy[0], sizeof(Uint32));
+	return (col);
 }
 
 Uint32			ft_map_cone(t_object *o, void *tex, t_vector hit)
@@ -29,24 +46,24 @@ Uint32			ft_map_cone(t_object *o, void *tex, t_vector hit)
 	t_cone		*cone;
 	SDL_Surface *t;
 	Uint32		col;
-	float		hei;
 	float		phi;
 	int			xy[2];
+	float		ratio[2];
 
 	cone = ((t_cone *)o->fig);
-	if (((t_cone *)o->fig)->maxh == FLT_MAX)
+	if (cone->maxh == FLT_MAX || cone->minh == -FLT_MAX)
 		return (o->color.val);
 	t = (SDL_Surface *)tex;
-	hei = fabsf(cone->maxh) > fabsf(cone->minh) ?
-		fabsf((hit[1]) / cone->maxh) : fabsf((hit[1]) / cone->minh);
-	if (!IN_RANGE(hit[1], cone->minh - 1e-1, cone->maxh - 1e-1))
-		return (ft_map_caps(((t_cone *)o->fig), t, hit));
-	phi = atan2f(hit[0], hit[2]);
-	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
+	if (!(IN_RANGE((phi = atan2f(hit[0], hit[2])), 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;
+	if (!IN_RANGE(hit[1], cone->minh + 1e-1, cone->maxh - 1e-1))
+		return (ft_map_caps(((t_cone *)o->fig), t, hit, phi));
+	ratio[0] = t->h * (1.f - (cone->r[0] + cone->r[1]) / cone->texh);
+	ratio[1] = t->h * (cone->r[1] / cone->texh);
 	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
-	xy[1] = (int)((t->h - 1) * hei);
-	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
+	xy[1] = (int)((ratio[0] - 1) * (fabsf((hit[1] - cone->maxh) /
+			(cone->maxh - cone->minh))) + ratio[1]);
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 					+ xy[0], sizeof(Uint32));

@@ -455,6 +455,7 @@ typedef struct		s_cone
 	float			tan;
 	float			minh;
 	float			maxh;
+	float			texh;
 }					t_cone;
 
 typedef struct		s_cylinder
@@ -483,6 +484,7 @@ typedef struct		s_paraboloid
 {
 	float			r;
 	float			maxh;
+	float 			ratio;
 }					t_prbld;
 
 typedef struct		s_torus

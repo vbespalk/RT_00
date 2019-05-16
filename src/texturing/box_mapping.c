@@ -21,7 +21,6 @@ Uint32		ft_map_box(t_object *o, void *tex, t_vector hit)
 
 Uint32		ft_checker_box(t_object *o, void *tex, t_vector hit)
 {
-	(void)o;
 	t_checkbrd	*t;
 	float		phi;
 	float		theta;
@@ -41,7 +40,7 @@ Uint32		ft_checker_box(t_object *o, void *tex, t_vector hit)
 		(fmodf(uv[1] * t->size, 1) > 0.5f))
 		return (t->noise[0] ? o->ft_procedural(o, t->noise[0], hit) :
 				t->color[0]);
-	return (t->noise[1] ? o->ft_procedural(o, t->noise[1], hit) :
+		return (t->noise[1] ? o->ft_procedural(o, t->noise[1], hit) :
 			t->color[1]);
 }
 

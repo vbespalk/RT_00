@@ -12,10 +12,24 @@
 
 #include "rt.h"
 
-static Uint32	ft_map_caps(t_prbld *prbl, SDL_Surface *tex,
-		t_vector hit, float hei)
+static Uint32	ft_map_caps(t_prbld *prbl, SDL_Surface *t,
+		t_vector hit, float phi)
 {
-	return (UINT32_MAX);
+	Uint32		col;
+	int			xy[2];
+	float		texh;
+
+	xy[0] = (int)((t->w - 1) * phi / 2.0f * (float)M_1_PI);
+	texh = t->h * (1.f - prbl->ratio);
+	hit = ft_3_vector_scale(hit, (1 / sqrtf(4.0f * prbl->maxh)));
+	xy[1] = (int)((texh - 1) * (1.f - CLAMP(sqrtf(hit[0] * hit[0] +
+			 hit[2] * hit[2]), 0, 1)) + t->h * prbl->ratio);
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
+		return (0xff);
+	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
+					+ xy[0], sizeof(Uint32));
+	return (col);
+//	return (UINT32_MAX);
 }
 
 Uint32			ft_map_prbld(t_object *o, void *tex, t_vector hit)
@@ -23,7 +37,6 @@ Uint32			ft_map_prbld(t_object *o, void *tex, t_vector hit)
 	t_prbld		*prbl;
 	SDL_Surface	*t;
 	Uint32		col;
-	float		hei;
 	float		phi;
 	int			xy[2];
 
@@ -31,18 +44,18 @@ Uint32			ft_map_prbld(t_object *o, void *tex, t_vector hit)
 	if (((t_prbld *)o->fig)->maxh == FLT_MAX)
 		return (o->color.val);
 	t = (SDL_Surface *)tex;
-	hei = sqrtf(hit[1] / prbl->maxh);
-	if (IN_RANGE(hit[1], -1e-6, 1e-6))
-		return (ft_map_caps(((t_prbld *)o->fig), tex, hit, hei));
 	phi = atan2f(hit[0], hit[2]);
 	if (!(IN_RANGE(phi, 0.0f, 2 * M_PI)))
 		phi = phi < 0 ? phi + 2 * (float)M_PI : phi;
+	if (IN_RANGE(hit[1], prbl->maxh - 1e-1, prbl->maxh + 1e-1))
+		return (ft_map_caps(((t_prbld *)o->fig), tex, hit, phi));
 	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
-	xy[1] = (int)((t->h - 1) * hei);
-	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
+	xy[1] = (int)((t->h * prbl->ratio - 1) *
+		CLAMP(sqrtf(hit[1] / prbl->maxh), 0, 1));
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
-					+ xy[0], sizeof(Uint32));
+		+ xy[0], sizeof(Uint32));
 	return (col);
 }
 

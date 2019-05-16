@@ -26,7 +26,7 @@ t_box		*ft_boxnew(t_object *o)
 	o->ft_scale_height = ft_scale_box;
 	o->ft_mapping = ft_map_box;
 	o->ft_checker = ft_checker_box;
-	o->ft_procedural = ft_procedural_pln;
+	o->ft_procedural = ft_procedural_box;
 	o->composed = true;
 	bx = ft_smemalloc(sizeof(t_box), "ft_boxnew");
 	bx->whl[0] = 10;
@@ -89,5 +89,7 @@ char		*ft_parse_box(char **content, t_object *o)
 	}
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
+	printf("ORIG LEN BOX %f, %f, %f addr %p, %p, %p\n", bx->whl[0], bx->whl[1], bx->whl[2],
+			bx->face[0], bx->face[1], bx->face[2]);
 	return ((void *)bx);
 }

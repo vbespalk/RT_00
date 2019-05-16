@@ -26,6 +26,7 @@ t_box		*ft_boxnew(t_object *o)
 	o->ft_scale_height = ft_scale_box;
 	o->ft_mapping = ft_map_box;
 	o->ft_checker = ft_checker_box;
+	o->ft_procedural = ft_procedural_pln;
 	o->composed = true;
 	bx = ft_smemalloc(sizeof(t_box), "ft_boxnew");
 	bx->whl[0] = 10;

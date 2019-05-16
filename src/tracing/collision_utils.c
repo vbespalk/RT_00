@@ -61,6 +61,7 @@ t_object	*ft_inside_obj(
 	t_list		*node;
 	t_object	*o;
 	int 		len;
+	static int	count = 0;
 
 	res_objs = NULL;
 	node = *objs;
@@ -91,6 +92,9 @@ void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)
 //			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
 		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
 		coll->coll_pnt -= ft_3_vector_scale(coll->norm, SHIFT);
+		coll->o->ft_procedural = ft_procedural_sph;
+		coll->o->ft_checker = ft_checker_sph;
+		coll->o->ft_mapping = ft_map_sphere;
 	}
 	else
 		coll->o = obj;

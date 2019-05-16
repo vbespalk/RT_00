@@ -1066,6 +1066,8 @@ Uint32					ft_checker_pln(t_object *o, void *tex, t_vector coll);
 Uint32					ft_procedural_pln(t_object *o, void *tex, t_vector coll);
 Uint32					ft_map_box(t_object *o, void *tex, t_vector hit);
 Uint32					ft_checker_box(t_object *o, void *tex, t_vector coll);
+Uint32					ft_procedural_box(t_object *o, void *tex, t_vector hit);
+
 
 
 /*

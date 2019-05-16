@@ -111,7 +111,7 @@
 # define THREADS		8
 
 # define ROTAT_F		DEG_TO_RAD(10)
-# define TRANS_F		15.0f
+# define TRANS_F		150.0f
 # define SCALE_F		0.1f
 # define SCANG_F		0.05f
 # define BOX_FACES		6

@@ -23,7 +23,7 @@ static Uint32	ft_map_caps(t_prbld *prbl, SDL_Surface *t,
 	texh = t->h * (1.f - prbl->ratio);
 	hit = ft_3_vector_scale(hit, (1 / sqrtf(4.0f * prbl->maxh)));
 	xy[1] = (int)((texh - 1) * (1.f - CLAMP(sqrtf(hit[0] * hit[0] +
-			 hit[2] * hit[2]), 0, 1)) + t->h * prbl->ratio);
+			hit[2] * hit[2]), 0, 1)) + t->h * prbl->ratio);
 	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w

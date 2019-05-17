@@ -30,21 +30,23 @@ int					ft_solve_quadratic(float a, float b, float c, float res[2])
 static int			ft_solve_sqr_(double a, double b, double c, double res[2])
 {
 	double	d;
-	double 	tmp;
 
+	res[0] = FLT_MAX;
+	res[1] = FLT_MAX;
+	if (IS_ZERO(a))
+	{
+		res[0] = -c / b;
+		res[1] = res[0];
+		return (1);
+	}
 	d = pow(b, 2) - 4.0f * a * c;
 	if (d < 0)
 		return (0);
 	d = sqrt(d);
-	bzero(res, sizeof(double) * 2);
 	res[0] = (-b + d) / (2.0f * a);
 	res[1] = (-b - d) / (2.0f * a);
-	if (res[0] > res[1] || res[0] < FLT_MIN)
-	{
-		tmp = res[0];
-		res[0] = res[1];
-		res[1] = tmp;
-	}
+	if ((res[0] > res[1] && res[1] >= 0) || res[0] <= 0)
+		ft_swap(&res[0], &res[1], sizeof(double));
 	return (2);
 }
 

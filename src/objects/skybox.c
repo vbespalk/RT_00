@@ -73,3 +73,25 @@ void		ft_skybox_del(t_skybox **sk)
 		ft_memdel((void **)&(*sk)->textur_id[i]);
 	ft_memdel((void **)sk);
 }
+
+int			ft_switch_skybox(t_sdl *sdl, t_scene *scn)
+{
+	if (scn->skybox != NULL)
+		scn->skybox_on = !scn->skybox_on;
+	else
+	{
+		scn->skybox = (t_skybox *)ft_smemalloc(sizeof(t_skybox),
+			"ft_switch_skybox");
+		scn->skybox->textur_id[0] = ft_strdup(SKBX_NEGZ);
+		scn->skybox->textur_id[1] = ft_strdup(SKBX_NEGY);
+		scn->skybox->textur_id[2] = ft_strdup(SKBX_NEGX);
+		scn->skybox->textur_id[3] = ft_strdup(SKBX_POSZ);
+		scn->skybox->textur_id[4] = ft_strdup(SKBX_POSY);
+		scn->skybox->textur_id[5] = ft_strdup(SKBX_POSX);
+		scn->skybox->bbx = ft_init_aabb(ZERO_PNT, ZERO_PNT);
+		if (ft_load_sky_tex(&scn->skybox, &scn->textures, sdl) == 0)
+			return (0);
+		scn->skybox_on = true;
+	}
+	return (1);
+}

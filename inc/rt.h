@@ -57,7 +57,8 @@
 # define FOV			1.570796
 # define FOV_MIN		60.0f
 # define FOV_MAX		120.0f
-# define EQN_EPS		1e-30
+//# define EQN_EPS		1e-30
+# define EQN_EPS		1e-16
 
 /*
 **	macro functions
@@ -108,7 +109,7 @@
 
 # define DEPTH			5
 # define STACK_SIZE		DEPTH
-# define THREADS		8
+# define THREADS		1
 
 # define ROTAT_F		DEG_TO_RAD(10)
 # define TRANS_F		150.0f
@@ -1020,7 +1021,6 @@ t_color					ft_add_colors(t_color c1, t_color c2);
 */
 
 int						ft_switch_col_mode(t_env *e, Sint32 sum);
-int	    				ft_switch_skybox(t_sdl *sdl, t_scene *scn);
 int	    				ft_set_exposure(Sint32 sum, t_object *o, t_env *e);
 
 /*
@@ -1093,10 +1093,16 @@ Uint32					ft_map_torus(t_object *o, void *tex, t_vector hit);
 */
 
 void					ft_parse_skybox(char **content, t_skybox **sky);
-Uint32					ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit);
 t_color					ft_apply_sky(t_skybox *skybox, t_vector origin, t_vector direct);
 void					ft_skybox_del(t_skybox **sk);
 int	    				ft_load_sky_tex(t_skybox **skybox, t_list **tex, t_sdl *sdl);
+int	    				ft_switch_skybox(t_sdl *sdl, t_scene *scn);
+
+/*
+** map_skybox.c
+*/
+
+Uint32					ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit);
 
 /*
 ** equations.c

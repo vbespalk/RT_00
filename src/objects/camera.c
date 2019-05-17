@@ -57,6 +57,9 @@ void				ft_parse_camera(char **content, t_camera *cam)
 	cam->angles = (t_vector) { angles[0], angles[1], angles[2] };
 	ft_get_attr(content, "fov", (void *)&(cam->fov), DT_FLOAT);
 	cam->fov = (float)ft_limitf(FOV_MIN, FOV_MAX, cam->fov);
+	cam->origin[0] = CLAMP(cam->origin[0], -16000000.f, 16000000.f);
+	cam->origin[1] = CLAMP(cam->origin[1], -16000000.f, 16000000.f);
+	cam->origin[2] = CLAMP(cam->origin[2], -16000000.f, 16000000.f);
 	cam->fov = ft_torad(cam->fov);
 	cam->angles[0] = ft_torad(cam->angles[0]);
 	cam->angles[1] = ft_torad(cam->angles[1]);

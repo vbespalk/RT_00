@@ -23,7 +23,7 @@ t_disk	*ft_disknew(t_object *o)
 	o->ft_translate = ft_translate_disk;
 	o->ft_rotate = ft_rotate_disk;
 	o->ft_scale = ft_scale_disk;
-	o->ft_scale_height = ft_scale_hei_null;
+	o->ft_scale_height = ft_scale_disk;
 	o->ft_mapping = ft_map_disk;
 	o->ft_checker = ft_checker_dsk;
 	o->ft_procedural = ft_procedural_dsk;
@@ -102,7 +102,7 @@ int		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m,
 	if (!o)
 		return (0);
 	dsk = (t_disk *)o->fig;
-	if (key == SDLK_z)
+	if (key == SDLK_z || key == SDLK_r)
 		scale = 1 + SCALE_F;
 	else
 		scale = 1 - SCALE_F;

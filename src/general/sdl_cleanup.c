@@ -50,15 +50,13 @@ void	on_sdl_close(char *fmt, ...)
 	while (*fmt)
 	{
 		if (*fmt == 's')
-			cleanup(va_arg(args_ptr, SDL_Surface **));
+			cleanup_sdl_surface(va_arg(args_ptr, SDL_Surface **));
 		else if (*fmt == 't')
-			cleanup(va_arg(args_ptr, SDL_Texture **));
+			cleanup_sdl_texture(va_arg(args_ptr, SDL_Texture **));
 		else if (*fmt == 'r')
-			cleanup(va_arg(args_ptr, SDL_Renderer **));
+			cleanup_sdl_render(va_arg(args_ptr, SDL_Renderer **));
 		else if (*fmt == 'w')
-			cleanup(va_arg(args_ptr, SDL_Window **));
-		else if (*fmt == 'v')
-			ft_memdel(va_arg(args_ptr, void **));
+			cleanup_sdl_window(va_arg(args_ptr, SDL_Window **));
 		fmt++;
 	}
 	va_end(args_ptr);

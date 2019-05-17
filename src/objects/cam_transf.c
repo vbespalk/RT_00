@@ -26,6 +26,9 @@ int		ft_translate_cam(Uint32 key, t_vector *transl)
 		(*transl)[0] += TRANS_F;
 	if (key == SDLK_e)
 		(*transl)[0] -= TRANS_F;
+	(*transl)[0] = CLAMP((*transl)[0], -16000000.f, 16000000.f);
+	(*transl)[1] = CLAMP((*transl)[1], -16000000.f, 16000000.f);
+	(*transl)[2] = CLAMP((*transl)[2], -16000000.f, 16000000.f);
 	return (1);
 }
 

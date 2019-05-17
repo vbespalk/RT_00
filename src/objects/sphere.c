@@ -23,7 +23,7 @@ t_sphere	*ft_spherenew(t_object *o)
 	o->ft_translate = ft_translate_sphere;
 	o->ft_rotate = ft_rotate_sphere;
 	o->ft_scale = ft_scale_sphere;
-	o->ft_scale_height = ft_scale_hei_null;
+	o->ft_scale_height = ft_scale_sphere;
 	o->ft_mapping = ft_map_sphere;
 	o->ft_checker = ft_checker_sph;
 	o->ft_procedural = ft_procedural_sph;
@@ -109,7 +109,7 @@ int			ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m,
 	if (!o)
 		return (0);
 	sph = (t_sphere *)o->fig;
-	scale = key == SDLK_z ? 1.f + SCALE_F : 1.f - SCALE_F;
+	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
 	sph->radius *= scale;
 	ft_3_transform_mat(tr_m, o->translate, ft_3_nullpointnew(), sph->radius);
 	ft_3_inv_trans_mat(inv_m, -o->translate, ft_3_nullpointnew(),

@@ -23,7 +23,7 @@ t_torus	*ft_torusnew(t_object *o)
 	o->ft_translate = ft_translate_torus;
 	o->ft_rotate = ft_rotate_torus;
 	o->ft_scale = ft_scale_torus;
-	o->ft_scale_height = ft_scale_hei_null;
+	o->ft_scale_height = ft_scale_torus;
 	o->ft_mapping = ft_map_torus;
 	o->ft_checker = ft_checker_tor;
 	o->ft_procedural = ft_procedural_tor;
@@ -102,7 +102,7 @@ int		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m,
 	(void)tr_m;
 	(void)inv_m;
 	trs = (t_torus *)o->fig;
-	scale = key == SDLK_z ? 1.f + SCALE_F : 1.f - SCALE_F;
+	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
 	trs->r_inner = trs->r_inner * scale;
 	trs->r_outer = trs->r_outer * scale;
 	return (1);

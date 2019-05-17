@@ -23,7 +23,7 @@ t_plane	*ft_planenew(t_object *o)
 	o->ft_translate = ft_translate_plane;
 	o->ft_rotate = ft_rotate_plane;
 	o->ft_scale = ft_scale_plane;
-	o->ft_scale_height = ft_scale_hei_null;
+	o->ft_scale_height = ft_scale_plane;
 	o->ft_mapping = ft_map_plane;
 	o->ft_checker = ft_checker_pln;
 	o->ft_procedural = ft_procedural_pln;
@@ -117,7 +117,7 @@ int		ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m,
 	pln = (t_plane *)o->fig;
 	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
 		return (0);
-	scale = key == SDLK_z ? 1.f + SCALE_F : 1.f - SCALE_F;
+	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
 	pln->len_wh[0] *= scale;
 	pln->len_wh[1] *= scale;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);

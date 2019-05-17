@@ -24,6 +24,7 @@
     {
       "name": "box",
       "color": "0xff0000",
+      "//negative": true,
       "length": 200,
       "width": 200,
       "height": 200,
@@ -37,9 +38,17 @@
 
       "rotate": {"z": 30}
     }
-    ,
+  , {
+      "name": "sphere",
+      "react_negative": true,
+      "translate": { "x": 0, "y": 0, "z": 100 },
+      "radius": 200,
+      "color": "0xff0000",
+      "ambnt": 0.2
+    },
         {
             "name": "cylinder",
+          "//negative": true,
             "translate": { "y": -50 },
             "rotate":{"z": 30, "y": 15},
             "radius": 50,

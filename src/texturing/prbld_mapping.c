@@ -29,7 +29,6 @@ static Uint32	ft_map_caps(t_prbld *prbl, SDL_Surface *t,
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 					+ xy[0], sizeof(Uint32));
 	return (col);
-//	return (UINT32_MAX);
 }
 
 Uint32			ft_map_prbld(t_object *o, void *tex, t_vector hit)
@@ -83,25 +82,25 @@ Uint32			ft_procedural_prbld(t_object *o, void *tex, t_vector coll)
 Uint32			ft_checker_prbld(t_object *o, void *tex, t_vector coll)
 {
 	float		uv[2];
-	t_prbld		*prbl;
+	t_prbld		*prb;
 	t_checkbrd	*t;
 	float		phi;
 	t_vector	pnt;
 
-	prbl = (t_prbld *)o->fig;
+	prb = (t_prbld *)o->fig;
 	t = (t_checkbrd *)tex;
-	phi = atan2f(coll[2], coll[0]);
-	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
+	if (!(IN_RANGE((phi = atan2f(coll[2], coll[0])), 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
 	uv[0] = phi / (float)M_PI + 1;
-	if (prbl->maxh != FLT_MAX && IN_RANGE(coll[1], -1e-6, 1e-6))
+	if (prb->maxh != FLT_MAX && IN_RANGE(coll[1], prb->maxh - 1e-1,
+			prb->maxh + 1e-1))
 	{
-		pnt = ft_3_vector_scale(coll, (1 / sqrtf(4.0f * prbl->maxh)));
+		pnt = ft_3_vector_scale(coll, (1 / sqrtf(4.0f * prb->maxh)));
 		uv[1] = sqrtf(powf(pnt[2], 2) + powf(pnt[0], 2));
 	}
 	else
-		uv[1] = prbl->maxh == FLT_MAX ? coll[1] / sqrtf(o->dist) :
-				sqrtf(coll[1] / prbl->maxh);
+		uv[1] = prb->maxh == FLT_MAX ? coll[1] / sqrtf(o->dist) :
+				sqrtf(coll[1] / prb->maxh);
 	if (!((fmodf(uv[0] * t->size, 1) > 0.5) ^
 		(fmodf(uv[1] * t->size, 1) > 0.5)))
 		return (t->noise[0] ? o->ft_procedural(o, t->noise[0], coll) :

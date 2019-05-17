@@ -49,8 +49,7 @@ float		ft_collide_plane(
 	if (!(pln->len_wh[0] == 0 || pln->len_wh[1] == 0) &&
 		!ft_inside_quad(pln, coll->ucoll_pnt))
 		return (FLT_MAX);
-	coll->norm = ft_3_tounitvector(
-		ft_3_norm_transform(&(obj->inverse), (t_vector){0, 1, 0}));
+	coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
 	coll->o = obj;
 	coll->tex_o = obj;
 	return (t);
@@ -65,6 +64,8 @@ int			ft_is_inside_plane(t_object *o, t_vector point)
 
 t_vector	ft_get_norm_plane(void *fig, t_matrix *inv_m, t_vector coll)
 {
-	(void)coll;
-	return (ft_3_nullpointnew());
+	(void)fig;
+
+	return (ft_3_tounitvector(
+			ft_3_norm_transform(inv_m, Y_AXIS)));
 }

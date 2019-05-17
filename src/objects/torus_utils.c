@@ -50,11 +50,15 @@ float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	{
 		if (res[i[0]] < t && res[i[0]] > 0)
 		{
-			t = res[i[0]];
-			odh[2] = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
+			coll->ucoll_pnt = odh[0] + ft_3_vector_scale(odh[1], (float)t);
+			coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
+			odh[2] = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[i[0]]);
+			if (obj->is_neg)
+				odh[2] += ft_3_vector_scale(coll->norm, SHIFT);
 			i[1] = ft_inside_type(objs, odh[2]);
 			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
 				continue ;
+			t = res[i[0]];
 		}
 	}
 	if (t == FLT_MAX)
@@ -63,9 +67,14 @@ float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 		return (FLT_MAX);
 	}
 	coll->ucoll_pnt = odh[0] + ft_3_vector_scale(odh[1], (float)t);
-	coll->o = obj;
-	coll->tex_o = obj;
+	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)t);
 	coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
+	if (obj->is_neg)
+		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
+	ft_choose_object(objs, obj, coll);
+	coll->tex_o = coll->o;
+	if (obj->is_neg)
+		coll->norm = ft_3_vector_invert(coll->norm);
 //	printf("HERE\n");
 	return ((float)t);
 }
@@ -82,10 +91,7 @@ int			ft_is_inside_torus(t_object *o, t_vector point)
 	point = ft_3_pnt_transform(&(o->inverse), point);
 	k = point[1];
 	if (fabs(k) > trs->r_inner)
-	{
-//		printf("OUT HEI\n");
 		return (0);
-	}
 //	a = point - ft_3_vector_scale(trs->v, (float)k);
 	a = (t_vector){point[0], FLT_MIN, point[2]};
 	r_outer = ft_3_vector_dot(a, a);

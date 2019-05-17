@@ -128,8 +128,7 @@ static float	get_caps_coll(
 			pnts[i[0] + 2], pnts[i[0] + 2]) < sq_r[i[0]])
 		{
 			pnts[i[0] + 4] = uod[0] + ft_3_vector_scale(uod[1], t[i[0]]);
-			*norm = ft_3_tounitvector(
-				ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));
+			*norm = ft_get_norm_plane(obj->fig, &(obj->inverse), pnts[i[0] + 4]);
 			if (obj->is_neg)
 				pnts[i[0] + 4] += ft_3_vector_scale(*norm, SHIFT);
 			i[1] = ft_inside_type(objs, pnts[i[0] + 4]);

@@ -30,8 +30,7 @@ float		ft_collide_disk(t_list **objs, struct s_object *obj, t_coll *coll, t_vect
 	coll->ucoll_pnt = od[0] + ft_3_vector_scale(od[1], t);
 	coll->o = obj;
 	coll->tex_o = obj;
-	coll->norm = ft_3_tounitvector(
-		ft_3_norm_transform(&(obj->inverse), (Y_AXIS)));
+	coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
 	dis = ft_3_vector_dot(coll->ucoll_pnt, coll->ucoll_pnt);
 	return (IN_RANGE(dis, dsk->sq_in_r, dsk->sq_out_r) ? t : FLT_MAX);
 }
@@ -45,7 +44,6 @@ int			ft_is_inside_disk(t_object *o, t_vector point)
 
 t_vector	ft_get_norm_disk(void *fig, t_matrix *inv_m, t_vector coll)
 {
-//	(void)coll;
-//	return (((t_disk *)fig)->norm);
-	return (ft_3_nullpointnew());
+	return (ft_3_tounitvector(
+			ft_3_norm_transform(inv_m, (Y_AXIS))));
 }

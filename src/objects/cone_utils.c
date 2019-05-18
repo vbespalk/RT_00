@@ -75,11 +75,10 @@ static float	get_cides_coll(
 			*norm = obj->ft_get_norm(obj->fig, &obj->inverse, hit[i[0]]);
 			if (obj->is_neg)
 				uhit[i[0]] += ft_3_vector_scale(*norm, SHIFT);
-			i[1] = ft_inside_type(objs, uhit[i[0]]);
+			if (obj->react_neg || obj->is_neg)
+				i[1] = ft_inside_type(objs, uhit[i[0]]);
 			(*norm)[3] = i[1];
-			if (obj->is_neg && i[1] != 1)
-				*norm = ft_3_vector_invert(*norm);
-			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			if (ft_is_invisible(obj, i[1]))
 			{
 				t[i[0]] = 0;
 				continue ;
@@ -131,19 +130,15 @@ static float	get_caps_coll(
 			*norm = ft_get_norm_plane(obj->fig, &(obj->inverse), pnts[i[0] + 4]);
 			if (obj->is_neg)
 				pnts[i[0] + 4] += ft_3_vector_scale(*norm, SHIFT);
-			i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
+			if (obj->react_neg || obj->is_neg)
+				i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
 			(*norm)[3] = i[1];
-			if (obj->is_neg && i[1] != 1)
-				*norm = ft_3_vector_invert(*norm);
-			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			if (ft_is_invisible(obj, i[1]))
 			{
 				t[i[0]] = 0;
 				continue ;
 			}
-//			*coll_pnt = pnts[i[0] + 2];
-			*coll_pnt = (i[0] == 0) ?
-					pnts[i[0] + 2] + (t_vector){ 0, hei[0], 0 } :
-					pnts[i[0] + 2] + (t_vector){ 0, hei[1], 0 };
+			*coll_pnt = pnts[i[0] + 2] + (t_vector){ 0, hei[i[0]], 0 };
 			return (t[i[0]]);
 		}
 	}
@@ -183,15 +178,8 @@ float			ft_collide_cone(t_list **objs, t_object *obj,
 	t = get_closer_pnt(res, hit, norms, coll, obj);
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
 	if (obj->is_neg)
-	{
-		coll->coll_pnt += ft_3_vector_scale(
-			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
-		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
-		coll->coll_pnt -= ft_3_vector_scale(
-			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
-	}
-	else
-		coll->o = obj;
+		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
+	ft_choose_object(objs, obj, coll);
 	return (t);
 }
 

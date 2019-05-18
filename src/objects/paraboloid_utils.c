@@ -58,28 +58,31 @@ static float	get_closer_pnt(
 	return (FLT_MAX);
 }
 
-static float	get_caps_coll(t_vector od[2], t_vector *coll, t_prbld *par)
+static float	get_caps_coll(
+					t_list **objs, t_vector od[2], t_vector uod[2],
+					t_vector *coll, t_vector *norm, t_object *obj)
 {
+	int			i;
 	float		t;
-	t_vector 	o;
+	t_vector 	hit;
+	t_prbld		*par;
 
+	i = 0;
+	par = (t_prbld *)(obj->fig);
 	od[0][1] -= par->maxh;
 	t = par->maxh == FLT_MAX ? FLT_MAX : -(od[0][1]) / od[1][1];
-	if (t < 0 || t == FLT_MAX)
-	{
-//		printf("FLT_MAX\n");
+	if (t <= 0 || t == FLT_MAX)
 		return (FLT_MAX);
-	}
 	*coll = od[0] + ft_3_vector_scale(od[1], t);
-//	if (ft_3_vector_dot(*coll, *coll) > par->r * par->r)
-	if (ft_3_vector_dot(*coll, *coll) > 4.0f * par->maxh)
-	{
-		*coll = ft_3_nullpointnew();
-//		printf("FLT_MAX\n");
+	hit = uod[0] + ft_3_vector_scale(uod[1], t);
+	*norm = ft_get_norm_plane(obj->fig, &(obj->inverse), *coll);
+	if (obj->is_neg)
+		hit += ft_3_vector_scale(*norm, SHIFT);
+	if (obj->react_neg || obj->is_neg)
+		i = ft_inside_type(objs, hit);
+	if (ft_is_invisible(obj, i))
 		return (FLT_MAX);
-	}
 	(*coll)[1] += par->maxh;
-//	printf("t %f\n", t);
 	return (t);
 }
 

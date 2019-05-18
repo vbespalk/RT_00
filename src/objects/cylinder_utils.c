@@ -95,11 +95,12 @@ static float	get_cides_coll(
 					(hit[i[0]] - (t_vector){0, hit[i[0]][1], 0})));
 			if (obj->is_neg)
 				uhit[i[0]] += ft_3_vector_scale(*norm, SHIFT);
-			i[1] = ft_inside_type(objs, uhit[i[0]]);
+			if (obj->react_neg || obj->is_neg)
+				i[1] = ft_inside_type(objs, uhit[i[0]]);
 			(*norm)[3] = i[1];
 			if (obj->is_neg && i[1] != 1)
 				*norm = ft_3_vector_invert(*norm);
-			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			if (ft_is_invisible(obj, i[1]))
 			{
 				t[i[0]] = 0;
 				continue ;
@@ -171,19 +172,18 @@ static float	get_caps_coll(
 	{
 		if (t[i[0]] >= 0 && ft_3_vector_dot(pnts[i[0] + 2], pnts[i[0] + 2]) < 1)
 		{
-			pnts[i[0] + 2] += (i[0] == 0)
-				? (t_vector){ 0, hei[0], 0 }
-				: (t_vector){ 0, hei[1], 0 };
+			pnts[i[0] + 2] += (t_vector){ 0, hei[i[0]], 0 };
 			pnts[i[0] + 4] = uod[0] + ft_3_vector_scale(uod[1], t[i[0]]);
 			*norm = ft_3_tounitvector(
 				ft_3_norm_transform(&(obj->inverse), (t_vector) {0, 1, 0}));
+			if (ft_3_vector_cos(*norm, pnts[i[0] + 4] - obj->translate) < 0)
+				*norm = ft_3_vector_invert(*norm);
 			if (obj->is_neg)
 				pnts[i[0] + 4] += ft_3_vector_scale(*norm, SHIFT);
-			i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
+			if (obj->react_neg || obj->is_neg)
+				i[1] = ft_inside_type(objs, pnts[i[0] + 4]);
 			(*norm)[3] = i[1];
-			if (obj->is_neg && i[1] != 1)
-				*norm = ft_3_vector_invert(*norm);
-			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			if (ft_is_invisible(obj, i[1]))
 			{
 				t[i[0]] = 0;
 				continue ;
@@ -222,18 +222,10 @@ float			ft_collide_cylinder(
 	if (res[0] == FLT_MAX && res[1] == FLT_MAX)
 		return (FLT_MAX);
 	t = get_closer_pnt(res, hit, coll, norms, obj);
-	//coll->coll_pnt = ft_3_pnt_transform(&(obj->transform), coll->ucoll_pnt);
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
 	if (obj->is_neg)
-	{
-		coll->coll_pnt += ft_3_vector_scale(
-			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
-		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
-		coll->coll_pnt -= ft_3_vector_scale(
-			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
-	}
-	else
-		coll->o = obj;
+		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
+	ft_choose_object(objs, obj, coll);
 	return (t);
 }
 

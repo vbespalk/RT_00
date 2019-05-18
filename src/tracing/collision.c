@@ -54,7 +54,7 @@ static void			ft_init_collision(t_coll *coll, t_list **objs, t_vector *od)
 //		if (o->ft_is_reachable(o->fig, od[0], od[1]))
 //		{
 			dist[1] = o->ft_collide(objs, o, coll, od);
-			if (dist[1] < dist[0])
+			if (dist[1] > 0 && dist[1] < dist[0])
 			{
 				dist[0] = dist[1];
 				tmp_coll = *coll;

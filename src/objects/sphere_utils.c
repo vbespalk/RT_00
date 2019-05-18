@@ -34,8 +34,9 @@ static float	ft_collide_sphere_half(
 					t_coll *coll, t_vector pnts[4])
 {
 	float	t;
-	float	i;
+	int		i;
 
+	i = 0;
 	t = (pnts[0][3] == FLT_MAX) ? pnts[1][3] : pnts[0][3];
 	pnts[0][3] = FLT_MAX;
 	if (t > 0)
@@ -43,12 +44,11 @@ static float	ft_collide_sphere_half(
 		coll->ucoll_pnt = pnts[2] + ft_3_vector_scale(pnts[3], t);
 		coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
 		coll->coll_pnt = pnts[0] + ft_3_vector_scale(pnts[1], t);
-		if (obj->is_neg == false && obj->react_neg == false)
-			return (t);
 		if (obj->is_neg)
 			coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
-		i = ft_inside_type(objs, coll->coll_pnt);
-		if (i < 0 || (obj->is_neg && i == 0))
+		if (obj->react_neg || obj->is_neg)
+			i = ft_inside_type(objs, coll->coll_pnt);
+		if (ft_is_invisible(obj, i))
 			return (0);
 		return (t);
 	}

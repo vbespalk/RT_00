@@ -103,13 +103,18 @@
 # define DEFAULT_REFR	1.0f
 # define SHIFT			0.1f
 
+# define IT_NEG			-1
+# define IT_VOID		0
+# define IT_POS_RT		1
+# define IT_POS_RF		2
+
 /*
 **	system
 */
 
 # define DEPTH			5
 # define STACK_SIZE		DEPTH
-# define THREADS		1
+# define THREADS		8
 
 # define ROTAT_F		DEG_TO_RAD(10)
 # define TRANS_F		150.0f
@@ -438,6 +443,7 @@ struct				s_object
 
 typedef struct		s_plane
 {
+	int				is_in_box;
 	float			len_wh[2];
 	float			ratio;
 }					t_plane;
@@ -1006,6 +1012,7 @@ t_object				*ft_inside_obj(
 							t_object *(*ft_choose)(t_list **, t_vector));
 void					ft_choose_object(
 							t_list **objs, t_object *obj, t_coll *coll);
+int						ft_is_invisible(t_object *obj, int inside_type);
 
 /*
 **	utils.c

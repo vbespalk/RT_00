@@ -32,7 +32,7 @@ SDL_IMG_LNK =	-F ./frameworks -rpath ./frameworks -framework SDL2_image
 
 INC	=	-I./inc/
 SRCS = $(wildcard src/*/*.c)
-OBJ = $(SRCS:.c=.o)
+OBJS = $(SRCS:.c=.o)
 
 # LINUX SDL
 
@@ -68,16 +68,16 @@ CC = gcc
 
 all: $(NAME) 
 
-$(NAME): $(OBJ) ./inc/rt.h
+$(NAME): $(OBJS) ./inc/rt.h
 	@$(MAKE) -C libftprintf
 	@$(MAKE) -C libpnt
 	@$(MAKE) -C JSON-c
-	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)\
 		$(LIBFT_PATH) $(LIBMLX_PATH) $(LIBPNT_PATH) $(LIBJSON_PATH) \
-		$(SDL_LNK) $(SDL_IMG_LNK) $(LFLAGS)
+		$(SDL_LNK) $(SDL_IMG_LNK) -lm
 
 clean:
-	@/bin/rm -f src/*/*.o
+	@/bin/rm -f $(OBJS)
 	@$(MAKE) clean -C libftprintf
 	@$(MAKE) clean -C libpnt
 	@$(MAKE) clean -C JSON-c

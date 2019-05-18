@@ -9,7 +9,8 @@ int			ft_is_reachable_disk(void *fig, t_vector origin, t_vector direct)
 	return (1);
 }
 
-float		ft_collide_disk(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+float		ft_collide_disk(
+				t_list **objs, t_object *obj, t_coll *coll, t_vector untr_od[2])
 {
 	t_disk		*dsk;
 	float 		t;
@@ -25,7 +26,7 @@ float		ft_collide_disk(t_list **objs, struct s_object *obj, t_coll *coll, t_vect
 	if (t < 0)
 		return (-1);
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
-	if (ft_inside_type(objs, coll->coll_pnt) < 0)
+	if (obj->react_neg && ft_inside_type(objs, coll->coll_pnt) == IT_NEG)
 		return (FLT_MAX);
 	coll->ucoll_pnt = od[0] + ft_3_vector_scale(od[1], t);
 	coll->o = obj;

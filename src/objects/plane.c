@@ -28,6 +28,7 @@ t_plane	*ft_planenew(t_object *o)
 	o->ft_checker = ft_checker_pln;
 	o->ft_procedural = ft_procedural_pln;
 	pln = ft_smemalloc(sizeof(t_plane), "ft_planenew");
+	pln->is_in_box = false;
 	pln->len_wh[0] = FLT_MIN;
 	pln->len_wh[1] = FLT_MIN;
 	return (pln);

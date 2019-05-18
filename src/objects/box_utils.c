@@ -61,7 +61,8 @@ float			ft_collide_box(
 
 */
 
-float		ft_collide_box(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+float		ft_collide_box(
+				t_list **objs, t_object *obj, t_coll *coll, t_vector untr_od[2])
 {
 	t_box		*bx;
 	t_coll		pln_coll;
@@ -80,19 +81,30 @@ float		ft_collide_box(t_list **objs, struct s_object *obj, t_coll *coll, t_vecto
 		t_cur = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
 		if (IN_RANGE(t_cur, FLT_MIN, t_min))
 		{
-			coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t_cur);
-			coll->inside_type = ft_inside_type(objs, coll->coll_pnt);
-			if (coll->inside_type < 0)
+			pln_coll.norm = ft_3_tounitvector(
+				ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
+			pln_coll.coll_pnt =
+				untr_od[0] + ft_3_vector_scale(untr_od[1], t_cur);
+			if (ft_3_vector_cos(
+				pln_coll.norm, pln_coll.coll_pnt - obj->translate) < 0)
+				pln_coll.norm = ft_3_vector_invert(pln_coll.norm);
+
+//			ft_3_vector_print("norm: ", pln_coll.norm);
+
+			if (obj->is_neg)
+				pln_coll.coll_pnt += ft_3_vector_scale(pln_coll.norm, SHIFT);
+			if (obj->react_neg || obj->is_neg)
+				coll->inside_type = ft_inside_type(objs, pln_coll.coll_pnt);
+			if (ft_is_invisible(obj, coll->inside_type))
 				continue ;
 			t_min = t_cur;
+			coll->coll_pnt = pln_coll.coll_pnt;
 			coll->ucoll_pnt = pln_coll.ucoll_pnt;
-			coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
-			if (obj->is_neg)
-				coll->norm = ft_3_vector_invert(coll->norm);
+			coll->norm = pln_coll.norm;
 			coll->tex_o = pln_coll.o;
-			coll->o = obj;
 		}
 	}
+	ft_choose_object(objs, obj, coll);
 	return (t_min);
 }
 

@@ -38,6 +38,7 @@ t_box		*ft_boxnew(t_object *o)
 
 void		ft_init_box_pln(t_box *bx, t_plane *pln, int i)
 {
+	pln->is_in_box = true;
 	if (i % 3 == 0)
 	{
 		bx->face[i]->translate = i == 0 ? (t_vector) {-bx->whl[0], 0, 0} :

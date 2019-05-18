@@ -7,7 +7,7 @@ int			ft_inside_type(t_list **objs, t_vector point)
 	t_list		*node;
 	t_object	*o;
 
-	res = 0;
+	res = IT_VOID;
 	node = *objs;
 	while (node)
 	{
@@ -15,8 +15,8 @@ int			ft_inside_type(t_list **objs, t_vector point)
 		if (o->ft_is_inside(o, point))
 		{
 			if (o->is_neg)
-				return (-1);
-			res = 1;
+				return (IT_NEG);
+			res = (o->react_neg) ? IT_POS_RT : IT_POS_RF;
 		}
 		node = node->next;
 	}
@@ -75,7 +75,6 @@ t_object	*ft_inside_obj(
 	t_object	*o;
 	t_object	*res;
 	int 		len;
-	static int	count = 0;
 
 	res_objs = NULL;
 	node = *objs;
@@ -101,11 +100,17 @@ void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)
 {
 	if (obj->is_neg)
 	{
-//		coll->coll_pnt += ft_3_vector_scale(
-//			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
 		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
 		coll->coll_pnt -= ft_3_vector_scale(coll->norm, SHIFT);
 	}
 	else
 		coll->o = obj;
+}
+
+int			ft_is_invisible(t_object *obj, int inside_type)
+{
+	return (
+		(obj->react_neg && inside_type == IT_NEG)
+		|| (obj->is_neg
+			&& (inside_type == IT_VOID || inside_type == IT_POS_RF)));
 }

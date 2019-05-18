@@ -69,6 +69,7 @@ float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	coll->ucoll_pnt = odh[0] + ft_3_vector_scale(odh[1], (float)t);
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)t);
 	coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);
+//	coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 	if (obj->is_neg)
 		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 	ft_choose_object(objs, obj, coll);
@@ -111,9 +112,19 @@ int			ft_is_inside_torus(t_object *o, t_vector point)
 t_vector	ft_get_norm_torus(void *fig, t_matrix *inv_m, t_vector coll)
 {
 	t_torus		*trs;
+	t_vector	norm;
+	float 		dot;
+	float 		r;
 
 	trs = (t_torus *)fig;
-	return(ft_3_tounitvector(ft_3_norm_transform(inv_m,
-			ft_3_tounitvector(coll - ft_3_vector_scale(ft_3_tounitvector((t_vector)
-		{coll[0], 0.f, coll[2]}), trs->r_outer)))));
+	dot = ft_3_vector_dot(coll, coll);
+	r = trs->r_outer * trs->r_outer + trs->r_inner * trs->r_inner;
+	norm = ZERO_PNT;
+	norm[0] = 4.0 * coll[0] * (dot - r);
+	norm[1] = 4.0 * coll[1] * (dot - r + 2.0 * trs->r_outer * trs->r_outer);
+	norm[2] = 4.0 * coll[2] * (dot - r);
+	return (ft_3_tounitvector(ft_3_norm_transform(inv_m, norm)));
+//	return(ft_3_tounitvector(ft_3_norm_transform(inv_m,
+//		ft_3_tounitvector(coll - ft_3_vector_scale(ft_3_tounitvector((t_vector)
+//		{coll[0], 0, coll[2]}), trs->r_outer)))));
 }

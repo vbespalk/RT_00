@@ -80,11 +80,10 @@ static float	get_cides_coll(
 	t_cylinder	*clnd;
 
 	clnd = (t_cylinder *)(obj->fig);
-	hit[0] = od[0] + ft_3_vector_scale(od[1], t[0]);
-	hit[1] = od[0] + ft_3_vector_scale(od[1], t[1]);
 	i[0] = -1;
 	while (++i[0] < 2)
 	{
+		hit[i[0]] = od[0] + ft_3_vector_scale(od[1], t[i[0]]);
 		if (t[i[0]] >= 0
 			&& IN_RANGE(hit[i[0]][1], -clnd->maxh, clnd->maxh))
 		{
@@ -98,8 +97,6 @@ static float	get_cides_coll(
 			if (obj->react_neg || obj->is_neg)
 				i[1] = ft_inside_type(objs, uhit[i[0]]);
 			(*norm)[3] = i[1];
-			if (obj->is_neg && i[1] != 1)
-				*norm = ft_3_vector_invert(*norm);
 			if (ft_is_invisible(obj, i[1]))
 			{
 				t[i[0]] = 0;

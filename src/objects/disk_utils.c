@@ -21,10 +21,10 @@ float		ft_collide_disk(
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
 	if (!od[1][1])
-		return (-1);
+		return (FLT_MAX);
 	t = -od[0][1] / od[1][1];
 	if (t < 0)
-		return (-1);
+		return (FLT_MAX);
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
 	if (obj->react_neg && ft_inside_type(objs, coll->coll_pnt) == IT_NEG)
 		return (FLT_MAX);

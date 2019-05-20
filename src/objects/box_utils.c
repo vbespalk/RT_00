@@ -79,7 +79,7 @@ float		ft_collide_box(
 	while (++i < BOX_FACES)
 	{
 		t_cur = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
-		if (IN_RANGE(t_cur, FLT_MIN, t_min))
+		if (t_cur > FLT_MIN && t_cur < t_min)
 		{
 			pln_coll.norm = ft_3_tounitvector(
 				ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
@@ -88,9 +88,7 @@ float		ft_collide_box(
 			if (ft_3_vector_cos(
 				pln_coll.norm, pln_coll.coll_pnt - obj->translate) < 0)
 				pln_coll.norm = ft_3_vector_invert(pln_coll.norm);
-
 //			ft_3_vector_print("norm: ", pln_coll.norm);
-
 			if (obj->is_neg)
 				pln_coll.coll_pnt += ft_3_vector_scale(pln_coll.norm, SHIFT);
 			if (obj->react_neg || obj->is_neg)
@@ -104,6 +102,8 @@ float		ft_collide_box(
 			coll->tex_o = pln_coll.o;
 		}
 	}
+	if (t_min == FLT_MAX)
+		return (FLT_MAX);
 	ft_choose_object(objs, obj, coll);
 	return (t_min);
 }

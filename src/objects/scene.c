@@ -17,6 +17,7 @@ t_scene		*ft_scenenew(void)
 	t_scene	*scn;
 
 	scn = ft_smemalloc(sizeof(t_scene), "ft_scenenew");
+	scn->depth = 5;
 	scn->bg_color.val = 0;
 	scn->cam = ft_cameranew();
 	scn->skybox = NULL;
@@ -33,4 +34,9 @@ void		ft_parse_scene(char **content, t_scene *scn)
 	ft_get_attr(content, "camera", (void *)&(scn->cam), DT_CAMERA);
 	ft_get_attr(content, "lights", (void *)&(scn->lights), DT_LIGHT_ARR);
 	ft_get_attr(content, "objects", (void *)&(scn->objs), DT_OBJECT_ARR);
+	ft_get_attr(content, "depth", (void *)&(scn->depth), DT_FLOAT);
+	if (scn->depth < 1)
+		scn->depth = 1;
+
+	printf("depth: %d\n", scn->depth);
 }

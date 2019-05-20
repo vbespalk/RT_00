@@ -1,6 +1,6 @@
 {
     "name": "Nested Refraction",
-    "bg_color": "0x0",
+    "bg_color": "0x808080",
     "camera": {
         "origin": { "x": -1000 }
     },
@@ -14,30 +14,30 @@
         {
             "name": "sphere",
             "radius": 100,
-            "color": "0x00ffff",
+            "color": "0xffff00",
             "diff": 1,
             "spclr": 0,
-            "trans": 1,
+            "transparent": 1,
             "phong": 0,
             "refr": 1.5
         },
         {
             "name": "sphere",
             "radius": 200,
-            "color": "0x00ffff",
+            "color": "0xffff00",
             "diff": 1,
             "spclr": 0,
-            "trans": 1,
+            "transparent": 1,
             "phong": 0,
             "refr": 1.8
         },
         {
             "name": "sphere",
             "radius": 300,
-            "color": "0x00ffff",
+            "color": "0xffff00",
             "diff": 1,
             "spclr": 0,
-            "trans": 1,
+            "transparent": 1,
             "phong": 0,
             "refr": 1.3
         }

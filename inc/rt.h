@@ -108,14 +108,6 @@
 # define IT_POS_RT		1
 # define IT_POS_RF		2
 
-/*
-**	system
-*/
-
-# define DEPTH			5
-# define STACK_SIZE		DEPTH
-# define THREADS		8
-
 # define ROTAT_F		DEG_TO_RAD(10)
 # define TRANS_F		150.0f
 # define SCALE_F		0.1f
@@ -125,6 +117,12 @@
 # define EXP_TEXTR		1
 # define EXP_CHCKR		2
 # define EXP_NOISE		3
+
+/*
+**	system
+*/
+
+# define THREADS		8
 
 /*
 ** LATTICE NOISE
@@ -560,6 +558,7 @@ typedef struct		s_camera
 
 typedef struct		s_scene
 {
+	int				depth;
 	t_color			bg_color;
 	char			*name;
 	t_list			*lights;
@@ -628,10 +627,11 @@ typedef struct		s_ray
 {
 	int				stack_i;
 	Uint32			pix;
+	size_t			stack_size;
 	t_coll			*coll;
 	t_vector		o;
 	t_vector		d;
-	t_object		*(stack[STACK_SIZE]);
+	t_object		**stack;
 }					t_ray;
 
 typedef struct		s_thrarg

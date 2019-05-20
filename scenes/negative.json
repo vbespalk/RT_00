@@ -33,7 +33,13 @@
     {
       "name": "//sphere",
       "negative": true,
-      "translate": { "x": 1000, "y": 0, "z": 0 },
+      "translate": { "x": 1500, "y": 0, "z": 100 },
+      "radius": 200
+    },
+    {
+      "name": "//sphere",
+      "negative": true,
+      "translate": { "x": 1500, "y": 0, "z": -100 },
       "radius": 200
     },
     {
@@ -151,9 +157,11 @@
       "color": "0xff0000"
     },
     {
-      "name": "paraboloid",
-      "translate": { "x": 1000, "y": 0, "z": 0 },
-      "rotate": { "x": -20, "y": 20, "z": 200 },
+      "name": "//paraboloid",
+      "negative": false,
+      "react_negative": true,
+      "translate": { "x": 2000, "y": -200, "z": 0 },
+      "//rotate": { "x": -20, "y": 20, "z": 200 },
       "radius": 500,
       "height": 1000,
       "ambnt": 0.2,
@@ -161,8 +169,10 @@
     },
     {
       "name": "//torus",
+      "negative": true,
+      "react_negative": true,
       "translate": { "x": 1000, "y": 0, "z": 0 },
-      "//rotate": { "x": -20, "y": 20, "z": 200 },
+      "rotate": { "x": 0, "y": 0, "z": 90 },
       "inner_radius": 500,
       "outer_radius": 100,
       "ambnt": 0.2,

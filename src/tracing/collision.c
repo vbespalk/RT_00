@@ -119,8 +119,12 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 		return (coll);
 	if (ft_3_vector_cos(coll.norm, ray->d) > 0)
 		coll.norm = ft_3_vector_invert(coll.norm);
+
+	printf("before refract\n");
 	if (coll.o->trans)
 		ft_refract(ray);
+	printf("before refract\n");
+
 //	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.1f);
 	if (coll.o->spclr)
 		coll.spclr_vec = ft_3_vector_reflect(ray->o, coll.coll_pnt, coll.norm);

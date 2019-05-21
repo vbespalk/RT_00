@@ -31,8 +31,7 @@ static float	get_closer_pnt(
 					const float *t, const t_vector *hit,
 					t_coll *coll, t_vector norms[2], t_object *obj)
 {
-	coll->o = obj;
-	coll->tex_o = obj;
+//	coll->o = obj;
 	if ((t[0] < t[1] || t[1] < 0) && t[0] > 0)
 	{
 		coll->ucoll_pnt = hit[0];
@@ -223,6 +222,7 @@ float			ft_collide_cylinder(
 	if (obj->is_neg)
 		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 	ft_choose_object(objs, obj, coll);
+	coll->tex_o = obj;
 	return (t);
 }
 

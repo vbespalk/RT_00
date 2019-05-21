@@ -125,17 +125,17 @@ void			ft_render(t_env *e)
 	ft_get_vs_params(e->sdl, e->scn->cam);
     ft_get_start_stack(e->scn);
     ft_update_obj_lst(e->scn->cam, e->scn->objs);
-//	i = -1;
-//    while (++i < THREADS)
-//	{
+	i = -1;
+    while (++i < THREADS)
+	{
 		thrargs[i].i = i;
 		thrargs[i].e = e;
-//	}
-//	i = -1;
-//	while (++i < THREADS)
+	}
+	i = -1;
+	while (++i < THREADS)
 		pthread_create(&threads[i], NULL,
 			ft_section_handle, (void *)&thrargs[i]);
-//	i = -1;
-//	while (++i < THREADS)
+	i = -1;
+	while (++i < THREADS)
 		pthread_join(threads[i], NULL);
 }

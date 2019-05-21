@@ -39,8 +39,7 @@ static float	get_closer_pnt(
 					const double t[2], const t_vector hit[2],
 					t_coll *coll, t_object *obj)
 {
-	coll->o = obj;
-	coll->tex_o = obj;
+//	coll->o = obj;
 	if ((t[0] < t[1]) && t[0] != FLT_MAX)
 	{
 		//printf("cides\n");
@@ -149,9 +148,8 @@ float			ft_collide_prbld(
 	coll->ucoll_pnt = hit[i];
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[i]);
 	coll->norm = norm[i];
-	if (obj->is_neg)
-		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 	ft_choose_object(objs, obj, coll);
+	coll->tex_o = obj;
 	return ((float)res[i]);
 }
 
@@ -162,7 +160,7 @@ int			ft_is_inside_prbld(t_object *o, t_vector point)
 
 	par = (t_prbld *)o->fig;
 	point = ft_3_pnt_transform(&(o->inverse), point);
-	if (!IN_RANGE(point[1], -(1e-2), par->maxh) && par->maxh != FLT_MAX)
+	if (!IN_RANGE(point[1], -SHIFT, par->maxh) && par->maxh != FLT_MAX)
 	{
 //		printf("OUTSIDE HEI\n");
 		return (0);

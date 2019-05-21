@@ -53,8 +53,8 @@ t_vector	rgb_to_hsv(float r, float g, float b)
 	t_vector	hsv;
 
 	hsv = ZERO_PNT;
-	hsv[1] = MIN_V(r, MIN_V(g, b));
-	hsv[2] = MAX_V(r, MAX_V(g, b));
+	hsv[1] = MINV(r, MINV(g, b));
+	hsv[2] = MAXV(r, MAXV(g, b));
 	delta = hsv[2] - hsv[1];
 	if (delta == 0)
 		hsv[0] = 0;
@@ -80,9 +80,9 @@ t_color		ft_invert_px(t_color in_col)
 			in_col.argb[2] / 255.f);
 	hsv[0] = (float)((int)(hsv[0] + 180.0f + .5) % 360);
 	rgb = hsv_to_rgb(hsv[0], hsv[1], hsv[2]);
-	col.argb[0] = (Uint8)(L_X(rgb[0], 255));
-	col.argb[1] = (Uint8)(L_X(rgb[1], 255));
-	col.argb[2] = (Uint8)(L_X(rgb[2], 255));
+	col.argb[0] = (Uint8)(MINV(rgb[0], 255));
+	col.argb[1] = (Uint8)(MINV(rgb[1], 255));
+	col.argb[2] = (Uint8)(MINV(rgb[2], 255));
 	col.argb[3] = in_col.argb[3];
 	return (col);
 }

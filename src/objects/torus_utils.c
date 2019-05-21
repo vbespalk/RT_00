@@ -67,7 +67,7 @@ float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vec
 	if (t == FLT_MAX)
 		return (FLT_MAX);
 	ft_choose_object(objs, obj, coll);
-//	coll->tex_o = coll->o;
+	coll->tex_o = coll->o;
 	return ((float)t);
 }
 

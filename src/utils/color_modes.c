@@ -33,11 +33,11 @@ t_color		ft_sepia_px(t_color in_col)
 {
 	t_color col;
 
-	col.argb[0] = (Uint8)L_X(in_col.argb[0] * .393 +
+	col.argb[0] = (Uint8)MINV(in_col.argb[0] * .393 +
 			in_col.argb[1] * .769 + in_col.argb[2] * .189, 0xFF);
-	col.argb[1] = (Uint8)L_X(in_col.argb[0] * .349 +
+	col.argb[1] = (Uint8)MINV(in_col.argb[0] * .349 +
 			in_col.argb[1] * .686 + in_col.argb[2] * .168, 0xFF);
-	col.argb[2] = (Uint8)L_X(in_col.argb[0] * .272 +
+	col.argb[2] = (Uint8)MINV(in_col.argb[0] * .272 +
 			in_col.argb[1] * .534 + in_col.argb[2] * .131, 0xFF);
 	col.argb[3] = in_col.argb[3];
 	return (col);

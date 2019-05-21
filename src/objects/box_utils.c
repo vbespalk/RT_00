@@ -1,65 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   box_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 23:19:56 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/21 23:19:58 by vbespalk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rt.h"
-/*
-static float	ft_collide_box_face(
-		t_list **objs, t_object *obj,
-		t_coll *coll, t_vector untr_od[2])
+
+int		ft_check_side(t_list **objs, t_object *obj, t_coll *coll, t_coll *pln_coll)
 {
-	t_vector	od[2];
-	t_box		*bx;
-	t_coll		pln_coll;
-	float		t;
-
-	bx = (t_box *)obj->fig;
-	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
-	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	t = ft_collide_plane(objs, bx->face[(int)untr_od[0][3]], &pln_coll, od);
-	if (IN_RANGE(t, 0, untr_od[1][3]) && t != FLT_MAX)
-	{
-//		coll->coll_pnt = pln_coll.coll_pnt;
-		coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
-
-//		ft_3_vector_print("coll_pnt: ", coll->coll_pnt);
-
-		coll->norm = ft_3_tounitvector(
-				ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
-		if (obj->is_neg)
-			coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
-		if (pln_coll.inside_type < 0
-			|| (obj->is_neg && pln_coll.inside_type == 0))
-			return (FLT_MAX);
-//		if (obj->is_neg && pln_coll.inside_type != 1)
-//			coll->norm = ft_3_vector_invert(coll->norm);
-//		coll->coll_pnt = untr_od[2];
-		coll->ucoll_pnt = pln_coll.ucoll_pnt;
-		coll->tex_o = pln_coll.o;
-		return (t);
-	}
-	return (FLT_MAX);
+	pln_coll->norm = ft_3_tounitvector(
+			ft_3_norm_transform(&(obj->inverse), pln_coll->norm));
+	if (ft_3_vector_cos(
+			pln_coll->norm, pln_coll->coll_pnt - obj->translate) < 0)
+		pln_coll->norm = ft_3_vector_invert(pln_coll->norm);
+	if (obj->is_neg)
+		pln_coll->coll_pnt += ft_3_vector_scale(pln_coll->norm, SHIFT);
+	if (obj->react_neg || obj->is_neg)
+		coll->inside_type = ft_inside_type(objs, pln_coll->coll_pnt);
+	if (ft_is_invisible(obj, coll->inside_type))
+		return (0);
+	coll->coll_pnt = pln_coll->coll_pnt;
+	coll->ucoll_pnt = pln_coll->ucoll_pnt;
+	coll->norm = pln_coll->norm;
+	coll->tex_o = pln_coll->o;
+	return (1);
 }
-
-float			ft_collide_box(
-		t_list **objs, t_object *obj,
-		t_coll *coll, t_vector untr_od[2])
-{
-	int 		i;
-	float		t[2];
-
-	i = -1;
-	t[0] = FLT_MAX;
-	while (++i < BOX_FACES)
-	{
-		untr_od[0][3] = i;
-		untr_od[1][3] = t[0];
-		t[1] = ft_collide_box_face(objs, obj, coll, untr_od);
-		if (t[1] < t[0])
-			t[0] = t[1];
-	}
-//	coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
-	ft_choose_object(objs, obj, coll);
-	return (t[0]);
-}
-
-*/
 
 float		ft_collide_box(
 				t_list **objs, t_object *obj, t_coll *coll, t_vector untr_od[2])
@@ -81,25 +52,11 @@ float		ft_collide_box(
 		t_cur = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
 		if (t_cur > FLT_MIN && t_cur < t_min)
 		{
-			pln_coll.norm = ft_3_tounitvector(
-				ft_3_norm_transform(&(obj->inverse), pln_coll.norm));
 			pln_coll.coll_pnt =
 				untr_od[0] + ft_3_vector_scale(untr_od[1], t_cur);
-			if (ft_3_vector_cos(
-				pln_coll.norm, pln_coll.coll_pnt - obj->translate) < 0)
-				pln_coll.norm = ft_3_vector_invert(pln_coll.norm);
-//			ft_3_vector_print("norm: ", pln_coll.norm);
-			if (obj->is_neg)
-				pln_coll.coll_pnt += ft_3_vector_scale(pln_coll.norm, SHIFT);
-			if (obj->react_neg || obj->is_neg)
-				coll->inside_type = ft_inside_type(objs, pln_coll.coll_pnt);
-			if (ft_is_invisible(obj, coll->inside_type))
+			if (ft_check_side(objs, obj, coll, &pln_coll) == 0)
 				continue ;
 			t_min = t_cur;
-			coll->coll_pnt = pln_coll.coll_pnt;
-			coll->ucoll_pnt = pln_coll.ucoll_pnt;
-			coll->norm = pln_coll.norm;
-			coll->tex_o = pln_coll.o;
 		}
 	}
 	if (t_min == FLT_MAX)

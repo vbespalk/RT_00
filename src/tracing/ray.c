@@ -23,7 +23,7 @@ static void		ft_init_ray
 	ray->stack_i = ray_prev->stack_i;
 	i = -1;
 
-	printf("size: %lu\n", ray->stack_size);
+//	printf("size: %lu\n", ray->stack_size);
 
 	while (++i < ray->stack_size)
 		ray->stack[i] = ray_prev->stack[i];
@@ -39,18 +39,18 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	float		num[2];
 	t_vector	coll_pnt;
 
-	printf("before inits\n");
+//	printf("before inits\n");
 	next_ray.stack_size = parg->e->scn->depth;
 	ft_bzero(&stack, next_ray.stack_size * sizeof(t_object *));
 	next_ray.stack = stack;
-	printf("after inits\n");
+//	printf("after inits\n");
 
 	spclr_col.val = 0;
 	trans_col.val = 0;
 
-	printf("before collision\n");
+//	printf("before collision\n");
 	coll = ft_get_collision(parg, ray);
-	printf("after collision\n");
+//	printf("after collision\n");
 
 	ray->coll = &coll;
 	if (depth == 0)
@@ -77,9 +77,9 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, SHIFT);
 		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.trans_vec));
 
-		printf("before handle hit\n");
+//		printf("before handle hit\n");
 		ft_handle_hit(&next_ray, coll.o);
-		printf("after handle hit\n");
+//		printf("after handle hit\n");
 
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
@@ -163,7 +163,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 
 	ray.stack_size = parg->e->scn->depth;
 
-	printf("size in bzero: %lu\n", ray.stack_size * sizeof(t_object *));
+//	printf("size in bzero: %lu\n", ray.stack_size * sizeof(t_object *));
 
 	ft_bzero(&stack, ray.stack_size * sizeof(t_object *));
 	ray.stack = stack;

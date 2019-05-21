@@ -59,18 +59,19 @@
 # define FOV_MAX		120.0f
 //# define EQN_EPS		1e-30
 # define EQN_EPS		1e-16
+# define MIN_DPTH		1
+# define MAX_DPTH		20
 
 /*
 **	macro functions
 */
-
-# define L_X(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a > _b ? _b : _a;})
-# define L_N(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a < _b ? _b : _a;})
+# define MINV(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a < _b ? _a : _b;})
+# define MAXV(a, b) ({typeof(a) _a = (a);typeof(b) _b = (b);_a > _b ? _a : _b;})
 # define DEG_TO_RAD(x) ((x) * (float)M_PI / 180.0f)
 # define RAD_TO_DEG(x) ((x) * 180.0f / M_PI)
-# define IN_RANGE(x, left, right) ((x >= left) && (x <= right))
-# define IS_ZERO(x) ((x > -EQN_EPS) && (x < EQN_EPS))
-# define CLAMP(x, min, max) (x < min ? min : (x > max ? max : x))
+# define IN_RANGE(x, left, right) (((x) >= (left)) && ((x) <= (right)))
+# define IS_ZERO(x) (((x) > -EQN_EPS) && ((x) < EQN_EPS))
+# define CLAMP(x, min, max) ((x) < (min) ? (min) : (x > (max) ? (max) : (x)))
 
 /*
 **	color modes
@@ -82,11 +83,7 @@
 # define MD_NEGATIVE	SDLK_h
 # define MD_INVERTED	SDLK_i
 
-# define MIN_VAL(a, b, c) (a < b ? (a < c ? a : c) : (b < c ? b : c))
-# define MAX_VAL(a, b, c) (a > b ? (a > c ? a : c) : (b > c ? b : c))
 
-# define MIN_V(a, b) (a < b ? a : b)
-# define MAX_V(a, b) (a > b ? a : b)
 
 /*
 **	camera
@@ -1029,6 +1026,7 @@ t_color					ft_add_colors(t_color c1, t_color c2);
 
 int						ft_switch_col_mode(t_env *e, Sint32 sum);
 int	    				ft_set_exposure(Sint32 sum, t_object *o, t_env *e);
+int 					ft_mod_depth(Sint32 sum, int *depth);
 
 /*
 **  textures.c

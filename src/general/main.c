@@ -25,12 +25,12 @@ static uint32_t	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
 		ft_render(e);
 	}
 //	sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
-//	SDL_UpdateTexture(
-//		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
-//	SDL_RenderClear(sdl->renderer);
-//	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
-//	ft_gui(e, btn_id);
-//	SDL_RenderPresent(sdl->renderer);
+	SDL_UpdateTexture(
+		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
+	SDL_RenderClear(sdl->renderer);
+	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
+	ft_gui(e, btn_id);
+	SDL_RenderPresent(sdl->renderer);
 //	printf("REDRAW\n");
 	return (btn_pressed);
 }
@@ -69,10 +69,10 @@ int			main(int argc, char **argv)
 		ft_usage("RT scn\n");
 	ft_bzero(&e, sizeof(t_env));
 	ft_bzero(&sdl, sizeof(t_sdl));
-//	if (sdl_init(&sdl) < 0)
-//		exit(-1);
-//	if (gui_init(&sdl) < 0)
-//		exit(-1);
+	if (sdl_init(&sdl) < 0)
+		exit(-1);
+	if (gui_init(&sdl) < 0)
+		exit(-1);
 	if (!(scene = ft_parse_json(argv[1])))
 		ft_error("Scene is incomplete or incorrect\n");
 	obj_pix = (t_object **)ft_smemalloc(

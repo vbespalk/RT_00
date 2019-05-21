@@ -25,6 +25,8 @@ static int	ft_on_other_key_down(SDL_Keycode sum, t_env *e)
 		return (ft_set_exposure(sum, e->selected, e));
 	if (sum == SDLK_c)
 		e->selected = NULL;
+	if (sum == SDLK_RALT || sum == SDLK_LALT)
+		return (ft_mod_depth(sum, &(e->scn->depth)));
 	return (0);
 }
 

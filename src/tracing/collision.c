@@ -51,15 +51,12 @@ static void			ft_init_collision(t_coll *coll, t_list **objs, t_vector *od)
 	while (node)
 	{
 		o = (t_object *)(node->content);
-//		if (o->ft_is_reachable(o->fig, od[0], od[1]))
-//		{
-			dist[1] = o->ft_collide(objs, o, coll, od);
-			if (dist[1] < dist[0])
-			{
+		dist[1] = o->ft_collide(objs, o, coll, od);
+		if (dist[1] < dist[0])
+		{
 				dist[0] = dist[1];
 				tmp_coll = *coll;
-			}
-//		}
+		}
 		node = node->next;
 	}
 	*coll = tmp_coll;
@@ -120,10 +117,10 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 	if (ft_3_vector_cos(coll.norm, ray->d) > 0)
 		coll.norm = ft_3_vector_invert(coll.norm);
 
-	printf("before refract\n");
+//	printf("before refract\n");
 	if (coll.o->trans)
 		ft_refract(ray);
-	printf("before refract\n");
+//	printf("before refract\n");
 
 //	coll.coll_pnt += ft_3_vector_scale(coll.norm, 0.1f);
 	if (coll.o->spclr)

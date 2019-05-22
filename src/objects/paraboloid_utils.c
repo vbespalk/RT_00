@@ -39,8 +39,7 @@ static float	get_closer_pnt(
 					const double t[2], const t_vector hit[2],
 					t_coll *coll, t_object *obj)
 {
-	coll->o = obj;
-	coll->tex_o = obj;
+//	coll->o = obj;
 	if ((t[0] < t[1]) && t[0] != FLT_MAX)
 	{
 		//printf("cides\n");
@@ -70,10 +69,12 @@ static float	get_caps_coll(
 	i = 0;
 	par = (t_prbld *)(obj->fig);
 	od[0][1] -= par->maxh;
-	t = par->maxh == FLT_MAX ? FLT_MAX : -(od[0][1]) / od[1][1];
+	t = (par->maxh == FLT_MAX) ? FLT_MAX : -(od[0][1]) / od[1][1];
 	if (t <= 0 || t == FLT_MAX)
 		return (FLT_MAX);
 	*coll = od[0] + ft_3_vector_scale(od[1], t);
+	if (ft_3_vector_dot(*coll, *coll) > 4.0f * par->maxh)
+		return (FLT_MAX);
 	hit = uod[0] + ft_3_vector_scale(uod[1], t);
 	*norm = ft_get_norm_plane(obj->fig, &(obj->inverse), *coll);
 	if (obj->is_neg)
@@ -122,23 +123,16 @@ float			ft_collide_prbld(
 					t_list **objs, struct s_object *obj,
 					t_coll *coll, t_vector untr_od[2])
 {
+	int			i;
 	t_prbld		*par;
 	t_vector	hit[2];
 	t_vector	norm[2];
 	double		res[2];
 	t_vector	od[2];
-//	float 		k;
 
 	par = (t_prbld *)obj->fig;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-//	k = par->maxh / (par->r * par->r);
-//	if (!ft_solve_sqr_(k * (od[1][0] * od[1][0] + od[1][2] * od[1][2]),
-//		2.0f * k * (od[1][0] * od[0][0] + od[1][2] * od[0][2]) - od[1][1],
-//		k * (od[0][0] * od[0][0] + od[0][2] * od[0][2]) - od[0][1],
-//		&res) || (res[0] < FLT_MIN && res[1] < FLT_MIN))
-//	printf(" ori %f,%f,%f, od %f,%f,%f\n", od[0][0], od[0][1], od[0][2],
-//			od[1][0], od[1][1], od[1][2]);
 	if ((!ft_solve_sqr_(
 		ft_3_vector_dot(od[1], od[1]) - od[1][1] * od[1][1],
 		2.0f * (ft_3_vector_dot(od[1], od[0]) - od[1][1] * (od[0][1] + 2.f)),
@@ -147,13 +141,16 @@ float			ft_collide_prbld(
 		&& (IS_ZERO(od[1][1]) || par->maxh == FLT_MAX))
 		return (FLT_MAX);
 	res[0] = get_cides_coll(objs, od, untr_od, res, &hit[0], &norm[0], obj);
-	res[1] = get_caps_coll(objs, od, untr_od, &hit[0], &norm[0], obj);
-	res[0] = get_closer_pnt(res, hit, coll, obj);
-	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[0]);
-	coll->inside_type = ft_inside_type(objs, coll->coll_pnt);
-	if (coll->inside_type < 0)
+	res[1] = get_caps_coll(objs, od, untr_od, &hit[1], &norm[1], obj);
+	if (res[0] == FLT_MAX && res[1] == FLT_MAX)
 		return (FLT_MAX);
-	return ((float)res[0]);
+	i = (res[0] < res[1]) ? 0 : 1;
+	coll->ucoll_pnt = hit[i];
+	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[i]);
+	coll->norm = norm[i];
+	ft_choose_object(objs, obj, coll);
+	coll->tex_o = obj;
+	return ((float)res[i]);
 }
 
 int			ft_is_inside_prbld(t_object *o, t_vector point)
@@ -163,7 +160,7 @@ int			ft_is_inside_prbld(t_object *o, t_vector point)
 
 	par = (t_prbld *)o->fig;
 	point = ft_3_pnt_transform(&(o->inverse), point);
-	if (!IN_RANGE(point[1], -(1e-2), par->maxh) && par->maxh != FLT_MAX)
+	if (!IN_RANGE(point[1], -SHIFT, par->maxh) && par->maxh != FLT_MAX)
 	{
 //		printf("OUTSIDE HEI\n");
 		return (0);

@@ -92,3 +92,12 @@ int				ft_set_exposure(Sint32 sum, t_object *o, t_env *e)
 	}
 	return (1);
 }
+
+int 			ft_mod_depth(Sint32 sum, int *depth)
+{
+	*depth += sum == SDLK_RALT ? 1 : -1;
+	if (IN_RANGE(*depth, MIN_DPTH, MAX_DPTH))
+		return (1);
+	*depth = CLAMP(*depth, MIN_DPTH, MAX_DPTH);
+	return (0);
+}

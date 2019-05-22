@@ -98,6 +98,7 @@ t_object	*ft_inside_obj(
 
 void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)
 {
+	coll->tex_o = obj;
 	if (obj->is_neg)
 	{
 		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
@@ -111,6 +112,5 @@ int			ft_is_invisible(t_object *obj, int inside_type)
 {
 	return (
 		(obj->react_neg && inside_type == IT_NEG)
-		|| (obj->is_neg
-			&& (inside_type == IT_VOID || inside_type == IT_POS_RF)));
+		|| (obj->is_neg && inside_type != IT_POS_RT));
 }

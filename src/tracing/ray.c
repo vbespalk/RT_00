@@ -22,7 +22,10 @@ static void		ft_init_ray
 	ray->coll = ray_prev->coll;
 	ray->stack_i = ray_prev->stack_i;
 	i = -1;
-	while (++i < STACK_SIZE)
+
+//	printf("size: %lu\n", ray->stack_size);
+
+	while (++i < ray->stack_size)
 		ray->stack[i] = ray_prev->stack[i];
 }
 
@@ -32,12 +35,23 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	t_coll		coll;
 	t_color		spclr_col;
 	t_color		trans_col;
+	t_object	*(stack[parg->e->scn->depth]);
 	float		num[2];
 	t_vector	coll_pnt;
 
+//	printf("before inits\n");
+	next_ray.stack_size = parg->e->scn->depth;
+	ft_bzero(&stack, next_ray.stack_size * sizeof(t_object *));
+	next_ray.stack = stack;
+//	printf("after inits\n");
+
 	spclr_col.val = 0;
 	trans_col.val = 0;
+
+//	printf("before collision\n");
 	coll = ft_get_collision(parg, ray);
+//	printf("after collision\n");
+
 	ray->coll = &coll;
 	if (depth == 0)
 		parg->e->pix_obj[ray->pix] = coll.o;
@@ -48,7 +62,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 		return (parg->e->scn->bg_color);
 	}
 	num[1] = depth;
-	if (coll.o->spclr && depth < DEPTH)
+	if (coll.o->spclr && depth < parg->e->scn->depth)
 	{
 		coll_pnt = coll.coll_pnt + ft_3_vector_scale(coll.norm, SHIFT);
 		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.spclr_vec));
@@ -57,12 +71,16 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 			ft_throw_rays(parg, &next_ray, &(coll.spclr_vec), num) :
 			ft_throw_ray(parg, &next_ray, depth + 1);
 	}
-	if (coll.o->trans && depth < DEPTH && !ft_3_isnullpoint(coll.trans_vec))
+	if (coll.o->trans && depth < parg->e->scn->depth
+		&& !ft_3_isnullpoint(coll.trans_vec))
 	{
-//        coll_pnt = coll.coll_pnt + ft_3_vector_scale(ray->d, 1e-1);
 		coll_pnt = coll.coll_pnt - ft_3_vector_scale(coll.norm, SHIFT);
 		ft_init_ray(ray, &next_ray, &coll_pnt, &(coll.trans_vec));
+
+//		printf("before handle hit\n");
 		ft_handle_hit(&next_ray, coll.o);
+//		printf("after handle hit\n");
+
 		num[0] = coll.o->t_blur;
 		trans_col = (coll.o->t_blur) ?
 			ft_throw_rays(parg, &next_ray, &(coll.trans_vec), num) :
@@ -73,12 +91,6 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 			coll.phong, coll.phong_color)
 		: ft_sum_colors(&coll, spclr_col, trans_col, depth));
 }
-
-//void			ft_add_blur_colors(float (*sum)[3], int num, t_color new)
-//{
-//
-//
-//}
 
 t_color			ft_throw_rays
 					(t_thrarg *parg, t_ray *ray, t_vector *vec, float num[2])
@@ -143,11 +155,18 @@ t_color			ft_blind(t_scene *scn, t_color color, t_vector o, t_vector d)
 
 t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 {
+	t_object	*(stack[parg->e->scn->depth]);
 	t_ray		ray;
 	t_color		res;
 	t_vector	o;
 	t_vector	d;
 
+	ray.stack_size = parg->e->scn->depth;
+
+//	printf("size in bzero: %lu\n", ray.stack_size * sizeof(t_object *));
+
+	ft_bzero(&stack, ray.stack_size * sizeof(t_object *));
+	ray.stack = stack;
 	ray.stack_i = -1;
 	if (parg->e->scn->cam->inner_o)
 	{

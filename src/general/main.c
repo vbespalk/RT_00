@@ -24,14 +24,14 @@ static uint32_t	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
 		printf("NEW RENDER #%d\n", render_count++);
 		ft_render(e);
 	}
-	sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
+//	sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
 	SDL_RenderCopy(sdl->renderer, sdl->screen, NULL, &(sdl->rt_cont));
 	ft_gui(e, btn_id);
 	SDL_RenderPresent(sdl->renderer);
-	printf("REDRAW\n");
+//	printf("REDRAW\n");
 	return (btn_pressed);
 }
 

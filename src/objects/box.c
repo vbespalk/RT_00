@@ -19,7 +19,7 @@ t_box		*ft_boxnew(t_object *o)
 	o->ft_collide = ft_collide_box;
 	o->ft_is_reachable = NULL;
 	o->ft_is_inside = ft_is_inside_box;
-	o->ft_get_norm = NULL;
+	o->ft_get_norm = ft_get_norm_plane;
 	o->ft_translate = ft_translate_box;
 	o->ft_rotate = ft_rotate_box;
 	o->ft_scale = ft_scale_box;
@@ -90,7 +90,5 @@ char		*ft_parse_box(char **content, t_object *o)
 	}
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
-	printf("ORIG LEN BOX %f, %f, %f addr %p, %p, %p\n", bx->whl[0], bx->whl[1], bx->whl[2],
-			bx->face[0], bx->face[1], bx->face[2]);
 	return ((void *)bx);
 }

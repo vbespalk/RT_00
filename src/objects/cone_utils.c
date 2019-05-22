@@ -12,26 +12,10 @@
 
 #include "rt.h"
 
-static int			ft_solve_sqr_(float a, float b, float c, float (*res)[2])
-{
-	float	d;
-
-	d = (float)pow(b, 2) - 4.0f * a * c;
-	if (d < 0)
-		return (0);
-	d = sqrtf(d);
-	(*res)[0] = (-b + d) / (2.0f * a);
-	(*res)[1] = (-b - d) / (2.0f * a);
-	if (((*res)[0] > (*res)[1] && (*res)[1] > FLT_MIN) || (*res)[0] < FLT_MIN)
-		ft_swap_float(&(*res)[0], &(*res)[1]);
-	return (1);
-}
-
 static float	get_closer_pnt(
 					const float t[2], const t_vector hit[2], t_vector norms[2],
 					t_coll *coll, t_object *obj)
 {
-//	coll->o = obj;
 	if ((t[0] < t[1] || t[1] < 0) && t[0] > 0)
 	{
 		coll->ucoll_pnt = hit[0];
@@ -98,24 +82,20 @@ static float	get_caps_coll(
 	t_vector	pnts[6];
 	float 		t[2];
 	float 		sq_r[2];
-	float 		hei[2];
 
 	cone = (t_cone *)(obj->fig);
-	pnts[0] = od[0] - (t_vector){FLT_MIN, cone->minh, FLT_MIN};
-	pnts[1] = od[0] - (t_vector){FLT_MIN, cone->maxh, FLT_MIN};
+	pnts[0] = (t_vector){od[0][0], od[0][1] - cone->minh, od[0][2], cone->minh};
+	pnts[1] = (t_vector){od[0][0], od[0][1] - cone->maxh, od[0][2], cone->maxh};
 	t[0] = cone->minh == -FLT_MAX ? -FLT_MAX : -(pnts[0][1]) / od[1][1];
 	t[1] = cone->maxh == FLT_MAX ? -FLT_MAX : -(pnts[1][1]) / od[1][1];
 	sq_r[0] = cone->r[0] * cone->r[0];
 	sq_r[1] = cone->r[1] * cone->r[1];
-	hei[0] = cone->minh;
-	hei[1] = cone->maxh;
 	if (t[0] <= 0 && t[1] <= 0)
 		return (FLT_MAX);
 	((t[0] > t[1] && t[1] > FLT_MIN) || t[0] < FLT_MIN)
 		? ft_swap_float(&t[0], &t[1]),
 			ft_swap(&pnts[0], &pnts[1], sizeof(t_vector)),
-			ft_swap_float(&sq_r[0], &sq_r[1]),
-			ft_swap_float(&hei[0], &hei[1])
+			ft_swap_float(&sq_r[0], &sq_r[1])
 		: 1;
 	pnts[2] = pnts[0] + ft_3_vector_scale(od[1], t[0]);
 	pnts[3] = pnts[1] + ft_3_vector_scale(od[1], t[1]);
@@ -137,7 +117,7 @@ static float	get_caps_coll(
 				t[i[0]] = 0;
 				continue ;
 			}
-			*coll_pnt = pnts[i[0] + 2] + (t_vector){ 0, hei[i[0]], 0 };
+			*coll_pnt = pnts[i[0] + 2] + (t_vector){ 0, pnts[i[0]][3], 0 };
 			return (t[i[0]]);
 		}
 	}
@@ -150,7 +130,6 @@ float			ft_collide_cone(t_list **objs, t_object *obj,
 	t_cone		*con;
 	t_vector	hit[2];
 	float		res[2];
-	float		sq_tan;
 	t_vector	od[2];
 	t_vector	norms[2];
 	float 		t;
@@ -158,11 +137,10 @@ float			ft_collide_cone(t_list **objs, t_object *obj,
 	con = (t_cone *)obj->fig;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	sq_tan = 1 + con->tan * con->tan;
 	if (!ft_solve_quadratic(
-		ft_3_vector_dot(od[1], od[1]) - sq_tan * od[1][1] * od[1][1],
-		2.0f * (ft_3_vector_dot(od[0], od[1]) - sq_tan * od[1][1] * od[0][1]),
-		ft_3_vector_dot(od[0], od[0]) - sq_tan * od[0][1] * od[0][1],
+		ft_3_vector_dot(od[1], od[1]) - con->sq_tan * od[1][1] * od[1][1],
+		2.0f * (ft_3_vector_dot(od[0], od[1]) - con->sq_tan * od[1][1] * od[0][1]),
+		ft_3_vector_dot(od[0], od[0]) - con->sq_tan * od[0][1] * od[0][1],
 		res) && IS_ZERO(od[1][1]))
 		return (FLT_MAX);
 	res[0] = (res[0] <= 0 && res[1] <= 0)
@@ -191,15 +169,7 @@ int			ft_is_inside_cone(t_object *o, t_vector point)
 	cone = (t_cone *)o->fig;
 	upoint = ft_3_pnt_transform(&(o->inverse), point);
 	if (!IN_RANGE(upoint[1], cone->minh, cone->maxh))
-	{
-//		printf("OUTSIDE HEI\n");
 		return (0);
-	}
-//	if ((ft_3_vector_dot(upoint, upoint) < upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2)))
-//		printf("INSIDE: (%8.3f, %8.3f, %8.3f)\n",
-//			point[0], point[1], point[2]);
-//	else
-//		printf("OUTSIDE\n");
 	return ((ft_3_vector_dot(upoint, upoint)
 			< upoint[1] * upoint[1] + powf(upoint[1] * cone->tan, 2.0f)) ? 1 : 0);
 }

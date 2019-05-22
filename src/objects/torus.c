@@ -17,7 +17,6 @@ t_torus	*ft_torusnew(t_object *o)
 	t_torus	*trs;
 
 	o->ft_collide = ft_collide_torus;
-	o->ft_is_reachable = ft_is_reachable_torus;
 	o->ft_is_inside = ft_is_inside_torus;
 	o->ft_get_norm = ft_get_norm_torus;
 	o->ft_translate = ft_translate_torus;

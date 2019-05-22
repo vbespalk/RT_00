@@ -14,10 +14,9 @@
 
 t_sphere	*ft_spherenew(t_object *o)
 {
-	t_sphere	*sph;
+	t_sphere *sph;
 
 	o->ft_collide = ft_collide_sphere;
-	o->ft_is_reachable = NULL;
 	o->ft_is_inside = ft_is_inside_sphere;
 	o->ft_get_norm = ft_get_norm_sphere;
 	o->ft_translate = ft_translate_sphere;

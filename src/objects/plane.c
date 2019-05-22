@@ -17,7 +17,6 @@ t_plane	*ft_planenew(t_object *o)
 	t_plane	*pln;
 
 	o->ft_collide = ft_collide_plane;
-	o->ft_is_reachable = ft_is_reachable_plane;
 	o->ft_is_inside = ft_is_inside_plane;
 	o->ft_get_norm = ft_get_norm_plane;
 	o->ft_translate = ft_translate_plane;

@@ -148,8 +148,8 @@ float			ft_collide_prbld(
 	coll->ucoll_pnt = hit[i];
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[i]);
 	coll->norm = norm[i];
-	ft_choose_object(objs, obj, coll);
 	coll->tex_o = obj;
+	ft_choose_object(objs, obj, coll);
 	return ((float)res[i]);
 }
 

@@ -410,8 +410,6 @@ struct				s_object
 	t_checkbrd		*checker;
 	int				exposure;
 
-	int				(*ft_is_reachable)
-			(void *fig, t_vector origin, t_vector direct);
 	float			(*ft_collide)
 			(t_list **objs, t_object *obj,
 			t_coll *coll, t_vector od[2]);
@@ -455,6 +453,7 @@ typedef struct		s_cone
 {
 	float			r[2];
 	float			tan;
+	float 			sq_tan;
 	float			minh;
 	float			maxh;
 	float			texh;
@@ -503,8 +502,6 @@ typedef struct		s_bounding_box
 	t_vector		cntr;
 	t_vector		dgnl;
 
-	int				(*ft_is_reachable)
-			(void *fig, t_vector origin, t_vector direct);
 	t_vector		(*ft_collide)
 			(void *fig, t_vector origin, t_vector direct);
 	int				(*ft_is_inside)(struct s_object *o, t_vector pnt);
@@ -746,8 +743,6 @@ int	    				ft_scale_plane
 **	plane_utils.c
 */
 
-int						ft_is_reachable_plane
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_plane
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_plane(t_object *o, t_vector pnt);
@@ -772,8 +767,6 @@ int	    				ft_scale_disk
 **	disk_utils.c
 */
 
-int						ft_is_reachable_disk
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_disk
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_disk(t_object *o, t_vector pnt);
@@ -799,8 +792,6 @@ int	    				ft_scale_hei_null
 **	box_utils.c
 */
 
-int						ft_is_reachable_box
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_box
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_box(t_object *o, t_vector pnt);
@@ -812,8 +803,6 @@ t_vector				ft_get_norm_box(void *fig, t_matrix *inv_m, t_vector coll);
 
 t_aabb					*ft_init_aabb
 			(t_vector min, t_vector max);
-int						ft_is_reachable_aabb
-			(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_aabb
 			(void *fig, t_vector origin, t_vector direct);
 void					ft_translate_aabb
@@ -842,8 +831,6 @@ int	    				ft_scale_sphere
 **	sphere_utils.c
 */
 
-int						ft_is_reachable_sphere
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_sphere
 			(t_list **objs, t_object *o, t_coll *coll, t_vector uod[2]);
 int						ft_is_inside_sphere(t_object *o, t_vector pnt);
@@ -902,8 +889,6 @@ int	    				ft_scale_hei_cylinder
 **	cylinder_utils.c
 */
 
-int						ft_is_reachable_cylinder
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_cylinder
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cylinder(t_object *o, t_vector pnt);
@@ -931,8 +916,6 @@ int	    				ft_scale_hei_prbld
 **	paraboloid_utils.c
 */
 
-int						ft_is_reachable_prbld
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_prbld
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_prbld(t_object *o, t_vector pnt);
@@ -959,8 +942,6 @@ int	    				ft_scale_torus
 **	torus_utils.c
 */
 
-int						ft_is_reachable_torus
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_torus
 			(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_torus(t_object *o, t_vector pnt);

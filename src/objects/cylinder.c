@@ -17,7 +17,6 @@ t_cylinder	*ft_cylindernew(t_object *o)
 	t_cylinder	*clnd;
 
 	o->ft_collide = ft_collide_cylinder;
-	o->ft_is_reachable = ft_is_reachable_plane;
 	o->ft_is_inside = ft_is_inside_cylinder;
 	o->ft_get_norm = ft_get_norm_cylinder;
 	o->ft_translate = ft_translate_cylinder;

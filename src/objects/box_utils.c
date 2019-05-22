@@ -12,7 +12,8 @@
 
 #include "rt.h"
 
-int		ft_check_side(t_list **objs, t_object *obj, t_coll *coll, t_coll *pln_coll)
+static int	ft_check_side(t_list **objs, t_object *obj, t_coll *coll,
+		t_coll *pln_coll)
 {
 	pln_coll->norm = ft_3_tounitvector(
 			ft_3_norm_transform(&(obj->inverse), pln_coll->norm));
@@ -37,32 +38,29 @@ float		ft_collide_box(
 {
 	t_box		*bx;
 	t_coll		pln_coll;
-	float		t_min;
-	float 		t_cur;
-	int 		i;
+	float		t[2];
+	int			i;
 	t_vector	od[2];
 
 	bx = (t_box *)obj->fig;
 	i = -1;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	t_min = FLT_MAX;
+	t[0] = FLT_MAX;
 	while (++i < BOX_FACES)
 	{
-		t_cur = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
-		if (t_cur > FLT_MIN && t_cur < t_min)
+		t[1] = ft_collide_plane(objs, bx->face[i], &pln_coll, od);
+		if (t[1] > FLT_MIN && t[1] < t[0])
 		{
 			pln_coll.coll_pnt =
-				untr_od[0] + ft_3_vector_scale(untr_od[1], t_cur);
+				untr_od[0] + ft_3_vector_scale(untr_od[1], t[1]);
 			if (ft_check_side(objs, obj, coll, &pln_coll) == 0)
 				continue ;
-			t_min = t_cur;
+			t[0] = t[1];
 		}
 	}
-	if (t_min == FLT_MAX)
-		return (FLT_MAX);
-	ft_choose_object(objs, obj, coll);
-	return (t_min);
+	t[0] < FLT_MAX ? ft_choose_object(objs, obj, coll) : 1;
+	return (t[0]);
 }
 
 int			ft_is_inside_box(t_object *o, t_vector point)
@@ -74,19 +72,12 @@ int			ft_is_inside_box(t_object *o, t_vector point)
 		return (0);
 	bx = (t_box *)o->fig;
 	point = ft_3_pnt_transform(&(o->inverse), point);
-	proj[0] = fabsf(ft_3_vector_dot(Z_AXIS,  point));
-	proj[1] = fabsf(ft_3_vector_dot(Y_AXIS,  point));
-	proj[2] = fabsf(ft_3_vector_dot(X_AXIS,  point));
+	proj[0] = fabsf(ft_3_vector_dot(Z_AXIS, point));
+	proj[1] = fabsf(ft_3_vector_dot(Y_AXIS, point));
+	proj[2] = fabsf(ft_3_vector_dot(X_AXIS, point));
 	if (!IN_RANGE(proj[0], 0, bx->whl[0]) ||
 		!IN_RANGE(proj[1], 0, bx->whl[1]) ||
 		!IN_RANGE(proj[2], 0, bx->whl[2]))
 		return (0);
 	return (1);
 }
-
-//t_vector	ft_get_norm_box(void *fig, t_matrix *inv_m, t_vector coll)
-//{
-//	(void)coll;
-//	return (ft_3_nullpointnew());
-//}
-//

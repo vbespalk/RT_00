@@ -17,7 +17,6 @@ t_disk	*ft_disknew(t_object *o)
 	t_disk	*dsk;
 
 	o->ft_collide = ft_collide_disk;
-	o->ft_is_reachable = ft_is_reachable_disk;
 	o->ft_is_inside = ft_is_inside_disk;
 	o->ft_get_norm = ft_get_norm_disk;
 	o->ft_translate = ft_translate_disk;

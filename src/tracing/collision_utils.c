@@ -98,7 +98,6 @@ t_object	*ft_inside_obj(
 
 void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)
 {
-	coll->tex_o = obj;
 	if (obj->is_neg)
 	{
 		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);

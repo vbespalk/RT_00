@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:17:04 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/10 15:35:54 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 16:55:07 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,22 @@
 uint32_t	other_buttons(t_env *e, const uint32_t id)
 {
 	if (id == CAMERA_MODE)
-	{
 		e->selected = NULL;
-		return (0);
-	}
 	else if (id == DELETE_OBJ && e->selected)
 	{
 		delete_obj(&(e->scn->objs), e->selected->id);
 		e->selected = NULL;
+		return (1);
+	}
+	else if (id == NEGATIVE_OBJ && e->selected)
+	{
+		e->selected->is_neg = !(e->selected->is_neg);
+		e->selected->react_neg = false;
+		return (1);
+	}
+	else if (id == REACT_NEGATIVE && e->selected && !(e->selected->is_neg))
+	{
+		e->selected->react_neg = !(e->selected->react_neg);
 		return (1);
 	}
 	else if (id == SKYBOX)

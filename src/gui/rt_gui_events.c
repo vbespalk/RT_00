@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:15:26 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/10 15:37:17 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 15:39:54 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static uint32_t	object_mode_events_handle_1(t_env *e, const uint32_t id)
 uint32_t		handle_button(t_env *e, const uint32_t id)
 {
 	if (id == SCREENSHOT || id == CAMERA_MODE ||
-		id == SKYBOX || id == DELETE_OBJ)
+		id == SKYBOX || (id >= DELETE_OBJ && id <= REACT_NEGATIVE))
 		return (other_buttons(e, id));
 	else if (id >= GRAYSCALE && id <= INVERTED)
 		return (color_filter(e, id));

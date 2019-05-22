@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/10 14:32:53 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 15:46:16 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,14 +208,16 @@ static const unsigned char	g_permutation_table[LTABLE_SIZE] =
 # define DEFAULT_BUTTTON_HEIGHT 20
 # define ARROW_BUTTON_WIDTH 30
 # define ARROW_BUTTON_HEIGHT 20
+# define OBJ_EDIT_BTN_WIDTH 65
+# define OBJ_EDIT_BTN_HEIGHT 20
 # define TEXTURE_EDIT_BTN_W 50
 # define TEXTURE_EDIT_BTN_H 17
 # define GUI_WIDTH 220
 # define GUI_HEIGHT 250 * 1290 / 570
-# define BUTTONS_AMOUNT 50
+# define BUTTONS_AMOUNT 52
 # define BTN_ID_SHIFT 100
 
-# define DEFAULT_GUI_TEX_NAME "./texture/gui_texture/gui_texture.png"
+# define DEFAULT_GUI_TEX_NAME "./texture/gui_texture/gui_tex.png"
 # define DEFAULT_SCRSHT_NAME "screenshots/RT ScreenShot "
 
 typedef enum {
@@ -245,7 +247,7 @@ typedef enum	e_btn_code
 	ROT_OY_DOWN, ROT_OY_UP,
 	ROT_OZ_DOWN, ROT_OZ_UP,
 	SKYBOX,
-	DELETE_OBJ,
+	DELETE_OBJ, NEGATIVE_OBJ, REACT_NEGATIVE,
 	RADIUS_DOWN, RADIUS_UP,
 	HEIGHT_DOWN, HEIGHT_UP,
 	REFL_DOWN, REFL_UP,

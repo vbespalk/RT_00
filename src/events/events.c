@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:52:24 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/10 15:16:52 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 15:56:34 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ t_bool		check_if_holdable(const uint32_t btn_id)
 {
 	return ((btn_id >= SCREENSHOT && btn_id <= CAMERA_MODE) ||
 			btn_id == SKYBOX ||
-			(btn_id >= COLOR && btn_id <= TEX_6));
+			(btn_id >= COLOR && btn_id <= TEX_6) ||
+			(btn_id >= DELETE_OBJ && btn_id <= REACT_NEGATIVE));
 }
 
 static int	event_handler_buttons(t_env *e, SDL_Event *event, uint32_t *btn_id,

@@ -46,9 +46,7 @@ static uint32_t	object_mode_events_handle_2(t_env *e, const uint32_t id)
 	else if (id == TRANSP_DOWN || id == TRANSP_UP)
 	{
 		inc_val_in_range(&(e->selected->trans), id == TRANSP_DOWN, 0, 1);
-		printf("BEF BAL TRANSP %f\n", e->selected->trans);
 		ft_balance_koefs(e->selected);
-		printf("TRANSP %f\n", e->selected->trans);
 	}
 	else if (id == DIFFUSE_DOWN || id == DIFFUSE_UP)
 	{

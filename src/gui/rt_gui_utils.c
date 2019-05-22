@@ -86,7 +86,7 @@ uint32_t	rotate(t_env *e, const uint32_t id)
 
 uint32_t	texture_editing(t_env *e, uint32_t id)
 {
-	const int id_shift = 41;
+	const int id_shift = 43;
 
 	return (ft_set_exposure(id - id_shift + SDLK_0, e->selected, e));
 }

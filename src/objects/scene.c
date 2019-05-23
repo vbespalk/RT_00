@@ -37,6 +37,4 @@ void		ft_parse_scene(char **content, t_scene *scn)
 	ft_get_attr(content, "depth", (void *)&(scn->depth), DT_FLOAT);
 	if (scn->depth < 1)
 		scn->depth = 1;
-
-	printf("depth: %d\n", scn->depth);
 }

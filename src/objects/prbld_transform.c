@@ -71,7 +71,7 @@ int	ft_scale_prbld(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 	scale = key == SDLK_z ? 1.f + SCALE_F : 1.f - SCALE_F;
 	if (IN_RANGE(prbl->r * scale, 1.f, 800000.f))
 	{
-		prbl->r = prbl->r * scale;
+		prbl->r *= scale;
 		prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX : prbl->maxh / scale;
 	}
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, prbl->r);

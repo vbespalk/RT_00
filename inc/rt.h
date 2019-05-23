@@ -494,6 +494,8 @@ typedef struct		s_torus
 {
 	float			r_inner;
 	float			r_outer;
+	float			r_inner2;
+	float			r_outer2;
 
 }					t_torus;
 

@@ -46,6 +46,8 @@ char	*ft_parse_torus(char **content, t_object *o)
 //	trs->r_outer = 1.f;
 //	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, trs->scale);
 //	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, 1.f / trs->scale);
+	trs->r_inner2 = trs->r_inner * trs->r_inner;
+	trs->r_outer2 = trs->r_outer * trs->r_outer;
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
 	return ((void *)trs);
@@ -119,6 +121,8 @@ int		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m,
 	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
 	trs->r_inner = trs->r_inner * scale;
 	trs->r_outer = trs->r_outer * scale;
+	trs->r_inner2 = trs->r_inner * trs->r_inner;
+	trs->r_outer2 = trs->r_outer * trs->r_outer;
 //	trs->scale *= scale;
 	printf("INNER  %f OUTER %f\n", trs->r_inner, trs->r_outer);
 //	ft_3_transform_mat(tr_m, o->translate, o->rotate, trs->scale);

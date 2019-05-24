@@ -72,6 +72,7 @@
 # define IN_RANGE(x, left, right) (((x) >= (left)) && ((x) <= (right)))
 # define IS_ZERO(x) (((x) > -EQN_EPS) && ((x) < EQN_EPS))
 # define CLAMP(x, min, max) ((x) < (min) ? (min) : (x > (max) ? (max) : (x)))
+# define ANGL_R(x, pi) {IN_RANGE(x, 0, pi) ? x : (x < 0 ? x + pi : x - pi)}
 
 /*
 **	color modes

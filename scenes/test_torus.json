@@ -4,7 +4,7 @@
     "camera": {
         "origin": { "x": -4000, "y": 0 }
     },
-      "skybox": {
+      "//skybox": {
       "negz": "./texture/skybox/thunder/negz.tga",
       "negy": "./texture/skybox/thunder/negy.tga", 
       "negx":"./texture/skybox/thunder/negx.tga", 
@@ -24,11 +24,13 @@
             "name": "torus",
             "translate": { "x": -100 },
             "//negative": true,
-            "rotate": {"z": 45, "y": 20},
+            "rotate": {"z": 45, "y": 20, "x":  15},
             "inner_radius": 500,
             "outer_radius": 1000,
             "//checker": { "color1": "warm_marble", "color2": "lattice", "size": 2},
-            "color": "0xffab2f",
+          "texture": "./texture/ring.png",
+          "//texture": "./texture/solar/earth.jpg",
+          "color": "0xffab2f",
             "spclr": 0,
             "diff": 1,
             "ambnt": 0.5
@@ -37,8 +39,12 @@
         "name": "sphere",
         "negative": true,
         "translate": { "x": -100, "y": 0, "z": 0 },
+        "rotate": {"z": -45, "y": -20, "x":  -10},
+        "checker": { "color1": "gray_marble", "color2": "lattice", "size": 2},
+
         "radius": 1100,
         "color": "0xff0000",
+        "texture": "./texture/ring.png",
         "ambnt": 0.2
       }
     ]

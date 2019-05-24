@@ -84,18 +84,11 @@ int			ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m,
 	(void)inv_m;
 	sph = (t_sphere *)o->fig;
 	if (key == SDLK_DOWN || key == SDLK_UP)
-		sph->theta += key == SDLK_UP ? ROTAT_F : -ROTAT_F;
+		o->rotate[2] += key == SDLK_UP ? ROTAT_F : -ROTAT_F;
 	else if (key == SDLK_LEFT || key == SDLK_RIGHT)
-		sph->phi += key == SDLK_LEFT ? ROTAT_F : -ROTAT_F;
+		o->rotate[1] += key == SDLK_LEFT ? ROTAT_F : -ROTAT_F;
 	else if (key == SDLK_PAGEDOWN || key == SDLK_PAGEUP)
-	{
-		sph->phi += key == SDLK_PAGEUP ? -0.5f * ROTAT_F : 0.5f * ROTAT_F;
-		sph->theta += key == SDLK_PAGEUP ? -0.5f * ROTAT_F : 0.5f * ROTAT_F;
-	}
-	if (!IN_RANGE(sph->phi, 0, 2 * M_PI))
-		sph->phi += sph->phi < 0 ? 2 * (float)M_PI : -2 * (float)M_PI;
-	if (!IN_RANGE(sph->theta, 0, 2 * M_PI))
-		sph->theta += sph->theta < 0 ? 2 * (float)M_PI : -2 * (float)M_PI;
+		o->rotate[0] += key == SDLK_PAGEUP ? -0.5f * ROTAT_F : 0.5f * ROTAT_F;
 	return (1);
 }
 

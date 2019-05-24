@@ -22,39 +22,27 @@ Uint32		ft_map_torus(t_object *o, void *tex, t_vector coll)
 	Uint32		col;
 	float		ang[2];
 	int			xy[2];
-	t_vector	cnt;
+	float		dot;
 	SDL_Surface	*t;
 
 	t = (SDL_Surface *)tex;
-//	cnt = coll - ft_3_vector_scale(ft_3_tounitvector((t_vector){coll[0], FLT_MIN, coll[2]}),
-//								   ((t_torus *)o->fig)->r_outer);
-//	cnt = ft_3_vector_scale(cnt, 1 / ((t_torus *)o->fig)->r_inner);
 	coll = ft_3_vector_scale(coll, 1 / ((t_torus *)o->fig)->r_inner);
 	ang[0] = atan2f(coll[2], coll[0]);
 	if (!(IN_RANGE(ang[0], 0.0f, 2.0f * M_PI)))
-		ang[0] = ang[0] < 0.0f ?
-				ang[0] + 2 * (float)M_PI : ang[0] - 2 * (float)M_PI;
-//	cnt = coll - ((t_vector){coll[0], FLT_MIN, coll[2]});
-	cnt = coll - ft_3_vector_scale(ft_3_tounitvector((t_vector){coll[0], FLT_MIN, coll[2]}),
-				((t_torus *)o->fig)->r_outer / ((t_torus *)o->fig)->r_inner);
-//	printf("CNT %f, %f, %f HIT %f, %f, %f\n", cnt[0], cnt[1], cnt[2], coll[0], coll[1], coll[2]);
+		ang[0] = (float)(ang[0] < 0.0f ? ang[0] + 2 * M_PI : ang[0] - 2 * M_PI);
+	dot = ft_3_vector_dot(coll - ft_3_vector_scale(ft_3_tounitvector((t_vector)
+		{coll[0], 0, coll[2]}), ((t_torus *)o->fig)->r_outer /
+		((t_torus *)o->fig)->r_inner), (t_vector){coll[0], 0, coll[2]});
 	ang[1] = 0.5f * acosf(CLAMP(coll[1], -1, 1));
-	if (!(IN_RANGE(ang[1], 0.0f, M_PI)))
-		ang[1] = ang[1] < 0.0f ? ang[1] + (float)M_PI : ang[1] - (float)M_PI;
 	if (coll[1] > 0)
-		ang[1] = ft_3_vector_dot((t_vector){coll[0], FLT_MIN, coll[2]}, cnt) < 0 ?
-				 (float)M_PI * 0.25 - ang[1] :
-				 (float)M_PI * 0.25 + ang[1];
+		ang[1] = (float)(dot < 0 ? M_PI * 0.25 - ang[1] : M_PI * 0.25 + ang[1]);
 	else
-		ang[1] = ft_3_vector_dot((t_vector){coll[0], FLT_MIN, coll[2]}, cnt) > 0 ?
-				 (float)M_PI * 0.25 + ang[1] :
-				 (ang[1] + (float)M_PI * 0.5);
+		ang[1] = (float)(dot > 0 ? M_PI * 0.25 + ang[1] : 1.25 * M_PI - ang[1]);
 	xy[0] = (int)((t->w - 1) * ang[0] * 0.5f * (float)M_1_PI);
 	xy[1] = (int)((t->h - 1) * ang[1] * (float)M_1_PI);
 	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (UINT32_MAX);
-	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
-		+ xy[0], sizeof(Uint32));
+	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w + xy[0], sizeof(Uint32));
 	return (col);
 }
 

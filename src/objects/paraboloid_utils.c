@@ -12,29 +12,6 @@
 
 #include "rt.h"
 
-static int		ft_solve_sqr_(double a, double b, double c, double res[2])
-{
-	double d;
-
-	res[0] = FLT_MAX;
-	res[1] = FLT_MAX;
-	if (IS_ZERO(a))
-	{
-		res[0] = -c / b;
-		res[1] = res[0];
-		return (1);
-	}
-	d = pow(b, 2) - 4.0f * a * c;
-	if (d < 0)
-		return (0);
-	d = sqrt(d);
-	res[0] = (float)((-b + d) / (2.0f * a));
-	res[1] = (float)((-b - d) / (2.0f * a));
-	if ((res[0] > res[1] && res[1] >= 0) || res[0] <= 0)
-		ft_swap(&res[0], &res[1], sizeof(double));
-	return (1);
-}
-
 static float	get_closer_pnt(
 					const double t[2], const t_vector hit[2],
 					t_coll *coll, t_object *obj)
@@ -133,7 +110,7 @@ float			ft_collide_prbld(
 	par = (t_prbld *)obj->fig;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	if ((!ft_solve_sqr_(
+	if ((!ft_solve_sq(
 		ft_3_vector_dot(od[1], od[1]) - od[1][1] * od[1][1],
 		2.0f * (ft_3_vector_dot(od[1], od[0]) - od[1][1] * (od[0][1] + 2.f)),
 		ft_3_vector_dot(od[0], od[0]) - od[0][1] * (od[0][1] + 4.f),

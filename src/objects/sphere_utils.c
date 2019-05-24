@@ -51,7 +51,7 @@ float			ft_collide_sphere(
 	pnts[1] = uod[1];
 	pnts[2] = ft_3_pnt_transform(&(obj->inverse), uod[0]);
 	pnts[3] = ft_3_vec_transform(&(obj->inverse), uod[1]);
-	if (!ft_solve_quadratic(ft_3_vector_dot(pnts[3], pnts[3]),
+	if (!ft_solve_qdr(ft_3_vector_dot(pnts[3], pnts[3]),
 		2.0f * ft_3_vector_dot(pnts[3], pnts[2]),
 		ft_3_vector_dot(pnts[2], pnts[2]) - 1, t) || (t[0] <= 0 && t[1] <= 0))
 		return (FLT_MAX);

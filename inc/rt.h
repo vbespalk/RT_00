@@ -1091,9 +1091,16 @@ Uint32			ft_map_skybox(t_aabb *bbx,
 ** equations.c
 */
 
-int				ft_solve_quartic(const double coef[5], double res[4]);
+int				ft_solve_quartic(double coef[5], double res[4]);
 int				ft_solve_cubic(const double coef[4], double res[3]);
-int				ft_solve_quadratic(float a, float b, float c, float res[2]);
+
+/*
+** quadratic.c
+*/
+
+int				ft_solve_sq(double a, double b, double c, double res[2]);
+int				ft_solve_qdr(float a, float b, float c, float res[2]);
+
 /*
 ** lattice_noise.c
 */

@@ -1,165 +1,130 @@
-//
-// Created by ivoriik on 19.03.19.
-//
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   equations.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/24 17:34:14 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/24 17:34:16 by vbespalk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
-int					ft_solve_quadratic(float a, float b, float c, float res[2])
+static int	less_zero_det(double res[3], double const pqd[3], double delim)
 {
-	float d;
-
-	res[0] = -FLT_MAX;
-	res[1] = -FLT_MAX;
-	if (IS_ZERO(a) && !IS_ZERO(b))
-	{
-		res[0] = -c / b;
-		return (1);
-	}
-	d = powf(b, 2) - 4.0f * a * c;
-	if (d < 0)
-		return (0);
-	d = sqrtf(d);
-	res[0] = (-b + d) / (2.0f * a);
-	res[1] = (-b - d) / (2.0f * a);
-	if ((res[0] > res[1] && res[1] > FLT_MIN) || res[0] < FLT_MIN)
-		ft_swap(&res[0], &res[1], sizeof(float));
-	return (2);
-}
-
-static int			ft_solve_sqr_(double a, double b, double c, double res[2])
-{
-	double	d;
-
-	res[0] = FLT_MAX;
-	res[1] = FLT_MAX;
-	if (IS_ZERO(a))
-	{
-		res[0] = -c / b;
-		res[1] = res[0];
-		return (1);
-	}
-	d = pow(b, 2) - 4.0f * a * c;
-	if (d < 0)
-		return (0);
-	d = sqrt(d);
-	res[0] = (-b + d) / (2.0f * a);
-	res[1] = (-b - d) / (2.0f * a);
-	if ((res[0] > res[1] && res[1] >= 0) || res[0] <= 0)
-		ft_swap(&res[0], &res[1], sizeof(double));
-	return (2);
-}
-
-int 				ft_solve_cubic(const double coef[4],  double res[3])
-{
-	double	abc[3];
-	double	pq[2];
-	double	d;
+	double	t;
 	double	phi;
-	double 	t;
 
-	abc[0] = coef[1] / coef[0];
-	abc[1] = coef[2] / coef[0];
-	abc[2] = coef[3] / coef[0];
-
-	/*  substitute x = y - A/3 to eliminate quadric term: x^3 +px + q = 0 */
-
-	pq[0] = 1.f / 3 * (-1.f / 3 * abc[0] * abc[0] + abc[1]);
-	pq[1] = 1.f / 2 * (2.f / 27 * pow(abc[0], 3) - 1.f / 3 * abc[0] * abc[1] + abc[2]);
-
-	/* use Cardano's formula */
-
-	d = pq[1] * pq[1] + pow(pq[0], 3);
-	if (IS_ZERO(d))
-	{
-		if (IS_ZERO(pq[1])) /* one triple solution */
+	if (IS_ZERO(pqd[2]))
+		if (IS_ZERO(pqd[1]))
 		{
-			res[0] = 0.f - 1.f / 3 * abc[0];
+			res[0] = 0.f - delim;
 			return (1);
 		}
 		else
 		{
-			res[0] = 2.f * cbrt(-pq[1]) - 1.f / 3 * abc[0];
-			res[1] = - cbrt(-pq[1]) - 1.f / 3 * abc[0];
+			res[0] = 2.f * cbrt(-pqd[1]) - delim;
+			res[1] = -cbrt(-pqd[1]) - delim;
 			return (2);
 		}
-	}
-	else if (d < 0) /* three real solutions */
+	else
 	{
-		phi = 1.f / 3 * acos(-pq[1] / sqrt(-(pq[0] * pq[0] * pq[0])));
-		t = 2 * sqrt(-pq[0]);
-		res[0] = t * cos(phi) - 1.f / 3 * abc[0];
-		res[1] = -t * cos(phi + M_PI / 3.f) - 1.f / 3 * abc[0];
-		res[2] = -t * cos(phi - M_PI / 3.f) - 1.f / 3 * abc[0];
+		phi = 1.f / 3 * acos(-pqd[1] / sqrt(-(pqd[0] * pqd[0] * pqd[0])));
+		t = 2 * sqrt(-pqd[0]);
+		res[0] = t * cos(phi) - delim;
+		res[1] = -t * cos(phi + M_PI / 3.0) - delim;
+		res[2] = -t * cos(phi - M_PI / 3.0) - delim;
 		return (3);
 	}
-	/* one real solution */
-	t = sqrt(d);
-	res[0] = (cbrt(t - pq[1]) - cbrt(t + pq[1])) - 1.f / 3 * abc[0];
+}
+
+int			ft_solve_cubic(const double coef[4], double res[3])
+{
+	double	abc[3];
+	double	pqd[3];
+
+	abc[0] = coef[1] / coef[0];
+	abc[1] = coef[2] / coef[0];
+	abc[2] = coef[3] / coef[0];
+	pqd[0] = (-1.f / 3 * abc[0] * abc[0] + abc[1]) / 3.0;
+	pqd[1] = 0.5 * (2.0 / 27 * pow(abc[0], 3) -
+			1.0 / 3 * abc[0] * abc[1] + abc[2]);
+	pqd[2] = pqd[1] * pqd[1] + pow(pqd[0], 3);
+	if (IS_ZERO(pqd[2]) || pqd[2] < 0)
+		return (less_zero_det(res, pqd, abc[0] / 3.0));
+	pqd[2] = sqrt(pqd[2]);
+	res[0] = (cbrt(pqd[2] - pqd[1]) - cbrt(pqd[2] + pqd[1])) - abc[0] / 3.0;
 	return (1);
 }
 
-int 				ft_solve_quartic(const double coef[5],  double res[4])
+static int	general_case(double rs[4], double const pqr[3], double s)
 {
 	double	abcd[4];
-	double 	pqr[3];
-	double 	tmp;
-	double 	sub;
-	int 	num;
-	double 	uv[2];
-	int 	i;
+	double	uv[2];
+	int		i[2];
 
-/* to normal form: x^4 + Ax^3 + Bx^2 + Cx + D = 0 */
-
-	abcd[0] = coef[1] / coef[0];
-	abcd[1] = coef[2] / coef[0];
-	abcd[2] = coef[3] / coef[0];
-	abcd[3] = coef[4] / coef[0];
-	sub = 0.25f * abcd[0];
-
-/*  substitute x = y - A/4 to eliminate cubic term: x^4 + px^2 + qx + r = 0 */
-	tmp = abcd[0] * abcd[0];
-	pqr[0] = -3.f / 8 * tmp + abcd[1];
-	pqr[1] = 1.f / 8 * tmp * abcd[0] - 0.5f * abcd[0] * abcd[1] + abcd[2];
-	pqr[2] = -3.f / 256 * tmp * tmp + 1.f / 16 * tmp * abcd[1] - 0.25f * abcd[0] * abcd[2] + abcd[3];
-	if (IS_ZERO(pqr[2])) /* no absolute term: y(y^3 + py + q) = 0 */
+	abcd[0] = 1;
+	abcd[1] = -0.5 * pqr[0];
+	abcd[2] = -pqr[2];
+	abcd[3] = 0.5 * pqr[2] * pqr[0] - 1.0 / 8 * pqr[1] * pqr[1];
+	i[1] = ft_solve_cubic(abcd, rs);
+	i[0] = -1;
+	while (++i[0] < i[1])
 	{
-		abcd[0] = 1;
-		abcd[1] = 0;
-		abcd[2] = pqr[0];
-		abcd[3] = pqr[1];
-		num = ft_solve_cubic(abcd, res);
-		res[num++] = 0.f;
+		s = rs[i[0]];
+		uv[0] = s * s - pqr[2];
+		uv[1] = 2 * s - pqr[0];
+		if (uv[0] > -EQN_EPS && uv[1] > -EQN_EPS)
+			break ;
 	}
-	else
-	{
-		abcd[0] = 1;
-		abcd[1] = -0.5f * pqr[0];
-		abcd[2] = -pqr[2];
-		abcd[3] = 0.5f * pqr[2] * pqr[0] - 1.f / 8 * pqr[1] * pqr[1];
-		num = ft_solve_cubic(abcd, res);
-		/* only 1 real solution */
-		/* ... to build two quadric equations */
-		i = -1;
-		while (++i < num)
-		{
-			tmp = res[i];
-			uv[0] = tmp * tmp - pqr[2];
-			uv[1] = 2 * tmp - pqr[0];
-			if (uv[0] > -EQN_EPS && uv[1] > -EQN_EPS)
-				break ;
-		}
-		if (uv[0] < -1e-1)
-			return (0);
-		uv[0] = IS_ZERO(uv[0]) ? 0.f : sqrt(fabs(uv[0]));
-		if (uv[1] < -1e-1)
-			return (0);
-		uv[1] = IS_ZERO(uv[1]) ? 0.f : sqrt(fabs(uv[1]));
-		num = ft_solve_sqr_(1, pqr[1] < 0 ? uv[1] : -uv[1], tmp + uv[0], res);
-		num += ft_solve_sqr_(1, pqr[1] < 0 ? -uv[1] : uv[1], tmp - uv[0], res + num);
-	}
-	i = -1;
-	while (++i < num)
-		res[i] -= sub;
+	if (uv[0] < -1e-1 || uv[1] < -1e-1)
+		return (0);
+	uv[0] = IS_ZERO(uv[0]) ? 0 : sqrt(fabs(uv[0]));
+	uv[1] = IS_ZERO(uv[1]) ? 0 : sqrt(fabs(uv[1]));
+	i[1] = ft_solve_sq(1, pqr[1] < 0 ? uv[1] : -uv[1], s + uv[0], rs);
+	i[1] += ft_solve_sq(1, pqr[1] < 0 ? -uv[1] : uv[1], s - uv[0], rs + i[1]);
+	return (i[1]);
+}
+
+static int	no_absol_term_case(double res[4], double const pqr[3])
+{
+	double	abcd[4];
+	int		num;
+
+	abcd[0] = 1;
+	abcd[1] = 0;
+	abcd[2] = pqr[0];
+	abcd[3] = pqr[1];
+	num = ft_solve_cubic(abcd, res);
+	res[num++] = 0;
 	return (num);
+}
+
+int			ft_solve_quartic(double abcde[5], double res[4])
+{
+	double	pqr[3];
+	double	tmp;
+	double	delim;
+	int		i[2];
+
+	abcde[1] = abcde[1] / abcde[0];
+	abcde[2] = abcde[2] / abcde[0];
+	abcde[3] = abcde[3] / abcde[0];
+	abcde[4] = abcde[4] / abcde[0];
+	delim = 0.25 * abcde[1];
+	tmp = abcde[1] * abcde[1];
+	pqr[0] = -3.0 / 8 * tmp + abcde[2];
+	pqr[1] = 1.0 / 8 * tmp * abcde[1] - 0.5 * abcde[1] * abcde[2] + abcde[3];
+	pqr[2] = -3.0 / 256 * tmp * tmp + (tmp * abcde[2]) / 16.0 -
+			0.25 * abcde[1] * abcde[3] + abcde[4];
+	if (IS_ZERO(pqr[2]))
+		i[1] = no_absol_term_case(res, pqr);
+	else
+		i[1] = general_case(res, pqr, 0);
+	i[0] = -1;
+	while (++i[0] < i[1])
+		res[i[0]] -= delim;
+	return (i[1]);
 }

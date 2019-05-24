@@ -58,19 +58,6 @@ int		sdl_init(t_sdl *sdl)
 	return (0);
 }
 
-//void	sdl_close(t_sdl *sdl)
-//{
-//	if (sdl->screen)
-//		SDL_DestroyTexture(sdl->screen);
-//	if (sdl->gui->gui_texture)
-//		SDL_DestroyTexture(sdl->gui->gui_texture);
-//	if (sdl->renderer)
-//		SDL_DestroyRenderer(sdl->renderer);
-//	if (sdl->window)
-//		SDL_DestroyWindow(sdl->window);
-//	SDL_Quit();
-//}
-
 int		sdl_error(char *message)
 {
 	if (message)

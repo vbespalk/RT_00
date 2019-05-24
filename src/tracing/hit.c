@@ -1,7 +1,7 @@
 
 #include "rt.h"
 
-void			ft_get_refrs(t_ray *ray, float (*refr)[2])
+void	ft_get_refrs(t_ray *ray, float (*refr)[2])
 {
 	int		i;
 
@@ -26,7 +26,7 @@ void			ft_get_refrs(t_ray *ray, float (*refr)[2])
 	}
 }
 
-void			ft_handle_hit(t_ray *ray, t_object *o)
+void	ft_handle_hit(t_ray *ray, t_object *o)
 {
 	int		i;
 

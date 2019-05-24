@@ -14,7 +14,6 @@
 
 float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 {
-//	printf("\n ----- IN FT_GET_ILLUMINATION -----\n\n");
 	float		res;
 	t_list		*o_node;
 	t_object	*obj;
@@ -37,23 +36,13 @@ float	ft_get_illumination(t_scene *scn, t_vector o, t_vector d, t_light *l)
 			o_node = o_node->next;
 			continue ;
 		}
-
-//		printf("coll: (%8.3f, %8.3f, %8.3f)\n",
-//			coll.coll_pnt[0], coll.coll_pnt[1], coll.coll_pnt[2]);
-
-		if (l->type != L_POINT || ft_3_pointcmp(
-				ft_3_unitvectornew(coll.coll_pnt, o),
-				ft_3_unitvectornew(l->origin, coll.coll_pnt),
-				1e-6
-			))
+		if (l->type != L_POINT
+		|| ft_3_vector_cos(o - l->origin, coll.coll_pnt - l->origin) < 0)
 			res *= obj->trans;
 		if (res == 0.0f)
 			return (res);
 		o_node = o_node->next;
 	}
-
-//	printf("res illum: %f\n", res);
-
 	return (res);
 }
 
@@ -102,8 +91,10 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 	nl_cos = ft_3_vector_cos(coll->norm, ldir);
 	if (nl_cos >= 0)
 	{
-		if ((illum = ft_get_illumination(
-			parg->e->scn, coll->coll_pnt + ft_3_vector_scale(coll->norm, SHIFT), ldir, l)) == 0.0f)
+		illum = ft_get_illumination(
+			parg->e->scn, coll->coll_pnt + ft_3_vector_scale(coll->norm, SHIFT),
+			ldir, l);
+		if (illum == 0.0f)
 			return ;
 		cl_len = (l->type == L_POINT)
 			? ft_3_point_point_dist(coll->coll_pnt, l->origin)
@@ -117,10 +108,6 @@ void	ft_illuminate_with(t_thrarg *parg, t_coll *coll, t_light *l)
 
 void	ft_illuminate(t_thrarg *parg, t_coll *coll)
 {
-//	printf("\n ----- IN FT_ILLUMINATE -----\n\n");
-//	printf("norm in illum: (%8.3f, %8.3f, %8.3f)\n",
-//		coll->norm[0], coll->norm[1], coll->norm[2]);
-
 	t_list		*node;
 	t_light		*l;
 
@@ -128,7 +115,6 @@ void	ft_illuminate(t_thrarg *parg, t_coll *coll)
 	coll->phong_color.val = 0;
 	coll->phong = 0.0;
 	node = parg->e->scn->lights;
-//	coll->coll_pnt += ft_3_vector_scale(coll->norm, 0.1f);
 	while (node)
 	{
 		l = (t_light *)(node->content);

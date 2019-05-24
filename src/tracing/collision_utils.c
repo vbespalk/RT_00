@@ -1,56 +1,6 @@
 
 #include "rt.h"
 
-int			ft_inside_type(t_list **objs, t_vector point)
-{
-	int			res;
-	t_list		*node;
-	t_object	*o;
-
-	res = IT_VOID;
-	node = *objs;
-	while (node)
-	{
-		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o, point))
-		{
-			if (o->is_neg)
-				return (IT_NEG);
-			res = (o->react_neg) ? IT_POS_RT : IT_POS_RF;
-		}
-		node = node->next;
-	}
-	return (res);
-}
-
-t_object	*ft_get_inner_object(t_list **objs, t_vector point)
-{
-	t_list		*node;
-	t_vector	od[2];
-	float		dist[2];
-	t_object	*o[2];
-	t_coll		coll;
-
-	node = *objs;
-	od[0] = point;
-	od[1] = (t_vector) { 1.0f, 0.0f, 0.0f };
-	dist[0] = FLT_MAX;
-	o[1] = NULL;
-	while (node)
-	{
-		o[0] = (t_object *)(node->content);
-		o[0]->ft_collide(objs, o[0], &coll, od);
-		dist[1] = ft_3_point_point_dist(point, coll.coll_pnt);
-		if (dist[1] < dist[0])
-		{
-			dist[0] = dist[1];
-			o[1] = o[0];
-		}
-		node = node->next;
-	}
-	return (o[1]);
-}
-
 static void	ft_free_list(t_list **head)
 {
 	t_list	*node;

@@ -18,7 +18,6 @@ t_aabb		*ft_init_aabb(t_vector min, t_vector max)
 
 	bbx = ft_smemalloc(sizeof(t_aabb), "ft_init_aabb");
 	bbx->ft_collide = ft_collide_aabb;
-	bbx->ft_is_reachable = ft_is_reachable_aabb;
 	bbx->ft_translate = ft_translate_aabb;
 	bbx->ft_scale = ft_scale_aabb;
 	if (ft_3_iszeropoint(min) || ft_3_iszeropoint(max))
@@ -36,14 +35,6 @@ t_aabb		*ft_init_aabb(t_vector min, t_vector max)
 	bbx->dgnl = bbx->bounds[1] - bbx->bounds[0];
 	bbx->cntr = ft_3_vector_scale(bbx->bounds[0] + bbx->bounds[1], 0.5f);
 	return ((void *)bbx);
-}
-
-int			ft_is_reachable_aabb(void *fig, t_vector origin, t_vector direct)
-{
-	(void)fig;
-	(void)origin;
-	(void)direct;
-	return (1);
 }
 
 t_vector	ft_collide_aabb(void *fig, t_vector origin, t_vector direct)

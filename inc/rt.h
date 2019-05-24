@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/10 14:32:53 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 15:46:16 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@
 # define IN_RANGE(x, left, right) (((x) >= (left)) && ((x) <= (right)))
 # define IS_ZERO(x) (((x) > -EQN_EPS) && ((x) < EQN_EPS))
 # define CLAMP(x, min, max) ((x) < (min) ? (min) : (x > (max) ? (max) : (x)))
+# define ANGL_R(x, pi) {IN_RANGE(x, 0, pi) ? x : (x < 0 ? x + pi : x - pi)}
 
 /*
 **	color modes
@@ -208,14 +209,16 @@ static const unsigned char	g_permutation_table[LTABLE_SIZE] =
 # define DEFAULT_BUTTTON_HEIGHT 20
 # define ARROW_BUTTON_WIDTH 30
 # define ARROW_BUTTON_HEIGHT 20
+# define OBJ_EDIT_BTN_WIDTH 65
+# define OBJ_EDIT_BTN_HEIGHT 20
 # define TEXTURE_EDIT_BTN_W 50
 # define TEXTURE_EDIT_BTN_H 17
 # define GUI_WIDTH 220
 # define GUI_HEIGHT 250 * 1290 / 570
-# define BUTTONS_AMOUNT 50
+# define BUTTONS_AMOUNT 52
 # define BTN_ID_SHIFT 100
 
-# define DEFAULT_GUI_TEX_NAME "./texture/gui_texture/gui_texture.png"
+# define DEFAULT_GUI_TEX_NAME "./texture/gui_texture/gui_tex.png"
 # define DEFAULT_SCRSHT_NAME "screenshots/RT ScreenShot "
 
 typedef enum {
@@ -245,7 +248,7 @@ typedef enum	e_btn_code
 	ROT_OY_DOWN, ROT_OY_UP,
 	ROT_OZ_DOWN, ROT_OZ_UP,
 	SKYBOX,
-	DELETE_OBJ,
+	DELETE_OBJ, NEGATIVE_OBJ, REACT_NEGATIVE,
 	RADIUS_DOWN, RADIUS_UP,
 	HEIGHT_DOWN, HEIGHT_UP,
 	REFL_DOWN, REFL_UP,
@@ -410,8 +413,6 @@ struct				s_object
 	t_checkbrd		*checker;
 	int				exposure;
 
-	int				(*ft_is_reachable)
-			(void *fig, t_vector origin, t_vector direct);
 	float			(*ft_collide)
 			(t_list **objs, t_object *obj,
 			t_coll *coll, t_vector od[2]);
@@ -455,6 +456,7 @@ typedef struct		s_cone
 {
 	float			r[2];
 	float			tan;
+	float 			sq_tan;
 	float			minh;
 	float			maxh;
 	float			texh;
@@ -493,6 +495,8 @@ typedef struct		s_torus
 {
 	float			r_inner;
 	float			r_outer;
+	float			r_inner2;
+	float			r_outer2;
 
 }					t_torus;
 
@@ -503,8 +507,6 @@ typedef struct		s_bounding_box
 	t_vector		cntr;
 	t_vector		dgnl;
 
-	int				(*ft_is_reachable)
-			(void *fig, t_vector origin, t_vector direct);
 	t_vector		(*ft_collide)
 			(void *fig, t_vector origin, t_vector direct);
 	int				(*ft_is_inside)(struct s_object *o, t_vector pnt);
@@ -746,8 +748,6 @@ int	    				ft_scale_plane
 **	plane_utils.c
 */
 
-int						ft_is_reachable_plane
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_plane
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_plane(t_object *o, t_vector pnt);
@@ -772,8 +772,6 @@ int	    				ft_scale_disk
 **	disk_utils.c
 */
 
-int						ft_is_reachable_disk
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_disk
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_disk(t_object *o, t_vector pnt);
@@ -799,8 +797,6 @@ int	    				ft_scale_hei_null
 **	box_utils.c
 */
 
-int						ft_is_reachable_box
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_box
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_box(t_object *o, t_vector pnt);
@@ -812,8 +808,6 @@ t_vector				ft_get_norm_box(void *fig, t_matrix *inv_m, t_vector coll);
 
 t_aabb					*ft_init_aabb
 			(t_vector min, t_vector max);
-int						ft_is_reachable_aabb
-			(void *fig, t_vector origin, t_vector direct);
 t_vector				ft_collide_aabb
 			(void *fig, t_vector origin, t_vector direct);
 void					ft_translate_aabb
@@ -842,8 +836,6 @@ int	    				ft_scale_sphere
 **	sphere_utils.c
 */
 
-int						ft_is_reachable_sphere
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_sphere
 			(t_list **objs, t_object *o, t_coll *coll, t_vector uod[2]);
 int						ft_is_inside_sphere(t_object *o, t_vector pnt);
@@ -902,8 +894,6 @@ int	    				ft_scale_hei_cylinder
 **	cylinder_utils.c
 */
 
-int						ft_is_reachable_cylinder
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_cylinder
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_cylinder(t_object *o, t_vector pnt);
@@ -931,8 +921,6 @@ int	    				ft_scale_hei_prbld
 **	paraboloid_utils.c
 */
 
-int						ft_is_reachable_prbld
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_prbld
 			(t_list **objs, t_object *o, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_prbld(t_object *o, t_vector pnt);
@@ -959,8 +947,6 @@ int	    				ft_scale_torus
 **	torus_utils.c
 */
 
-int						ft_is_reachable_torus
-			(void *fig, t_vector origin, t_vector direct);
 float					ft_collide_torus
 			(t_list **objs, t_object *obj, t_coll *coll, t_vector od[2]);
 int						ft_is_inside_torus(t_object *o, t_vector pnt);

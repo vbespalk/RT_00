@@ -85,7 +85,6 @@ Uint32			ft_checker_prbld(t_object *o, void *tex, t_vector coll)
 	t_prbld		*prb;
 	t_checkbrd	*t;
 	float		phi;
-	t_vector	pnt;
 
 	prb = (t_prbld *)o->fig;
 	t = (t_checkbrd *)tex;
@@ -94,10 +93,8 @@ Uint32			ft_checker_prbld(t_object *o, void *tex, t_vector coll)
 	uv[0] = phi / (float)M_PI + 1;
 	if (prb->maxh != FLT_MAX && IN_RANGE(coll[1], prb->maxh - 1e-1,
 			prb->maxh + 1e-1))
-	{
-		pnt = ft_3_vector_scale(coll, (1 / sqrtf(4.0f * prb->maxh)));
-		uv[1] = sqrtf(powf(pnt[2], 2) + powf(pnt[0], 2));
-	}
+		uv[1] = sqrtf(powf(coll[2] / sqrtf(4.0f * prb->maxh), 2) +
+				powf(coll[0] / sqrtf(4.0f * prb->maxh), 2));
 	else
 		uv[1] = prb->maxh == FLT_MAX ? coll[1] / sqrtf(o->dist) :
 				sqrtf(coll[1] / prb->maxh);

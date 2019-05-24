@@ -17,7 +17,6 @@ t_prbld		*ft_prbldnew(t_object *o)
 	t_prbld	*prbl;
 
 	o->ft_collide = ft_collide_prbld;
-	o->ft_is_reachable = ft_is_reachable_prbld;
 	o->ft_is_inside = ft_is_inside_prbld;
 	o->ft_get_norm = ft_get_norm_prbld;
 	o->ft_translate = ft_translate_prbld;

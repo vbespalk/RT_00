@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/24 12:14:15 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/04/30 13:44:36 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 16:39:37 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 */
 
 const SDL_Rect g_btn_containers[] = {
-
 	(SDL_Rect){212, 51, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
 	(SDL_Rect){212, 88, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
 	(SDL_Rect){212, 109, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
@@ -40,7 +39,9 @@ const SDL_Rect g_btn_containers[] = {
 	(SDL_Rect){102, 216, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT},
 	(SDL_Rect){39, 216, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT},
 	(SDL_Rect){212, 239, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
-	(SDL_Rect){212, 278, DEFAULT_BUTTTON_WIDTH, DEFAULT_BUTTTON_HEIGHT},
+	(SDL_Rect){212, 278, OBJ_EDIT_BTN_WIDTH, OBJ_EDIT_BTN_HEIGHT},
+	(SDL_Rect){144, 278, OBJ_EDIT_BTN_WIDTH, OBJ_EDIT_BTN_HEIGHT},
+	(SDL_Rect){75, 278, OBJ_EDIT_BTN_WIDTH, OBJ_EDIT_BTN_HEIGHT},
 	(SDL_Rect){75, 298, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT},
 	(SDL_Rect){38, 298, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT},
 	(SDL_Rect){75, 317, ARROW_BUTTON_WIDTH, ARROW_BUTTON_HEIGHT},
@@ -75,8 +76,6 @@ int			gui_init(t_sdl *sdl)
 {
 	SDL_Surface *image;
 
-//	if (IMG_Init(IMG_INIT_PNG) < 0)
-//		return (-1);
 	MLC_TEST((sdl->gui = (t_gui*)malloc(sizeof(t_gui))), "gui alloc failed!");
 	MLC_TEST((image = IMG_Load(DEFAULT_GUI_TEX_NAME)),
 		"gui texture could not loaded");

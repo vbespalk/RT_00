@@ -17,7 +17,6 @@ t_box		*ft_boxnew(t_object *o)
 	t_box	*bx;
 
 	o->ft_collide = ft_collide_box;
-	o->ft_is_reachable = NULL;
 	o->ft_is_inside = ft_is_inside_box;
 	o->ft_get_norm = ft_get_norm_plane;
 	o->ft_translate = ft_translate_box;

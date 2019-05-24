@@ -17,7 +17,6 @@ t_cone		*ft_conenew(t_object *o)
 	t_cone	*cone;
 
 	o->ft_collide = ft_collide_cone;
-	o->ft_is_reachable = ft_is_reachable_plane;
 	o->ft_is_inside = ft_is_inside_cone;
 	o->ft_get_norm = ft_get_norm_cone;
 	o->ft_translate = ft_translate_cone;
@@ -52,10 +51,11 @@ void		*ft_parse_cone(char **content, t_object *o)
 		cone->tan = (int)cone->tan % 175;
 	cone->tan = cone->tan < 1 ? tanf(DEG_TO_RAD(1)) :
 			tanf(DEG_TO_RAD(cone->tan / 2.0f));
+	cone->sq_tan = cone->tan * cone->tan + 1;
 	cone->r[0] = (cone->minh == -FLT_MAX || cone->minh == 0) ?
-				 FLT_MIN : fabsf(cone->minh * cone->tan);
+				FLT_MIN : fabsf(cone->minh * cone->tan);
 	cone->r[1] = (cone->maxh == FLT_MAX || cone->maxh == 0) ?
-				 FLT_MIN : fabsf(cone->maxh * cone->tan);
+				FLT_MIN : fabsf(cone->maxh * cone->tan);
 	if (!(cone->minh == -FLT_MAX || cone->maxh == FLT_MAX))
 		cone->texh = sqrtf(powf(cone->maxh - cone->minh, 2) +
 			powf(cone->r[1] - cone->r[0], 2)) + cone->r[0] + cone->r[1];

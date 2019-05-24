@@ -12,37 +12,42 @@
 
 #include "rt.h"
 
+/*
+** angls[0] for phi
+** angls[1] for theta
+*/
+
 Uint32		ft_map_torus(t_object *o, void *tex, t_vector coll)
 {
 	Uint32		col;
-	float		theta;
-	float		phi;
+	float		ang[2];
 	int			xy[2];
-	t_vector	cnt;
+	float		dot;
 	SDL_Surface	*t;
 
 	t = (SDL_Surface *)tex;
 	coll = ft_3_vector_scale(coll, 1 / ((t_torus *)o->fig)->r_inner);
-	phi = atan2f(coll[2], coll[0]);
-	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
-		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
-	cnt = coll - ft_3_tounitvector((t_vector){coll[0], FLT_MIN, coll[2]});
-	theta = 0.5f * acosf(CLAMP(coll[1], -1, 1));
-	if (!(IN_RANGE(theta, 0.0f, M_PI)))
-		theta = theta < 0.0f ? theta + (float)M_PI : theta - (float)M_PI;
-	if (IN_RANGE(cnt[0] * cnt[0] + cnt[2] * cnt[2], 0, 1))
-		theta = (float)M_PI - theta;
-	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
-	xy[1] = (int)((t->h - 1) * theta * (float)M_1_PI);
-	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
+	ang[0] = atan2f(coll[2], coll[0]);
+	if (!(IN_RANGE(ang[0], 0.0f, 2.0f * M_PI)))
+		ang[0] = (float)(ang[0] < 0.0f ? ang[0] + 2 * M_PI : ang[0] - 2 * M_PI);
+	dot = ft_3_vector_dot(coll - ft_3_vector_scale(ft_3_tounitvector((t_vector)
+		{coll[0], 0, coll[2]}), ((t_torus *)o->fig)->r_outer /
+		((t_torus *)o->fig)->r_inner), (t_vector){coll[0], 0, coll[2]});
+	ang[1] = 0.5f * acosf(CLAMP(coll[1], -1, 1));
+	if (coll[1] > 0)
+		ang[1] = (float)(dot < 0 ? M_PI * 0.25 - ang[1] : M_PI * 0.25 + ang[1]);
+	else
+		ang[1] = (float)(dot > 0 ? M_PI * 0.25 + ang[1] : 1.25 * M_PI - ang[1]);
+	xy[0] = (int)((t->w - 1) * ang[0] * 0.5f * (float)M_1_PI);
+	xy[1] = (int)((t->h - 1) * ang[1] * (float)M_1_PI);
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (UINT32_MAX);
-	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
-		+ xy[0], sizeof(Uint32));
+	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w + xy[0], sizeof(Uint32));
 	return (col);
 }
 
 /*
-** pnt[0] for normilized coll value
+** pnt[0] for normalized coll value
 ** pnt[1] for center inside torus ring
 */
 

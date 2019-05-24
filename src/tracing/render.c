@@ -40,35 +40,33 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 static t_color	ft_get_pixel_color(t_thrarg	*thrarg, int x, int y, int smth)
 {
 	t_color	color;
-	float	color_sum[3];
-	int		i;
-	int		j;
-	float	smth_2;
+	float	nums[4];
+	int		i[2];
 
 	x = x * smth - 1;
 	y = y * smth - 1;
-	i = x + smth + 1;
-	j = y + smth + 1;
-	smth_2 = smth * smth;
-	ft_bzero((void *)color_sum, sizeof(color_sum));
-	while (++x < i)
+	i[0] = x + smth + 1;
+	i[1] = y + smth + 1;
+	ft_bzero((void *)nums, sizeof(nums));
+	nums[3] = smth * smth;
+	while (++x < i[0])
 	{
-		y = j - smth - 1;
-		while (++y < j)
+		y = i[1] - smth - 1;
+		while (++y < i[1])
 		{
 			color = ft_trace_ray(thrarg, x, y);
-			color_sum[0] += (float)(color.argb[0]) / smth_2;
-			color_sum[1] += (float)(color.argb[1]) / smth_2;
-			color_sum[2] += (float)(color.argb[2]) / smth_2;
+			nums[0] += (float)(color.argb[0]) / nums[3];
+			nums[1] += (float)(color.argb[1]) / nums[3];
+			nums[2] += (float)(color.argb[2]) / nums[3];
 		}
 	}
-	color.argb[0] = (t_byte)(color_sum[0]);
-	color.argb[1] = (t_byte)(color_sum[1]);
-	color.argb[2] = (t_byte)(color_sum[2]);
+	color.argb[0] = (t_byte)(nums[0]);
+	color.argb[1] = (t_byte)(nums[1]);
+	color.argb[2] = (t_byte)(nums[2]);
 	return (color);
 }
 
-static void	ft_update_obj_lst(t_camera *cam, t_list *objs)
+static void		ft_update_obj_lst(t_camera *cam, t_list *objs)
 {
 	t_object *o;
 
@@ -82,33 +80,26 @@ static void	ft_update_obj_lst(t_camera *cam, t_list *objs)
 
 void			*ft_section_handle(void *arg)
 {
-	t_thrarg	*thrarg;
 	int			x;
 	int			y;
 	int			smth;
     t_color     col;
+	t_thrarg	*thrarg;
 
 	thrarg = (t_thrarg *)arg;
 	x = thrarg->i;
 	smth = thrarg->e->scn->cam->smooth + 1;
-
-//	x = thrarg->e->sdl->rt_wid / 2;
-//	y = thrarg->e->sdl->scr_hei / 2;
-
 	while (x < thrarg->e->sdl->rt_wid)
 	{
 		y = -1;
 		while (++y < thrarg->e->sdl->scr_hei)
 		{
-			col = thrarg->e->color_mode == NULL ? ft_get_pixel_color(thrarg, x, y, smth) :
-            		ft_px_mode(ft_get_pixel_color(thrarg, x, y, smth),
-            				thrarg->e->color_mode);
-//		    img_pixel_put(
-//                    thrarg->e->sdl, x, y,
-//                    (unsigned int) col.val);
-			img_pixel_put(
-				thrarg->e->sdl, x, y, (unsigned int)SDL_MapRGB(thrarg->e->sdl->format,
-				        col.argb[0], col.argb[1], col.argb[2]));
+			col = (thrarg->e->color_mode == NULL)
+			? ft_get_pixel_color(thrarg, x, y, smth)
+			: ft_px_mode(
+				ft_get_pixel_color(thrarg, x, y, smth), thrarg->e->color_mode);
+			img_pixel_put(thrarg->e->sdl, x, y, (unsigned int)SDL_MapRGB(
+				thrarg->e->sdl->format, col.argb[0], col.argb[1], col.argb[2]));
         }
 		x += THREADS;
 	}
@@ -117,7 +108,6 @@ void			*ft_section_handle(void *arg)
 
 void			ft_render(t_env *e)
 {
-//	printf(" *** RENDER ***\n");
 	pthread_t	threads[THREADS];
 	t_thrarg	thrargs[THREADS];
 	int			i = 0;

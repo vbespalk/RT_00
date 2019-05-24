@@ -101,6 +101,9 @@
 # define DEFAULT_REFR	1.0f
 # define SHIFT			0.1f
 
+# define RM_SPCLR		0
+# define RM_TRANS		1
+
 # define IT_NEG			-1
 # define IT_VOID		0
 # define IT_POS_RT		1
@@ -958,25 +961,35 @@ t_vector				ft_get_norm_torus(void *fig, t_matrix *inv_m, t_vector coll);
 
 t_color					ft_trace_ray(t_thrarg *parg, int x, int y);
 t_color					ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth);
-t_color					ft_throw_rays
-				(t_thrarg *parg, t_ray *ray, t_vector *vec, float num[2]);
+t_color					ft_throw_rays(t_thrarg *parg, t_ray *ray, float num[2]);
 
 /*
 **	ray_utils.c
 */
 
-t_vector				ft_change_blur_vec
-							(t_vector norm, t_vector vec, float angle);
-t_vector				ft_get_blur_proj(t_vector origin, t_vector norm);
-t_color					ft_sum_colors
-							(t_coll *coll, t_color color_s,
-							t_color color_t, int depth);
+void					ft_init_ray(
+							t_ray *ray_prev, t_ray *ray,
+							t_vector *o, t_vector *d);
+t_vector				ft_change_blur_vec(
+							t_vector norm, t_vector vec, float angle);
+t_color					ft_sum_colors(
+							t_coll *coll, t_color color_s, t_color color_t);
 
 /*
 **	illumination.c
 */
 
 void					ft_illuminate(t_thrarg *parg, t_coll *coll);
+
+/*
+**	illumination_utils.c
+*/
+
+float					ft_get_illumination(
+							t_scene *scn, t_vector o, t_vector d, t_light *l);
+void					ft_affect_illumination(
+							t_coll *coll, t_light *l,
+							t_vector ldir, float bright_coef);
 
 /*
 **	collision.c

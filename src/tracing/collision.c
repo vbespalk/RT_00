@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   collision.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/23 13:21:02 by domelche          #+#    #+#             */
-/*   Updated: 2018/08/23 13:25:52 by domelche         ###   ########.fr       */
+/*   Updated: 2019/05/24 15:15:07 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_coll				ft_get_collision(t_thrarg *arg, t_ray *ray)
 {
 	t_coll		coll;
 	t_vector	od[2];
-	fun_tab		func;
+	t_fun_tab		func;
 
 //	od[0] = ray->o + ft_3_vector_scale(ray->d, 0.1f);
 	od[0] = ray->o;

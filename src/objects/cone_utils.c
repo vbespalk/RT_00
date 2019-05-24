@@ -137,7 +137,7 @@ float			ft_collide_cone(t_list **objs, t_object *obj,
 	con = (t_cone *)obj->fig;
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	if (!ft_solve_quadratic(
+	if (!ft_solve_qdr(
 		ft_3_vector_dot(od[1], od[1]) - con->sq_tan * od[1][1] * od[1][1],
 		2.0f * (ft_3_vector_dot(od[0], od[1]) - con->sq_tan * od[1][1] * od[0][1]),
 		ft_3_vector_dot(od[0], od[0]) - con->sq_tan * od[0][1] * od[0][1],

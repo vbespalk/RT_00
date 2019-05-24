@@ -1,4 +1,3 @@
-
 #include "rt.h"
 
 static char	*ft_read(char *filename)

@@ -128,7 +128,7 @@ float			ft_collide_cylinder(
 
 	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
 	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	if (!ft_solve_quadratic(od[1][0] * od[1][0] + od[1][2] * od[1][2],
+	if (!ft_solve_qdr(od[1][0] * od[1][0] + od[1][2] * od[1][2],
 			2.0f * (od[0][0] * od[1][0] + od[0][2] * od[1][2]),
 			od[0][0] * od[0][0] + od[0][2] * od[0][2] - 1, res))
 		return (FLT_MAX);

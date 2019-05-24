@@ -17,23 +17,18 @@ static void		delnod_obj(void *nod, size_t size)
 	t_object	*obj;
 	int			i;
 
+	(void)size;
 	obj = (t_object *)nod;
-	printf("DELNOD OBJ\n");
-	if (obj->composed && (i = -1))
+	i = -1;
+	if (obj->composed)
 		while (++i < BOX_FACES)
 			delnod_obj(((t_box *)obj->fig)->face[i], sizeof(t_object));
 	ft_memdel((void **)&obj->fig);
 	ft_memdel((void **)&obj->texture_id);
 	if (obj->noise)
-	{
-		printf("DEL NOISE\n");
 		ft_noise_del(&obj->noise);
-	}
 	if (obj->checker)
-	{
 		ft_checker_del(&obj->checker);
-		printf("DEL CHECKER\n");
-	}
 	ft_memdel(&nod);
 }
 
@@ -93,7 +88,7 @@ int				ft_set_exposure(Sint32 sum, t_object *o, t_env *e)
 	return (1);
 }
 
-int 			ft_mod_depth(Sint32 sum, int *depth)
+int				ft_mod_depth(Sint32 sum, int *depth)
 {
 	*depth += sum == SDLK_RALT ? 1 : -1;
 	if (IN_RANGE(*depth, MIN_DPTH, MAX_DPTH))

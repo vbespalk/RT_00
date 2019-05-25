@@ -16,7 +16,7 @@
 **	turn vec towards axis on angle
 */
 
-t_vector		ft_3_vector_turn_near(t_vector vec, t_vector axis, float angle)
+t_vector	ft_3_vector_turn_near(t_vector vec, t_vector axis, float angle)
 {
 	t_vector	rotated;
 	float		sin_a;

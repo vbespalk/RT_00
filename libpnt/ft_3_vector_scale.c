@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_vector		ft_3_vector_scale(t_vector vec, float k)
+t_vector	ft_3_vector_scale(t_vector vec, float k)
 {
 	vec[0] *= k;
 	vec[1] *= k;

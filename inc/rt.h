@@ -924,6 +924,16 @@ t_vector		ft_get_norm_prbld(void *fig,
 			t_matrix *inv_m, t_vector coll);
 
 /*
+**	paraboloid_utils.c
+*/
+
+float			get_caps_coll(
+					t_list **objs, t_vector vecs[4][2], t_object *obj);
+double			get_cides_coll(
+					t_list **objs, t_vector v[4][2],
+					double t[2], t_object *obj);
+
+/*
 ** TORUS
 */
 

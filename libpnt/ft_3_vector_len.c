@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-float			ft_3_vector_len(t_vector vec)
+float	ft_3_vector_len(t_vector vec)
 {
 	return (sqrtf(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]));
 }

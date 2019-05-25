@@ -19,7 +19,8 @@ int				ft_limit(int min, int max, int num)
 	return (num);
 }
 
-unsigned int	ft_limit_uint(unsigned int min, unsigned int max, unsigned int num)
+unsigned int	ft_limit_uint(
+					unsigned int min, unsigned int max, unsigned int num)
 {
 	if (num < min)
 		return (min);

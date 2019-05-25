@@ -82,7 +82,7 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 	if (coll.o == NULL)
 	{
 		if (parg->e->scn->skybox_on)
-		    return (ft_apply_sky(parg->e->scn->skybox, ray->o, ray->d));
+			return (ft_apply_sky(parg->e->scn->skybox, ray->o, ray->d));
 		return (parg->e->scn->bg_color);
 	}
 	st_col[0] = ft_throw_spclr(parg, ray, depth);
@@ -96,29 +96,25 @@ t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth)
 t_color			ft_throw_rays(t_thrarg *parg, t_ray *ray, float num[2])
 {
 	float		max_angle;
-	int			rays;
-	int			j;
-	int			i;
+	int			i[3];
 	t_color		color;
 	float		color_sum[3];
 
-	color_sum[0] = 0.0f;
-	color_sum[1] = 0.0f;
-	color_sum[2] = 0.0f;
+	ft_bzero(color_sum, 3 * sizeof(float));
 	max_angle = ft_torad(num[0] * 45.0f);
-	rays = ft_limit(1, (int)(50.0f * sinf(ft_torad(45.0f))),
+	i[2] = ft_limit(1, (int)(50.0f * sinf(ft_torad(45.0f))),
 		(int)(sinf(max_angle) * 50.0f));
 	if (ft_3_vector_cos(ray->d, ray->coll->norm) < 0)
 		ray->coll->norm = ft_3_vector_invert(ray->coll->norm);
 	ray->d = ft_change_blur_vec(ray->coll->norm, ray->d, max_angle);
-	i = -1;
-	while (++i < rays)
+	i[0] = -1;
+	while (++i[0] < i[2])
 	{
 		ray->d = ft_3_vector_random_cone(ray->d, max_angle);
 		color = ft_throw_ray(parg, ray, (int)(num[1] + 1));
-		j = -1;
-		while (++j < 3)
-			color_sum[j] += (float)(color.argb[j]) / (float)(rays);
+		i[1] = -1;
+		while (++i[1] < 3)
+			color_sum[i[1]] += (float)(color.argb[i[1]]) / (float)(i[2]);
 	}
 	color.argb[0] = (t_byte)(color_sum[0]);
 	color.argb[1] = (t_byte)(color_sum[1]);

@@ -6,7 +6,6 @@ OBJS = $(SRCS:.c=.o)
 
 CC = gcc
 
-
 .PHONY: all clean fclean re
 
 .NOTPARALLEL: all clean fclean re

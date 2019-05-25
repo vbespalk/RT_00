@@ -12,8 +12,8 @@
 
 #include "libpnt.h"
 
-float		ft_3_line_point_dist
-				(t_vector origin, t_vector direct, t_vector point)
+float		ft_3_line_point_dist(
+				t_vector origin, t_vector direct, t_vector point)
 {
 	return (ft_3_vector_len(
 		ft_3_vector_cross(direct, (origin - point))));

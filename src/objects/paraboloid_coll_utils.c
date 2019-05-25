@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   paraboloid_coll_utils.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/25 18:55:04 by domelche          #+#    #+#             */
+/*   Updated: 2019/05/25 18:55:06 by domelche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
@@ -5,7 +16,7 @@ float	ft_get_prbld_caps_coll(t_list **objs, t_vector v[4][2], t_object *obj)
 {
 	int			i;
 	float		t;
-	t_vector 	hit;
+	t_vector	hit;
 	t_prbld		*par;
 
 	i = 0;
@@ -30,10 +41,10 @@ float	ft_get_prbld_caps_coll(t_list **objs, t_vector v[4][2], t_object *obj)
 }
 
 double	ft_get_prbld_cides_coll(
-	t_list **objs, t_vector v[4][2], double *t, t_object *obj)
+			t_list **objs, t_vector v[4][2], double *t, t_object *obj)
 {
 	int			i[2];
-	t_vector 	hit[4];
+	t_vector	hit[4];
 	t_prbld		*par;
 
 	par = (t_prbld *)(obj->fig);

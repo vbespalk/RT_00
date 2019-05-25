@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_vector		ft_3_tounitvector(t_vector vec)
+t_vector	ft_3_tounitvector(t_vector vec)
 {
 	float	len;
 

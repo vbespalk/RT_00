@@ -41,7 +41,6 @@ void		ft_gui(t_env *e, uint32_t id)
 {
 	SDL_Rect	gui_container;
 	SDL_Rect	tmp;
-	float		k;
 
 	tmp = (SDL_Rect){
 		e->sdl->scr_wid - GUI_WIDTH, GUI_HEIGHT, GUI_WIDTH,

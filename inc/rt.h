@@ -110,6 +110,8 @@
 # define TRANS_F		150.0f
 # define SCALE_F		0.1f
 # define SCANG_F		0.05f
+# define MIN_R			0.00005f
+# define MAX_R			FLT_MAX
 # define BOX_FACES		6
 # define EXP_COLOR		0
 # define EXP_TEXTR		1
@@ -449,12 +451,13 @@ typedef struct	s_sphere
 
 typedef struct	s_cone
 {
-	float			r[2];
-	float			tan;
-	float			sq_tan;
 	float			minh;
 	float			maxh;
+	float			tan;
+	float			sq_tan;
+	float			r[2];
 	float			texh;
+
 }				t_cone;
 
 typedef struct	s_cylinder

@@ -865,8 +865,15 @@ float			ft_collide_cone
 int				ft_is_inside_cone(t_object *o, t_vector upnt);
 t_vector		ft_get_norm_cone(void *fig,
 			t_matrix *inv_m, t_vector coll);
-void			ft_get_coll_pnts
-			(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
+
+/*
+**	cone_coll_utils.c
+*/
+
+float			ft_get_cone_cides_coll(
+					t_list **objs, t_vector v[4][2], float t[2], t_object *obj);
+float			ft_get_cone_caps_coll(
+					t_list **objs, t_vector v[4][2], t_object *obj);
 
 /*
 ** CYLINDER

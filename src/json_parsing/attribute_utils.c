@@ -41,39 +41,46 @@ void			ft_parse_json_object(char **content, char **data,
 		ft_parse_warning_datatype(content[0], *data, datatype);
 }
 
-static void		ft_parse_array(char **content, char **data, t_list **list,
+static int		ft_check_str(char **data, int *i, int *is_in_str)
+{
+	if ((*data)[*i] == '\"' && (*data)[*i - 1] != '\\')
+		*is_in_str = !*is_in_str;
+	if (*is_in_str)
+	{
+		++*i;
+		return (0);
+	}
+	return (1);
+}
+
+static void		ft_parse_array(
+					char **content, char **data, t_list **list,
 					void (*ft_parse)(char **, t_list **, Uint32))
 {
-	int		scope;
-	int		i;
+	int		i[2];
 	int		is_in_str;
 	Uint32	id;
 	char	*(new_content[2]);
 
-	scope = 0;
-	i = 0;
+	i[1] = 0;
+	i[0] = 0;
 	is_in_str = 0;
 	id = 0;
-	while (scope != 0 || (*data)[i] != ']' || is_in_str)
+	while (i[1] != 0 || (*data)[i[0]] != ']' || is_in_str)
 	{
-		if ((*data)[i] == '\"' && (*data)[i - 1] != '\\')
-			is_in_str = !is_in_str;
-		if (is_in_str)
-		{
-			++i;
+		if (!ft_check_str(data, &i[0], &is_in_str))
 			continue ;
-		}
-		if ((*data)[i] == '{')
+		if ((*data)[i[0]] == '{')
 		{
 			new_content[0] = content[0];
-			new_content[1] = &((*data)[i]);
-			if (scope == 0)
+			new_content[1] = &((*data)[i[0]]);
+			if (i[1] == 0)
 				ft_parse(new_content, list, id++);
-			++scope;
+			++i[1];
 		}
-		else if ((*data)[i] == '}')
-			--scope;
-		++i;
+		else if ((*data)[i[0]] == '}')
+			--i[1];
+		++i[0];
 	}
 }
 

@@ -49,7 +49,7 @@ float		ft_collide_plane(
 		&& (coll->inside_type = ft_inside_type(objs, coll->coll_pnt)) == IT_NEG)
 		return (FLT_MAX);
 	coll->ucoll_pnt = od[0] + ft_3_vector_scale(od[1], t);
-	if (!(pln->len_wh[0] == 0 || pln->len_wh[1] == 0) &&
+	if (!(pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN) &&
 		!ft_inside_quad(pln, coll->ucoll_pnt))
 		return (FLT_MAX);
 	coll->norm = obj->ft_get_norm(obj->fig, &(obj->inverse), coll->ucoll_pnt);

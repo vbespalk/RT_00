@@ -20,6 +20,7 @@ int		on_resize(Sint32 w, Sint32 h, t_env *e)
 	e->sdl->rt_wid = e->sdl->scr_wid - GUI_WIDTH;
 	e->sdl->scr_hei = h;
 	e->sdl->rt_cont = (SDL_Rect){0, 0, e->sdl->rt_wid, e->sdl->scr_hei};
+	ft_memdel((void**)&e->sdl->format);
 	get_format_data(e->sdl);
 	cleanup_sdl_texture(&e->sdl->screen);
 	e->sdl->screen = SDL_CreateTexture(e->sdl->renderer, SDL_PIXELFORMAT_RGBA32,

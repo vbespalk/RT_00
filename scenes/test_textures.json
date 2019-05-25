@@ -3,9 +3,7 @@
 
     "//": "universe",
       "skybox": {
-      "min": { "x": -100000, "y": -100000, "z": -100000},
-      "max": { "x": 100000, "y": 100000, "z": 100000},
-      "negz": "./texture/skybox/milkyway/dark/negz.jpg", 
+      "negz": "./texture/skybox/milkyway/dark/negz.jpg",
       "negy": "./texture/skybox/milkyway/dark/negy.jpg", 
       "negx":"./texture/skybox/milkyway/dark/negx.jpg", 
       "posz": "./texture/skybox/milkyway/dark/posz.jpg", 
@@ -13,7 +11,7 @@
       "posx": "./texture/skybox/milkyway/dark/posx.jpg"
   },
     "camera": {
-        "origin": { "x": -1000, "y": 0 }
+        "origin": { "x": -4000, "y": 0 }
     },
     "lights": [
         {
@@ -38,7 +36,7 @@
             "texture": "./texture/solar/sun.jpg",
 
             "diff": 1,
-            "ambnt": 0.1
+            "ambnt": 1
         },
         {
             "//": "earth",
@@ -59,7 +57,7 @@
 
             "name": "sphere",
             "translate": {"x": -3500, "y": 50, "z": 100 },
-            "radius": 64,
+            "radius": 44,
 
             "//": "light_grey",
             "color": "0xbbbbbb",
@@ -92,6 +90,20 @@
             "//": "red",
             "color": "0xff0000",
             "texture": "./texture/solar/mars.jpg",
+
+            "diff": 1,
+            "ambnt": 0.1
+        },
+        {
+            "//": "jupiter",
+
+            "name": "sphere",
+            "translate": {"x": 1200, "y": -1800, "z": 2600 },
+            "radius": 720,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/jupiter.jpg",
 
             "diff": 1,
             "ambnt": 0.1

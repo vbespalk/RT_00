@@ -75,7 +75,9 @@ int	ft_scale_cylinder(Uint32 key, t_object *o, t_matrix *tr_m,
 		scale = 1.f + SCALE_F;
 	else
 		scale = 1.f - SCALE_F;
-	clnd->r = clnd->r * scale > 900000 ? clnd->r : clnd->r * scale;
+	if (!IN_RANGE(clnd->r * scale, MIN_R, MAX_R))
+		return (0);
+	clnd->r *= scale;
 	if (clnd->maxh != FLT_MAX)
 		clnd->maxh = clnd->maxh / scale;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, clnd->r);
@@ -95,10 +97,9 @@ int	ft_scale_hei_cylinder(Uint32 key, t_object *o, t_matrix *tr_m,
 	if (!o || ((t_cylinder *)o->fig)->maxh == FLT_MAX)
 		return (0);
 	clnd = (t_cylinder *)o->fig;
-	if (key == SDLK_r)
-		scale = 1 + SCALE_F;
-	else
-		scale = 1 - SCALE_F;
+	scale = key == SDLK_r ? 1 + SCALE_F : 1 - SCALE_F;
+	if (!IN_RANGE(clnd->maxh * scale, MIN_R, MAX_R))
+		return (0);
 	clnd->maxh = clnd->maxh * scale;
 	clnd->ratio = clnd->maxh / (clnd->maxh + 2.f);
 	return (1);

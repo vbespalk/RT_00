@@ -74,7 +74,8 @@ int		ft_translate_plane(Uint32 key, t_object *o, t_matrix *tr_m,
 		o->translate[0] += TRANS_F;
 	if (key == SDLK_q)
 		o->translate[0] -= TRANS_F;
-	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);
+	ft_3_transform_mat(tr_m, o->translate, o->rotate,
+			(pln->len_wh[0] == FLT_MIN ? FLT_MIN : pln->len_wh[0]));
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate,
 			(pln->len_wh[0] == FLT_MIN ? FLT_MIN : 1.0f / pln->len_wh[0]));
 	return (1);
@@ -118,6 +119,9 @@ int		ft_scale_plane(Uint32 key, t_object *o, t_matrix *tr_m,
 	if (pln->len_wh[0] == FLT_MIN || pln->len_wh[1] == FLT_MIN)
 		return (0);
 	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
+	if (!IN_RANGE(pln->len_wh[0] * scale, MIN_R, MAX_R) ||
+			!IN_RANGE(pln->len_wh[1] * scale, MIN_R, MAX_R))
+		return (0);
 	pln->len_wh[0] *= scale;
 	pln->len_wh[1] *= scale;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, pln->len_wh[0]);

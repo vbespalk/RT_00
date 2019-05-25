@@ -102,7 +102,7 @@ void		ft_parse_object(char **content, t_list **lst, Uint32 id)
 	if (!ft_parse_figure)
 		return ;
 	o = ft_objectnew(id);
-	o->react_neg = true;
+	o->react_neg = false;
 	o->color.val = UINT32_MAX;
 	o->noise = NULL;
 	o->checker = NULL;

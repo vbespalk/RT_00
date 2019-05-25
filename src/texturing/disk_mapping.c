@@ -31,7 +31,7 @@ Uint32		ft_map_disk(t_object *o, void *tex, t_vector hit)
 	xy[0] = (int)((t->w - 1) * phi / 2.0f * (float)M_1_PI);
 	xy[1] = (int)((t->h - 1) * CLAMP(sqrtf(hit[0] * hit[0] +
 			hit[2] * hit[2]), 0, 1));
-	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 					+ xy[0], sizeof(Uint32));

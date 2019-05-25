@@ -104,6 +104,9 @@ int		ft_scale_torus(Uint32 key, t_object *o, t_matrix *tr_m,
 	(void)inv_m;
 	trs = (t_torus *)o->fig;
 	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
+	if (!IN_RANGE(trs->r_inner * scale, MIN_R, MAX_R) ||
+			!IN_RANGE(trs->r_outer * scale, MIN_R, MAX_R))
+		return (0);
 	trs->r_inner = trs->r_inner * scale;
 	trs->r_outer = trs->r_outer * scale;
 	trs->r_inner2 = trs->r_inner * trs->r_inner;

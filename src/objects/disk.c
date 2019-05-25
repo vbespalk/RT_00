@@ -101,12 +101,11 @@ int		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m,
 	if (!o)
 		return (0);
 	dsk = (t_disk *)o->fig;
-	if (key == SDLK_z || key == SDLK_r)
-		scale = 1 + SCALE_F;
-	else
-		scale = 1 - SCALE_F;
-	dsk->in_r = dsk->in_r == FLT_MIN ? FLT_MIN : dsk->in_r * scale;
+	scale = key == SDLK_z || key == SDLK_r ? 1 + SCALE_F : 1 - SCALE_F;
+	if (!(dsk->out_r != FLT_MAX && IN_RANGE(dsk->out_r * scale, MIN_R, MAX_R)))
+		return (0);
 	dsk->out_r = dsk->out_r == FLT_MAX ? FLT_MAX : dsk->out_r * scale;
+	dsk->in_r = dsk->in_r == FLT_MIN ? FLT_MIN : dsk->in_r * scale;
 	dsk->sq_in_r = dsk->in_r * dsk->in_r;
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);

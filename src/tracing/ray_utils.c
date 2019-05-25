@@ -62,7 +62,7 @@ t_color			ft_sum_colors(t_coll *coll, t_color color_s, t_color color_t)
 	return (res);
 }
 
-t_color			ft_blind(t_scene *scn, t_color color, t_vector o, t_vector d)
+t_color			ft_blind(t_env *e, t_color color, t_ray *ray)
 {
 	float 		k;
 	float 		cos;
@@ -70,16 +70,18 @@ t_color			ft_blind(t_scene *scn, t_color color, t_vector o, t_vector d)
 	t_light		*l;
 	t_vector	l_dir;
 
-	node = scn->lights;
+	if (e->pix_obj[ray->pix])
+		return (color);
+	node = e->scn->lights;
 	while (node)
 	{
 		l = (t_light *)(node->content);
 		l_dir = (l->type == L_POINT)
-			? ft_3_unitvectornew(o, l->origin)
+			? ft_3_unitvectornew(ray->o, l->origin)
 			: ft_3_vector_scale(l->direct, -1.0f);
-		if ((cos = ft_3_vector_cos(d, l_dir)) > 0.9f)
+		if ((cos = ft_3_vector_cos(ray->d, l_dir)) > 0.95f)
 		{
-			k = (float)(pow(cos - 0.9f, 2) * 100.0f);
+			k = (float)(pow(cos - 0.95f, 2) * 400.0f) * l->bright;
 			color = ft_add_colors(color, ft_scale_color(l->color, k));
 		}
 		node = node->next;

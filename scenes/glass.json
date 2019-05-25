@@ -3,7 +3,14 @@
 
     "//": "sky blue color",
     "bg_color": "0x87cefa",
-
+    "skybox": {
+        "negz": "./texture/skybox/yokohama/negz.jpg",
+        "negy": "./texture/skybox/yokohama/negy.jpg",
+        "negx":"./texture/skybox/yokohama/negx.jpg",
+        "posz": "./texture/skybox/yokohama/posz.jpg",
+        "posy": "./texture/skybox/yokohama/posy.jpg",
+        "posx": "./texture/skybox/yokohama/posx.jpg"
+    },
     "camera": {
         "origin": { "x": -500, "y": 0 }
     },
@@ -16,10 +23,10 @@
     "objects": [
         {
             "name": "cylinder",
-            "translate": { "y": -65 },
+            "translate": {"x": 10,  "y": -90, "z": 60 },
             "rotate":{"z": 15},
-            "radius": 50,
-            "height": 150,
+            "radius": 45,
+            "height": 100,
             "color": "0x111111",
             "diff": 0.2,
             "spclr": 0.5,
@@ -31,19 +38,19 @@
         {
             "name": "plane",
             "translate": { "x": 0, "y": -140, "z": 0 },
-            "rotate": {"z": 15},
+            "rotate": {"z": 5},
             "width": 320,
-            "height": 260,
+            "height": 160,
             "color": "0xff00ff",
-            "checker": {"color1": "green_marble", "color2": "lattice", "size": 5},
+            "checker": {"color1": "green_marble", "color2": "gray_marble", "size": 10},
             "spclr": 0,
             "phong": 1
         },
         {
             "name": "cylinder",
-            "translate": { "y": 0 },
+            "translate": { "y": -20, "z": 60 },
             "rotate":{"z": 30, "y": 15},
-            "radius": 5,
+            "radius": 4,
             "height": 200,
             "spclr": 1,
             "color": "0x00ffff",
@@ -51,9 +58,9 @@
         },
                 {
             "name": "cylinder",
-            "translate": { "y": -67 },
+            "translate": { "y": -60, "z": 60 },
             "rotate":{"z": 15},
-            "radius": 60,
+            "radius": 50,
             "height": 155,
             "color": "0x111111",
             "diff": 0.2,

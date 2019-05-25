@@ -87,7 +87,7 @@ float		ft_collide_torus(
 			t = res[i[0]];
 		}
 	}
-	t < FLT_MAX ? ft_choose_object(objs, obj, coll) : 1;
+	(t < FLT_MAX) ? ft_choose_object(objs, obj, coll) : 1;
 	return ((float)t);
 }
 

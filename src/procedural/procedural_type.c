@@ -42,7 +42,6 @@ static void	ft_init_sandstn(t_procedural *tex, char *ramp)
 
 void		ft_null_lattice(t_procedural *tex)
 {
-	printf("LATTICE\n");
 	tex->ramp = NULL;
 	tex->octaves = 5;
 	tex->gain = 0.5f;
@@ -72,7 +71,8 @@ void		ft_init_type(t_procedural *tex, const char *name)
 		ft_null_lattice(tex);
 	else
 	{
-		printf("WARNING: UNKNOWN TYPE, VALUE SET TO DEFAULT\n");
+		ft_putendl(ON_WARN "ft_init_type. Unknown noise type. "
+				   "Value set to default\n");
 		ft_null_lattice(tex);
 	}
 }

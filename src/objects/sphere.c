@@ -28,8 +28,6 @@ t_sphere	*ft_spherenew(t_object *o)
 	o->ft_procedural = ft_procedural_sph;
 	sph = ft_smemalloc(sizeof(t_sphere), "ft_spherenew");
 	sph->radius = 100.0f;
-	sph->phi = 0.0f;
-	sph->theta = 0.0f;
 	return (sph);
 }
 
@@ -76,13 +74,10 @@ int			ft_translate_sphere(Uint32 key, t_object *o, t_matrix *tr_m,
 int			ft_rotate_sphere(Uint32 key, t_object *o, t_matrix *tr_m,
 													t_matrix *inv_m)
 {
-	t_sphere *sph;
-
 	if (!o)
 		return (0);
 	(void)tr_m;
 	(void)inv_m;
-	sph = (t_sphere *)o->fig;
 	if (key == SDLK_DOWN || key == SDLK_UP)
 		o->rotate[2] += key == SDLK_UP ? ROTAT_F : -ROTAT_F;
 	else if (key == SDLK_LEFT || key == SDLK_RIGHT)
@@ -102,7 +97,7 @@ int			ft_scale_sphere(Uint32 key, t_object *o, t_matrix *tr_m,
 		return (0);
 	sph = (t_sphere *)o->fig;
 	scale = (key == SDLK_z || key == SDLK_r) ? 1.f + SCALE_F : 1.f - SCALE_F;
-	sph->radius *= scale;
+	sph->radius = CLAMP(sph->radius * scale, MIN_R, MAX_R);
 	ft_3_transform_mat(tr_m, o->translate, ft_3_nullpointnew(), sph->radius);
 	ft_3_inv_trans_mat(inv_m, -o->translate, ft_3_nullpointnew(),
 			1.f / sph->radius);

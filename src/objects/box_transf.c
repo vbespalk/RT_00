@@ -63,14 +63,14 @@ int	ft_rotate_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 int	ft_scale_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 {
 	t_box		*bx;
+	float		scale;
 
 	if (!o)
 		return (0);
 	bx = (t_box *)o->fig;
-	if (key == SDLK_z || key == SDLK_r)
-		bx->scale *= (1.f + SCALE_F);
-	else
-		bx->scale *= (1.f - SCALE_F);
+	scale = key == SDLK_z ||
+			key == SDLK_r ?  1.f + SCALE_F : 1.f - SCALE_F;
+	bx->scale = CLAMP(bx->scale * scale, MIN_R, MAX_R);
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, bx->scale);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / bx->scale);
 	return (1);

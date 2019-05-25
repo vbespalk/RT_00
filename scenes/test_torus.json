@@ -2,15 +2,15 @@
     "name": "Test TORUS",
 
     "camera": {
-        "origin": { "x": -4000, "y": 0 }
+        "origin": { "x": -450, "y": 0 }
     },
-      "//skybox": {
-      "negz": "./texture/skybox/thunder/negz.tga",
-      "negy": "./texture/skybox/thunder/negy.tga", 
-      "negx":"./texture/skybox/thunder/negx.tga", 
-      "posz": "./texture/skybox/thunder/posz.tga", 
-      "posy": "./texture/skybox/thunder/posy.tga",
-      "posx": "./texture/skybox/thunder/posx.tga"
+      "skybox": {
+      "negz": "./texture/skybox/bloodvalley/negz.tga",
+      "negy": "./texture/skybox/bloodvalley/negy.tga",
+      "negx": "./texture/skybox/bloodvalley/negx.tga",
+      "posz": "./texture/skybox/bloodvalley/posz.tga",
+      "posy": "./texture/skybox/bloodvalley/posy.tga",
+      "posx": "./texture/skybox/bloodvalley/posx.tga"
   },
     "lights": [
         {
@@ -23,26 +23,22 @@
 
             "name": "torus",
             "translate": { "x": -100 },
-            "//negative": true,
-            "rotate": {"z": 45, "y": 20, "x":  15},
-            "inner_radius": 500,
-            "outer_radius": 1000,
-            "//checker": { "color1": "warm_marble", "color2": "lattice", "size": 2},
-          "texture": "./texture/ring.png",
-          "//texture": "./texture/solar/earth.jpg",
-          "color": "0xffab2f",
-            "spclr": 0,
+            "react_negative": true,
+            "rotate": {"z": 45, "y": 20, "x":  5},
+            "inner_radius": 25,
+            "outer_radius": 50,
+            "texture": "./texture/ring.png",
+            "color": "0xffab2f",
+            "spclr": 0.5,
             "diff": 1,
-            "ambnt": 0.5
+            "ambnt": 0.2
         },
       {
         "name": "sphere",
         "negative": true,
         "translate": { "x": -100, "y": 0, "z": 0 },
-        "rotate": {"z": -45, "y": -20, "x":  -10},
-        "checker": { "color1": "gray_marble", "color2": "lattice", "size": 2},
-
-        "radius": 1100,
+        "rotate": {"z": -45, "y": -20, "x":  0},
+        "radius": 60,
         "color": "0xff0000",
         "texture": "./texture/ring.png",
         "ambnt": 0.2

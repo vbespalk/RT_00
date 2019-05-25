@@ -59,7 +59,7 @@ Uint32			ft_map_clndr(t_object *o, void *tex, t_vector hit)
 	xy[0] = (int)((t->w - 1) * phi * 0.5f * (float)M_1_PI);
 	xy[1] = (int)(((clnd->ratio * t->h - 1)) * (1.0f - ((hit[1] + clnd->maxh)
 			* 0.5f) / clnd->maxh) + t->h * 0.5f * (1.f - clnd->ratio));
-	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 					+ xy[0], sizeof(Uint32));

@@ -35,17 +35,17 @@ int		ft_translate_cam(Uint32 key, t_vector *transl)
 int		ft_rotate_cam(Uint32 key, t_vector *angles)
 {
 	if (key == SDLK_UP)
-		(*angles)[0] += ROTAT_F;
+		(*angles)[2] += ROTAT_F;
 	if (key == SDLK_DOWN)
-		(*angles)[0] -= ROTAT_F;
+		(*angles)[2] -= ROTAT_F;
 	if (key == SDLK_LEFT)
 		(*angles)[1] -= ROTAT_F;
 	if (key == SDLK_RIGHT)
 		(*angles)[1] += ROTAT_F;
 	if (key == SDLK_PAGEUP)
-		(*angles)[2] -= ROTAT_F;
+		(*angles)[0] -= ROTAT_F;
 	if (key == SDLK_PAGEDOWN)
-		(*angles)[2] += ROTAT_F;
+		(*angles)[0] += ROTAT_F;
 	return (1);
 }
 

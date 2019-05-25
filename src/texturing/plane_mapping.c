@@ -30,7 +30,7 @@ Uint32		ft_map_plane(t_object *o, void *tex, t_vector hit)
 			Z_AXIS)) / (pln->ratio * 2);
 	xy[0] = (int)((t->w - 1) * uv[0]);
 	xy[1] = (int)((t->h - 1) * uv[1]);
-	if (!(IN_RANGE(xy[0], 0, t->w) && IN_RANGE(xy[1], 0, t->h)))
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) && IN_RANGE(xy[1], 0, t->h - 1)))
 		return (UINT32_MAX);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w + xy[0],
 			sizeof(Uint32));

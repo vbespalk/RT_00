@@ -88,14 +88,10 @@ void	ft_load_noise_ramp(t_procedural *n, t_list **textures, t_sdl *sdl)
 void	ft_noise_del(t_procedural **noise)
 {
 	if (!noise || !(*noise))
-	{
-		printf("NULL NOISE\n");
 		return ;
-	}
 	if ((*noise)->noise_ptr)
 		ft_memdel((void **)&((*noise)->noise_ptr->value_table));
 	ft_memdel((void **)&(*noise)->noise_ptr);
 	ft_memdel((void **)&(*noise)->ramp_id);
 	ft_memdel((void **)noise);
-	printf("DEL NOISE AT FT_NOISE_DEL\n");
 }

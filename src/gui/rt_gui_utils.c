@@ -53,7 +53,7 @@ uint32_t	color_filter(t_env *e, const uint32_t id)
 uint32_t	translate(t_env *e, const uint32_t id)
 {
 	static const SDL_Keycode	s_buttons_codes[] = {
-		SDLK_d, SDLK_a, SDLK_s, SDLK_w, SDLK_e, SDLK_q,
+		SDLK_a, SDLK_d, SDLK_s, SDLK_w, SDLK_e, SDLK_q,
 	};
 	const int					id_shift = 9;
 
@@ -69,9 +69,9 @@ uint32_t	translate(t_env *e, const uint32_t id)
 uint32_t	rotate(t_env *e, const uint32_t id)
 {
 	static const SDL_Keycode	s_buttons_codes[] = {
-		SDLK_PAGEUP, SDLK_PAGEDOWN,
-		SDLK_RIGHT, SDLK_LEFT,
-		SDLK_UP, SDLK_DOWN,
+		SDLK_DOWN, SDLK_UP,
+		SDLK_LEFT, SDLK_RIGHT,
+		SDLK_PAGEDOWN, SDLK_PAGEUP,
 	};
 	const int					id_shift = 15;
 

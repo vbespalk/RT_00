@@ -106,8 +106,8 @@
 # define IT_POS_RT		1
 # define IT_POS_RF		2
 
-# define ROTAT_F		DEG_TO_RAD(10)
-# define TRANS_F		150.0f
+# define ROTAT_F		DEG_TO_RAD(5)
+# define TRANS_F		10.0f
 # define SCALE_F		0.1f
 # define SCANG_F		0.05f
 # define MIN_R			0.00005f
@@ -151,12 +151,12 @@
 /*
 ** DEFAULT SKYBOX PATH
 */
-# define SKBX_NEGX			"./texture/skybox/bloodvalley/negx.tga"
-# define SKBX_NEGY			"./texture/skybox/bloodvalley/negy.tga"
-# define SKBX_NEGZ			"./texture/skybox/bloodvalley/negz.tga"
-# define SKBX_POSX			"./texture/skybox/bloodvalley/posx.tga"
-# define SKBX_POSY			"./texture/skybox/bloodvalley/posy.tga"
-# define SKBX_POSZ			"./texture/skybox/bloodvalley/posz.tga"
+# define SKBX_NEGX			"./texture/skybox/thunder/negx.tga"
+# define SKBX_NEGY			"./texture/skybox/thunder/negy.tga"
+# define SKBX_NEGZ			"./texture/skybox/thunder/negz.tga"
+# define SKBX_POSX			"./texture/skybox/thunder/posx.tga"
+# define SKBX_POSY			"./texture/skybox/thunder/posy.tga"
+# define SKBX_POSZ			"./texture/skybox/thunder/posz.tga"
 
 static const unsigned char	g_permutation_table[LTABLE_SIZE] =
 {
@@ -445,16 +445,14 @@ typedef struct	s_sphere
 {
 	t_vector		origin;
 	float			radius;
-	float			phi;
-	float			theta;
 }				t_sphere;
 
 typedef struct	s_cone
 {
+	float			tan;
+	float			tan2;
 	float			minh;
 	float			maxh;
-	float			tan;
-	float			sq_tan;
 	float			r[2];
 	float			texh;
 
@@ -868,8 +866,15 @@ float			ft_collide_cone
 int				ft_is_inside_cone(t_object *o, t_vector upnt);
 t_vector		ft_get_norm_cone(void *fig,
 			t_matrix *inv_m, t_vector coll);
-void			ft_get_coll_pnts
-			(t_cone *cone, t_vector (*pnt)[4], int is_cyl);
+
+/*
+**	cone_coll_utils.c
+*/
+
+float			ft_get_cone_cides_coll(
+					t_list **objs, t_vector v[4][2], float t[2], t_object *obj);
+float			ft_get_cone_caps_coll(
+					t_list **objs, t_vector v[4][2], t_object *obj);
 
 /*
 ** CYLINDER
@@ -900,6 +905,18 @@ t_vector		ft_get_norm_cylinder(void *fig,
 			t_matrix *inv_m, t_vector coll);
 
 /*
+**	cylinder_coll_utils.c
+*/
+
+float			ft_get_clnd_closer_pnt(
+					const float *t, const t_vector *hit,
+					t_coll *coll, t_vector *norms);
+float			ft_get_clnd_caps_coll(
+					t_list **objs, t_vector v[4][2], t_object *obj);
+float			ft_get_clnd_cides_coll(
+					t_list **objs, t_vector v[4][2], float *t, t_object *obj);
+
+/*
 ** PARABOLOID
 */
 /*
@@ -925,6 +942,16 @@ float			ft_collide_prbld(t_list **objs, t_object *o,
 int				ft_is_inside_prbld(t_object *o, t_vector pnt);
 t_vector		ft_get_norm_prbld(void *fig,
 			t_matrix *inv_m, t_vector coll);
+
+/*
+**	paraboloid_utils.c
+*/
+
+float			ft_get_prbld_caps_coll(
+					t_list **objs, t_vector v[4][2], t_object *obj);
+double			ft_get_prbld_cides_coll(
+					t_list **objs, t_vector v[4][2],
+					double *t, t_object *obj);
 
 /*
 ** TORUS
@@ -956,37 +983,38 @@ t_vector		ft_get_norm_torus(void *fig,
 **	ray.c
 */
 
-t_color					ft_trace_ray(t_thrarg *parg, int x, int y);
-t_color					ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth);
-t_color					ft_throw_rays(t_thrarg *parg, t_ray *ray, float num[2]);
+t_color			ft_trace_ray(t_thrarg *parg, int x, int y);
+t_color			ft_throw_ray(t_thrarg *parg, t_ray *ray, int depth);
+t_color			ft_throw_rays(t_thrarg *parg, t_ray *ray, float num[2]);
 
 /*
 **	ray_utils.c
 */
 
-void					ft_init_ray(
-							t_ray *ray_prev, t_ray *ray,
-							t_vector *o, t_vector *d);
-t_vector				ft_change_blur_vec(
-							t_vector norm, t_vector vec, float angle);
-t_color					ft_sum_colors(
-							t_coll *coll, t_color color_s, t_color color_t);
+void			ft_init_ray(
+					t_ray *ray_prev, t_ray *ray,
+					t_vector *o, t_vector *d);
+t_vector		ft_change_blur_vec(
+					t_vector norm, t_vector vec, float angle);
+t_color			ft_sum_colors(
+					t_coll *coll, t_color color_s, t_color color_t);
+t_color			ft_blind(t_env *e, t_color color, t_ray *ray);
 
 /*
 **	illumination.c
 */
 
-void				ft_illuminate(t_thrarg *parg, t_coll *coll);
+void			ft_illuminate(t_thrarg *parg, t_coll *coll);
 
 /*
 **	illumination_utils.c
 */
 
-float					ft_get_illumination(
-							t_scene *scn, t_vector o, t_vector d, t_light *l);
-void					ft_affect_illumination(
-							t_coll *coll, t_light *l,
-							t_vector ldir, float bright_coef);
+float			ft_get_illumination(
+					t_scene *scn, t_vector o, t_vector d, t_light *l);
+void			ft_affect_illumination(
+					t_coll *coll, t_light *l,
+					t_vector ldir, float bright_coef);
 
 /*
 **	collision.c
@@ -1185,5 +1213,29 @@ t_color			ft_invert_px(t_color in_col);
 ** FROM MY LIBFT
 */
 void			ft_usage(char *message);
+
+/*
+**	Structures for norminette
+*/
+
+typedef struct	s_clnd_coll
+{
+	t_list		**objs;
+	t_object	*obj;
+	t_vector	pnts[3][2];
+	t_vector	(*v)[2];
+	float		t[2];
+	int			i[2];
+}				t_clnd_coll;
+
+typedef struct	s_cone_coll
+{
+	t_list		**objs;
+	t_object	*obj;
+	t_vector	pnts[3][2];
+	t_vector	(*v)[2];
+	float		*t;
+	int			i[2];
+}				t_cone_coll;
 
 #endif

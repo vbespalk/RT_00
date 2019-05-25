@@ -117,8 +117,7 @@ float			ft_get_clnd_caps_coll(
 		res = ft_check_caps_coll(&cc);
 		if (res == FLT_MAX)
 			continue ;
-		else
-			return (res);
+		return (res);
 	}
 	return (FLT_MAX);
 }

@@ -51,7 +51,7 @@ void		*ft_parse_cone(char **content, t_object *o)
 		cone->tan = (int)cone->tan % 175;
 	cone->tan = cone->tan < 1 ? tanf(DEG_TO_RAD(1)) :
 			tanf(DEG_TO_RAD(cone->tan / 2.0f));
-	cone->sq_tan = cone->tan * cone->tan + 1;
+	cone->tan2 = cone->tan * cone->tan + 1;
 	cone->r[0] = (cone->minh == -FLT_MAX || cone->minh == 0) ?
 				FLT_MIN : fabsf(cone->minh * cone->tan);
 	cone->r[1] = (cone->maxh == FLT_MAX || cone->maxh == 0) ?

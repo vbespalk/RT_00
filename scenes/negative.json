@@ -36,9 +36,9 @@
     },
     {
       "name": "sphere",
-      "negative": false,
+      "negative": true,
       "translate": { "x": 1000, "y": 0, "z": 0 },
-      "radius": 500
+      "radius": 300
     },
     {
       "name": "//sphere",
@@ -75,7 +75,7 @@
       "ambnt": 0.2
     },
     {
-      "name": "cylinder",
+      "name": "//cylinder",
       "negative": true,
       "react_negative": true,
       "color": "0xff0000",
@@ -94,8 +94,8 @@
       "color": "0xffff00"
     },
     {
-      "name": "//cone",
-      "react_negative": false,
+      "name": "cone",
+      "react_negative": true,
       "translate": { "x": 1500, "y": 0, "z": 0 },
       "minh": 700,
       "maxh": 0,

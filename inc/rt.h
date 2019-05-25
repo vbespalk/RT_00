@@ -451,7 +451,7 @@ typedef struct	s_cone
 {
 	float			r[2];
 	float			tan;
-	float			sq_tan;
+	float			tan2;
 	float			minh;
 	float			maxh;
 	float			texh;
@@ -1219,5 +1219,15 @@ typedef struct	s_clnd_coll
 	float		t[2];
 	int			i[2];
 }				t_clnd_coll;
+
+typedef struct	s_cone_coll
+{
+	t_list		**objs;
+	t_object	*obj;
+	t_vector	pnts[3][2];
+	t_vector	(*v)[2];
+	float		*t;
+	int			i[2];
+}				t_cone_coll;
 
 #endif

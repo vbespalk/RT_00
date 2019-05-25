@@ -2,13 +2,13 @@
   "name": "Negative Object",
   "bg_color": "0x808080",
   "camera": {
-    "origin": { "x": -2000 },
+    "origin": { "x": -200 },
     "smooth": "1x"
   },
   "lights": [
     {
       "type": "direct",
-      "direct": { "x": 0, "y": 1, "z": 0 }
+      "direct": { "x": 1, "y": 0, "z": 0 }
     }
   ],
   "objects": [
@@ -31,10 +31,10 @@
       "phong": 0
     },
     {
-      "name": "//sphere",
+      "name": "sphere",
       "negative": true,
-      "translate": { "x": 1500, "y": 0, "z": 100 },
-      "radius": 200
+      "translate": { "x": 0, "y": 0, "z": 0 },
+      "radius": 300
     },
     {
       "name": "//sphere",
@@ -157,13 +157,13 @@
       "color": "0xff0000"
     },
     {
-      "name": "//paraboloid",
+      "name": "paraboloid",
       "negative": false,
       "react_negative": true,
-      "translate": { "x": 2000, "y": -200, "z": 0 },
-      "//rotate": { "x": -20, "y": 20, "z": 200 },
+      "translate": { "x": -100, "y": 0, "z": 0 },
+      "rotate": { "x": 0, "y": 0, "z": -90 },
       "radius": 500,
-      "height": 1000,
+      "height": 300,
       "ambnt": 0.2,
       "color": "0xffff00"
     },

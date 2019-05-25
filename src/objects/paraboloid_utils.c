@@ -16,17 +16,14 @@ static float	get_closer_pnt(
 					const double t[2], const t_vector hit[2],
 					t_coll *coll, t_object *obj)
 {
-//	coll->o = obj;
 	if ((t[0] < t[1]) && t[0] != FLT_MAX)
 	{
-		//printf("cides\n");
 		coll->ucoll_pnt = hit[0];
 		coll->norm = obj->ft_get_norm(obj->fig, &obj->inverse, hit[0]);
 		return ((float)t[0]);
 	}
 	if (t[1] != FLT_MAX)
 	{
-		//printf("caps\n");
 		coll->ucoll_pnt = hit[1];
 		coll->norm = ft_get_norm_plane(obj->fig, &(obj->inverse), hit[1]);
 		return ((float)t[1]);
@@ -79,7 +76,7 @@ static double	get_cides_coll(
 	while (++i[0] < 2)
 	{
 		hit[i[0]] = od[0] + ft_3_vector_scale(od[1], (float)t[i[0]]);
-		if (t[i[0]] >= 0 && IN_RANGE(hit[0][1], 0, par->maxh))
+		if (t[i[0]] >= 0 && IN_RANGE(hit[i[0]][1], 0, par->maxh))
 		{
 			uhit[i[0]] = uod[0] + ft_3_vector_scale(uod[1], (float)t[i[0]]);
 			*norm = obj->ft_get_norm(obj->fig, &obj->inverse, hit[i[0]]);
@@ -138,26 +135,9 @@ int			ft_is_inside_prbld(t_object *o, t_vector point)
 	par = (t_prbld *)o->fig;
 	point = ft_3_pnt_transform(&(o->inverse), point);
 	if (!IN_RANGE(point[1], -SHIFT, par->maxh) && par->maxh != FLT_MAX)
-	{
-//		printf("OUTSIDE HEI\n");
 		return (0);
-	}
-//	r = point - Y_AXIS;
 	r = (t_vector){point[0], point[1] - 1, point[2]};
-//	if (ft_3_vector_dot(r, r) <= (point[1] + 1) * (point[1] + 1))
-//		printf("INSIDE\n");
-//	else
-//		printf("OUTSIDE\n");
 	return (ft_3_vector_dot(r, r) <= (point[1] + 1) * (point[1] + 1) ? 1 : 0);
-}
-
-int				ft_is_reachable_prbld(
-					void *fig, t_vector origin, t_vector direct)
-{
-	(void)origin;
-	(void)direct;
-	(void)fig;
-	return (1);
 }
 
 t_vector	ft_get_norm_prbld(void *fig, t_matrix *inv_m, t_vector coll)

@@ -1,53 +1,83 @@
 {
   "name": "TEST",
-  "bg_color": "0xffffff",
-        "skybox": {
-      "min": { "x": -1000000000, "y": -1000000000, "z": -1000000000},
-      "max": { "x": 1000000000, "y": 1000000000, "z": 1000000000},
-      "negz": "./texture/skybox/thunder/negz.tga", 
-      "negy": "./texture/skybox/thunder/negy.tga", 
-      "negx":"./texture/skybox/thunder/negx.tga", 
-      "posz": "./texture/skybox/thunder/posz.tga", 
-      "posy": "./texture/skybox/thunder/posy.tga",
-      "posx": "./texture/skybox/thunder/posx.tga"
-  },
+  "bg_color": "0xaaaaad",
   "camera": {
-    "origin": { "x": 0 },
+    "origin": { "x": -1100, "y": 150 },
     "rotate": {"z": 0} 
   },
   "lights": [
     {
       "type": "direct",
-      "direct": { "x": 1, "y": 0, "z": 0 }
+      "direct": { "x": 1, "y": -1, "z": 0 }
     }
   ],
   "objects": [
     {
       "name": "paraboloid",
-      "translate": { "x": 3000, "y": -150 },
-      "rotate": {"x": 0, "z": 90},
+      "translate": { "y": 25, "z": 0},
+      "rotate": {"z": 5},
       "color": "0x00aab0",
+      "react_negative": true,
       "procedural": { "name": "warm_marble"},
       "checker": { "color1": "gray_marble", "color2": "blue_marble", "size": 2},
       "diffuse": 1,
-      "radius": 3000,
-      "texture": "./texture/solar/earth.jpg",
-    "height": 100,
-
-      "phong": 1
+      "radius": 300,
+      "height": 100,
+      "phong": 1,
+      "ambnt": 0.3
+    },
+    {
+      "name": "paraboloid",
+      "translate": { "y": 25, "z": 0},
+      "rotate": {"z": 5},
+      "negative": true,
+      "radius": 200,
+      "height": 105
+    },
+    {
+      "name": "paraboloid",
+      "translate": { "y": 25, "z": 0},
+      "rotate": {"z": 5},
+      "color": "0x0090ff",
+      "diffuse": 0.2,
+      "radius": 200,
+      "height": 90,
+      "spclr": 1,
+      "transparent": 1,
+      "refract": 1.5,
+      "phong": 1,
+      "ambnt": 0.3
+    },
+    {
+      "name": "cylinder",
+      "translate": { "x": 0, "y": -75, "z": 0 },
+      "rotate": {"z": 5},
+      "radius": 300,
+      "height": 50,
+      "color": "0xFF0000",
+      "procedural": { "name": "warm_marble"},
+      "spclr": 0,
+      "phong": 0,
+      "ambnt": 0.2
     },
     {
       "name": "sphere",
-      "//negative": true,
-      "translate": { "x": 3000, "y": 0, "z": 0 },
-      "rotate": {"z": -45, "y": -20, "x":  -10},
-      "checker": { "color1": "gray_marble", "color2": "lattice", "size": 2},
-
-      "radius": 1100,
+      "translate": { "x": 0, "y": 0, "z": 0 },
+      "procedural": { "name": "warm_marble"},
+      "radius": 50,
       "color": "0xff0000",
-      "//texture": "./texture/ring.png",
       "ambnt": 0.2
+    },
+    {
+      "name": "plane",
+      "translate": { "x": 0, "y": -100, "z": 0 },
+      "rotate": {"z": 5},
+      "width": 3200,
+      "height": 1600,
+      "color": "0xff00ff",
+      "checker": {"color1": "blue_marble", "color2": "gray_marble", "size": 20},
+      "spclr": 0,
+      "phong": 1
     }
-
   ]
 } 

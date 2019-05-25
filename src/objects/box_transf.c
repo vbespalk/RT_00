@@ -69,7 +69,7 @@ int	ft_scale_box(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
 		return (0);
 	bx = (t_box *)o->fig;
 	scale = key == SDLK_z ||
-			key == SDLK_r ?  1.f + SCALE_F : 1.f - SCALE_F;
+			key == SDLK_r ? 1.f + SCALE_F : 1.f - SCALE_F;
 	bx->scale = CLAMP(bx->scale * scale, MIN_R, MAX_R);
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, bx->scale);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, 1.f / bx->scale);

@@ -72,7 +72,7 @@ void		ft_init_type(t_procedural *tex, const char *name)
 	else
 	{
 		ft_putendl(ON_WARN "ft_init_type. Unknown noise type. "
-				   "Value set to default\n");
+			"Value set to default\n");
 		ft_null_lattice(tex);
 	}
 }

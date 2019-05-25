@@ -73,7 +73,7 @@ float			ft_collide_cone(
 	if (obj->is_neg)
 		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 	coll->tex_o = obj;
-	ft_choose_object(objs, obj, coll);
+	t < FLT_MAX ? ft_choose_object(objs, obj, coll) : 1;
 	return (t);
 }
 

@@ -37,8 +37,8 @@ float		ft_collide_cylinder(
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
 	if (obj->is_neg)
 		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
-	ft_choose_object(objs, obj, coll);
 	coll->tex_o = obj;
+	t < FLT_MAX ? ft_choose_object(objs, obj, coll) : 1;
 	return (t);
 }
 

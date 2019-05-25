@@ -44,9 +44,11 @@ float			ft_collide_prbld(
 	i = (res[0] < res[1]) ? 0 : 1;
 	coll->ucoll_pnt = v[2][i];
 	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[i]);
+	if (obj->is_neg)
+		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
 	coll->norm = v[3][i];
 	coll->tex_o = obj;
-	ft_choose_object(objs, obj, coll);
+	res[i] < FLT_MAX ? ft_choose_object(objs, obj, coll) : 1;
 	return ((float)res[i]);
 }
 

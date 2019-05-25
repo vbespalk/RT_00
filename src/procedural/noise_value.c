@@ -94,7 +94,7 @@ Uint32	ft_ramp_noise_col(t_procedural *tex, t_vector hit)
 	u = y + tex->pertubation * noise_val;
 	u = 0.5f * (1.0f + sinf(u));
 	x = (int)(u * (tex->ramp->w - 1));
-	if (!(IN_RANGE(x, 0, tex->ramp->w-1)))
+	if (!(IN_RANGE(x, 0, tex->ramp->w - 1)))
 		return (UINT32_MAX);
 	ft_memcpy(&col, (Uint32 *)tex->ramp->pixels + x, sizeof(Uint32));
 	return (col);

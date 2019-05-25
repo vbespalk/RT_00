@@ -37,8 +37,8 @@ float			ft_collide_prbld(
 		res) || (res[0] <= 0 && res[1] <= 0))
 		&& (IS_ZERO(v[0][1][1]) || ((t_prbld *)obj->fig)->maxh == FLT_MAX))
 		return (FLT_MAX);
-	res[0] = get_cides_coll(objs, v, res, obj);
-	res[1] = get_caps_coll(objs, v, obj);
+	res[0] = ft_get_prbld_cides_coll(objs, v, res, obj);
+	res[1] = ft_get_prbld_caps_coll(objs, v, obj);
 	if (res[0] == FLT_MAX && res[1] == FLT_MAX)
 		return (FLT_MAX);
 	i = (res[0] < res[1]) ? 0 : 1;

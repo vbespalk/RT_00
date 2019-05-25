@@ -149,7 +149,7 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	d = d + ft_3_vector_scale(parg->e->scn->cam->vs_y_step_vec, y);
 	d = ft_3_unitvectornew(parg->e->scn->cam->origin, d);
 	ray.d = d;
-	res = ft_throw_ray(parg, &ray,  0);
-//	res = ft_blind(parg->e->scn, res, o, d);
+	res = ft_throw_ray(parg, &ray, 0);
+//	res = ft_blind(parg->e, res, &ray);
 	return (res);
 }

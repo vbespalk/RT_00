@@ -897,6 +897,18 @@ t_vector		ft_get_norm_cylinder(void *fig,
 			t_matrix *inv_m, t_vector coll);
 
 /*
+**	cylinder_coll_utils.c
+*/
+
+float			ft_get_clnd_closer_pnt(
+					const float *t, const t_vector *hit,
+					t_coll *coll, t_vector *norms);
+float			ft_get_clnd_caps_coll(
+					t_list **objs, t_vector v[4][2], t_object *obj);
+float			ft_get_clnd_cides_coll(
+					t_list **objs, t_vector v[4][2], float *t, t_object *obj);
+
+/*
 ** PARABOLOID
 */
 /*
@@ -927,11 +939,11 @@ t_vector		ft_get_norm_prbld(void *fig,
 **	paraboloid_utils.c
 */
 
-float			get_caps_coll(
-					t_list **objs, t_vector vecs[4][2], t_object *obj);
-double			get_cides_coll(
+float			ft_get_prbld_caps_coll(
+					t_list **objs, t_vector v[4][2], t_object *obj);
+double			ft_get_prbld_cides_coll(
 					t_list **objs, t_vector v[4][2],
-					double t[2], t_object *obj);
+					double *t, t_object *obj);
 
 /*
 ** TORUS
@@ -978,6 +990,7 @@ t_vector				ft_change_blur_vec(
 							t_vector norm, t_vector vec, float angle);
 t_color					ft_sum_colors(
 							t_coll *coll, t_color color_s, t_color color_t);
+t_color					ft_blind(t_env *e, t_color color, t_ray *ray);
 
 /*
 **	illumination.c
@@ -1192,5 +1205,19 @@ t_color			ft_invert_px(t_color in_col);
 ** FROM MY LIBFT
 */
 void			ft_usage(char *message);
+
+/*
+**	Structures for norminette
+*/
+
+typedef struct	s_clnd_coll
+{
+	t_list		**objs;
+	t_object	*obj;
+	t_vector	pnts[3][2];
+	t_vector	(*v)[2];
+	float		t[2];
+	int			i[2];
+}				t_clnd_coll;
 
 #endif

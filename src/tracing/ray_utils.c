@@ -22,7 +22,7 @@ void			ft_init_ray(
 	ray->coll = ray_prev->coll;
 	ray->stack_i = ray_prev->stack_i;
 	i = -1;
-	while (++i < ray->stack_size)
+	while (++i < (int)ray->stack_size)
 		ray->stack[i] = ray_prev->stack[i];
 }
 
@@ -64,8 +64,8 @@ t_color			ft_sum_colors(t_coll *coll, t_color color_s, t_color color_t)
 
 t_color			ft_blind(t_env *e, t_color color, t_ray *ray)
 {
-	float 		k;
-	float 		cos;
+	float		k;
+	float		cos;
 	t_list		*node;
 	t_light		*l;
 	t_vector	l_dir;

@@ -18,6 +18,7 @@ static int	check_intersection(
 {
 	int i;
 
+	i = 0;
 	if (obj->is_neg)
 		cucn[0] += ft_3_vector_scale(cucn[2], SHIFT);
 	if (obj->react_neg || obj->is_neg)

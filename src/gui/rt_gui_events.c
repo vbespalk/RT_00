@@ -20,8 +20,8 @@ uint32_t		mouse_on_btn(const int32_t x, const int32_t y, t_env *e)
 	i = -1;
 	while (++i < BUTTONS_AMOUNT)
 	{
-		if (x > w - g_btn_containers[i].x &&
-			x < w - g_btn_containers[i].x + g_btn_containers[i].w &&
+		if ((uint32_t)x > w - g_btn_containers[i].x &&
+			(uint32_t)x < w - g_btn_containers[i].x + g_btn_containers[i].w &&
 			y > g_btn_containers[i].y &&
 			y < g_btn_containers[i].y + g_btn_containers[i].h)
 			return (i + 1);

@@ -69,4 +69,3 @@ t_vector		ft_get_norm_prbld(void *fig, t_matrix *inv_m, t_vector coll)
 	return (ft_3_tounitvector(ft_3_norm_transform(inv_m,
 		ft_3_tounitvector(coll - ((t_vector){0, coll[1] + 2, 0})))));
 }
-

@@ -39,36 +39,36 @@ static void	ft_init_collision(t_coll *coll, t_list **objs, t_vector *od)
 
 static void	ft_refract(t_ray *ray)
 {
-    float		refr[2];
-    float		cos[2];
+	float		refr[2];
+	float		cos[2];
 
-    ft_get_refrs(ray, &refr);
-    ray->coll->trans_vec =
-            ft_3_vector_refract(ray->coll->norm, ray->d, refr[0], refr[1]);
+	ft_get_refrs(ray, &refr);
+	ray->coll->trans_vec =
+		ft_3_vector_refract(ray->coll->norm, ray->d, refr[0], refr[1]);
 	if (ft_3_isnullpoint(ray->coll->trans_vec))
-    {
-        ray->coll->fresnel = 1.0f;
-        return ;
-    }
-    cos[0] = fabsf(ft_3_vector_cos(ray->d, ray->coll->norm));
-    cos[1] = fabsf(ft_3_vector_cos(ray->coll->trans_vec, ray->coll->norm));
-    if (ray->coll->o->spclr)
-    {
-        ray->coll->fresnel = (powf(
-                (refr[1] * cos[0] - refr[0] * cos[1]) /
-                (refr[1] * cos[0] + refr[0] * cos[1]),
-                2.0f) + powf(
-                (refr[0] * cos[1] - refr[1] * cos[0]) /
-                (refr[0] * cos[1] + refr[1] * cos[0]),
-                2.0f)) / 2.0f;
-    }
+	{
+		ray->coll->fresnel = 1.0f;
+		return ;
+	}
+	cos[0] = fabsf(ft_3_vector_cos(ray->d, ray->coll->norm));
+	cos[1] = fabsf(ft_3_vector_cos(ray->coll->trans_vec, ray->coll->norm));
+	if (ray->coll->o->spclr)
+	{
+		ray->coll->fresnel = (powf(
+			(refr[1] * cos[0] - refr[0] * cos[1]) /
+			(refr[1] * cos[0] + refr[0] * cos[1]),
+			2.0f) + powf(
+			(refr[0] * cos[1] - refr[1] * cos[0]) /
+			(refr[0] * cos[1] + refr[1] * cos[0]),
+			2.0f)) / 2.0f;
+	}
 }
 
 t_coll		ft_get_collision(t_thrarg *arg, t_ray *ray)
 {
 	t_coll		coll;
 	t_vector	od[2];
-	t_fun_tab		func;
+	t_fun_tab	func;
 
 	od[0] = ray->o;
 	od[1] = ray->d;

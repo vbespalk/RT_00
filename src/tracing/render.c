@@ -37,7 +37,7 @@ static void		ft_get_vs_params(t_sdl *sdl, t_camera *cam)
 			cam->angles[0], cam->angles[1], cam->angles[2]);
 }
 
-static t_color	ft_get_pixel_color(t_thrarg	*thrarg, int x, int y, int smth)
+static t_color	ft_get_pixel_color(t_thrarg *thrarg, int x, int y, int smth)
 {
 	t_color	color;
 	float	nums[4];
@@ -83,7 +83,7 @@ void			*ft_section_handle(void *arg)
 	int			x;
 	int			y;
 	int			smth;
-    t_color     col;
+	t_color		col;
 	t_thrarg	*thrarg;
 
 	thrarg = (t_thrarg *)arg;
@@ -100,7 +100,7 @@ void			*ft_section_handle(void *arg)
 				ft_get_pixel_color(thrarg, x, y, smth), thrarg->e->color_mode);
 			img_pixel_put(thrarg->e->sdl, x, y, (unsigned int)SDL_MapRGB(
 				thrarg->e->sdl->format, col.argb[0], col.argb[1], col.argb[2]));
-        }
+		}
 		x += THREADS;
 	}
 	return (NULL);
@@ -110,13 +110,13 @@ void			ft_render(t_env *e)
 {
 	pthread_t	threads[THREADS];
 	t_thrarg	thrargs[THREADS];
-	int			i = 0;
+	int			i;
 
 	ft_get_vs_params(e->sdl, e->scn->cam);
-    ft_get_start_stack(e->scn);
-    ft_update_obj_lst(e->scn->cam, e->scn->objs);
+	ft_get_start_stack(e->scn);
+	ft_update_obj_lst(e->scn->cam, e->scn->objs);
 	i = -1;
-    while (++i < THREADS)
+	while (++i < THREADS)
 	{
 		thrargs[i].i = i;
 		thrargs[i].e = e;

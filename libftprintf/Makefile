@@ -11,15 +11,10 @@
 # **************************************************************************** #
 
 NAME = libftprintf.a
-
 SRCS = $(wildcard src/*.c libft/*.c)
-
 OBJ = $(SRCS:.c=.o)
-
 HEAD = printf.h
-
 CFLAGS = -Wall -Wextra -Werror
-
 CC = gcc
 
 .PHONY: all clean fclean re

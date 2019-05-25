@@ -30,7 +30,6 @@ int				make_screenshot(t_env *e)
 	static time_t		now = 0;
 	char				*str_time;
 	char				*name;
-	char				*tmp;
 
 	if (now == time(0))
 		return (0);

@@ -39,6 +39,8 @@ int		on_lbutton_down(int x, int y, t_env *e)
 
 int		on_rbutton_down(int x, int y, t_env *e)
 {
+	(void)x;
+	(void)y;
 	e->selected = NULL;
 	return (0);
 }

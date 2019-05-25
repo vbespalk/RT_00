@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   illumination_utils.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/25 18:56:09 by domelche          #+#    #+#             */
+/*   Updated: 2019/05/25 18:56:11 by domelche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
@@ -56,7 +67,7 @@ void			ft_affect_illumination(
 					t_coll *coll, t_light *l, t_vector ldir, float bright_coef)
 {
 	float		phong_cos;
-	int 		i;
+	int			i;
 	t_byte		color_part;
 
 	phong_cos = ft_3_vector_cos(coll->spclr_vec, ldir);

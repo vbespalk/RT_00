@@ -29,11 +29,13 @@ void			ft_init_ray(
 t_vector		ft_change_blur_vec(t_vector norm, t_vector vec, float angle)
 {
 	t_vector	proj;
+	float		nv_angle;
 
-	if (acosf(ft_3_vector_cos(norm, vec)) + angle <= M_PI_2)
+	nv_angle = acosf(ft_3_vector_cos(norm, vec));
+	if (nv_angle + angle < M_PI_2 - 1e-3f)
 		return (vec);
 	proj = ft_3_tounitvector(ft_3_vector_project(norm, vec));
-	return (ft_3_vector_turn(proj, norm, (float)M_PI_2 - angle));
+	return (ft_3_vector_turn(proj, norm, (float)M_PI_2 + 1e-3f - angle - nv_angle));
 }
 
 t_color			ft_sum_colors(t_coll *coll, t_color color_s, t_color color_t)

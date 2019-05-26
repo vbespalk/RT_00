@@ -26,30 +26,29 @@ float			ft_collide_prbld(
 {
 	int			i;
 	t_vector	v[4][2];
-	double		res[2];
+	double		r[2];
 
 	ft_init_v(v, obj, untr_od);
-	if ((!ft_solve_sq(
+	if (((r[0] <= 0 && r[1] <= 0) || !ft_solve_sq(
 		ft_3_vector_dot(v[0][1], v[0][1]) - v[0][1][1] * v[0][1][1],
 		2.0f * (ft_3_vector_dot(
 			v[0][1], v[0][0]) - v[0][1][1] * (v[0][0][1] + 2.f)),
-		ft_3_vector_dot(v[0][0], v[0][0]) - v[0][0][1] * (v[0][0][1] + 4.f),
-		res) || (res[0] <= 0 && res[1] <= 0))
+		ft_3_vector_dot(v[0][0], v[0][0]) - v[0][0][1] * (v[0][0][1] + 4.f), r))
 		&& (IS_ZERO(v[0][1][1]) || ((t_prbld *)obj->fig)->maxh == FLT_MAX))
 		return (FLT_MAX);
-	res[0] = ft_get_prbld_cides_coll(objs, v, res, obj);
-	res[1] = ft_get_prbld_caps_coll(objs, v, obj);
-	if (res[0] == FLT_MAX && res[1] == FLT_MAX)
+	r[0] = ft_get_prbld_cides_coll(objs, v, r, obj);
+	r[1] = ft_get_prbld_caps_coll(objs, v, obj);
+	if (r[0] == FLT_MAX && r[1] == FLT_MAX)
 		return (FLT_MAX);
-	i = (res[0] < res[1]) ? 0 : 1;
+	i = (r[0] < r[1]) ? 0 : 1;
 	coll->ucoll_pnt = v[2][i];
-	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)res[i]);
+	coll->coll_pnt = untr_od[0] + ft_3_vector_scale(untr_od[1], (float)r[i]);
+	coll->norm = v[3][i];
 	if (obj->is_neg)
 		coll->coll_pnt += ft_3_vector_scale(coll->norm, SHIFT);
-	coll->norm = v[3][i];
 	coll->tex_o = obj;
-	res[i] < FLT_MAX ? ft_choose_object(objs, obj, coll) : 1;
-	return ((float)res[i]);
+	ft_choose_object(objs, obj, coll);
+	return ((float)r[i]);
 }
 
 int				ft_is_inside_prbld(t_object *o, t_vector point)

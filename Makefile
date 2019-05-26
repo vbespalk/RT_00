@@ -34,11 +34,11 @@ LIBS = libftprintf/libftprintf.a libpnt/libpnt.a JSON-c/libjsonchecker.a\
 
 
 
-## LINUX SDL
-#
-##SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
-##SDL_LNK		= -lSDL2
-##SDL_IMG_LNK = -lSDL2_image
+# LINUX SDL
+
+#SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
+#SDL_LNK		= -lSDL2
+#SDL_IMG_LNK = -lSDL2_image
 
 
 .PHONY: all name dirs clean fclean re
@@ -52,6 +52,7 @@ all: dirs
 	@$(MAKE) name
 
 dirs: $(OBJ_DIR)
+	@mkdir -p screenshots
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)

@@ -34,7 +34,7 @@ float			ft_collide_prbld(
 		2.0f * (ft_3_vector_dot(
 			v[0][1], v[0][0]) - v[0][1][1] * (v[0][0][1] + 2.f)),
 		ft_3_vector_dot(v[0][0], v[0][0]) - v[0][0][1] * (v[0][0][1] + 4.f), r))
-		&& (IS_ZERO(v[0][1][1]) || ((t_prbld *)obj->fig)->maxh == FLT_MAX))
+		&& (IS_ZERO(v[0][1][1]) && ((t_prbld *)obj->fig)->maxh == FLT_MAX))
 		return (FLT_MAX);
 	r[0] = ft_get_prbld_cides_coll(objs, v, r, obj);
 	r[1] = ft_get_prbld_caps_coll(objs, v, obj);

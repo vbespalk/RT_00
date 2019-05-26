@@ -25,7 +25,7 @@ static float	ft_affect_transparency(
 	if (t == FLT_MAX || t <= 0)
 		return (1.0f);
 	if (l->type != L_POINT
-	|| ft_3_vector_cos(od[0] - l->origin, coll.coll_pnt - l->origin) < 0)
+	|| ft_3_vector_cos(od[0] - l->origin, coll.coll_pnt - l->origin) > 0)
 		return (obj->trans);
 	return (1.0f);
 }

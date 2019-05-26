@@ -40,7 +40,8 @@ char		*ft_parse_prbld(char **content, t_object *o)
 	ft_get_attr(content, "radius", (void *)(&(prbl->r)), DT_FLOAT);
 	ft_get_attr(content, "height", (void *)(&(prbl->maxh)), DT_FLOAT);
 	prbl->maxh = prbl->maxh == FLT_MAX ? FLT_MAX : prbl->maxh / prbl->r;
-	prbl->ratio = prbl->maxh / ((sqrtf(4.f * prbl->maxh)) + prbl->maxh);
+	prbl->ratio = prbl->maxh == FLT_MAX ? FLT_MAX :
+			prbl->maxh / ((sqrtf(4.f * prbl->maxh)) + prbl->maxh);
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, prbl->r);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, 1.f / prbl->r);
 	return ((void *)prbl);

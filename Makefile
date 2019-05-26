@@ -10,87 +10,47 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = RT
+NAME	=	RT
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-SRCS = $(wildcard src/*/*.c)
-OBJS = $(SRCS:.c=.o)
+CC		=	gcc
+CFLAGS	=	-Wall -Wextra -Werror
+SRCS	=	$(wildcard src/*/*.c)
+OBJS	=	$(SRCS:.c=.o)
+DIRS	=	./screenshots/
 
-INC = -I inc -I libftprintf -I libpnt -I JSON-c \
--I frameworks/SDL2.framework/Headers/ \
--I frameworks/SDL2_image.framework/Headers/
+INC		=	-I inc -I libftprintf -I libpnt -I JSON-c \
+			-I frameworks/SDL2.framework/Headers/ \
+			-I frameworks/SDL2_image.framework/Headers/
 
-LIBS = libftprintf/libftprintf.a libpnt/libpnt.a JSON-c/libjsonchecker.a
+LLIBS	=	-lftprintf \
+			-ljsonchecker \
+			-lpnt \
+			-framework SDL2 \
+			-framework SDL2_image
 
-
-
-
-
-
-
-
-#LIBFT_NAME = libftprintf.a
-#LIBFT_PATH = libftprintf/$(LIBFT_NAME)
-#LIBFT_INC  = -Ilibftprintf
-#
-#LIBPNT_NAME = libpnt.a
-#LIBPNT_PATH = libpnt/$(LIBPNT_NAME)
-#LIBPNT_INC  = -I libpnt
-#
-#LIBJSON_NAME = libjsonchecker.a
-#LIBJSON_PATH = JSON-c/$(LIBJSON_NAME)
-#LIBJSON_INC = -IJSON-c
-#
-#SDL_INC =	-I frameworks/SDL2.framework/Headers/
-#SDL_LNK	=	-F ./frameworks -rpath ./frameworks -framework SDL2
-#
-#SDL_IMG_INC =	-I frameworks/SDL2_image.framework/Headers/
-#SDL_IMG_LNK =	-F ./frameworks -rpath ./frameworks -framework SDL2_image
-#
-#INC	=	-I./inc/
-#
-## LINUX SDL
-#
-##SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
-##SDL_LNK		= -lSDL2
-##SDL_IMG_LNK = -lSDL2_image
-#LFLAGS =
-#
-#HEAD = rt.h
-#
-#CFLAGS = -pthread $(LIBFT_INC) $(LIBPNT_INC) $(LIBJSON_INC) $(INC) $(SDL_INC)\
-#			$(SDL_IMG_INC)
-#
-#EFLAGS =
-#
-## MacOSX flags
-#
-#FLAGS = -framework OpenGL -framework AppKit
-#
-#
-#
-##SDL_LNK		= -lSDL2
-##SDL_IMG_LNK = -lSDL2_image
-#LFLAGS 		= -pthread -lm
-
-
-
+LIBS	=	-L libftprintf \
+			-L libpnt \
+			-L JSON-c \
+			-F ./frameworks -rpath ./frameworks \
+			-F ./frameworks -rpath ./frameworks
 
 .PHONY: all clean fclean re
 
 .NOTPARALLEL: all clean fclean re
 
-all: $(NAME) 
+all: $(NAME) $(DIRS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@ 
 
 $(NAME): $(OBJS)
 	@$(MAKE) -C libftprintf
 	@$(MAKE) -C libpnt
 	@$(MAKE) -C JSON-c
-	@$(CC) -o $(NAME) $(OBJS)
+	@$(CC) -o $(NAME) $(OBJS) $(LIBS) $(LLIBS)
+
+$(DIRS):
+	mkdir -p $(DIRS)
 
 clean:
 	@/bin/rm -f $(OBJS)

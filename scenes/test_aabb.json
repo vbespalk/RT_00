@@ -2,9 +2,7 @@
   "name": "BOUNDING BOX",
   "bg_color": "0xbbbbbb",
   "skybox": {
-      "min": { "x": -100000, "y": -100000, "z": -100000},
-      "max": { "x": 100000, "y": 100000, "z": 100000},
-      "negz": "./texture/skybox/darkskies/negz.tga", 
+      "negz": "./texture/skybox/darkskies/negz.tga",
       "negy": "./texture/skybox/darkskies/negy.tga", 
       "negx":"./texture/skybox/darkskies/negx.tga", 
       "posz": "./texture/skybox/darkskies/posz.tga", 

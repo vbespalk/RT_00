@@ -104,7 +104,7 @@ void				ft_get_start_stack(t_scene *scn)
 	if (len == 0)
 		scn->cam->inner_o = NULL;
 	else
-		scn->cam->inner_o = len == 1 ? (t_object *)(objs->content) :
-							ft_get_inner_object(&objs, scn->cam->origin);
+		scn->cam->inner_o = (len == 1) ? (t_object *)(objs->content)
+			: ft_get_inner_object(&objs, scn->cam->origin);
 	del_nods(&objs);
 }

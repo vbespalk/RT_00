@@ -1,0 +1,37 @@
+{
+  "name": "Light Mixing",
+  "bg_color": "0x0",
+  "camera": {
+    "origin": { "x": -1500 },
+    "smooth": "4x"
+  },
+  "lights": [
+    {
+      "type": "point",
+      "bright": 0.03,
+      "color": "0xff0000",
+      "origin": { "x": -1000, "y": 700, "z": 700 }
+    },
+    {
+      "type": "point",
+      "bright": 0.03,
+      "color": "0x00ff00",
+      "origin": { "x": -1000, "y": 700, "z": -700 }
+    },
+    {
+      "type": "point",
+      "bright": 0.03,
+      "color": "0x0000ff",
+      "origin": { "x": -1000, "y": -1000, "z": 0 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "plane",
+      "translate": { "x": 2500 },
+      "rotate": { "z": 90 },
+      "color": "0xffffff",
+      "phong": 0
+    }
+  ]
+}

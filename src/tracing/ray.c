@@ -138,7 +138,8 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 		ray.stack[0] = parg->e->scn->cam->inner_o;
 		ray.stack_i = 0;
 	}
-	ray.pix = (Uint32)(y * parg->e->sdl->scr_wid + x);
+	ray.pix = (Uint32)(y / (float)(parg->e->scn->cam->smooth + 1)
+		* parg->e->sdl->scr_wid + x / (float)(parg->e->scn->cam->smooth + 1));
 	ray.o = parg->e->scn->cam->origin;
 	d = parg->e->scn->cam->vs_start_point;
 	d = d + ft_3_vector_scale(parg->e->scn->cam->vs_x_step_vec, x);
@@ -146,6 +147,5 @@ t_color			ft_trace_ray(t_thrarg *parg, int x, int y)
 	d = ft_3_unitvectornew(parg->e->scn->cam->origin, d);
 	ray.d = d;
 	res = ft_throw_ray(parg, &ray, 0);
-//	res = ft_blind(parg->e, res, &ray);
 	return (res);
 }

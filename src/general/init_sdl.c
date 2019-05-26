@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_sdl.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/08 18:10:01 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/08 18:10:04 by vbespalk         ###   ########.fr       */
+/*   Updated: 2019/05/26 15:33:57 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		get_format_data(t_sdl *sdl)
 	return (0);
 }
 
-int		sdl_init(t_sdl *sdl)
+int		sdl_init(t_sdl *sdl, char *name)
 {
 	Uint32				flags[3];
 
@@ -43,7 +43,7 @@ int		sdl_init(t_sdl *sdl)
 		return (sdl_error(ON_ERR "sdl_init"));
 	if (!IMG_Init(flags[2]))
 		return (sdl_img_error(ON_ERR "sdl_init"));
-	if (!(sdl->window = SDL_CreateWindow("RayTracer", SDL_WINDOWPOS_UNDEFINED,
+	if (!(sdl->window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED, SCR_WID, SCR_HEI, flags[0])))
 		return (sdl_error(ON_ERR "sdl_init"));
 	if (!(sdl->renderer = SDL_CreateRenderer(sdl->window, -1, flags[1])))

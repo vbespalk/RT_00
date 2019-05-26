@@ -22,7 +22,6 @@
             "name": "sphere",
             "translate": { "y": -100000 },
             "radius": 100000,
-
             "//": "water blue color",
             "color": "0x0077be",
 

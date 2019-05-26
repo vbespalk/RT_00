@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/17 21:50:08 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/05/24 16:13:05 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/26 15:30:10 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -647,7 +647,7 @@ int				delete_obj(t_list **obj_lst, Uint32 id);
 ** init_sdl.c
 */
 
-int				sdl_init(t_sdl *sdl);
+int				sdl_init(t_sdl *sdl, char *name);
 int				event_handler(t_env *env, uint32_t *btn_id);
 int				sdl_error(char *message);
 int				get_format_data(t_sdl *sdl);

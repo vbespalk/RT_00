@@ -1,0 +1,83 @@
+{
+	"camera": {
+		"origin": { "x": -100, "y": 10, "z": -50 }
+	},
+	"skybox": {
+		"negz": "./texture/skybox/gamla/negz.jpg",
+		"negy": "./texture/skybox/gamla/negy.jpg", 
+		"negx":"./texture/skybox/gamla/negx.jpg", 
+		"posz": "./texture/skybox/gamla/posz.jpg", 
+		"posy": "./texture/skybox/gamla/posy.jpg",
+		"posx": "./texture/skybox/gamla/posx.jpg"
+	},
+	"lights": [
+		{
+			"type": "direct",
+			"direct": { "x": 1, "y": -1, "z": 0 }
+		}
+	],
+	"objects": [
+		{
+		"name": "sphere",
+		"translate": { "x": 0 ,"y": 5, "z": -10},
+		"radius": 10,
+
+		"//": "purple",
+		"color": "0x8E44AD",
+
+		"diff": 1
+		},
+		{
+			"name": "sphere",
+			"translate": { "x": -15 ,"y": 5, "z": -10},
+			"radius": 10,
+	
+			"//": "midnight blue",
+			"color": "0x191970",
+			"diff": 1
+		},
+		{
+			"name": "sphere",
+			"translate": { "x": -15 ,"y": 5, "z": -30},
+			"radius": 10,
+			"//": "red",
+			"color": "0xA93226",
+	
+			"diff": 1
+		},
+		{
+			"name": "sphere",
+			"translate": { "x": -15 ,"y": 22, "z": -20},
+			"radius": 10,
+			"color": "0x34495E",
+	
+			"diff": 1
+		},
+		{
+			"name": "plane",
+			"origin": {"x": 0, "y": 0, "z": 0},
+			"width": 100,
+			"height": 100,
+			"spclr": 1,
+			"color": "0x2980B9"
+		},
+		{
+			"name": "plane",
+			"origin": {"x": 10, "y": 0, "z": 0},
+			"rotate": {"x" : 90},
+			"width": 100,
+			"height": 100,
+			"spclr": 1,
+			"color": "0x2980B9"
+		},
+		{
+			"name": "plane",
+			"origin": {"x": 10, "y": 0, "z": 0},
+			"rotate": {"z" : 90},
+			"width": 100,
+			"height": 100,
+			"spclr": 1,
+			"color": "0x2980B9"
+		}
+	]
+}

@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hit.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/25 18:55:52 by domelche          #+#    #+#             */
+/*   Updated: 2019/05/25 18:55:53 by domelche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
-void			ft_get_refrs(t_ray *ray, float (*refr)[2])
+void	ft_get_refrs(t_ray *ray, float (*refr)[2])
 {
 	int		i;
 
@@ -26,7 +37,7 @@ void			ft_get_refrs(t_ray *ray, float (*refr)[2])
 	}
 }
 
-void			ft_handle_hit(t_ray *ray, t_object *o)
+void	ft_handle_hit(t_ray *ray, t_object *o)
 {
 	int		i;
 

@@ -12,80 +12,70 @@
 
 NAME = RT
 
-LIBFT_NAME = libftprintf.a
-LIBFT_PATH = libftprintf/$(LIBFT_NAME)
-LIBFT_INC  = -Ilibftprintf
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
 
-LIBPNT_NAME = libpnt.a
-LIBPNT_PATH = libpnt/$(LIBPNT_NAME)
-LIBPNT_INC  = -I libpnt
+# finding all sources and cutting 'src/' prefix
+SRCS = $(shell find src -name '*.c' | cut -c 5-)
 
-LIBJSON_NAME = libjsonchecker.a
-LIBJSON_PATH = JSON-c/$(LIBJSON_NAME)
-LIBJSON_INC = -IJSON-c
+OBJS = $(addprefix obj/,$(SRCS:.c=.o))
 
-SDL_INC =	-I frameworks/SDL2.framework/Headers/
-SDL_LNK	=	-F ./frameworks -rpath ./frameworks -framework SDL2
+# src/dir/source.c -> obj/dir
+OBJ_DIR = $(shell find src -name '*.c' | cut -c 5- | cut -f1 -d'/' | uniq\
+| sed -e 's/^/obj\//')
 
-SDL_IMG_INC =	-I frameworks/SDL2_image.framework/Headers/
-SDL_IMG_LNK =	-F ./frameworks -rpath ./frameworks -framework SDL2_image
+INC = -I inc -I libftprintf -I libpnt -I JSON-c \
+-I frameworks/SDL2.framework/Headers/ \
+-I frameworks/SDL2_image.framework/Headers/
 
-INC	=	-I./inc/
-SRCS = $(wildcard src/*/*.c)
-OBJ = $(SRCS:.c=.o)
+LIBS = libftprintf/libftprintf.a libpnt/libpnt.a JSON-c/libjsonchecker.a\
+-F ./frameworks -rpath ./frameworks -framework SDL2\
+-F ./frameworks -rpath ./frameworks -framework SDL2_image
+
+
 
 # LINUX SDL
 
 #SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
 #SDL_LNK		= -lSDL2
 #SDL_IMG_LNK = -lSDL2_image
-LFLAGS 		= -pthread -lm
-
-HEAD = rt.h
-
-CFLAGS = -pthread $(LIBFT_INC) $(LIBPNT_INC) $(LIBJSON_INC) $(INC) $(SDL_INC)\
-			$(SDL_IMG_INC)
-
-EFLAGS =  -Wall -Wextra -Werror
-
-# MacOSX flags
-
-FLAGS = -lmlx -framework OpenGL -framework AppKit
 
 
+.PHONY: all name dirs clean fclean re
 
-#SDL_LNK		= -lSDL2
-#SDL_IMG_LNK = -lSDL2_image
-LFLAGS 		= -pthread -lm
+.NOTPARALLEL: all name dirs clean fclean re
 
-CC = gcc
-
-
-
-.PHONY: all clean fclean re
-
-.NOTPARALLEL: all clean fclean re
-
-all: $(NAME) 
-
-$(NAME): $(OBJ) ./inc/rt.h
+all: dirs
 	@$(MAKE) -C libftprintf
 	@$(MAKE) -C libpnt
 	@$(MAKE) -C JSON-c
-	@$(CC) $(CFLAGS) $(SRCS) -o $(NAME) \
-		$(LIBFT_PATH) $(LIBMLX_PATH) $(LIBPNT_PATH) $(LIBJSON_PATH) \
-		$(SDL_LNK) $(SDL_IMG_LNK) $(LFLAGS)
+	@$(MAKE) name
+
+dirs: $(OBJ_DIR)
+	@mkdir -p screenshots
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+name: $(NAME)
+
+obj/%.o: src/%.c
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(NAME): $(OBJS)
+	@$(CC) -o $(NAME) $(OBJS) $(LIBS)
 
 clean:
-	@/bin/rm -f src/*/*.o
+	@/bin/rm -f $(OBJS)
 	@$(MAKE) clean -C libftprintf
 	@$(MAKE) clean -C libpnt
 	@$(MAKE) clean -C JSON-c
 
-fclean: clean
+fclean:
+	@/bin/rm -rf obj
 	@/bin/rm -f $(NAME)
-	@/bin/rm -f $(LIBFT_PATH)
-	@/bin/rm -f $(LIBPNT_PATH)
-	@/bin/rm -f $(LIBJSON_PATH)
+	@$(MAKE) fclean -C libftprintf
+	@$(MAKE) fclean -C libpnt
+	@$(MAKE) fclean -C JSON-c
 
 re: fclean all

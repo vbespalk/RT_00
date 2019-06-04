@@ -21,8 +21,7 @@ Uint32		ft_map_sphere(t_object *o, void *tex, t_vector hit)
 	SDL_Surface	*t;
 
 	t = (SDL_Surface *)tex;
-	hit = ft_3_vector_rotate(hit, 0, ((t_sphere *)o->fig)->phi,
-							 ((t_sphere *)o->fig)->theta);
+	hit = ft_3_vector_rotate(hit, o->rotate[0], o->rotate[1], o->rotate[2]);
 	phi = atan2f(hit[2], hit[0]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
@@ -31,8 +30,8 @@ Uint32		ft_map_sphere(t_object *o, void *tex, t_vector hit)
 		theta = theta < 0.0f ? theta + (float)M_PI : theta - (float)M_PI;
 	xy[0] = (int)((t->w - 1) * phi / 2.0f * (float)M_1_PI);
 	xy[1] = (int)((t->h - 1) * theta * (float)M_1_PI);
-	if (!(IN_RANGE(xy[0], 0, t->w) &&
-		IN_RANGE(xy[1], 0, t->h)))
+	if (!(IN_RANGE(xy[0], 0, t->w - 1) &&
+		IN_RANGE(xy[1], 0, t->h - 1)))
 		return (0xff);
 	ft_memcpy(&col, (Uint32 *)t->pixels + xy[1] * t->w
 			+ xy[0], sizeof(Uint32));
@@ -48,8 +47,7 @@ Uint32		ft_checker_sph(t_object *o, void *tex, t_vector coll)
 	t_vector	hit;
 
 	t = (t_checkbrd *)tex;
-	hit = ft_3_vector_rotate(coll, 0, ((t_sphere *)o->fig)->phi,
-			((t_sphere *)o->fig)->theta);
+	hit = ft_3_vector_rotate(coll, o->rotate[0], o->rotate[1], o->rotate[2]);
 	phi = atan2f(hit[2], hit[0]);
 	if (!(IN_RANGE(phi, 0.0f, 2.0f * M_PI)))
 		phi = phi < 0.0f ? phi + 2 * (float)M_PI : phi - 2 * (float)M_PI;
@@ -71,7 +69,6 @@ Uint32		ft_procedural_sph(t_object *o, void *tex, t_vector coll)
 	t_procedural *t;
 
 	t = (t_procedural *)tex;
-	coll = ft_3_vector_rotate(coll, 0, ((t_sphere *)o->fig)->phi,
-							 ((t_sphere *)o->fig)->theta);
-	return (t->ft_get_color(t, NULL, ft_3_vector_scale(coll, t->scale)));
+	coll = ft_3_vector_rotate(coll, o->rotate[0], o->rotate[1], o->rotate[2]);
+	return (t->ft_get_color(t, ft_3_vector_scale(coll, t->scale)));
 }

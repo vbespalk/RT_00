@@ -12,8 +12,8 @@
 
 #include "libpnt.h"
 
-t_vector	ft_3_line_line_inter
-				(t_vector o1, t_vector d1, t_vector o2, t_vector d2)
+t_vector	ft_3_line_line_inter(
+				t_vector o1, t_vector d1, t_vector o2, t_vector d2)
 {
 	float		t;
 	float		len;

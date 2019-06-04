@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   abbx_utils.c                                       :+:      :+:    :+:   */
+/*   sdl_ev.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/19 15:46:28 by vbespalk          #+#    #+#             */
-/*   Updated: 2019/02/19 15:46:31 by vbespalk         ###   ########.fr       */
+/*   Created: 2019/01/28 21:53:36 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/01/28 21:53:41 by vbespalk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
+#ifndef SDL_EV_H
+# define SDL_EV_H
 
-float	bbx_area(t_vector d)
-{
-	return (2.0f * (d[0] * d[1] + d[0] * d[2] + d[1] * d[2]));
-}
+# include "rt.h"
 
-float	bbx_volume(t_vector d)
-{
-	return (d[0] * d[1] * d[2]);
-}
+int	on_key_down(SDL_Keycode sum, t_env *e);
+int	on_lbutton_down(int x, int y, t_env *e);
+int	on_rbutton_down(int x, int y, t_env *e);
+int	on_resize(Sint32 w, Sint32 h, t_env *e);
+int	ft_on_exit(t_env *e);
+int	on_mouse_wheel(Sint32 y, Uint32 dir, t_env *e);
+
+#endif

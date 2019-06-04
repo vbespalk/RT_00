@@ -12,8 +12,8 @@
 
 #include "libpnt.h"
 
-float		ft_3_plane_point_dist
-				(t_vector origin, t_vector norm, t_vector point)
+float		ft_3_plane_point_dist(
+				t_vector origin, t_vector norm, t_vector point)
 {
 	return (norm[0] * (point[0] - origin[0]) +
 			norm[1] * (point[1] - origin[1]) +

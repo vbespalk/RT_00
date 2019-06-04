@@ -12,36 +12,33 @@
 
 #include "rt.h"
 
+void			ft_init_ray(
+					t_ray *ray_prev, t_ray *ray, t_vector *o, t_vector *d)
+{
+	int		i;
+
+	ray->o = *o;
+	ray->d = *d;
+	ray->coll = ray_prev->coll;
+	ray->stack_i = ray_prev->stack_i;
+	i = -1;
+	while (++i < (int)ray->stack_size)
+		ray->stack[i] = ray_prev->stack[i];
+}
+
 t_vector		ft_change_blur_vec(t_vector norm, t_vector vec, float angle)
 {
 	t_vector	proj;
+	float		nv_angle;
 
-	if (acosf(ft_3_vector_cos(norm, vec)) + angle <= M_PI_2)
+	nv_angle = acosf(ft_3_vector_cos(norm, vec));
+	if (nv_angle + angle < M_PI_2)
 		return (vec);
 	proj = ft_3_tounitvector(ft_3_vector_project(norm, vec));
-	return (ft_3_vector_turn(proj, norm, (float)M_PI_2 - angle));
+	return (ft_3_vector_turn(proj, norm, (float)M_PI_2 - angle - nv_angle));
 }
 
-t_vector		ft_get_blur_proj(t_vector origin, t_vector norm)
-{
-	t_vector	zero_proj;
-	float		angle;
-
-	zero_proj = ft_3_vector_project(
-		norm, ((t_vector){0.0f, 0.0f, 0.0f} - origin));
-	if (ft_3_vector_len(zero_proj) == 0.0)
-		zero_proj = ft_3_vector_project(
-			norm, ((t_vector){42.0f, 0.0f, 0.0f} - origin));
-	if (ft_3_vector_len(zero_proj) == 0.0)
-		zero_proj = ft_3_vector_project(
-			norm, ((t_vector){0.0, 42.0, 0.0} - origin));
-	zero_proj = ft_3_tounitvector(zero_proj);
-	angle = (float)rand() / (float)RAND_MAX * (float)M_2_PI;
-	return (ft_3_vector_turn_near(zero_proj, norm, angle));
-}
-
-t_color			ft_sum_colors
-		(t_coll *coll, t_color color_s, t_color color_t, int depth)
+t_color			ft_sum_colors(t_coll *coll, t_color color_s, t_color color_t)
 {
 	t_color		res;
 	t_object	*o;
@@ -54,54 +51,42 @@ t_color			ft_sum_colors
 	while (++i < 3)
 	{
 		illum = (float)ft_limitf(
-				0.0, 1.0, o->ambnt + (float)(coll->illum_color.argb[i]) / 255.0);
-		res.argb[i] = (t_byte)(
-				(!coll->o->spclr || !coll->o->trans)
-				? ((float)(coll->px_color.argb[i]) * illum * o->diff +
-				   (float)(color_s.argb[i]) * coll->o->spclr +
-				   (float)(color_t.argb[i]) * coll->o->trans)
-				: ((float)(coll->px_color.argb[i]) * illum * o->diff +
-				   (1.0f - o->diff) *
-				   ((float)(color_s.argb[i]) * coll->fresnel +
-					(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));
+			0.0, 1.0, o->ambnt + (float)(coll->illum_color.argb[i]) / 255.0);
+		res.argb[i] = (t_byte)((!coll->o->spclr || !coll->o->trans)
+			? ((float)(coll->px_color.argb[i]) * illum * o->diff +
+				(float)(color_s.argb[i]) * coll->o->spclr +
+				(float)(color_t.argb[i]) * coll->o->trans)
+			: ((float)(coll->px_color.argb[i]) * illum * o->diff +
+				(1.0f - o->diff) *
+				((float)(color_s.argb[i]) * coll->fresnel +
+				(float)(color_t.argb[i]) * (1.0f - coll->fresnel))));
 	}
-//	if ((!coll->o->spclr && !coll->o->trans))
-//		printf("RES %u\n", res.val);
-//	printf("SPCLR %u TRANS %u FRES %f RES %u\n", color_s.val, color_t.val, coll->fresnel,
-//			res.val);
 	return (res);
 }
 
+t_color			ft_blind(t_env *e, t_color color, t_ray *ray)
+{
+	float		k;
+	float		cos;
+	t_list		*node;
+	t_light		*l;
+	t_vector	l_dir;
 
-//t_color			ft_sum_colors
-//		(t_coll *coll, t_color color_s, t_color color_t, int depth) {
-//	t_color res;
-//	t_object *o;
-//	int i;
-//	float illum;
-//
-//	res.val = UINT32_MAX;
-//	o = coll->o;
-//	i = -1;
-//	while (++i < 3)
-//	{
-//		illum = (float) ft_limitf(
-//				0.0, 1.0, o->ambnt + (float) (coll->illum_color.argb[i]) / 255.0);
-//		res.argb[i] = (t_byte) (
-//				(!coll->o->spclr || !coll->o->trans)
-//				? ((float) (coll->px_color.argb[i]) * illum *
-//				   (coll->o->trans && coll->px_color.val != UINT32_MAX ? 1 : o->diff) +
-//				   (float) (color_s.argb[i]) * coll->o->spclr +
-//				   (float) (color_t.argb[i]) * coll->o->trans)
-//				: ((float) (coll->px_color.argb[i]) * illum *
-//				   (coll->o->trans && coll->px_color.val != UINT32_MAX ? 1 : o->diff) +
-//				   (1.0f - (coll->o->trans && coll->px_color.val != UINT32_MAX ? 1 : o->diff)) *
-//				   ((float) (color_s.argb[i]) * coll->fresnel +
-//					(float) (color_t.argb[i]) * (1.0f - coll->fresnel))));
-//	}
-////	if ((!coll->o->spclr && !coll->o->trans))
-////		printf("RES %u\n", res.val);
-////	printf("SPCLR %u TRANS %u FRES %f RES %u\n", color_s.val, color_t.val, coll->fresnel,
-////			res.val);
-//	return (res);
-//}
+	if (e->pix_obj[ray->pix])
+		return (color);
+	node = e->scn->lights;
+	while (node)
+	{
+		l = (t_light *)(node->content);
+		l_dir = (l->type == L_POINT)
+			? ft_3_unitvectornew(ray->o, l->origin)
+			: ft_3_vector_scale(l->direct, -1.0f);
+		if ((cos = ft_3_vector_cos(ray->d, l_dir)) > 0.95f)
+		{
+			k = (float)(pow(cos - 0.95f, 2) * 400.0f) * l->bright;
+			color = ft_add_colors(color, ft_scale_color(l->color, k));
+		}
+		node = node->next;
+	}
+	return (color);
+}

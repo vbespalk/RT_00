@@ -1,0 +1,179 @@
+{
+    "name": "Solar System",
+
+    "//": "universe",
+      "skybox": {
+      "negz": "./texture/skybox/milkyway/dark/negz.jpg",
+      "negy": "./texture/skybox/milkyway/dark/negy.jpg", 
+      "negx":"./texture/skybox/milkyway/dark/negx.jpg", 
+      "posz": "./texture/skybox/milkyway/dark/posz.jpg", 
+      "posy": "./texture/skybox/milkyway/dark/posy.jpg",
+      "posx": "./texture/skybox/milkyway/dark/posx.jpg"
+  },
+    "camera": {
+        "origin": { "x": -1500, "y": 0, "z": -5200 },
+        "beta": -77
+    },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "y": -1 }
+        }
+    ],
+    "objects": [
+        {
+            "//": "sun",
+
+            "name": "sphere",
+            "translate": { "y": 0 },
+            "radius": 700,
+
+            "//": "yellow",
+            "color": "0xffff00",
+            "texture": "./texture/solar/sun.jpg",
+
+            "diff": 1,
+            "ambnt": 1
+        },
+        {
+            "//": "earth",
+
+            "name": "sphere",
+            "translate": {"x": -1900, "y": -250, "z": -300 },
+            "radius": 82,
+
+            "//": "green",
+            "color": "0x00ff36",
+            "texture": "./texture/solar/earth.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "moon",
+
+            "name": "sphere",
+            "translate": {"x": -1900, "y": -160, "z": -20 },
+            "radius": 12,
+
+            "//": "light grey",
+            "color": "0xccccdc",
+            "texture": "./texture/solar/moon.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "mercury",
+
+            "name": "sphere",
+            "translate": {"x": -970, "y": -150, "z": 329 },
+            "radius": 25,
+
+            "//": "light_grey",
+            "color": "0xbbbbbb",
+            "texture": "./texture/solar/mercury.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "venus",
+
+            "name": "sphere",
+            "translate": {"x": -1200, "y": 300, "z": -450 },
+            "radius": 76,
+
+            "//": "blue",
+            "color": "0x0011ff",
+            "texture": "./texture/solar/venus.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "mars",
+
+            "name": "sphere",
+            "translate": {"x": -2300, "y": 300, "z": 400 },
+            "radius": 36,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/mars.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "jupiter",
+
+            "name": "sphere",
+            "translate": {"x": 3200, "y": 1800, "z": -800 },
+            "radius": 720,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/jupiter.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "saturn",
+
+            "name": "sphere",
+            "translate": {"x": 8000, "y": -1500, "z": 6000 },
+            "rotate": {"z":  -30, "x":  0},
+            "radius": 620,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/saturn.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "saturn rings",
+
+            "name": "disk",
+            "translate": {"x": 8000, "y": -1500, "z": 6000 },
+            "rotate": {"z":  30, "x":  0},
+            "inner_radius": 720,
+            "outer_radius": 822,
+            "procedural": {"name":  "sandstone",
+                "ramp": "./texture/solar/saturn_ring.png"},
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "uranus",
+
+            "name": "sphere",
+            "translate": {"x": -2600, "y": 1200, "z": -560 },
+            "radius": 78,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/uranus.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        },
+        {
+            "//": "neptun",
+
+            "name": "sphere",
+            "translate": {"x": -3600, "y": -2050, "z": 1800 },
+            "radius": 64,
+
+            "//": "red",
+            "color": "0xff0000",
+            "texture": "./texture/solar/neptune.jpg",
+
+            "diff": 1,
+            "ambnt": 0.8
+        }
+    ]
+}

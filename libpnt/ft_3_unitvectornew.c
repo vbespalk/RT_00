@@ -12,7 +12,7 @@
 
 #include "libpnt.h"
 
-t_vector		ft_3_unitvectornew(t_vector origin, t_vector direct)
+t_vector	ft_3_unitvectornew(t_vector origin, t_vector direct)
 {
 	return (ft_3_tounitvector(direct - origin));
 }

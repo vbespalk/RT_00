@@ -6,7 +6,7 @@
 /*   By: mdovhopo <mdovhopo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 12:17:16 by mdovhopo          #+#    #+#             */
-/*   Updated: 2019/05/10 15:09:52 by mdovhopo         ###   ########.fr       */
+/*   Updated: 2019/05/22 15:41:25 by mdovhopo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void		ft_gui(t_env *e, uint32_t id)
 {
 	SDL_Rect	gui_container;
 	SDL_Rect	tmp;
-	float		k;
 
 	tmp = (SDL_Rect){
 		e->sdl->scr_wid - GUI_WIDTH, GUI_HEIGHT, GUI_WIDTH,

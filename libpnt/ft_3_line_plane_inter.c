@@ -12,8 +12,8 @@
 
 #include "libpnt.h"
 
-t_vector	ft_3_line_plane_inter
-				(t_vector pln_o, t_vector pln_norm,
+t_vector	ft_3_line_plane_inter(
+				t_vector pln_o, t_vector pln_norm,
 				t_vector ln_o, t_vector ln_d)
 {
 	float		t;

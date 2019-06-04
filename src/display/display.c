@@ -12,15 +12,6 @@
 
 #include "rt.h"
 
-// void			put_to_window(t_env *ptr)
-// {
-// 	render(ptr, ptr->scn);
-// 	SDL_RenderClear(ptr->sdl->renderer);
-// 	SDL_UpdateTexture(ptr->sdl->screen, NULL, ptr->sdl->pixels, SCR_WID * sizeof(Uint32));
-// 	SDL_RenderCopy(ptr->sdl->renderer, ptr->sdl->screen, NULL, NULL);
-// 	SDL_RenderPresent(ptr->sdl->renderer);
-// }
-
 Uint32			get_rgb(t_sdl *sdl, Uint8 red, Uint8 green, Uint8 blue)
 {
 	Uint32 col;

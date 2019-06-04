@@ -1,44 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   plane.c                                            :+:      :+:    :+:   */
+/*   disk.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/23 13:25:05 by domelche          #+#    #+#             */
-/*   Updated: 2018/08/23 13:27:24 by domelche         ###   ########.fr       */
+/*   Created: 2019/05/14 21:07:32 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/14 21:07:35 by vbespalk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 
-t_disk		*ft_disknew(void)
+t_disk	*ft_disknew(t_object *o)
 {
 	t_disk	*dsk;
 
+	o->ft_collide = ft_collide_disk;
+	o->ft_is_inside = ft_is_inside_disk;
+	o->ft_get_norm = ft_get_norm_disk;
+	o->ft_translate = ft_translate_disk;
+	o->ft_rotate = ft_rotate_disk;
+	o->ft_scale = ft_scale_disk;
+	o->ft_scale_height = ft_scale_disk;
+	o->ft_mapping = ft_map_disk;
+	o->ft_checker = ft_checker_dsk;
+	o->ft_procedural = ft_procedural_dsk;
 	dsk = ft_smemalloc(sizeof(t_disk), "ft_disknew");
 	dsk->out_r = FLT_MAX;
 	dsk->in_r = FLT_MIN;
 	return (dsk);
 }
 
-char		*ft_parse_disk(char **content, t_object *o)
+char	*ft_parse_disk(char **content, t_object *o)
 {
-	t_object	*obj;
 	t_disk		*dsk;
 
-	o->ft_collide = ft_collide_disk;
-	o->ft_is_reachable = ft_is_reachable_disk;
-	o->ft_is_inside = ft_is_inside_disk;
-	o->ft_get_norm = ft_get_norm_disk;
-	o->ft_translate = ft_translate_disk;
-	o->ft_rotate = ft_rotate_disk;
-	o->ft_scale = ft_scale_disk;
-	o->ft_scale_height = ft_scale_hei_null;
-	o->ft_mapping = NULL;
-	o->ft_checker = ft_checker_dsk;
-	o->ft_procedural = ft_procedural_dsk;
-	dsk = ft_disknew();
+	dsk = ft_disknew(o);
 	ft_get_attr(content, "inner_radius", (void *)(&(dsk->in_r)), DT_FLOAT);
 	ft_get_attr(content, "outer_radius", (void *)(&(dsk->out_r)), DT_FLOAT);
 	if (dsk->in_r > dsk->out_r)
@@ -47,22 +45,14 @@ char		*ft_parse_disk(char **content, t_object *o)
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
 	ft_3_transform_mat(&(o->transform), o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(&(o->inverse), -o->translate, -o->rotate, FLT_MIN);
-	printf("MATRIX\n");
-	for (int i = 0; i < 4; ++i)
-		printf("%f, %f, %f, %f\n", o->transform[i][0], o->transform[i][1], o->transform[i][2], o->transform[i][3]);
-	printf("INVERTED\n");
-	for (int i = 0; i < 4; ++i)
-		printf("%f, %f, %f, %f\n", o->inverse[i][0], o->inverse[i][1], o->inverse[i][2], o->inverse[i][3]);
 	return ((void *)dsk);
 }
 
-int	    	ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m,
+													t_matrix *inv_m)
 {
-	t_disk *dsk;
-
 	if (!o)
 		return (0);
-	dsk = (t_disk *)o->fig;
 	if (key == SDLK_d)
 		o->translate[2] += TRANS_F;
 	if (key == SDLK_a)
@@ -77,16 +67,14 @@ int	    	ft_translate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *in
 		o->translate[0] -= TRANS_F;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
-    return (1);
+	return (1);
 }
 
-int	    	ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m,
+												t_matrix *inv_m)
 {
-	t_disk *dsk;
-
 	if (!o)
 		return (0);
-	dsk = (t_disk *)o->fig;
 	if (key == SDLK_DOWN)
 		o->rotate[2] += ROTAT_F;
 	else if (key == SDLK_UP)
@@ -99,31 +87,28 @@ int	    	ft_rotate_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m
 		o->rotate[0] += ROTAT_F;
 	else if (key == SDLK_PAGEUP)
 		o->rotate[0] -= ROTAT_F;
-	printf("ROT %f,%f,%f\n", RAD_TO_DEG(o->rotate[0]), RAD_TO_DEG(o->rotate[1]), RAD_TO_DEG(o->rotate[2]));
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
-    return (1);
+	return (1);
 }
 
-int	    	ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m, t_matrix *inv_m)
+int		ft_scale_disk(Uint32 key, t_object *o, t_matrix *tr_m,
+												t_matrix *inv_m)
 {
-	t_disk *dsk;
+	t_disk	*dsk;
+	float	scale;
 
 	if (!o)
 		return (0);
 	dsk = (t_disk *)o->fig;
-	float scale = 1;
-	if (key == SDLK_z)
-		scale += SCALE_F;
-	else if (key == SDLK_x && scale >= 0.0f)
-		scale -= SCALE_F;
-	else
-		scale = 0;
-	dsk->in_r *= scale;
-	dsk->out_r = dsk->out_r == FLT_MAX ? FLT_MAX : scale;
+	scale = key == SDLK_z || key == SDLK_r ? 1 + SCALE_F : 1 - SCALE_F;
+	if (!(dsk->out_r != FLT_MAX && IN_RANGE(dsk->out_r * scale, MIN_R, MAX_R)))
+		return (0);
+	dsk->out_r = dsk->out_r == FLT_MAX ? FLT_MAX : dsk->out_r * scale;
+	dsk->in_r = dsk->in_r == FLT_MIN ? FLT_MIN : dsk->in_r * scale;
 	dsk->sq_in_r = dsk->in_r * dsk->in_r;
 	dsk->sq_out_r = dsk->out_r * dsk->out_r;
 	ft_3_transform_mat(tr_m, o->translate, o->rotate, FLT_MIN);
 	ft_3_inv_trans_mat(inv_m, -o->translate, -o->rotate, FLT_MIN);
-    return (1);
+	return (1);
 }

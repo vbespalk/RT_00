@@ -1,0 +1,37 @@
+{
+  "name": "Lense",
+  "bg_color": "0x808080",
+  "camera": {
+    "origin": { "x": -1500 },
+    "smooth": "1x"
+  },
+  "skybox": {
+    "negz": "./texture/skybox/darkskies/negz.tga",
+    "negy": "./texture/skybox/darkskies/negy.tga",
+    "negx":"./texture/skybox/darkskies/negx.tga",
+    "posz": "./texture/skybox/darkskies/posz.tga",
+    "posy": "./texture/skybox/darkskies/posy.tga",
+    "posx": "./texture/skybox/darkskies/posx.tga"
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": -1 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "paraboloid",
+      "translate": { "x": 1000 },
+      "rotate": { "z": 90 },
+      "color": "0xffffff",
+      "radius": 500,
+      "height": 300,
+      "diff": 0.2,
+      "spclr": 0.1,
+      "transparent": 1,
+      "refr": 1.3,
+      "phong": 1
+    }
+  ]
+}

@@ -12,9 +12,8 @@
 
 #include "rt.h"
 
-int 	ft_translate_cam(Uint32 key, t_vector *transl)
+int		ft_translate_cam(Uint32 key, t_vector *transl)
 {
-
 	if (key == SDLK_w)
 		(*transl)[1] += TRANS_F;
 	if (key == SDLK_d)
@@ -27,34 +26,36 @@ int 	ft_translate_cam(Uint32 key, t_vector *transl)
 		(*transl)[0] += TRANS_F;
 	if (key == SDLK_e)
 		(*transl)[0] -= TRANS_F;
-    return (1);
+	(*transl)[0] = CLAMP((*transl)[0], -16000000.f, 16000000.f);
+	(*transl)[1] = CLAMP((*transl)[1], -16000000.f, 16000000.f);
+	(*transl)[2] = CLAMP((*transl)[2], -16000000.f, 16000000.f);
+	return (1);
 }
 
-int 	ft_rotate_cam(Uint32 key, t_vector *angles)
+int		ft_rotate_cam(Uint32 key, t_vector *angles)
 {
 	if (key == SDLK_UP)
-		(*angles)[0] += ROTAT_F;
+		(*angles)[2] += ROTAT_F;
 	if (key == SDLK_DOWN)
-		(*angles)[0] -= ROTAT_F;
+		(*angles)[2] -= ROTAT_F;
 	if (key == SDLK_LEFT)
 		(*angles)[1] -= ROTAT_F;
 	if (key == SDLK_RIGHT)
 		(*angles)[1] += ROTAT_F;
 	if (key == SDLK_PAGEUP)
-		(*angles)[2] -= ROTAT_F;
+		(*angles)[0] -= ROTAT_F;
 	if (key == SDLK_PAGEDOWN)
-		(*angles)[2] += ROTAT_F;
-    return (1);
+		(*angles)[0] += ROTAT_F;
+	return (1);
 }
 
-int 	ft_scale_cam(Uint32 key, float *sc_factor)
+int		ft_scale_cam(Uint32 key, float *sc_factor)
 {
 	if (key == SDLK_z)
-		*sc_factor = ((*sc_factor - SCALE_F) < DEG_TO_RAD(10.f)) ? \
+		*sc_factor = ((*sc_factor - SCALE_F) < DEG_TO_RAD(10.f)) ?
 	DEG_TO_RAD(10.f) : *sc_factor - SCALE_F;
 	else if (key == SDLK_x)
-		*sc_factor = ((*sc_factor + SCALE_F) < DEG_TO_RAD(160)) ? *sc_factor + \
-	SCALE_F : DEG_TO_RAD(160);
-    return (1);
+		*sc_factor = ((*sc_factor + SCALE_F) < DEG_TO_RAD(160)) ?
+				*sc_factor + SCALE_F : DEG_TO_RAD(160);
+	return (1);
 }
-

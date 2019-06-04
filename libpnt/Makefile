@@ -11,15 +11,10 @@
 # **************************************************************************** #
 
 NAME = libpnt.a
-
 SRCS = $(wildcard *.c)
-
 OBJ = $(SRCS:.c=.o)
-
 HEAD = libpnt.h
-
 CFLAGS = -Wall -Wextra -Werror
-
 CC = gcc
 
 .PHONY: all clean fclean re

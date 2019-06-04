@@ -54,8 +54,8 @@ static char	*ft_search_attr(char *content, char *attr)
 	return (NULL);
 }
 
-void		ft_get_attr
-				(char **content, char *attr, void *dst, t_datatype datatype)
+void		ft_get_attr(char **content, char *attr,
+				void *dst, t_datatype datatype)
 {
 	char	*data;
 

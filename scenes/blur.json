@@ -18,21 +18,20 @@
   "objects": [
     {
       "name": "sphere",
-      "origin": { "x": 1000, "z": 0 },
+      "translate": { "x": 1000, "z": -200 },
       "radius": 500,
       "color": "0x808080",
       "diff": 1,
       "spclr": 0,
-      "trans": 1,
+      "transparent": 1,
       "t_blur": 0.1,
-      "refr": 1.5,
       "phong": 1,
       "ambnt": 0.3
     },
     {
       "name": "plane",
-      "origin": { "y": -500 },
-      "norm": { "x": 0, "y": 1 },
+      "translate": { "y": -2500 },
+      "rotate": { "z": 45 },
       "color": "0x808080",
       "diff": 1,
       "spclr": 1,
@@ -40,7 +39,7 @@
     },
     {
       "name": "sphere",
-      "origin": { "x": 2000, "y": 250, "z": 250 },
+      "translate": { "x": 2000, "y": 250, "z": 500 },
       "radius": 300,
       "color": "0xff0000",
       "diff": 1,

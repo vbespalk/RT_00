@@ -57,8 +57,8 @@ Uint32			ft_map_skybox(t_aabb *bbx, SDL_Surface *tex[6], t_vector hit)
 	rst = ft_get_rst(vec, norm);
 	xy[0] = (int)((tex[(int)rst[0]]->w - 1) * fabsf(rst[1]));
 	xy[1] = (int)((tex[(int)rst[0]]->h - 1) * fabsf(rst[2]));
-	if (!(IN_RANGE(xy[0], 0, tex[(int)rst[0]]->w) &&
-		IN_RANGE(xy[1], 0, tex[(int)rst[0]]->h)))
+	if (!(IN_RANGE(xy[0], 0, tex[(int)rst[0]]->w - 1) &&
+		IN_RANGE(xy[1], 0, tex[(int)rst[0]]->h - 1)))
 		return (0xff0000);
 	ft_memcpy(&col, (Uint32 *)tex[(int)rst[0]]->pixels + xy[1] *
 		tex[(int)rst[0]]->w + xy[0], sizeof(Uint32));

@@ -3,10 +3,10 @@
   "bg_color": "0xEEEEEE",
   "camera": {
     "origin": {
-      "x": 120,
-      "y": 1200
+      "x": 0,
+      "y": 0
     },
-    "gamma": -90
+    "gamma": 0
   },
   "lights": [
     {
@@ -20,11 +20,11 @@
   "objects": [
     {
       "name": "sphere",
-      "origin": {
+      "translate": {
         "x": 120,
         "z": 0
       },
-      "radius": 100,
+      "radius": 50,
       "color": "0x00ffff",
       "procedural":
       {
@@ -41,7 +41,7 @@
     },
     {
       "name": "sphere",
-      "origin": {
+      "translate": {
         "x": 500,
         "z": 100
       },

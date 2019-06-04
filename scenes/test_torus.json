@@ -2,17 +2,15 @@
     "name": "Test TORUS",
 
     "camera": {
-        "origin": { "x": -1000, "y": 0 }
+        "origin": { "x": -450, "y": 0 }
     },
       "skybox": {
-      "min": { "x": -10000000000000, "y": -10000000000000, "z": -10000000000000},
-      "max": { "x": 10000000000000, "y": 10000000000000, "z": 10000000000000},
-      "negz": "./texture/skybox/thunder/negz.tga", 
-      "negy": "./texture/skybox/thunder/negy.tga", 
-      "negx":"./texture/skybox/thunder/negx.tga", 
-      "posz": "./texture/skybox/thunder/posz.tga", 
-      "posy": "./texture/skybox/thunder/posy.tga",
-      "posx": "./texture/skybox/thunder/posx.tga"
+      "negz": "./texture/skybox/bloodvalley/negz.tga",
+      "negy": "./texture/skybox/bloodvalley/negy.tga",
+      "negx": "./texture/skybox/bloodvalley/negx.tga",
+      "posz": "./texture/skybox/bloodvalley/posz.tga",
+      "posy": "./texture/skybox/bloodvalley/posy.tga",
+      "posx": "./texture/skybox/bloodvalley/posx.tga"
   },
     "lights": [
         {
@@ -25,15 +23,25 @@
 
             "name": "torus",
             "translate": { "x": -100 },
-            "rotate": {"z": 45, "y": 20},
-            "inner_radius": 500,
-            "outer_radius": 1000,
-            "translate": {"z" : -100},
-            "checker": { "color1": "warm_marble", "color2": "lattice", "size": 2},
-            "color": "0xff6666",
-            "spclr": 0,
+            "react_negative": true,
+            "rotate": {"z": 45, "y": 20, "x":  5},
+            "inner_radius": 25,
+            "outer_radius": 50,
+            "texture": "./texture/ring.png",
+            "color": "0xffab2f",
+            "spclr": 0.5,
             "diff": 1,
-            "ambnt": 0.5
-        }
+            "ambnt": 0.2
+        },
+      {
+        "name": "sphere",
+        "negative": true,
+        "translate": { "x": -100, "y": 0, "z": 0 },
+        "rotate": {"z": -45, "y": -20, "x":  0},
+        "radius": 60,
+        "color": "0xff0000",
+        "texture": "./texture/ring.png",
+        "ambnt": 0.2
+      }
     ]
 }

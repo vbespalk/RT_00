@@ -1,10 +1,8 @@
 {
-  "name": "CFOMPOSED BOX",
+  "name": "COMPOSED BOX",
   "bg_color": "0xbbbbbb",
-          "skybox": {
-      "min": { "x": -10000000000000, "y": -10000000000000, "z": -10000000000000},
-      "max": { "x": 10000000000000, "y": 10000000000000, "z": 10000000000000},
-      "negz": "./texture/skybox/thunder/negz.tga", 
+      "skybox": {
+      "negz": "./texture/skybox/thunder/negz.tga",
       "negy": "./texture/skybox/thunder/negy.tga", 
       "negx":"./texture/skybox/thunder/negx.tga", 
       "posz": "./texture/skybox/thunder/posz.tga", 
@@ -12,7 +10,7 @@
       "posx": "./texture/skybox/thunder/posx.tga"
   },
   "camera": {
-    "origin": { "x": -1700 }
+    "origin": { "x": -200 }
   },
   "lights": [
     {
@@ -24,29 +22,37 @@
     {
       "name": "box",
       "color": "0xff0000",
-      "length": 200,
-      "width": 200,
-      "height": 200,
+      "length": 21,
+      "width": 21,
+      "height": 21,
       "phong": 1,
       "ambnt": 0.2,
        "spclr": 1,
        "transparent": 1,
+      "t_blur": 0.2,
        "refract": 1.5,
        "diff": 0.3,
       "translate": { "x": 0, "y": 0, "z": 0 },
 
       "rotate": {"z": 30}
     }
-    ,
-        {
-            "name": "cylinder",
-            "translate": { "y": -50 },
-            "rotate":{"z": 30, "y": 15},
-            "radius": 50,
-            "height": 800,
-            "color": "0x00ffff",
-            "procedural": {"name": "sandstone"},
-            "ambnt": 0.3
-        }
+  , {
+      "name": "sphere",
+      "//negative": true,
+      "translate": { "x": 0, "y": 0, "z": 10 },
+      "radius": 20,
+      "color": "0xff0000",
+      "ambnt": 0.2
+    },
+    {
+        "name": "cylinder",
+        "translate": { "y": -5 },
+        "rotate":{"z": 30, "y": 15},
+        "radius": 5,
+        "height": 80,
+        "color": "0x00ffff",
+        "procedural": {"name": "sandstone"},
+        "ambnt": 0.3
+    }
   ]
 }

@@ -1,74 +1,94 @@
-//
-// Created by ivoriik on 19.03.19.
-//
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   torus_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vbespalk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/23 15:36:36 by vbespalk          #+#    #+#             */
+/*   Updated: 2019/05/23 15:36:38 by vbespalk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
-int			ft_is_reachable_torus(void *fig, t_vector origin, t_vector direct)
+static int	check_intersection(
+		t_list **objs, t_object *obj,
+		t_vector *cucn, t_coll *coll)
 {
-	(void)origin;
-	(void)direct;
-	(void)fig;
+	int i;
+
+	i = 0;
+	if (obj->is_neg)
+		cucn[0] += ft_3_vector_scale(cucn[2], SHIFT);
+	if (obj->react_neg || obj->is_neg)
+		i = ft_inside_type(objs, cucn[0]);
+	if (ft_is_invisible(obj, i))
+		return (0);
+	coll->coll_pnt = cucn[0];
+	coll->ucoll_pnt = cucn[1];
+	coll->norm = cucn[2];
+	coll->tex_o = obj;
 	return (1);
 }
 
-float		ft_collide_torus(t_list **objs, struct s_object *obj, t_coll *coll, t_vector untr_od[2])
+static int	get_intersections(
+		double *res, const t_vector *untr_od,
+		t_vector *od, t_object *obj)
 {
 	t_torus		*trs;
-	double		res[4];
-	double 		doxr[4];
-	double 		abcde[5];
-	t_vector	odh[3];
-	int 		num;
-	int			i[2];
-	double 		t;
+	double		doxr[4];
+	double		abcde[5];
+	int			num;
 
 	trs = (t_torus *)obj->fig;
-	odh[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
-	odh[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
-	doxr[0] = ft_3_vector_dot(odh[1], odh[1]);
-	doxr[1] = ft_3_vector_dot(odh[0], odh[0]);
-	doxr[2] = ft_3_vector_dot(odh[0], odh[1]);
-	doxr[3] = trs->r_inner * trs->r_inner + trs->r_outer * trs->r_outer;
+	od[0] = ft_3_pnt_transform(&(obj->inverse), untr_od[0]);
+	od[1] = ft_3_vec_transform(&(obj->inverse), untr_od[1]);
+	doxr[0] = ft_3_vector_dot(od[1], od[1]);
+	doxr[1] = ft_3_vector_dot(od[0], od[0]) -
+			(trs->r_inner2 + trs->r_outer2);
+	doxr[2] = ft_3_vector_dot(od[0], od[1]);
+	doxr[3] = 4 * trs->r_outer2;
 	abcde[0] = doxr[0] * doxr[0];
 	abcde[1] = 4 * doxr[0] * doxr[2];
-	abcde[2] = 2 * doxr[0] * (doxr[1] - doxr[3]) + 4 * doxr[2] * doxr[2] +
-			4 * trs->r_outer * trs->r_outer * odh[1][1] * odh[1][1];
-	abcde[3] = 4 * (doxr[1] - doxr[3]) * doxr[2] + 8 * trs->r_outer *
-			trs->r_outer * odh[0][1] * odh[1][1];
-	abcde[4] = (doxr[1] - doxr[3]) * (doxr[1] - doxr[3]) - 4 * trs->r_outer *
-			trs->r_outer * (trs->r_inner * trs->r_inner - odh[0][1] * odh[0][1]);
+	abcde[2] = 2 * doxr[0] * doxr[1] + 4 * doxr[2] * doxr[2] +
+			doxr[3] * od[1][1] * od[1][1];
+	abcde[3] = 4 * doxr[1] * doxr[2] + 2 * doxr[3] * od[0][1] * od[1][1];
+	abcde[4] = doxr[1] * doxr[1] - 4 * trs->r_outer *
+				trs->r_outer * (trs->r_inner2 - od[0][1] * od[0][1]);
 	if ((num = ft_solve_quartic(abcde, res)) == 0)
-	{
-//		printf("NO SOL\n");
+		return (0);
+	return (num);
+}
+
+float		ft_collide_torus(
+		t_list **objs, struct s_object *obj,
+		t_coll *coll, t_vector uod[2])
+{
+	double		res[4];
+	t_vector	od[2];
+	t_vector	cucn[3];
+	int			i[3];
+	double		t;
+
+	if ((i[2] = get_intersections(res, uod, od, obj)) == 0)
 		return (FLT_MAX);
-	}
 	i[0] = -1;
+	i[1] = 0;
 	t = FLT_MAX;
-	while (++i[0] < num)
+	while (++i[0] < i[2])
 	{
 		if (res[i[0]] < t && res[i[0]] > 0)
 		{
-			t = res[i[0]];
-			odh[2] = untr_od[0] + ft_3_vector_scale(untr_od[1], t);
-			i[1] = ft_inside_type(objs, odh[2]);
-			if (i[1] < 0 || (obj->is_neg && i[1] == 0))
+			cucn[1] = od[0] + ft_3_vector_scale(od[1], (float)res[i[0]]);
+			cucn[2] = obj->ft_get_norm(obj->fig, &(obj->inverse), cucn[1]);
+			cucn[0] = uod[0] + ft_3_vector_scale(uod[1], (float)res[i[0]]);
+			if (!check_intersection(objs, obj, cucn, coll))
 				continue ;
+			t = res[i[0]];
 		}
 	}
-	if (t == FLT_MAX)
-	{
-//		printf("NO SOL\n");
-		return (FLT_MAX);
-	}
-	coll->ucoll_pnt = odh[0] + ft_3_vector_scale(odh[1], (float)t);
-	coll->o = obj;
-	coll->tex_o = obj;
-	coll->norm = ft_3_tounitvector(ft_3_norm_transform(&(obj->inverse),
-			coll->ucoll_pnt - ft_3_vector_scale(ft_3_tounitvector((t_vector)
-			{coll->ucoll_pnt[0], FLT_MIN, coll->ucoll_pnt[2]}), trs->r_outer)));
-//	printf("HERE\n");
+	(t < FLT_MAX) ? ft_choose_object(objs, obj, coll) : 1;
 	return ((float)t);
 }
 
@@ -76,56 +96,37 @@ int			ft_is_inside_torus(t_object *o, t_vector point)
 {
 	t_torus		*trs;
 	double		k;
-	double		r_outer;
-	double		r_inner;
+	double		r[2];
 	t_vector	a;
 
 	trs = (t_torus *)o->fig;
 	point = ft_3_pnt_transform(&(o->inverse), point);
 	k = point[1];
 	if (fabs(k) > trs->r_inner)
-	{
-//		printf("OUT HEI\n");
 		return (0);
-	}
-//	a = point - ft_3_vector_scale(trs->v, (float)k);
 	a = (t_vector){point[0], FLT_MIN, point[2]};
-	r_outer = ft_3_vector_dot(a, a);
+	r[1] = ft_3_vector_dot(a, a);
 	a = point - ft_3_vector_scale(ft_3_tounitvector(a), trs->r_outer);
-	r_inner = ft_3_vector_dot(a, a);
-	if (r_outer > (trs->r_outer + trs->r_inner) * (trs->r_outer + trs->r_inner) ||
-		r_inner > trs->r_inner * trs->r_inner)
-	{
-//		printf("OUT r_outer %f inn %f or %f, %f\n", r_outer, r_inner, (trs->r_outer + trs->r_inner) *
-//		(trs->r_outer + trs->r_inner), trs->r_inner * trs->r_inner);
+	r[0] = ft_3_vector_dot(a, a);
+	if (r[1] > trs->r_outer2 + trs->r_inner2 + 2 * trs->r_outer *
+		trs->r_inner || r[0] > trs->r_inner2)
 		return (0);
-	}
-//	printf("IN\n");
 	return (1);
 }
 
-t_vector	ft_get_norm_torus(void *fig, t_vector coll)
+t_vector	ft_get_norm_torus(void *fig, t_matrix *inv_m, t_vector coll)
 {
-//	t_torus		*trs;
-//	double		k;
-////	float 		m;
-//	t_vector	a;
-//	t_vector	norm;
-//
-//	trs = (t_torus *)fig;
-//	k = ft_3_vector_dot(coll - trs->o, trs->v);
-//	if (fabs(k) > trs->r_inner)
-//		k = k > 0 ? trs->r_inner : -trs->r_inner;
-//	a = coll - ft_3_vector_scale(trs->v, (float)k);
-//	if (trs->r_inner * trs->r_inner - k * k < -0.1f)
-//	{
-////		printf("here r %f, k %f, dif %f, coll %f,%f,%f\n", trs->r_inner, k, trs->r_inner * trs->r_inner - k * k,
-////				coll[0], coll[1], coll[2]);
-		return (ft_3_nullpointnew());
-//	}
-////	m = sqrtf(fabsf(trs->r_inner * trs->r_inner - k * k));
-////	norm = ft_3_tounitvector(coll - a - ft_3_vector_scale(trs->o - a, m / trs->r_outer + m));
-//	norm = ft_3_tounitvector(coll - (trs->o + ft_3_vector_scale(ft_3_tounitvector(a - trs->o),
-//			trs->r_outer)));
-//	return(norm);
+	t_torus		*trs;
+	t_vector	norm;
+	float		dot;
+	float		r;
+
+	trs = (t_torus *)fig;
+	dot = ft_3_vector_dot(coll, coll);
+	r = trs->r_outer2 + trs->r_inner2;
+	norm = ZERO_PNT;
+	norm[0] = 4.0 * coll[0] * (dot - r);
+	norm[1] = 4.0 * coll[1] * (dot - r + 2.0 * trs->r_outer2);
+	norm[2] = 4.0 * coll[2] * (dot - r);
+	return (ft_3_tounitvector(ft_3_norm_transform(inv_m, norm)));
 }

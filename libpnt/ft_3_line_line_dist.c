@@ -12,8 +12,7 @@
 
 #include "libpnt.h"
 
-float		ft_3_line_line_dist
-				(t_vector o1, t_vector d1, t_vector o2, t_vector d2)
+float	ft_3_line_line_dist(t_vector o1, t_vector d1, t_vector o2, t_vector d2)
 {
 	t_vector	axb;
 

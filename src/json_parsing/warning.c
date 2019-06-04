@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   warning.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/25 18:53:37 by domelche          #+#    #+#             */
+/*   Updated: 2019/05/25 18:53:42 by domelche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "json.h"
 
@@ -21,7 +32,7 @@ static void	ft_get_line_symbol(char *content, char *attr, int *line, int *symb)
 	}
 }
 
-static char *ft_get_dt_str(t_datatype datatype)
+static char	*ft_get_dt_str(t_datatype datatype)
 {
 	char	*dt;
 
@@ -48,7 +59,7 @@ static char *ft_get_dt_str(t_datatype datatype)
 
 static char	*ft_get_line_ptr(char *content)
 {
-	char 		*line_ptr;
+	char		*line_ptr;
 	size_t		len;
 
 	len = 0;
@@ -60,7 +71,7 @@ static char	*ft_get_line_ptr(char *content)
 	return (line_ptr);
 }
 
-static void	ft_put_space(size_t	len)
+static void	ft_put_space(size_t len)
 {
 	char	*space;
 
@@ -69,13 +80,13 @@ static void	ft_put_space(size_t	len)
 	free(space);
 }
 
-void		ft_parse_warning_datatype
-				(char *content, char *attr, t_datatype datatype)
+void		ft_parse_warning_datatype(char *content, char *attr,
+										t_datatype datatype)
 {
 	int		line;
 	int		symbol;
 	char	*dt;
-	char 	*line_ptr;
+	char	*line_ptr;
 	int		i;
 
 	ft_get_line_symbol(content, attr, &line, &symbol);

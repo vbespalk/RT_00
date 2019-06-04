@@ -12,14 +12,14 @@
 
 #include "libpnt.h"
 
-int			ft_3_isnullpoint(t_vector point)
+int		ft_3_isnullpoint(t_vector point)
 {
 	return (point[0] == -FLT_MAX
 			&& point[1] == -FLT_MAX
 			&& point[2] == -FLT_MAX);
 }
 
-int			ft_3_iszeropoint(t_vector point)
+int		ft_3_iszeropoint(t_vector point)
 {
 	return (point[0] == FLT_MIN
 			&& point[1] == FLT_MIN

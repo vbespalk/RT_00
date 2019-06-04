@@ -46,9 +46,10 @@ t_ltype		ft_get_light_type(char *type)
 
 void		ft_parse_light(char **content, t_list **lst, Uint32 id)
 {
-	char 			*ltype_str;
-	t_light			*light;
+	char		*ltype_str;
+	t_light		*light;
 
+	(void)id;
 	ltype_str = NULL;
 	light = ft_lightnew();
 	ft_lstpush(lst, ft_nodenew((void *)light, sizeof(t_light)));

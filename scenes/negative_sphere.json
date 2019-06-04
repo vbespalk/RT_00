@@ -1,0 +1,54 @@
+{
+    "name": "Negative Sphere",
+
+    "bg_color": "0xaaaaaa",
+    "skybox": {
+        "negz": "./texture/skybox/storforsen/negz.jpg", 
+        "negy": "./texture/skybox/storforsen/negy.jpg", 
+        "negx":"./texture/skybox/storforsen/negx.jpg", 
+        "posz": "./texture/skybox/storforsen/posz.jpg", 
+        "posy": "./texture/skybox/storforsen/posy.jpg",
+        "posx": "./texture/skybox/storforsen/posx.jpg"
+    },
+    "camera": {
+        "origin": { "x": -50, "y": 0 }
+    },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        },
+                {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        }
+    ],
+    "objects": [
+        {
+            "name": "cylinder",
+            "translate": { "x": 0, "y": 0, "z": 0 },
+            "radius": 4,
+            "height": 25,
+            "rotate": {"z": 45},
+            "transparent": 0.5,
+            "react_negative": true,
+            "color": "0x138D75"
+        },
+        {
+            "name": "cylinder",
+            "translate": { "x": 0, "y": 0, "z": 0 },
+            "rotate": {"x": 45},
+            "react_negative": true,
+            "transparent": 0.5,
+            "radius": 4,
+            "height": 25,
+            "color": "0x138D75"
+        },
+        {
+            "name": "sphere",
+            "origin": { "x": 0, "z": 0 },
+            "radius": 5,
+            "color": "0x283747"
+        }
+    ]
+}

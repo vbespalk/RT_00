@@ -1,55 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   collision_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: domelche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/25 18:55:25 by domelche          #+#    #+#             */
+/*   Updated: 2019/05/25 18:55:27 by domelche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "rt.h"
 
-int			ft_inside_type(t_list **objs, t_vector point)
+static void	ft_free_list(t_list **head)
 {
-	int			res;
-	t_list		*node;
-	t_object	*o;
+	t_list	*node;
+	t_list	*prev;
 
-	res = 0;
-	node = *objs;
+	node = *head;
 	while (node)
 	{
-		o = (t_object *)(node->content);
-		if (o->ft_is_inside(o, point))
-		{
-			if (o->is_neg)
-				return (-1);
-			res = 1;
-		}
+		prev = node;
 		node = node->next;
+		free(prev);
 	}
-	return (res);
-}
-
-t_object	*ft_get_inner_object(t_list **objs, t_vector point)
-{
-	t_list		*node;
-	t_vector	od[2];
-	float		dist[2];
-	t_object	*o;
-	t_object	*res;
-	t_coll		coll;
-
-	node = *objs;
-	od[0] = point;
-	od[1] = (t_vector) { 1.0f, 0.0f, 0.0f };
-	dist[0] = FLT_MAX;
-	res = NULL;
-	while (node)
-	{
-		o = (t_object *)(node->content);
-		o->ft_collide(objs, o, &coll, od);
-		dist[1] = ft_3_point_point_dist(point, coll.coll_pnt);
-		if (dist[1] < dist[0])
-		{
-			dist[0] = dist[1];
-			res = o;
-		}
-		node = node->next;
-	}
-	return (res);
 }
 
 t_object	*ft_inside_obj(
@@ -60,7 +34,8 @@ t_object	*ft_inside_obj(
 	t_list		*res_objs;
 	t_list		*node;
 	t_object	*o;
-	int 		len;
+	t_object	*res;
+	int			len;
 
 	res_objs = NULL;
 	node = *objs;
@@ -75,23 +50,27 @@ t_object	*ft_inside_obj(
 		}
 		node = node->next;
 	}
-	if (len == 0)
-		return (NULL);
-	else if (len == 1)
-		return ((t_object *)(res_objs->content));
-	else
-		return (ft_choose(&res_objs, point));
+	res = (len == 0) ? NULL : (t_object *)(res_objs->content);
+	if (len > 1)
+		res = ft_choose(&res_objs, point);
+	ft_free_list(&res_objs);
+	return (res);
 }
 
 void		ft_choose_object(t_list **objs, t_object *obj, t_coll *coll)
 {
 	if (obj->is_neg)
 	{
-//		coll->coll_pnt += ft_3_vector_scale(
-//			coll->norm, (coll->norm[3] != 1) ? -SHIFT : SHIFT);
 		coll->o = ft_inside_obj(objs, coll->coll_pnt, ft_get_inner_object);
 		coll->coll_pnt -= ft_3_vector_scale(coll->norm, SHIFT);
 	}
 	else
 		coll->o = obj;
+}
+
+int			ft_is_invisible(t_object *obj, int inside_type)
+{
+	return (
+		(obj->react_neg && inside_type == IT_NEG)
+		|| (obj->is_neg && inside_type != IT_POS_RT));
 }

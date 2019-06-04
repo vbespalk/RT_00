@@ -12,8 +12,8 @@
 
 #include "libpnt.h"
 
-t_vector	ft_3_line_point_proj
-				(t_vector origin, t_vector direct, t_vector point)
+t_vector	ft_3_line_point_proj(
+				t_vector origin, t_vector direct, t_vector point)
 {
 	return (ft_3_line_plane_inter(point, direct, origin, direct));
 }

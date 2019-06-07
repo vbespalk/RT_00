@@ -110,3 +110,5 @@ Shortcuts
 Project done with [Dmytro Omelchenko](https://github.com/AwesomeKPIPenguin) & [Maxim Dovhopoliy](https://github.com/mdovhopo)
 
 If you want to contact me, you can send me a mail at vbespalk@student.unit.ua
+
+![alt tag](https://github.com/vbespalk/RT_00/blob/master/screenshots/RT%20ScreenShot%20Fri%20May%2024%2010:39:39%202019.png)

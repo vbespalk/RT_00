@@ -1,0 +1,47 @@
+{
+    "name": "My precious",
+
+    "camera": {
+        "origin": { "x": -450, "y": 0 }
+    },
+      "skybox": {
+      "negz": "./texture/skybox/bloodvalley/negz.tga",
+      "negy": "./texture/skybox/bloodvalley/negy.tga",
+      "negx": "./texture/skybox/bloodvalley/negx.tga",
+      "posz": "./texture/skybox/bloodvalley/posz.tga",
+      "posy": "./texture/skybox/bloodvalley/posy.tga",
+      "posx": "./texture/skybox/bloodvalley/posx.tga"
+  },
+    "lights": [
+        {
+            "type": "direct",
+            "direct": { "x": 1, "y": 0, "z": 0 }
+        }
+    ],
+    "objects": [
+        {
+
+            "name": "torus",
+            "translate": { "x": -100 },
+            "react_negative": true,
+            "rotate": {"z": 45, "y": 20, "x":  5},
+            "inner_radius": 25,
+            "outer_radius": 50,
+            "texture": "./texture/ring.png",
+            "color": "0xffab2f",
+            "spclr": 0.5,
+            "diff": 1,
+            "ambnt": 0.2
+        },
+      {
+        "name": "sphere",
+        "negative": true,
+        "translate": { "x": -100, "y": 0, "z": 0 },
+        "rotate": {"z": -45, "y": -20, "x":  0},
+        "radius": 60,
+        "color": "0xff0000",
+        "texture": "./texture/ring.png",
+        "ambnt": 0.2
+      }
+    ]
+}

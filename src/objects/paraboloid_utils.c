@@ -29,7 +29,7 @@ float			ft_collide_prbld(
 	double		r[2];
 
 	ft_init_v(v, obj, untr_od);
-	if (((r[0] <= 0 && r[1] <= 0) || !ft_solve_sq(
+	if (((r[0] < 0 && r[1] < 0) || !ft_solve_sq(
 		ft_3_vector_dot(v[0][1], v[0][1]) - v[0][1][1] * v[0][1][1],
 		2.0f * (ft_3_vector_dot(
 			v[0][1], v[0][0]) - v[0][1][1] * (v[0][0][1] + 2.f)),

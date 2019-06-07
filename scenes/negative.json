@@ -18,13 +18,12 @@
   "objects": [
     {
       "name": "//plane",
-      "origin": { "x": 0, "y": -500, "z": 0 },
-      "norm": { "x": 0, "y": 1, "z": 0 },
+      "translate": { "x": 0, "y": -500, "z": 0 },
       "color": "0xff0000"
     },
     {
       "name": "//sphere",
-      "origin": { "x": 200, "y": 0, "z": -200 },
+      "translate": { "x": 200, "y": 0, "z": -200 },
       "radius": 500,
       "color": "0x00ff00",
       "ambnt": 0.2,

@@ -71,6 +71,7 @@ static int	general_case(double rs[4], double const pqr[3], double s)
 	abcd[3] = 0.5 * pqr[2] * pqr[0] - 1.0 / 8 * pqr[1] * pqr[1];
 	i[1] = ft_solve_cubic(abcd, rs);
 	i[0] = -1;
+	ft_bzero(uv, sizeof(double) * 2);
 	while (++i[0] < i[1])
 	{
 		s = rs[i[0]];

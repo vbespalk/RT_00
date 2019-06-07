@@ -55,5 +55,5 @@ int			on_key_down(SDL_Keycode sum, t_env *e)
 	if (e->selected && (sum == SDLK_r || sum == SDLK_t))
 		return (e->selected->ft_scale_height(sum, e->selected,
 				&(e->selected->transform), &(e->selected->inverse)));
-		return (ft_on_other_key_down(sum, e));
+	return (ft_on_other_key_down(sum, e));
 }

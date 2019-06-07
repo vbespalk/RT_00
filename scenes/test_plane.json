@@ -19,7 +19,7 @@
       "width": 480,
       "height": 480,
       "color": "0xff00ff",
-    "checker": {"color1": "blue_marble", "color2": "lattice", "size": 2},
+    "procedural": {"name": "blue_marble", "scale": 100},
       "spclr": 0,
       "phong": 1
     },

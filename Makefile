@@ -20,26 +20,29 @@ SRCS = $(shell find src -name '*.c' | cut -c 5-)
 
 OBJS = $(addprefix obj/,$(SRCS:.c=.o))
 
+# external libraries
+LDFLAGS =	$(LIBSDL) -lm \
+			libftprintf/libftprintf.a \
+			libpnt/libpnt.a \
+			JSON-c/libjsonchecker.a
+INCLDES =	$(INCSDL) \
+			-I inc \
+			-I libftprintf \
+			-I libpnt \
+			-I JSON-c
 # src/dir/source.c -> obj/dir
-OBJ_DIR = $(shell find src -name '*.c' | cut -c 5- | cut -f1 -d'/' | uniq\
+OBJ_DIR =	$(shell find src -name '*.c' | cut -c 5- | cut -f1 -d'/' | uniq\
 | sed -e 's/^/obj\//')
 
-INC = -I inc -I libftprintf -I libpnt -I JSON-c \
--I frameworks/SDL2.framework/Headers/ \
--I frameworks/SDL2_image.framework/Headers/
-
-LIBS = libftprintf/libftprintf.a libpnt/libpnt.a JSON-c/libjsonchecker.a\
--F ./frameworks -rpath ./frameworks -framework SDL2\
--F ./frameworks -rpath ./frameworks -framework SDL2_image
-
-
-
-# LINUX SDL
-
-#SDL_INC		= -I/usr/include/SDL2 -D_REENTRANT
-#SDL_LNK		= -lSDL2
-#SDL_IMG_LNK = -lSDL2_image
-
+ifeq ($(shell uname -s), Darwin)
+INCSDL =	-I frameworks/SDL2.framework/Headers/ \
+			-I frameworks/SDL2_image.framework/Headers/
+LIBSDL =	-F ./frameworks -rpath ./frameworks -framework SDL2\
+			-F ./frameworks -rpath ./frameworks -framework SDL2_image
+endif
+ifeq ($(shell uname -s), Linux)
+LIBSDL =	-lSDL2_image -lSDL2 -pthread
+endif
 
 .PHONY: all name dirs clean fclean re
 
@@ -60,10 +63,10 @@ $(OBJ_DIR):
 name: $(NAME)
 
 obj/%.o: src/%.c
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLDES) -c $< -o $@
 
 $(NAME): $(OBJS)
-	@$(CC) -o $(NAME) $(OBJS) $(LIBS)
+	@$(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 clean:
 	@/bin/rm -f $(OBJS)

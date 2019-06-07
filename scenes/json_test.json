@@ -19,7 +19,7 @@
   "objects": [
     {
       "name": "sphere",
-      "origin": { "x": 500 },
+      "translate": { "x": 500 },
       "radius": 500,
       "color": "0x00ff00",
       "spclr": 0.01,

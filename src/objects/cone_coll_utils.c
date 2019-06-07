@@ -17,6 +17,7 @@ static float	ft_check_cides_coll(t_cone_coll *cc)
 	t_cone		*cone;
 
 	cone = (t_cone *)(cc->obj->fig);
+	cc->i[1] = 0;
 	if (cc->t[cc->i[0]] >= FLT_MIN
 		&& IN_RANGE(cc->pnts[0][cc->i[0]][1], cone->minh, cone->maxh))
 	{

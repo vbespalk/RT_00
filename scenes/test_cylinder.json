@@ -25,17 +25,10 @@
             "height": 500,
             "color": "0xFF0000",
             "texture": "./texture/solar/earth.jpg",
+            "checker": { "color1": "gray_marble", "color2": "blue_marble", "size": 2},
             "spclr": 0,
             "phong": 0,
             "ambnt": 0.2
-        },
-        {
-            "name": "sphere",
-            "origin": { "x": 0, "z": 200 },
-            "radius": 50,
-            "color": "0xff0000",
-            "spclr": 0.1,
-            "phong": 1
         }
     ]
 }

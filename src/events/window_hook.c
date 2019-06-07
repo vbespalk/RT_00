@@ -49,6 +49,5 @@ int		ft_on_exit(t_env *e)
 	e->sdl->event_loop = 0;
 	on_sdl_close("wrtt", &e->sdl->window, &e->sdl->renderer, &e->sdl->screen,
 		&e->sdl->gui->gui_texture);
-	system("leaks RT");
 	return (0);
 }

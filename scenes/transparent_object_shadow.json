@@ -1,10 +1,10 @@
 {
   "name": "Shadow from the Transparent Object",
 
-  "bg_color": "0x0",
+  "bg_color": "0x",
 
   "camera": {
-    "origin": { "x": -1000, "y": 500 },
+    "origin": { "x": -1100, "y": 500 },
     "gamma": -15,
     "smooth": "4x"
   },
@@ -17,32 +17,35 @@
   "objects": [
     {
       "name": "plane",
-      "origin": { "y": -700 },
-      "norm": { "x": 0, "y": 1 }
+      "translate": { "y": -1000 },
+      "rotate": { "z": 14 },
+      "checker": {"color1":  "0x881010", "size": 2}
     },
     {
       "name": "sphere",
-      "origin": { "x": 1000, "z": -500 },
+      "translate": { "x": 1200, "z": -500 },
       "radius": 300,
       "color": "0xff0000",
       "diff": 1,
-      "trans": 0
+      "transparent": 0
     },
     {
       "name": "sphere",
-      "origin": { "x": 2000 },
+      "translate": { "x": 2200 },
       "radius": 300,
       "color": "0xff0000",
       "diff": 1,
-      "trans": 1
+      "refr": 1.5,
+      "transparent": 1
     },
     {
       "name": "sphere",
-      "origin": { "x": 1000, "z": 500 },
+      "translate": { "x": 1200, "z": 500 },
       "radius": 300,
       "color": "0xff0000",
       "diff": 0.2,
-      "trans": 1
+      "refr": 1.1,
+      "transparent": 1
     }
   ]
 }

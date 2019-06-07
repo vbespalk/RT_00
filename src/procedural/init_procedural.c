@@ -24,7 +24,7 @@ void	ft_init_lattice(t_procedural **tex, char *function, unsigned int seed)
 			ft_turbulance_noise : ft_fractal_noise;
 	(*tex)->scale = CLAMP(fabsf((*tex)->scale), 1, 99);
 	(*tex)->octaves = CLAMP(fabsf((*tex)->octaves), 1, 7);
-	(*tex)->gain = CLAMP(fabsf((*tex)->gain), 0, 1.2f);
+	(*tex)->gain = CLAMP(fabsf((*tex)->gain), 0, 10);
 	(*tex)->lacunarity = CLAMP((*tex)->lacunarity, 0, 20);
 	(*tex)->pertubation = CLAMP((*tex)->pertubation, 0, 99);
 	ft_lattice_bounds((int)(*tex)->octaves, (*tex)->gain, (*tex)->bounds);

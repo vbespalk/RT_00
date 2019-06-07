@@ -12,6 +12,8 @@
 
 #include "libpnt.h"
 
+static int			g_is_seeded = 0;
+
 t_vector	ft_3_vector_random(void)
 {
 	t_vector	vector;

@@ -16,14 +16,10 @@ static uint32_t	sdl_draw_screen(t_env *e, t_sdl *sdl, uint32_t btn_id,
 	uint32_t status)
 {
 	static uint32_t btn_pressed = 0;
-	static uint32_t render_count = 1;
 
 	btn_pressed = btn_id > 0 ? 1 : 0;
 	if (status == 1)
-	{
-		ft_printf("NEW RENDER #%d\n", render_count++);
 		ft_render(e);
-	}
 	SDL_UpdateTexture(
 		sdl->screen, NULL, sdl->pixels, sdl->rt_wid * sizeof(Uint32));
 	SDL_RenderClear(sdl->renderer);
@@ -43,10 +39,14 @@ static void		ft_rt_loop(t_env *e)
 	sdl = e->sdl;
 	sdl->event_loop = 1;
 	sdl_draw_screen(e, e->sdl, 0, 1);
+	btn_status = -1;
 	while (sdl->event_loop)
 	{
-		if ((status = event_handler(e, &btn_id)))
+		status = event_handler(e, &btn_id);
+		if (status)
 			btn_status = sdl_draw_screen(e, e->sdl, btn_id, status);
+		else
+			sdl_draw_screen(e, e->sdl, 0, status);
 		if (btn_status != -1 && btn_id == 0)
 		{
 			sdl_draw_screen(e, e->sdl, 0, 2);

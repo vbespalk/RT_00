@@ -27,8 +27,6 @@ typedef float		t_vector __attribute__((vector_size(sizeof(float)*4)));
 
 # define ZERO_PNT	(t_vector){FLT_MIN, FLT_MIN, FLT_MIN}
 
-static int			g_is_seeded = 0;
-
 /*
 **	point
 */

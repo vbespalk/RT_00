@@ -28,7 +28,7 @@ static Uint32	ft_map_caps(t_cone *cone, SDL_Surface *t,
 		xy[1] = (int)((texh[0] - 1) * (1 - CLAMP(sqrtf(hit[0] * hit[0] +
 				hit[2] * hit[2]), 0, 1)) + t->h - texh[0]);
 	}
-	else if (IN_RANGE(hit[1], cone->maxh - 1e-1, cone->maxh + 1e-1))
+	else
 	{
 		hit = (t_vector){hit[0] / cone->r[1], hit[1], hit[2] / cone->r[1]};
 		xy[1] = (int)((texh[1] - 1) * CLAMP(sqrtf(hit[0] * hit[0] +
@@ -98,7 +98,7 @@ Uint32			ft_checker_cone(t_object *o, void *tex, t_vector coll)
 		(fmodf(uv[1] * t->size, 1) > 0.5)))
 		return (t->noise[0] ? o->ft_procedural(o, t->noise[0], coll) :
 			t->color[0]);
-		return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
+	return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
 			t->color[1]);
 }
 

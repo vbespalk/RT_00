@@ -178,8 +178,8 @@ static const unsigned char	g_permutation_table[LTABLE_SIZE] =
 	137, 214, 145, 93, 92, 100, 245, 0, 216, 186, 60, 83, 105, 97, 204, 52
 };
 
-# define PERM(x)		(g_permutation_table[x & LTABLE_MASK])
-# define INDEX(x, y, z)	(PERM(x + PERM(y + PERM(z))))
+# define PERM(x)		(g_permutation_table[(x) & (LTABLE_MASK)])
+# define INDEX(x, y, z)	(PERM((x) + PERM((y) + PERM(z))))
 
 # if SDL_BYTEORDER == SDL_BIG_ENDIAN
 

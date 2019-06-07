@@ -75,6 +75,40 @@ light {
 #		default: 0.2;														   #
 #		koef of the shining effect;											   #
 #                                                                              #
+#	Texturing:                                                                 #
+#                                                                              #
+#	 - "texture": "path/to/the/texture/file                                    #
+#	    Supported .png, .jp(e)g, .tga, .bmp                                    #
+#                                                                              #
+#	 - "procedural": {        												   #
+#		 "name": "name of sample",								        	   #
+#		 "ramp": "path/to/ramp/file",   									   #
+#		 "seed":  19067                                                        #
+#           number to initialize a pseudorandom number generator        	   #
+#		 "scale": 2                                                            #
+#           pattern repeatability       	                	        	   #
+#		 "function": "turbulance / fractal",   								   #
+#		    function to generate noise value, default: fractal_sum 	    	   #
+#		 "octaves": 2,				            				        	   #
+#		    value to control the amount of detail of Perlin noise			   #
+#		    range: 1 - 7                                            		   #
+#		 "gain": 0.5,			              					        	   #
+#		    aka "frequency"                                           		   #
+#		 "lacunarity": 2,   				            					   #
+#		    aka "amplitude"                                           		   #
+#		 "perturbation": 1   				            					   #
+#		}                       											   #
+#                                                                              #
+#	 - "checker": {        			    									   #
+#		 "color1": "0xABABAB",      							        	   #
+#		 "color2": "blue_marble",      							        	   #
+#		    color or noise sample value to fill a cell                         #
+#		 "size": 2                                                             #
+#           size of pattern                	                	        	   #
+#		}                       											   #
+#		Any of fields could be skipped 										   #
+#		General checker could be set by typing "checker": {}				   #
+#                                                                              #
 #	Also, there are 2 functions:                                               #
 #                                                                              #
 #	 - translate;                                                              #
@@ -89,23 +123,45 @@ light {
 ################################################################################
 
 plane {
-	origin: (0, -500, 0)			# default: (0, -1000, 0)
-	norm: (0, 1, 0)					# default: (0, 1, 0)
-									# 	normal vector of the plane
+	translate: (0, -500, 0)			# default: (0, -1000, 0)
+	rotate: (0, 0, 90)				# default: (0, 90, 0)
+	width: 150                      # default: infinite
+	height: 100						# default: infinite
 	color: 0x0000ff;
 	phong: 0;
 }
 
 sphere {
-	origin: (0, 0, 0);				# default: (0, 0, 0)
+	translate: (0, 0, 0);			# default: (0, 0, 0)
 	radius: 300;					# default: 100
 	color: 0xff0000;
 }
 
 cone {
-	base: (0, -500, 0);				# default: (0, 0, -200)
-	base_rad: 300;					# default: 100
-	vert: (0, -150, 0);				# default: (0, 0, 200)
-	vert_rad: 150;					# default: 100
+	translate: (0, -500, 0);		# default: (0, 0, -200)
+	angle: 30;					    # default: 45
+	rotate: (30, -15, 45);			# default: (0, 90, 0)
+	maxh: 150;					    # default: infinite
+	minh: 150;					    # default: infinite
 	color: 0x00ff00;
+}
+
+cylinder {
+
+}
+
+disk {
+
+}
+
+cube {
+
+}
+
+paraboloid {
+
+}
+
+torus {
+
 }

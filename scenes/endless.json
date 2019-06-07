@@ -1,0 +1,74 @@
+{
+  "name": "TEST",
+  "bg_color": "0x0",
+  "camera": {
+    "origin": { "x": -1000 },
+    "smooth": "9x"
+  },
+  "lights": [
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": 1 }
+    },
+    {
+      "type": "direct",
+      "direct": { "x": 1, "y": -1, "z": -1 }
+    }
+  ],
+  "objects": [
+    {
+      "name": "sphere",
+      "translate": { "x": 0 },
+      "radius": 50,
+      "color": "0x203542",
+      "spclr": 0.01,
+      "phong": 1,
+      "ambnt": 0.2
+    },
+    {
+      "name": "cone",
+      "translate": {
+        "x": 0,
+        "y": 100,
+        "z": 0
+      },
+      "rotate": {
+        "x": 15,
+        "z": 20
+      },
+      "angle": 15,
+      "color": "0xF0485A",
+      "spclr": 0.05,
+      "phong": 1,
+      "ambnt": 0.2
+    },
+    {
+      "name": "cylinder",
+      "translate": { "x": 100, "y": 0, "z": 100 },
+      "rotate": { "z": 45, "x": -15 },
+      "radius": 50,
+      "color": "0x113D63",
+      "checker": {"color1": "0x263545", "color2": "0x999999", "size": 2},
+      "spclr": 0,
+      "phong": 0,
+      "ambnt": 0.2
+    },
+    {
+      "name": "plane",
+      "translate": { "x": -100, "y": -500, "z": 0 },
+      "color": "0xbbbbbb",
+      "spclr": 0.5,
+      "diffuse": 1,
+      "phong": 1
+    },
+    {
+      "name": "plane",
+      "translate": { "x": 1500, "y": -500, "z": 0 },
+      "rotate": {"z": 60, "x": -30},
+      "color": "0x704348",
+      "spclr": 0,
+      "diffuse": 1,
+      "phong": 1
+    }
+  ]
+}

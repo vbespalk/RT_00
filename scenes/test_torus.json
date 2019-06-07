@@ -35,7 +35,7 @@
         },
       {
         "name": "sphere",
-        "negative": true,
+        "//negative": true,
         "translate": { "x": -100, "y": 0, "z": 0 },
         "rotate": {"z": -45, "y": -20, "x":  0},
         "radius": 60,

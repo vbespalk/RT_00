@@ -37,6 +37,7 @@ float			ft_get_clnd_cides_coll(
 	t_vector	hit[4];
 
 	i[0] = -1;
+	i[1] = 0;
 	while (++i[0] < 2)
 	{
 		hit[i[0]] = v[0][0] + ft_3_vector_scale(v[0][1], t[i[0]]);

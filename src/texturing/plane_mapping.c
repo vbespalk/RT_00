@@ -53,7 +53,7 @@ Uint32		ft_checker_pln(t_object *o, void *tex, t_vector coll)
 	if ((x * z < 0))
 		return (t->noise[0] ? o->ft_procedural(o, t->noise[0], coll) :
 			t->color[0]);
-		return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
+	return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
 			t->color[1]);
 }
 
@@ -64,7 +64,9 @@ Uint32		ft_procedural_pln(t_object *o, void *tex, t_vector coll)
 
 	pln = (t_plane *)o->fig;
 	t = (t_procedural *)tex;
-	coll[0] = pln->len_wh[0] == FLT_MIN ? coll[0] : (coll[0] * pln->len_wh[0]) /
-		pln->len_wh[1];
+	if (pln->len_wh[0] == FLT_MIN)
+		coll =	ft_3_vector_scale(coll, 1.f / o->dist);
+	else
+		coll[0] = (coll[0] * pln->len_wh[0]) / pln->len_wh[1];
 	return (t->ft_get_color(t, ft_3_vector_scale(coll, t->scale)));
 }

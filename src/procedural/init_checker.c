@@ -19,9 +19,9 @@ static void		ft_init_checker(t_checkbrd *tex)
 	if (tex->noise[0] == NULL && tex->noise[1] != NULL)
 		ft_swap(&tex->noise[0], &tex->noise[1], sizeof(t_procedural *));
 	tex->color[0] = tex->color[0] == UINT32_MAX ? 0xffffff :
-			(Uint32)CLAMP(tex->color[0], 0, 0xffffff);
+			(Uint32)MINV(tex->color[0], (unsigned int)0xffffff);
 	tex->color[1] = tex->color[1] == UINT32_MAX ? 0x666666 :
-			(Uint32)CLAMP(tex->color[1], 0, 0xffffff);
+			(Uint32)MINV(tex->color[1], (unsigned int)0xffffff);
 }
 
 static void		ft_set_checker_color(t_checkbrd *tex, const char *color, int i)

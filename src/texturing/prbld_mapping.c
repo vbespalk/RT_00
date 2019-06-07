@@ -102,6 +102,6 @@ Uint32			ft_checker_prbld(t_object *o, void *tex, t_vector coll)
 		(fmodf(uv[1] * t->size, 1) > 0.5)))
 		return (t->noise[0] ? o->ft_procedural(o, t->noise[0], coll) :
 			t->color[0]);
-		return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
+	return (t->noise[1] ? o->ft_procedural(o, t->noise[1], coll) :
 			t->color[1]);
 }

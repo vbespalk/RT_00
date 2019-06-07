@@ -49,6 +49,7 @@ double	ft_get_prbld_cides_coll(
 
 	par = (t_prbld *)(obj->fig);
 	i[0] = -1;
+	i[1] = 0;
 	while (++i[0] < 2)
 	{
 		hit[i[0]] = v[0][0] + ft_3_vector_scale(v[0][1], (float)t[i[0]]);

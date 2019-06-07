@@ -28,7 +28,7 @@
             "spclr": 1,
             "transparent": 1,
             "phong": 0,
-            "refr": 4.5
+            "refr": 1.5
         },
         {
             "name": "cylinder",

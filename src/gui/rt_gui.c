@@ -56,7 +56,6 @@ void		ft_gui(t_env *e, uint32_t id)
 	}
 	SDL_RenderCopy(e->sdl->renderer, e->sdl->gui->gui_texture,
 	NULL, &gui_container);
-	printf("id: %d\n", id);
 	if (id > 0)
 		button_pressed(e, id);
 }

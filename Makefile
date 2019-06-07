@@ -13,7 +13,7 @@
 NAME = RT
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+#CFLAGS = -Wall -Wextra -Werror
 
 # finding all sources and cutting 'src/' prefix
 SRCS = $(shell find src -name '*.c' | cut -c 5-)

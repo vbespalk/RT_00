@@ -38,6 +38,9 @@
       },
       "angle": 15,
       "color": "0xF0485A",
+      "transparent": 0.9,
+      "diffuse": 0.1,
+      "refr": 1.8,
       "spclr": 0.05,
       "phong": 1,
       "ambnt": 0.2

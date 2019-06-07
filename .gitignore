@@ -3,3 +3,4 @@
 .vscode/*
 *.a
 CMakeLists.txt
+cmake-build-debug/*
